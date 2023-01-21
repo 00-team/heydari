@@ -1,0 +1,12 @@
+section.hero-container {
+    width: clamp(0px, 100%, 1500px);
+    height: 90vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .hero-img {
+        transform: scaleX(-1);
+    }
+}
