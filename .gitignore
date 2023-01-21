@@ -162,6 +162,7 @@ yarn-error.log*
 templates/base.html
 database/doom.json
 database/secrets.json
+static/
 
 # database
 *.db
