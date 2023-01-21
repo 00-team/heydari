@@ -15,7 +15,6 @@ const Home = loadable(() => import('Screens/Home'))
 const App: FC = () => {
     return (
         <>
-            app
             <MainContent />
         </>
     )
