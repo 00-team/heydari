@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import './style/about.scss'
 
@@ -49,18 +49,18 @@ const About = () => {
     const [ActiveAbout, setActiveAbout] = useState(1)
     setActiveAbout
 
-    // useEffect(() => {
-    //     const inverval = setInterval(() => {
-    //         setActiveAbout(value => {
-    //             if (value + 2 > ABOUT_CONTENTS.length) {
-    //                 return 1
-    //             }
-    //             return value + 1
-    //         })
-    //     }, 10000)
+    useEffect(() => {
+        const inverval = setInterval(() => {
+            setActiveAbout(value => {
+                if (value + 2 > ABOUT_CONTENTS.length) {
+                    return 1
+                }
+                return value + 1
+            })
+        }, 10000)
 
-    //     return () => clearInterval(inverval)
-    // }, [])
+        return () => clearInterval(inverval)
+    }, [])
 
     return (
         <section id='about' className='about-container'>
@@ -109,12 +109,18 @@ const About = () => {
                                 return 'next'
                             return ''
                         }
+
                         return (
                             <div
                                 key={idx0}
                                 className={`about-slider ${returnClass()}`}
                             >
-                                <img draggable={'false'} src={img} alt='' />
+                                <img
+                                    loading='lazy'
+                                    draggable={'false'}
+                                    src={img}
+                                    alt=''
+                                />
                             </div>
                         )
                     })}
