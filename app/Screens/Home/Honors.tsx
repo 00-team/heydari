@@ -42,8 +42,6 @@ const Honors = () => {
         return () => clearTimeout(timeout)
     }, [isIntersecting])
 
-    console.log(ConfettiEnd)
-
     return (
         <section
             ref={LazyRef}
@@ -53,7 +51,13 @@ const Honors = () => {
                 <span>افتخارات ما</span>
             </h2>
             <div className='honors-wrapper'></div>
-            {isIntersecting && <Confetti recycle={!ConfettiEnd} />}
+            {isIntersecting && (
+                <Confetti
+                    recycle={!ConfettiEnd}
+                    numberOfPieces={innerWidth <= 1024 ? 100 : 200}
+                    gravity={innerWidth <= 1024 ? 0.3 : 0.1}
+                />
+            )}
         </section>
     )
 }
