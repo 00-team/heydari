@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 
 import loadable from '@loadable/component'
 import {
@@ -13,6 +13,9 @@ import './style/font/imports.scss'
 const Home = loadable(() => import('Screens/Home'))
 
 const App: FC = () => {
+    useEffect(() => {
+        window.history.scrollRestoration = 'manual'
+    }, [])
     return (
         <>
             <MainContent />
