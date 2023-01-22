@@ -15,6 +15,7 @@ section.about-container {
 
     @media screen and (max-width: 768px) {
         gap: 6vh;
+        min-height: 100vh;
     }
 
     .about-header {
@@ -117,6 +118,9 @@ section.about-container {
         .about-content-wrapper {
             @media screen and (max-width: 768px) {
                 margin-bottom: 12vh;
+            }
+            @media screen and (min-width: 768px) {
+                margin-top: -5vh;
             }
         }
         .about-img-wrapper {
