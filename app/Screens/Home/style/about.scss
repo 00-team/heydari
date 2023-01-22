@@ -49,7 +49,7 @@ section.about-container {
         .about-content {
             display: flex;
             flex-direction: column;
-            gap: 6vh;
+            gap: 4vh;
 
             .content-descrption {
                 @media screen and (min-width: 768px) {
@@ -121,27 +121,14 @@ section.about-container {
                 height: 100%;
 
                 &:not(.prev, .active, .next) {
-                    display: none;
+                    position: absolute;
+                    z-index: -1;
+                    opacity: 0;
                 }
-                &.active {
-                    z-index: 2;
-                }
+
                 &.prev,
                 &.next {
                     position: absolute;
-                    z-index: 1;
-                    transform: scale(0.6);
-                }
-                &.prev {
-                    bottom: 0;
-                    right: 0;
-                    translate: 50% 50%;
-                    transform: scale(0.7);
-                }
-                &.next {
-                    top: 0;
-                    left: 0;
-                    translate: -50% -50%;
                 }
 
                 img {
@@ -151,31 +138,77 @@ section.about-container {
                     border-radius: 10px;
                 }
 
-                &.active {
-                    animation: about-slidein 0.9s forwards ease-in-out;
-
-                    @keyframes about-slidein {
-                        from {
-                            transform: translateY(-50%);
-                            opacity: 0;
+                &.next {
+                    animation: next-slider 1s ease-in-out forwards;
+                    @keyframes next-slider {
+                        0% {
+                            position: absolute;
+                            z-index: -1;
                         }
-                        to {
-                            transform: translateY(0);
-                            opacity: 1;
+                        50% {
+                            transform: scale(0.6);
+                            top: 0;
+                            left: 0;
+                            translate: -50% -50%;
+                            z-index: 1;
+                        }
+                        100% {
+                            transform: scale(0.6);
+                            top: 0;
+                            left: 0;
+                            translate: -50% -50%;
+                            z-index: 1;
+                        }
+                    }
+                }
+                &.active {
+                    animation: active-slider 1s ease-in-out forwards;
+                    @keyframes active-slider {
+                        0% {
+                            transform: scale(0.6);
+                            top: 0;
+                            left: 0;
+                            translate: -50% -50%;
+                            z-index: 1;
+                        }
+                        50% {
+                            transform: scale(1);
+                            position: relative;
+                            translate: 0 0;
+                            z-index: 2;
+                        }
+                        100% {
+                            transform: scale(1);
+                            position: relative;
+                            translate: 0 0;
+                            z-index: 2;
                         }
                     }
                 }
                 &.prev {
-                    animation: about-slideout 0.9s forwards ease-in-out;
-
-                    @keyframes about-slideout {
-                        from {
-                            transform: translateY(0);
+                    animation: prev-slider 1s ease-in-out forwards;
+                    @keyframes prev-slider {
+                        0% {
+                            z-index: 2;
+                            opacity: 0;
+                        }
+                        1% {
                             opacity: 1;
                         }
-                        to {
-                            transform: translateY(50%);
-                            opacity: 0;
+                        50% {
+                            bottom: 0;
+                            right: 0;
+                            translate: 50% 50%;
+                            transform: scale(0.6);
+                            opacity: 1;
+                        }
+                        100% {
+                            bottom: 0;
+                            right: 0;
+                            translate: 50% 50%;
+                            transform: scale(0.6);
+                            z-index: 1;
+                            opacity: 1;
                         }
                     }
                 }
