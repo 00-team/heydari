@@ -1,5 +1,5 @@
 section.about-container {
-    height: 100vh;
+    min-height: 80vh;
     width: 100%;
 
     background-color: white;
@@ -13,6 +13,10 @@ section.about-container {
 
     padding: 3vh 5vw;
 
+    @media screen and (max-width: 768px) {
+        gap: 6vh;
+    }
+
     .about-header {
         display: flex;
         align-items: center;
@@ -25,7 +29,7 @@ section.about-container {
 
         span {
             white-space: nowrap;
-            padding: 0 2em;
+            padding: 0 calc(1em + 10px);
         }
 
         &::before,
@@ -60,7 +64,7 @@ section.about-container {
 
         .about-content-wrapper,
         .about-img-wrapper {
-            width: 50%;
+            width: clamp(0px, 600px, 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -80,7 +84,8 @@ section.about-container {
                     opacity: 0;
                 }
                 &.active {
-                    animation: fadeIn 0.9s forwards ease-in-out;
+                    animation: fadeIn 1s cubic-bezier(0.45, 0.02, 0.09, 0.98)
+                        forwards;
 
                     @keyframes fadeIn {
                         from {
@@ -109,8 +114,13 @@ section.about-container {
                 }
             }
         }
+        .about-content-wrapper {
+            @media screen and (max-width: 768px) {
+                margin-bottom: 12vh;
+            }
+        }
         .about-img-wrapper {
-            width: clamp(0px, 350px, 70%);
+            width: clamp(0px, 350px, 60%);
             aspect-ratio: 1/1;
 
             .about-slider {
@@ -139,7 +149,8 @@ section.about-container {
                 }
 
                 &.next {
-                    animation: next-slider 1s ease-in-out forwards;
+                    animation: next-slider 1.5s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
                     @keyframes next-slider {
                         0% {
                             position: absolute;
@@ -162,7 +173,8 @@ section.about-container {
                     }
                 }
                 &.active {
-                    animation: active-slider 1s ease-in-out forwards;
+                    animation: active-slider 1.5s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
                     @keyframes active-slider {
                         0% {
                             transform: scale(0.6);
@@ -186,7 +198,8 @@ section.about-container {
                     }
                 }
                 &.prev {
-                    animation: prev-slider 1s ease-in-out forwards;
+                    animation: prev-slider 1.5s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
                     @keyframes prev-slider {
                         0% {
                             z-index: 2;
