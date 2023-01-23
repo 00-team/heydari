@@ -38,4 +38,144 @@ section.honors-container {
         width: 100%;
         height: 100%;
     }
+
+    .honors-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .honor-container {
+            // debug
+            width: clamp(0px, 60%, 500px);
+            //
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            aspect-ratio: 1/1.1;
+
+            &.active {
+                .honor-cup {
+                    &::after {
+                        animation: after-honor-glass 1s 2.5s
+                            cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+
+                        @keyframes after-honor-glass {
+                            from {
+                                bottom: 0;
+                                left: 0%;
+                                translate: -100% 100%;
+                            }
+                            to {
+                                bottom: 100%;
+                                left: 100%;
+                                translate: -80% 80%;
+                            }
+                        }
+                    }
+                    &::before {
+                        animation: before-honor-glass 1s 2.5s
+                            cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+
+                        @keyframes before-honor-glass {
+                            from {
+                                top: 0;
+                                right: 0%;
+                                translate: 100% -100%;
+                            }
+                            to {
+                                top: 100%;
+                                right: 100%;
+                                translate: 80% -80%;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .honor-cup {
+                width: 100%;
+                flex: 1 0;
+
+                background-color: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(5px);
+
+                z-index: 1;
+
+                position: relative;
+                overflow: hidden;
+
+                &::before,
+                &::after {
+                    content: '';
+                    position: absolute;
+
+                    width: 50%;
+                    height: 50%;
+
+                    opacity: 0.32;
+                    z-index: 1;
+                }
+                &::after {
+                    bottom: 0;
+                    left: 0%;
+                    translate: -100% 100%;
+
+                    background-image: linear-gradient(
+                        45deg,
+                        rgba(255, 255, 255, 0) 0%,
+                        rgba(255, 255, 255, 0) 30%,
+                        white 100%
+                    );
+                }
+                &::before {
+                    top: 0;
+                    right: 0%;
+                    translate: 100% -100%;
+
+                    background-image: linear-gradient(
+                        226deg,
+                        rgba(255, 255, 255, 0) 0%,
+                        rgba(255, 255, 255, 0) 30%,
+                        white 100%
+                    );
+                }
+            }
+            .honor-content {
+                width: 105%;
+                height: clamp(0px, 20%, 100px);
+                background-color: #42291a;
+
+                position: relative;
+
+                &::before,
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+
+                    transform: translateY(-30%);
+
+                    width: 20px;
+
+                    background-color: #42291a;
+
+                    aspect-ratio: 1/1;
+                    transform-origin: top;
+                }
+
+                &::before {
+                    left: 2px;
+                    rotate: -30deg;
+                }
+                &::after {
+                    right: 2px;
+                    rotate: 30deg;
+                }
+            }
+        }
+    }
 }
