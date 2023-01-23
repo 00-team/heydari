@@ -50,14 +50,26 @@ const Honors = () => {
             <h2 className={`section_title honor-header ${C(isIntersecting)}`}>
                 <span>افتخارات ما</span>
             </h2>
-            <div className='honors-wrapper'></div>
             {isIntersecting && (
                 <Confetti
+                    colors={['gold', 'white']}
                     recycle={!ConfettiEnd}
                     numberOfPieces={innerWidth <= 1024 ? 100 : 200}
                     gravity={innerWidth <= 1024 ? 0.3 : 0.1}
                 />
             )}
+            <div className='honors-wrapper'>
+                <div className={`honor-container ${C(isIntersecting)}`}>
+                    <div className='honor-cup'>
+                        <div className='cup-glass'></div>
+                        <img src='' alt='' className='cup-img' />
+                    </div>
+                    <div className='honor-content'>
+                        <div className='honor-name'></div>
+                        <div className='honor-description'></div>
+                    </div>
+                </div>
+            </div>
         </section>
     )
 }
