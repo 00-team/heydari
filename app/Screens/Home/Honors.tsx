@@ -37,7 +37,7 @@ const Honors = () => {
 
         const timeout = setTimeout(() => {
             setConfettiEnd(() => true)
-        }, 3000)
+        }, 2000)
 
         return () => clearTimeout(timeout)
     }, [isIntersecting])
@@ -65,8 +65,15 @@ const Honors = () => {
                         <img src='' alt='' className='cup-img' />
                     </div>
                     <div className='honor-content'>
-                        <div className='honor-name'></div>
-                        <div className='honor-description'></div>
+                        <div className='honor-name title'>
+                            <span>تندیس بلورین برند برتر</span>
+                        </div>
+                        <div className='honor-description description'>
+                            <span>
+                                تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری
+                                Hofex2006
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
