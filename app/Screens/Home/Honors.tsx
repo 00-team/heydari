@@ -6,6 +6,8 @@ import Confetti from 'react-confetti'
 
 import './style/honors.scss'
 
+const HONOR_IMG = require('../../static/honor.png')
+
 const Honors = () => {
     const LazyRef = useRef<HTMLDivElement>(null)
     const [isIntersecting, setisIntersecting] = useState(false)
@@ -62,7 +64,7 @@ const Honors = () => {
                 <div className={`honor-container ${C(isIntersecting)}`}>
                     <div className='honor-cup'>
                         <div className='cup-glass'></div>
-                        <img src='' alt='' className='cup-img' />
+                        <img src={HONOR_IMG} alt='' className='cup-img' />
                     </div>
                     <div className='honor-content'>
                         <div className='honor-name title'>
