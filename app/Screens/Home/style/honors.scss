@@ -49,14 +49,11 @@ section.honors-container {
         justify-content: center;
 
         .honor-container {
-            // debug
-            width: clamp(0px, 60%, 500px);
-            //
-
             display: flex;
             flex-direction: column;
             align-items: center;
 
+            height: clamp(0px, 60%, 500px);
             aspect-ratio: 1/1.1;
 
             &.active {
@@ -97,7 +94,7 @@ section.honors-container {
                     }
 
                     .cup-img {
-                        animation: honor-cup-img-fadein 3s 3s
+                        animation: honor-cup-img-fadein 2.5s 2.8s
                             cubic-bezier(0.79, 0.04, 0.09, 0.98) forwards;
                         @keyframes honor-cup-img-fadein {
                             0% {
@@ -237,6 +234,10 @@ section.honors-container {
 
                 position: relative;
                 overflow: hidden;
+
+                @media screen and (max-width: 768px) {
+                    padding: 1em 1em;
+                }
 
                 &::before,
                 &::after {
