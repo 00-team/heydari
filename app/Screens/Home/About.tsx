@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import './style/about.scss'
 
@@ -45,9 +45,8 @@ const ABOUT_CONTENTS = [
     },
 ]
 
-const About = () => {
+const About: FC = () => {
     const [ActiveAbout, setActiveAbout] = useState(1)
-    setActiveAbout
 
     useEffect(() => {
         const inverval = setInterval(() => {
@@ -87,7 +86,7 @@ const About = () => {
                                 className={`about-content ${returnClass()}`}
                             >
                                 <div className='content-title title'>
-                                    {content.title}
+                                    {content.title + '' + idx0}
                                 </div>
                                 <div className='content-descrption title_small'>
                                     {content.description}
