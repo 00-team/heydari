@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 
 import { Typer } from '@00-team/utils'
 
@@ -8,7 +8,7 @@ import './style/hero.scss'
 
 const heroImg = require('../../static/chair.png')
 
-const HeroSection = () => {
+const HeroSection: FC = () => {
     return (
         <section className='hero-container'>
             <div className='hero-wrapper'>
