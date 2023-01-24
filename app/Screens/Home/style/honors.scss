@@ -10,11 +10,11 @@ section.honors-container {
     flex-direction: column;
     gap: 12vh;
 
-    padding: 3vh 5vw;
     position: relative;
 
     .honor-header {
         overflow: hidden;
+        padding: 3vh 5vw;
 
         &.active {
             span {
@@ -28,7 +28,7 @@ section.honors-container {
 
             @keyframes honors-header-fadein {
                 from {
-                    transform: translateY(-100%);
+                    transform: translateY(-200%);
                 }
                 to {
                     transform: translateY(0);
@@ -42,21 +42,16 @@ section.honors-container {
     }
 
     .honors-wrapper {
-        width: 100%;
+        width: clamp(0px, 100%, 1500px);
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        .honor-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        position: relative;
 
-            height: clamp(0px, 60%, 500px);
-            aspect-ratio: 1/1.1;
-
-            &.active {
+        &.active {
+            .honor-container {
                 .honor-cup {
                     &::after {
                         animation: after-honor-glass 1s 3s
@@ -155,6 +150,82 @@ section.honors-container {
                                 transform: translateY(0);
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        .honor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            height: clamp(0px, 60%, 500px);
+            aspect-ratio: 1/1.1;
+
+            &:not(.prev, .active, .next) {
+                position: absolute;
+                z-index: -1;
+                opacity: 0;
+            }
+
+            &.prev,
+            &.next {
+                position: absolute;
+                height: 100%;
+            }
+
+            &.active {
+                z-index: 3;
+
+                animation: honor-cup-active-transform 2s
+                    cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                @keyframes honor-cup-active-transform {
+                    0% {
+                        translate: -125%;
+                        scale: 0.9;
+                    }
+                    80% {
+                        translate: 0;
+                    }
+                    100% {
+                        scale: 1;
+                        translate: 0;
+                    }
+                }
+            }
+            &.next {
+                z-index: 1;
+                animation: honor-cup-next-transform 2s
+                    cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                @keyframes honor-cup-next-transform {
+                    0% {
+                        translate: 0;
+                    }
+                    80% {
+                        translate: -125%;
+                    }
+                    100% {
+                        z-index: 1;
+                        scale: 0.9;
+                        translate: -125%;
+                    }
+                }
+            }
+            &.prev {
+                z-index: 2;
+                animation: honor-cup-prev-transform 2s
+                    cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                @keyframes honor-cup-prev-transform {
+                    0% {
+                        translate: 0;
+                    }
+                    80% {
+                        translate: 125%;
+                    }
+                    100% {
+                        scale: 0.9;
+                        translate: 125%;
                     }
                 }
             }
