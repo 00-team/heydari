@@ -50,7 +50,7 @@ const Honors: FC = () => {
     const LazyRef = useRef<HTMLDivElement>(null)
     const [isIntersecting, setisIntersecting] = useState(false)
     const [ConfettiEnd, setConfettiEnd] = useState(false)
-    ConfettiEnd
+    
 
     useEffect(() => {
         if (LazyRef.current && !isIntersecting) {
