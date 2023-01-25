@@ -6,43 +6,43 @@ import Confetti from 'react-confetti'
 
 import './style/honors.scss'
 
-// const HONOR_IMG = require('../../static/honor.png')
+const HONOR_IMG = require('../../static/honor.png')
 
 const DEBUG_HONORS = [
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1021/961',
+        img: HONOR_IMG,
     },
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1021/962',
+        img: HONOR_IMG,
     },
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1021/963',
+        img: HONOR_IMG,
     },
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1021/964',
+        img: HONOR_IMG,
     },
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1020/960',
+        img: HONOR_IMG,
     },
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1023/960',
+        img: HONOR_IMG,
     },
     {
-        title: 'لورم اولی',
+        title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: 'https://picsum.photos/1024/960',
+        img: HONOR_IMG,
     },
 ]
 
