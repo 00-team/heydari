@@ -50,6 +50,7 @@ const Honors: FC = () => {
     const LazyRef = useRef<HTMLDivElement>(null)
     const [isIntersecting, setisIntersecting] = useState(false)
     const [ConfettiEnd, setConfettiEnd] = useState(false)
+    ConfettiEnd
 
     useEffect(() => {
         if (LazyRef.current && !isIntersecting) {
@@ -96,6 +97,7 @@ const Honors: FC = () => {
                     recycle={!ConfettiEnd}
                     numberOfPieces={innerWidth <= 1024 ? 100 : 200}
                     gravity={innerWidth <= 1024 ? 0.3 : 0.1}
+                    style={{ zIndex: 5 }}
                 />
             )}
             <HonorsWrapper isIntersecting={isIntersecting} />
@@ -108,8 +110,9 @@ interface HonorsWrapperProps {
 }
 const HonorsWrapper: FC<HonorsWrapperProps> = ({ isIntersecting }) => {
     const [HonorActive, setHonorActive] = useState(1)
-    setHonorActive
     useEffect(() => {
+        if (!isIntersecting) return
+
         const inverval = setInterval(() => {
             setHonorActive(value => {
                 if (value + 2 > DEBUG_HONORS.length) {
@@ -120,7 +123,7 @@ const HonorsWrapper: FC<HonorsWrapperProps> = ({ isIntersecting }) => {
         }, 4000)
 
         return () => clearInterval(inverval)
-    }, [])
+    }, [isIntersecting])
     return (
         <div className={`honors-wrapper ${C(isIntersecting)}`}>
             {DEBUG_HONORS.map(({ title, description, img }, idx0) => {
