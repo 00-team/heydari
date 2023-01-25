@@ -3,6 +3,7 @@ import React, { FC } from 'react'
 import About from './About'
 import HeroSection from './HeroSection'
 import Honors from './Honors'
+import Products from './Products'
 import Welcomer from './Welcome'
 
 import './style/home.scss'
@@ -15,6 +16,7 @@ const Home: FC = () => {
             <HeroSection />
             <About />
             <Honors />
+            <Products />
         </main>
     )
 }
