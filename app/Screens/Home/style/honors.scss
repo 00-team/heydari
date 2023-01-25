@@ -24,7 +24,7 @@ section.honors-container {
         }
         span {
             display: inline-block;
-            transform: translateY(-100%);
+            transform: translateY(-200%);
 
             @keyframes honors-header-fadein {
                 from {
@@ -49,6 +49,7 @@ section.honors-container {
         justify-content: center;
 
         position: relative;
+        overflow: hidden;
 
         &.active {
             .honor-container {
