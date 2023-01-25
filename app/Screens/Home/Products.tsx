@@ -37,7 +37,7 @@ const Products: FC = () => {
                     <span>محصولات</span>
                 </span>
             </h2>
-            <div className="products-wrapper"></div>
+            <div className='products-wrapper'></div>
         </section>
     )
 }
