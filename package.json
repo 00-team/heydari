@@ -27,6 +27,7 @@
         "compression-webpack-plugin": "^10.0.0",
         "css-loader": "^6.7.3",
         "css-minimizer-webpack-plugin": "^4.2.2",
+        "firebase-tools": "^11.21.0",
         "html-webpack-plugin": "^5.5.0",
         "mini-css-extract-plugin": "^2.7.2",
         "postcss-loader": "^7.0.2",
