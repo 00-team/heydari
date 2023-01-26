@@ -56,7 +56,7 @@ const About: FC = () => {
                 }
                 return value + 1
             })
-        }, 10000)
+        }, 75000)
 
         return () => clearInterval(inverval)
     }, [])
