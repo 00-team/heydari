@@ -124,8 +124,9 @@
                         .holder {
                             .holder-icon {
                                 svg {
-                                    animation: shake 0.75s ease-in-out forwards;
-                                    @keyframes shake {
+                                    animation: product-icon-shake 0.75s
+                                        ease-in-out forwards;
+                                    @keyframes product-icon-shake {
                                         0%,
                                         100% {
                                             transform: rotate(0deg);
