@@ -68,10 +68,10 @@
     }
     .products-wrapper {
         display: flex;
+        justify-content: space-between;
         flex-wrap: wrap;
 
         width: clamp(0px, 100%, 1400px);
-        height: 500px;
 
         .product-detail-wrapper {
             display: flex;
@@ -284,6 +284,100 @@
                             height: 120%;
                         }
                     }
+                }
+            }
+        }
+        .products-slider {
+            width: clamp(0px, 350px, 60%);
+            aspect-ratio: 1/1;
+
+            display: grid;
+            place-items: center;
+
+            position: relative;
+            isolation: isolate;
+            .product-slider {
+                &:not(.prev, .active, .next) {
+                    position: absolute;
+                    z-index: -1;
+                    opacity: 0;
+                    scale: 0.7;
+                }
+
+                &.prev,
+                &.next {
+                    position: absolute;
+                }
+
+                &.next {
+                    animation: product-next 1.5s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                    @keyframes product-next {
+                        0% {
+                            position: absolute;
+                            z-index: 1;
+                            scale: 1;
+                            translate: 0;
+                        }
+                        50% {
+                            position: absolute;
+                            transform: scale(0.7);
+                            translate: 50% 50%;
+                            z-index: -1;
+                        }
+                        100% {
+                            position: absolute;
+                            transform: scale(0.7);
+                            translate: 50% 50%;
+                            z-index: -1;
+                        }
+                    }
+                }
+                &.active {
+                    animation: product-active 1.5s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                    @keyframes product-active {
+                        0% {
+                            translate: -50% 50%;
+                            scale: 0.7;
+                        }
+                        80% {
+                            position: relative;
+                            translate: 0;
+                        }
+                        100% {
+                            position: relative;
+                            translate: 0;
+                            scale: 1;
+                            z-index: 1;
+                        }
+                    }
+                }
+                &.prev {
+                    animation: product-prev 1.5s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                    @keyframes product-prev {
+                        0% {
+                            z-index: -1;
+                            opacity: 0;
+                            scale: 0.7;
+                        }
+                        80% {
+                            opacity: 1;
+                            translate: -50% 50%;
+                        }
+                        100% {
+                            opacity: 1;
+                            translate: -50% 50%;
+                            scale: 0.7;
+                        }
+                    }
+                }
+
+                img {
+                    width: 100%;
+                    object-fit: cover;
+                    border-radius: 10px;
                 }
             }
         }
