@@ -2,6 +2,8 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
+import { ColorSvg, RulerSvg, WeightSvg } from 'Icons'
+
 import './style/products.scss'
 
 const Products: FC = () => {
@@ -34,10 +36,61 @@ const Products: FC = () => {
                 className={`section_title products-header ${C(isIntersecting)}`}
             >
                 <span className='header-wrapper'>
-                    <span>محصولات</span>
+                    <span>بهترین محصولات</span>
                 </span>
             </h2>
-            <div className='products-wrapper'></div>
+            <div className='products-wrapper'>
+                <div className='product-detail-wrapper'>
+                    <div className='product-name section_title'>
+                        لورم ایپسوم
+                    </div>
+                    <div className='product-details title'>
+                        <div className='product-detail '>
+                            <div className='holder'>
+                                <div className='holder-icon icon'>
+                                    <ColorSvg size={25} />
+                                </div>
+                                <div className='holder-text'>رنگ:</div>
+                            </div>
+                            <div className='data'>نارنجی</div>
+                        </div>
+                        <div className='product-detail'>
+                            <div className='holder'>
+                                <div className='holder-icon icon'>
+                                    <WeightSvg size={25} />
+                                </div>
+                                <div className='holder-text'>وزن:</div>
+                            </div>
+                            <div className='data'>3</div>
+                        </div>
+                        <div className='product-detail'>
+                            <div className='holder'>
+                                <div className='holder-icon icon'>
+                                    <RulerSvg size={25} />
+                                </div>
+                                <div className='holder-text'>طول:</div>
+                            </div>
+                            <div className='data'>60</div>
+                        </div>
+                        <div className='product-detail'>
+                            <div className='holder'>
+                                <div className='holder-icon icon'>
+                                    <RulerSvg
+                                        style={{ rotate: `-90deg` }}
+                                        size={25}
+                                    />
+                                </div>
+                                <div className='holder-text'>عرض:</div>
+                            </div>
+                            <div className='data'>60</div>
+                        </div>
+                    </div>
+                    <button className='product-submit title_small'>
+                        خرید فوری!
+                    </button>
+                </div>
+                <div className='product-slider'></div>
+            </div>
         </section>
     )
 }
