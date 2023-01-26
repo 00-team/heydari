@@ -100,6 +100,7 @@
                     width: 100%;
 
                     font-family: 'iranBold';
+                    cursor: default;
 
                     .holder {
                         display: flex;
@@ -118,10 +119,33 @@
                             }
                         }
                     }
-                    .data {
+
+                    &:hover {
+                        .holder {
+                            .holder-icon {
+                                svg {
+                                    animation: shake 0.75s ease-in-out forwards;
+                                    @keyframes shake {
+                                        0%,
+                                        100% {
+                                            transform: rotate(0deg);
+                                        }
+                                        20%,
+                                        60% {
+                                            transform: rotate(6deg);
+                                        }
+                                        40%,
+                                        80% {
+                                            transform: rotate(-6deg);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
             button {
                 width: 100%;
                 padding: 0.75rem 1rem;
