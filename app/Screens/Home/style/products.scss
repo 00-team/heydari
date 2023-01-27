@@ -85,6 +85,36 @@
             padding: 1rem 2rem;
             border-radius: 15px;
 
+            .product-name-wrapper {
+                width: 100%;
+
+                position: relative;
+                isolation: isolate;
+                overflow: hidden;
+
+                .product-name {
+                    transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+                    &:not(.next, .prev, .active) {
+                        position: absolute;
+                        top: 0;
+                        z-index: -1;
+                        opacity: 0;
+                    }
+                    &.prev,
+                    &.next {
+                        position: absolute;
+                        top: 0;
+                        opacity: 0;
+                    }
+                    &.prev {
+                        translate: 200%;
+                    }
+                    &.next {
+                        translate: -200%;
+                    }
+                }
+            }
+
             .product-details {
                 display: flex;
                 flex-direction: column;
