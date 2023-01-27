@@ -344,11 +344,13 @@
             position: relative;
             isolation: isolate;
             .product-slider {
+                width: 100%;
+
                 &:not(.prev, .active, .next) {
                     position: absolute;
                     z-index: -1;
                     opacity: 0;
-                    scale: 0.7;
+                    scale: 0.6;
                 }
 
                 &.prev,
@@ -368,13 +370,13 @@
                         }
                         50% {
                             position: absolute;
-                            transform: scale(0.7);
+                            transform: scale(0.6);
                             translate: 50% 50%;
                             z-index: -1;
                         }
                         100% {
                             position: absolute;
-                            transform: scale(0.7);
+                            transform: scale(0.6);
                             translate: 50% 50%;
                             z-index: -1;
                         }
@@ -386,7 +388,7 @@
                     @keyframes product-active {
                         0% {
                             translate: -50% 50%;
-                            scale: 0.7;
+                            scale: 0.6;
                         }
                         80% {
                             position: relative;
@@ -407,7 +409,7 @@
                         0% {
                             z-index: -1;
                             opacity: 0;
-                            scale: 0.7;
+                            scale: 0.6;
                         }
                         80% {
                             opacity: 1;
@@ -416,7 +418,7 @@
                         100% {
                             opacity: 1;
                             translate: -50% 50%;
-                            scale: 0.7;
+                            scale: 0.6;
                         }
                     }
                 }
