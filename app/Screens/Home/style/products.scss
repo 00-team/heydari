@@ -73,7 +73,7 @@
 
         width: clamp(0px, 100%, 1400px);
 
-        .product-detail-wrapper {
+        .product-detail-container {
             display: flex;
             flex-direction: column;
             gap: 6vh;
@@ -115,53 +115,79 @@
                 }
             }
 
-            .product-details {
-                display: flex;
-                flex-direction: column;
-                gap: 3vh;
-
-                width: 100%;
-
-                .product-detail {
+            .product-details-wrapper {
+                .product-details {
                     display: flex;
-                    align-items: center;
-                    justify-content: space-between;
+                    flex-direction: column;
+                    gap: 3vh;
 
                     width: 100%;
 
-                    font-family: 'iranBold';
-                    cursor: default;
+                    position: relative;
+                    isolation: isolate;
+                    overflow: hidden;
 
-                    .holder {
+                    .product-detail {
                         display: flex;
                         align-items: center;
-                        gap: 1vw;
+                        justify-content: space-between;
 
-                        opacity: 0.7;
-                    }
+                        width: 100%;
 
-                    &:hover {
+                        font-family: 'iranBold';
+                        cursor: default;
+
+                        transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+
                         .holder {
-                            .holder-icon {
-                                svg {
-                                    animation: product-icon-shake 0.75s
-                                        ease-in-out forwards;
-                                    @keyframes product-icon-shake {
-                                        0%,
-                                        100% {
-                                            transform: rotate(0deg);
-                                        }
-                                        20%,
-                                        60% {
-                                            transform: rotate(6deg);
-                                        }
-                                        40%,
-                                        80% {
-                                            transform: rotate(-6deg);
+                            display: flex;
+                            align-items: center;
+                            gap: 1vw;
+
+                            opacity: 0.7;
+                        }
+
+                        &:hover {
+                            .holder {
+                                .holder-icon {
+                                    svg {
+                                        animation: product-icon-shake 0.75s
+                                            ease-in-out forwards;
+                                        @keyframes product-icon-shake {
+                                            0%,
+                                            100% {
+                                                transform: rotate(0deg);
+                                            }
+                                            20%,
+                                            60% {
+                                                transform: rotate(6deg);
+                                            }
+                                            40%,
+                                            80% {
+                                                transform: rotate(-6deg);
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+
+                        &:not(.next, .prev, .active) {
+                            position: absolute;
+                            top: 0;
+                            z-index: -1;
+                            opacity: 0;
+                        }
+                        &.prev,
+                        &.next {
+                            position: absolute;
+                            opacity: 0;
+                        }
+                        &.prev {
+                            translate: 200%;
+                        }
+                        &.next {
+                            translate: -200%;
                         }
                     }
                 }
