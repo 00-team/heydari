@@ -6,6 +6,12 @@ import { ColorSvg, RulerSvg, SvgProps, WeightSvg } from 'Icons'
 
 import './style/products.scss'
 
+const product_img = require('../../static/products/product.jpg')
+const product_img2 = require('../../static/products/product2.jpg')
+const product_img3 = require('../../static/products/product3.jpg')
+const product_img4 = require('../../static/products/product4.jpg')
+const product_img5 = require('../../static/products/product5.jpg')
+
 interface ProductsModelProps {
     img: string
     name: string
@@ -19,7 +25,7 @@ interface ProductsModelProps {
 
 const DEBUG_PRODCUTS: ProductsModelProps[] = [
     {
-        img: 'https://picsum.photos/1021/960',
+        img: product_img,
         name: 'صندلی اداری مدل 4312',
         details: [
             {
@@ -46,7 +52,7 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
         link: '/',
     },
     {
-        img: 'https://picsum.photos/1022/959',
+        img: product_img2,
         name: 'صندلی اداری مدل 213',
         details: [
             {
@@ -73,7 +79,7 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
         link: '/',
     },
     {
-        img: 'https://picsum.photos/1022/961',
+        img: product_img3,
         name: 'صندلی اداری مدل 321',
         details: [
             {
@@ -100,7 +106,7 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
         link: '/',
     },
     {
-        img: 'https://picsum.photos/1021/963',
+        img: product_img4,
         name: 'صندلی اداری مدل 124',
         details: [
             {
@@ -127,7 +133,7 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
         link: '/',
     },
     {
-        img: 'https://picsum.photos/1024/963',
+        img: product_img5,
         name: 'صندلی اداری مدل 213',
         details: [
             {
@@ -240,7 +246,6 @@ const ProductsWrapper: FC = () => {
                 </div>
                 <div className='product-details-wrapper'>
                     {DEBUG_PRODCUTS.map(({ details }, idx1) => {
-                        console.log(idx1)
                         return (
                             <div key={idx1} className='product-details title'>
                                 {details.map(({ holder, data, Svg }, idx2) => {
