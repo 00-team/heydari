@@ -2,6 +2,12 @@ import React, { FC, useEffect, useState } from 'react'
 
 import './style/about.scss'
 
+const about_img1 = require('../../static/about.jpg')
+const about_img2 = require('../../static/about2.jpg')
+const about_img3 = require('../../static/about3.jpg')
+const about_img4 = require('../../static/about4.jpg')
+const about_img5 = require('../../static/about5.jpg')
+
 const ABOUT_CONTENTS = [
     {
         content: {
@@ -9,7 +15,7 @@ const ABOUT_CONTENTS = [
             description:
                 'صنایع تولیدی حیدری در سال 1357 با هدف تولید مصنوعات پلاستیکی تاسیس گردید و در سال 1364 مجوز فعالیت خود را از اداره کل صنایع استان تهران دریافت نمود',
         },
-        img: 'https://picsum.photos/1023/960',
+        img: about_img1,
     },
     {
         content: {
@@ -17,7 +23,7 @@ const ABOUT_CONTENTS = [
             description:
                 'در سال 1374 با گسترش فعالیتهای تولیدی خود اقدام به تولید و عرضه انواع صندلی ،  نیمکت ، میز و تجهیزات آموزشی و اداری نمود',
         },
-        img: 'https://picsum.photos/1025/960',
+        img: about_img2,
     },
     {
         content: {
@@ -25,7 +31,7 @@ const ABOUT_CONTENTS = [
             description:
                 'در سال 1380 صنایع تولیدی حیدری مجوز تولید محصولات خود را از وزارت صنایع اخذ نمود',
         },
-        img: 'https://picsum.photos/1021/960',
+        img: about_img3,
     },
     {
         content: {
@@ -33,7 +39,7 @@ const ABOUT_CONTENTS = [
             description:
                 ' ما مفتخریم در طول 40 سال فعالیت تولیدی، همواره کیفیت برتر را جهت فراهم نمودن رضایت مشتریان بعنوان هدف اصلی در نظر گرفته و در عرصه تولید ملی در زمینه صندلی آموزشی و نیمکت انتظار و تجهیزات اداری از پیشتازان بوده ایم.',
         },
-        img: 'https://picsum.photos/1023/960',
+        img: about_img4,
     },
     {
         content: {
@@ -41,7 +47,7 @@ const ABOUT_CONTENTS = [
             description:
                 'هدف تولید مصنوعات پلاستیکی تاسیس گردید و در سال 1364 مجوز فعالیت خود را از اداره کل صنایع استان تهران دریافت نمود و در سال 1374 با گسترش فعالیتهای تولیدی خود اقدام به تولید و عرضه انواع صندلی ،  نیمکت ، میز و تجهیزات آموزشی و اداری نمود؛ در سال 1380 ص',
         },
-        img: 'https://picsum.photos/1022/960',
+        img: about_img5,
     },
 ]
 
@@ -56,7 +62,7 @@ const About: FC = () => {
                 }
                 return value + 1
             })
-        }, 75000)
+        }, 7500)
 
         return () => clearInterval(inverval)
     }, [])
