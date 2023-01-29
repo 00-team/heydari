@@ -1,7 +1,5 @@
 .products-container {
-    // debug
-    height: 100vh;
-    //
+    min-height: 150vh;
 
     width: 100%;
 
@@ -12,6 +10,10 @@
     gap: 12vh;
 
     padding: 5vh 7vw;
+
+    @media screen and (min-width: 1440px) {
+        min-height: 100vh;
+    }
 
     .products-header {
         display: flex;
@@ -68,8 +70,11 @@
     }
     .products-wrapper {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         flex-wrap: wrap;
+
+        row-gap: 12vh;
+        column-gap: calc(10vw + 50px);
 
         width: clamp(0px, 100%, 1400px);
 
@@ -78,7 +83,7 @@
             flex-direction: column;
             gap: 6vh;
 
-            width: 50%;
+            width: clamp(0px, 100%, 700px);
 
             color: black;
             background: white;
@@ -94,6 +99,11 @@
 
                 .product-name {
                     transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+
+                    &.center {
+                        text-align: center;
+                    }
+
                     &:not(.next, .prev, .active) {
                         position: absolute;
                         top: 0;
@@ -339,7 +349,6 @@
 
             display: grid;
             align-items: start;
-            place-items: center;
 
             position: relative;
             isolation: isolate;
