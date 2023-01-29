@@ -1,6 +1,6 @@
 {
     "name": "heydari",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "scripts": {
         "start": "webpack serve --config config/webpack/dev.ts",
         "build": "webpack --config config/webpack/build.ts",
@@ -25,6 +25,7 @@
         "@types/webpack-bundle-analyzer": "^4.6.0",
         "autoprefixer": "^10.4.13",
         "compression-webpack-plugin": "^10.0.0",
+        "copy-webpack-plugin": "^11.0.0",
         "css-loader": "^6.7.3",
         "css-minimizer-webpack-plugin": "^4.2.2",
         "firebase-tools": "^11.21.0",
