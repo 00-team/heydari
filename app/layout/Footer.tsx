@@ -38,18 +38,20 @@ const Footer = () => {
                     <div className='footer-content'>
                         <div className='content-socials'>
                             <div className='social icon telegram'>
-                                <TelegramSvg size={35} />
+                                <TelegramSvg size={40} />
                             </div>
                             <div className='social icon whatsapp'>
-                                <WhatsappSvg size={35} />
+                                <WhatsappSvg size={40} />
                             </div>
                             <div className='social icon instagram'>
-                                <InstagramSvg size={35} />
+                                <InstagramSvg size={40} />
                             </div>
                         </div>
                         <div className='content-row-wrapper'>
-                            <div className='row-header title'></div>
-                            <div className='row-option title_smaller'></div>
+                            <div className='row-wrapper'>
+                                <div className='row-header title'></div>
+                                <div className='row-option title_smaller'></div>
+                            </div>
                         </div>
                     </div>
                     <div className='footer-logo title_small'>
