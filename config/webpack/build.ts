@@ -1,4 +1,5 @@
 import Compression from 'compression-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizer from 'css-minimizer-webpack-plugin'
 import HtmlPlugin from 'html-webpack-plugin'
 import { Configuration } from 'webpack'
@@ -26,6 +27,11 @@ const BuildConfig: Configuration = {
         new CssExtract(),
         new Compression({ exclude: /\.(html)$/ }),
         Html,
+        new CopyPlugin({
+            patterns: [
+                { from: resolve(APP_DIR, 'static/favicon.ico'), to: DIST_DIR },
+            ],
+        }),
     ],
     optimization: {
         emitOnErrors: false,
