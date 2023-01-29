@@ -4,6 +4,8 @@ import { CallSvg, LocationSvg, SvgProps } from 'Icons'
 
 import './style/footer.scss'
 
+const logo = require('../static/logo.png')
+
 const Footer = () => {
     return (
         <footer className='footer-container'>
@@ -26,8 +28,16 @@ const Footer = () => {
                     />
                 </div>
                 <div className='footer-content-wrapper'>
-                    <div className='footer-logo'></div>
-                    <div className='footer-content'></div>
+                    <div className='footer-content'>
+                        <div className='content-row'>
+                            <div className='row-header title'></div>
+                            <div className='row-option title_smaller'></div>
+                        </div>
+                    </div>
+                    <div className='footer-logo title_small'>
+                        <img className='logo-img' src={logo} />
+                        <div className='logo-name'>صنایع تولیدی حیدری</div>
+                    </div>
                 </div>
             </div>
         </footer>
