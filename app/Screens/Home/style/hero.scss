@@ -16,6 +16,7 @@ section.hero-container {
         display: flex;
         align-items: center;
         justify-content: center;
+        row-gap: calc(5vh + 20px);
         flex-wrap: wrap;
 
         .hero-img {
