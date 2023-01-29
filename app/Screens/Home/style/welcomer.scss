@@ -38,6 +38,7 @@
                 .word {
                     display: inline-block;
                     margin: 0 0.5vmin;
+                    opacity: 0;
 
                     font-size: clamp(4.5rem, 5.7vw + 4.5rem, 5.7rem);
 
