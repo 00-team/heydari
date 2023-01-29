@@ -162,7 +162,7 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
 ]
 
 // BASE_PRODUCT_DETAIL_DELAY
-const BPDD = 0.25
+const BPDD = 0.2
 
 const Products: FC = () => {
     const LazyRef = useRef<HTMLDivElement>(null)
