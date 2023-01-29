@@ -210,6 +210,12 @@ footer.footer-container {
                         }
                     }
                 }
+                .content-row-wrapper {
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    row-gap: calc(2.5vh + 5px);
+                }
             }
         }
     }
