@@ -8,6 +8,7 @@ import {
     TelegramSvg,
     WhatsappSvg,
 } from 'Icons'
+import { Link } from 'react-router-dom'
 
 import './style/footer.scss'
 
@@ -49,8 +50,69 @@ const Footer = () => {
                         </div>
                         <div className='content-row-wrapper'>
                             <div className='row-wrapper'>
-                                <div className='row-header title'></div>
-                                <div className='row-option title_smaller'></div>
+                                <h2 className='row-header title'>صفحه اصلی</h2>
+                                <Link
+                                    to={'/#about'}
+                                    className='row-option title_smaller'
+                                >
+                                    درباره ما
+                                </Link>
+                                <Link
+                                    to={''}
+                                    className='row-option title_smaller'
+                                >
+                                    افتخارات ما
+                                </Link>
+                                <Link
+                                    to={'/#products'}
+                                    className='row-option title_smaller'
+                                >
+                                    برترین محصولات
+                                </Link>
+                            </div>
+                            <div className='row-wrapper'>
+                                <h2 className='row-header title'>محصولات</h2>
+                                <Link
+                                    to={'/#products'}
+                                    className='row-option title_smaller'
+                                >
+                                    برترین محصولات
+                                </Link>
+                                <Link
+                                    to={'/products'}
+                                    className='row-option title_smaller'
+                                >
+                                    همه محصولات
+                                </Link>
+                            </div>
+                            <div className='row-wrapper'>
+                                <h2 className='row-header title'>
+                                    ارتباط با شرکت
+                                </h2>
+                                <Link
+                                    to={'/contact'}
+                                    className='row-option title_smaller'
+                                >
+                                    ارتباط با ما
+                                </Link>
+                                <Link
+                                    to={'/contact'}
+                                    className='row-option title_smaller'
+                                >
+                                    تلفن مستقیم
+                                </Link>
+                                <Link
+                                    to={'/contact'}
+                                    className='row-option title_smaller'
+                                >
+                                    فکس
+                                </Link>
+                                <Link
+                                    to={'/contact'}
+                                    className='row-option title_smaller'
+                                >
+                                    آدرس شرکت
+                                </Link>
                             </div>
                         </div>
                     </div>
