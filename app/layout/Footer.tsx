@@ -7,22 +7,28 @@ import './style/footer.scss'
 const Footer = () => {
     return (
         <footer className='footer-container'>
-            <div className='footer-header'>
-                <FooterHeaderRow
-                    Svg={LocationSvg}
-                    data='یوسف اباد، پلاک 21، زنگ 5'
-                    holder='آدرس'
-                />
-                <FooterHeaderRow
-                    Svg={CallSvg}
-                    data='09120974957'
-                    holder='شماره تماس'
-                />
-                <FooterHeaderRow
-                    Svg={CallSvg}
-                    data='09120974957'
-                    holder='شماره تماس'
-                />
+            <div className='footer-wrapper'>
+                <div className='footer-header'>
+                    <FooterHeaderRow
+                        Svg={LocationSvg}
+                        data='یوسف اباد، پلاک 21، زنگ 5'
+                        holder='آدرس'
+                    />
+                    <FooterHeaderRow
+                        Svg={CallSvg}
+                        data='09120974957'
+                        holder='شماره تماس'
+                    />
+                    <FooterHeaderRow
+                        Svg={CallSvg}
+                        data='09120974957'
+                        holder='شماره تماس'
+                    />
+                </div>
+                <div className='footer-content-wrapper'>
+                    <div className='footer-logo'></div>
+                    <div className='footer-content'></div>
+                </div>
             </div>
         </footer>
     )
