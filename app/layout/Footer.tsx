@@ -1,6 +1,13 @@
 import React, { FC } from 'react'
 
-import { CallSvg, LocationSvg, SvgProps } from 'Icons'
+import {
+    CallSvg,
+    InstagramSvg,
+    LocationSvg,
+    SvgProps,
+    TelegramSvg,
+    WhatsappSvg,
+} from 'Icons'
 
 import './style/footer.scss'
 
@@ -29,7 +36,18 @@ const Footer = () => {
                 </div>
                 <div className='footer-content-wrapper'>
                     <div className='footer-content'>
-                        <div className='content-row'>
+                        <div className='content-socials'>
+                            <div className='social icon telegram'>
+                                <TelegramSvg size={35} />
+                            </div>
+                            <div className='social icon whatsapp'>
+                                <WhatsappSvg size={35} />
+                            </div>
+                            <div className='social icon instagram'>
+                                <InstagramSvg size={35} />
+                            </div>
+                        </div>
+                        <div className='content-row-wrapper'>
                             <div className='row-header title'></div>
                             <div className='row-option title_smaller'></div>
                         </div>
