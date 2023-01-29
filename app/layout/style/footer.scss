@@ -125,6 +125,51 @@ footer.footer-container {
 
                         cursor: pointer;
 
+                        position: relative;
+                        isolation: isolate;
+                        overflow: hidden;
+
+                        &::before {
+                            content: '';
+                            position: absolute;
+
+                            width: 0;
+                            height: 0;
+                            border-radius: 100vmax;
+                            background-color: white;
+
+                            z-index: -1;
+
+                            transition: all 0.5s
+                                cubic-bezier(0.45, 0.02, 0.09, 0.98);
+                        }
+                        &:hover {
+                            &.telegram {
+                                svg {
+                                    color: #08a0e9;
+                                }
+                            }
+                            &.whatsapp {
+                                svg {
+                                    color: #1dee40;
+                                }
+                            }
+                            &.instagram {
+                                svg {
+                                    color: #bb2d93;
+                                }
+                            }
+                            &::before {
+                                width: 90%;
+                                height: 90%;
+                            }
+                        }
+
+                        svg {
+                            transition: color 0.5s
+                                cubic-bezier(0.45, 0.02, 0.09, 0.98);
+                        }
+
                         &.telegram {
                             background: linear-gradient(
                                     to bottom,
