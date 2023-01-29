@@ -235,9 +235,11 @@ const ProductsWrapper: FC = () => {
                         return (
                             <div
                                 key={index}
-                                className={`product-name section_title ${returnClass(
-                                    index
-                                )}`}
+                                className={`product-name ${
+                                    innerWidth <= 1024
+                                        ? 'title center'
+                                        : 'section_title'
+                                } ${returnClass(index)}`}
                             >
                                 {name}
                             </div>
