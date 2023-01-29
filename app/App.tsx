@@ -11,6 +11,7 @@ import './style/base.scss'
 import './style/font/imports.scss'
 
 const Home = loadable(() => import('Screens/Home'))
+const Footer = loadable(() => import('layout/Footer'))
 
 const App: FC = () => {
     useEffect(() => {
@@ -19,6 +20,7 @@ const App: FC = () => {
     return (
         <>
             <MainContent />
+            <Footer />
         </>
     )
 }
