@@ -6,6 +6,10 @@ export * from './products/Height'
 export * from './footer/Call'
 export * from './footer/Location'
 
+export * from './socials/Telegram'
+export * from './socials/Whatsapp'
+export * from './socials/Instagram'
+
 export interface SvgProps {
     size: number
     style?: React.CSSProperties
