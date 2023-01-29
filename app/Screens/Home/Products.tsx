@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
-import { ColorSvg, RulerSvg, SvgProps, WeightSvg } from 'Icons'
+import { ColorSvg, HeightSvg, SvgProps, WeightSvg, WidthSvg } from 'Icons'
 
 import './style/products.scss'
 
@@ -35,12 +35,12 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
             },
             {
                 holder: 'طول',
-                Svg: RulerSvg,
+                Svg: WidthSvg,
                 data: '123',
             },
             {
                 holder: 'عرض',
-                Svg: RulerSvg,
+                Svg: HeightSvg,
                 data: '33',
             },
             {
@@ -62,12 +62,12 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
             },
             {
                 holder: 'طول',
-                Svg: RulerSvg,
+                Svg: HeightSvg,
                 data: '132',
             },
             {
                 holder: 'عرض',
-                Svg: RulerSvg,
+                Svg: WidthSvg,
                 data: '31',
             },
             {
@@ -89,12 +89,12 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
             },
             {
                 holder: 'طول',
-                Svg: RulerSvg,
+                Svg: HeightSvg,
                 data: '142',
             },
             {
                 holder: 'عرض',
-                Svg: RulerSvg,
+                Svg: WidthSvg,
                 data: '41',
             },
             {
@@ -116,12 +116,12 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
             },
             {
                 holder: 'طول',
-                Svg: RulerSvg,
+                Svg: HeightSvg,
                 data: '150',
             },
             {
                 holder: 'عرض',
-                Svg: RulerSvg,
+                Svg: WidthSvg,
                 data: '20',
             },
             {
@@ -143,12 +143,12 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
             },
             {
                 holder: 'طول',
-                Svg: RulerSvg,
+                Svg: HeightSvg,
                 data: '100',
             },
             {
                 holder: 'عرض',
-                Svg: RulerSvg,
+                Svg: WidthSvg,
                 data: '30',
             },
             {
