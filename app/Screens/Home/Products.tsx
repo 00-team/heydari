@@ -189,7 +189,7 @@ const Products: FC = () => {
         }
     }, [LazyRef])
     return (
-        <section ref={LazyRef} className='products-container'>
+        <section id='products' ref={LazyRef} className='products-container'>
             <h2
                 className={`section_title products-header ${C(isIntersecting)}`}
             >
