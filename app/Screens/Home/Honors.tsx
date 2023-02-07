@@ -6,43 +6,55 @@ import Confetti from 'react-confetti'
 
 import './style/honors.scss'
 
-const HONOR_IMG = require('../../static/honor.png')
+const HONOR_IMG1 = require('../../static/honor1.png')
+const HONOR_IMG2 = require('../../static/honor2.png')
+const HONOR_IMG3 = require('../../static/honor3.png')
+const HONOR_IMG4 = require('../../static/honor4.png')
+const HONOR_IMG5 = require('../../static/honor5.png')
+const HONOR_IMG6 = require('../../static/honor6.png')
+const HONOR_IMG7 = require('../../static/honor7.png')
+const HONOR_IMG8 = require('../../static/honor8.png')
 
 const DEBUG_HONORS = [
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG1,
     },
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG2,
     },
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG3,
     },
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG4,
     },
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG5,
     },
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG6,
     },
     {
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG,
+        img: HONOR_IMG7,
+    },
+    {
+        title: 'اسم جام',
+        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        img: HONOR_IMG8,
     },
 ]
 
@@ -50,7 +62,6 @@ const Honors: FC = () => {
     const LazyRef = useRef<HTMLDivElement>(null)
     const [isIntersecting, setisIntersecting] = useState(false)
     const [ConfettiEnd, setConfettiEnd] = useState(false)
-    
 
     useEffect(() => {
         if (LazyRef.current && !isIntersecting) {
@@ -97,7 +108,7 @@ const Honors: FC = () => {
                     recycle={!ConfettiEnd}
                     numberOfPieces={innerWidth <= 1024 ? 100 : 200}
                     gravity={innerWidth <= 1024 ? 0.3 : 0.1}
-                    style={{ zIndex: 5,position:"fixed" }}
+                    style={{ zIndex: 5, position: 'fixed' }}
                 />
             )}
             <HonorsWrapper isIntersecting={isIntersecting} />
