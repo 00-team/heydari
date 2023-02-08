@@ -282,8 +282,10 @@ section.honors-container {
 
                 .cup-img {
                     position: absolute;
+
+                    width: 80%;
                     height: 100%;
-                    object-fit: cover;
+                    object-fit: contain;
 
                     opacity: 0;
                     transform: translateY(100%);
