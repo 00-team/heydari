@@ -6,14 +6,13 @@ import Confetti from 'react-confetti'
 
 import './style/honors.scss'
 
-const HONOR_IMG1 = require('../../static/honor1.png')
-const HONOR_IMG2 = require('../../static/honor2.png')
-const HONOR_IMG3 = require('../../static/honor3.png')
-const HONOR_IMG4 = require('../../static/honor4.png')
-const HONOR_IMG5 = require('../../static/honor5.png')
-const HONOR_IMG6 = require('../../static/honor6.png')
-const HONOR_IMG7 = require('../../static/honor7.png')
-const HONOR_IMG8 = require('../../static/honor8.png')
+const HONOR_IMG1 = require('../../static/honors/honor1.png')
+const HONOR_IMG2 = require('../../static/honors/honor2.png')
+const HONOR_IMG3 = require('../../static/honors/honor3.png')
+const HONOR_IMG4 = require('../../static/honors/honor4.png')
+const HONOR_IMG5 = require('../../static/honors/honor5.png')
+const HONOR_IMG6 = require('../../static/honors/honor6.png')
+const HONOR_IMG7 = require('../../static/honors/honor7.png')
 
 const DEBUG_HONORS = [
     {
@@ -50,11 +49,6 @@ const DEBUG_HONORS = [
         title: 'اسم جام',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
         img: HONOR_IMG7,
-    },
-    {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG8,
     },
 ]
 
