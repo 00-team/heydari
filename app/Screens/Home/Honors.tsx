@@ -16,17 +16,17 @@ const HONOR_IMG7 = require('../../static/honors/honor7.png')
 
 const DEBUG_HONORS = [
     {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        title: 'برند برتر',
+        description: 'نخستین نمایشگاه تخصصی برندهای برتر مبلمان اداری و گیشه',
         img: HONOR_IMG1,
     },
     {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        title: 'نمایشگاه بین المللی مبلمان',
+        description: 'چهارمین نمایشگاه بین المللی مبلمان اداری',
         img: HONOR_IMG2,
     },
     {
-        title: 'اسم جام',
+        title: 'صنایع مبل و دکوراسیون خانگی',
         description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
         img: HONOR_IMG3,
     },
