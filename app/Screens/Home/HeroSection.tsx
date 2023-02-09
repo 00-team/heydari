@@ -40,12 +40,14 @@ const HeroSection: FC = () => {
                     </div>
 
                     <div className='cta-wrapper'>
-                        <StickyButton className='main hero-button'>
-                            محصولات
-                        </StickyButton>
-                        <button className='sec hero-button'>
-                            ارتباط با ما{' '}
-                        </button>
+                        <a href='#products'>
+                            <StickyButton className='main hero-button'>
+                                محصولات
+                            </StickyButton>
+                        </a>
+                        <a href='#about' className='sec hero-button'>
+                            درباره ما
+                        </a>
                     </div>
                 </div>
                 <img className='hero-img' src={heroImg} alt='' />
