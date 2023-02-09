@@ -1,7 +1,7 @@
 section.honors-container {
     width: 100%;
     // debug
-    min-height: 85vh;
+    min-height: 100vh;
     //
 
     display: flex;
@@ -9,6 +9,8 @@ section.honors-container {
     justify-content: flex-start;
     flex-direction: column;
     gap: 12vh;
+
+    position: relative;
 
     .honor-header {
         overflow: hidden;
@@ -159,7 +161,7 @@ section.honors-container {
             flex-direction: column;
             align-items: center;
 
-            height: clamp(0px, 60%, 500px);
+            width: clamp(0px, 70%, 500px);
             aspect-ratio: 1/1.1;
 
             &:not(.prev, .active, .next) {
