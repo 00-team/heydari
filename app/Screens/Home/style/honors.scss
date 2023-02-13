@@ -1,8 +1,5 @@
 section.honors-container {
     width: 100%;
-    // debug
-    min-height: 100vh;
-    //
 
     display: flex;
     align-items: center;
@@ -108,6 +105,7 @@ section.honors-container {
                     }
                 }
                 .honor-content {
+                    height: clamp(100px, 100%, 130px);
                     .honor-name {
                         span {
                             animation: honor-name-fadein 1s 1s ease-in-out
@@ -144,7 +142,7 @@ section.honors-container {
 
                         @keyframes honor-description-fadein {
                             from {
-                                transform: translateY(200%);
+                                transform: translateY(300%);
                             }
                             to {
                                 transform: translateY(0);
@@ -375,7 +373,7 @@ section.honors-container {
                     text-align: center;
                     width: 80%;
 
-                    transform: translateY(200%);
+                    transform: translateY(300%);
                     overflow: hidden;
 
                     span {
