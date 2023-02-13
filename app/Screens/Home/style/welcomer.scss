@@ -10,6 +10,8 @@
     align-items: center;
     justify-content: center;
 
+    will-change: transform;
+
     animation: welcomer-slideOut 0.7s 4.5s cubic-bezier(0.45, 0.02, 0.09, 0.98)
         forwards;
 
@@ -40,8 +42,6 @@
                     margin: 0 0.5vmin;
                     opacity: 0;
 
-                    font-size: clamp(4.5rem, 5.7vw + 4.5rem, 5.7rem);
-
                     transform: translateY(100%);
 
                     animation: fadein 6s ease-in-out forwards;
@@ -71,6 +71,12 @@
                             opacity: 0;
                         }
                     }
+                }
+
+                &.ltr {
+                    direction: ltr;
+
+                    font-size: clamp(4.5rem, 5.7vw + 4.5rem, 5.7rem);
 
                     @media screen and (max-width: 1024px) {
                         font-size: clamp(2.7rem, 3.9vw + 2.7rem, 3.9rem);
