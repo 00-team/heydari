@@ -7,8 +7,27 @@ const Welcomer: FC = () => {
         <div className='welcomer title'>
             <div className='welcomer-wrapper'>
                 <span>
-                    <div className='welcomer-motto'>
-                        {'اولین نیستیم ولی تلاش میکنیم بهترین باشیم.'
+                    <div className='welcomer-motto ltr'>
+                        {'NOT THE FIRST, BUT THE BEST'
+                            .split(' ')
+                            .map((word, index) => {
+                                return (
+                                    <span
+                                        style={{
+                                            animationDelay: `${index * 150}ms`,
+                                        }}
+                                        className='word'
+                                        key={index}
+                                    >
+                                        {word}
+                                    </span>
+                                )
+                            })}
+                    </div>
+                </span>
+                <span>
+                    <div className='welcomer-motto title_hero'>
+                        {'اولین نیستیم ولی تلاش میکنیم بهترین باشیم'
                             .split(' ')
                             .map((word, index) => {
                                 return (
