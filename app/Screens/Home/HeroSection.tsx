@@ -34,14 +34,15 @@ const HeroSection: FC = () => {
                         <span className='section_title'>حیدری</span>
                     </div>
                     <div className='title_smaller detail'>
-                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت
-                        چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون
-                        هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت
+                        ما مفتخریم در طول 40 سال فعالیت تولیدی، همواره کیفیت
+                        برتر را جهت فراهم نمودن رضایت مشتریان بعنوان هدف اصلی در
+                        نظر گرفته و در عرصه تولید ملی در زمینه صندلی آموزشی و
+                        نیمکت انتظار و تجهیزات اداری از پیشتازان بوده ایم.{' '}
                     </div>
 
                     <div className='cta-wrapper'>
                         <a href='#products'>
-                            <StickyButton className='main hero-button'>
+                            <StickyButton className='main hero-button title_smaller'>
                                 محصولات
                             </StickyButton>
                         </a>
