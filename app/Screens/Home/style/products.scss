@@ -71,9 +71,9 @@
     .products-wrapper {
         display: flex;
         justify-content: center;
-        flex-wrap: wrap;
+        flex-wrap: wrap-reverse;
 
-        row-gap: 12vh;
+        row-gap: calc(17vh + 25px);
         column-gap: calc(10vw + 50px);
 
         width: clamp(0px, 100%, 1400px);
