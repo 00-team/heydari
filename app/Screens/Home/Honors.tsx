@@ -12,7 +12,6 @@ const HONOR_IMG3 = require('../../static/honors/honor3.png')
 const HONOR_IMG4 = require('../../static/honors/honor4.png')
 const HONOR_IMG5 = require('../../static/honors/honor5.png')
 const HONOR_IMG6 = require('../../static/honors/honor6.png')
-const HONOR_IMG7 = require('../../static/honors/honor7.png')
 
 const DEBUG_HONORS = [
     {
@@ -22,33 +21,32 @@ const DEBUG_HONORS = [
     },
     {
         title: 'نمایشگاه بین المللی مبلمان',
-        description: 'چهارمین نمایشگاه بین المللی مبلمان اداری',
+        description: 'تندیس و لوح تقدیر در هفتمین نمایشگاه تخصصی مبلمان',
         img: HONOR_IMG2,
     },
     {
         title: 'صنایع مبل و دکوراسیون خانگی',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        description:
+            ' تندیس و لوح تقدیر در چهارمین نمایشگاه بین المللی مبلمان اداری',
         img: HONOR_IMG3,
     },
     {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        title: 'لوح یادبود',
+        description:
+            ' تندیس و لوح تقدیر در هفتمین نمایشگاه تخصصی صنایع مبل و دکوراسیون داخلی',
         img: HONOR_IMG4,
     },
     {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        title: 'لوح یادبود ',
+        description:
+            ' تندیس و لوح تقدیر در شانزدهمین نمایشگاه بین المللی مبلمان منزل و اداری',
         img: HONOR_IMG5,
     },
     {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
+        title: 'لوح یادبود ',
+        description:
+            ' تندیس و لوح تقدیر در نونزدهمین نمایشگاه بین المللی مبلمان منزل و اداری Hofex2010',
         img: HONOR_IMG6,
-    },
-    {
-        title: 'اسم جام',
-        description: 'تولیدکنندگان و صادرکنندگان مبلمان منزل و اداری Hofex2006',
-        img: HONOR_IMG7,
     },
 ]
 
@@ -153,7 +151,7 @@ const HonorsWrapper: FC<HonorsWrapperProps> = ({ isIntersecting }) => {
                             <div className='honor-name title'>
                                 <span>{title} </span>
                             </div>
-                            <div className='honor-description description'>
+                            <div className='honor-description title_smaller'>
                                 <span>{description}</span>
                             </div>
                         </div>
