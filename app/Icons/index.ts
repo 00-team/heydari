@@ -5,6 +5,7 @@ export * from './products/Height'
 
 export * from './footer/Call'
 export * from './footer/Location'
+export * from './footer/Fax'
 
 export * from './socials/Telegram'
 export * from './socials/Whatsapp'
