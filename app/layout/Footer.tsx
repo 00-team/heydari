@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 
 import {
     CallSvg,
+    FaxSvg,
     InstagramSvg,
     LocationSvg,
     SvgProps,
@@ -30,9 +31,9 @@ const Footer = () => {
                         holder='شماره تماس'
                     />
                     <FooterHeaderRow
-                        Svg={CallSvg}
-                        data='09120974957'
-                        holder='شماره تماس'
+                        Svg={FaxSvg}
+                        data='02188359411'
+                        holder='شماره فکس'
                     />
                 </div>
                 <div className='footer-content-wrapper'>
