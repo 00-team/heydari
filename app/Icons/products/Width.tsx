@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 
 import { SvgProps } from 'Icons'
 
-export const WidthSvg: FC<SvgProps> = ({ size, style }) => {
+export const WidthSvg: FC<SvgProps> = ({ size, ...attr }) => {
     return (
         <svg
             stroke='currentColor'
@@ -13,7 +13,7 @@ export const WidthSvg: FC<SvgProps> = ({ size, style }) => {
             width={size}
             xmlns='http://www.w3.org/2000/svg'
             style={{
-                ...style,
+                ...attr.style,
                 rotate: '-90deg',
             }}
         >
