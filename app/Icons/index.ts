@@ -12,6 +12,9 @@ export * from './socials/Whatsapp'
 export * from './socials/Instagram'
 
 export * from './models/Arrow'
+export * from './models/Home'
+export * from './models/Chair'
+export * from './models/Company'
 
 export interface SvgProps {
     size: number
