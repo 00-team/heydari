@@ -1,2 +1,2 @@
 export * from './Alert'
-export * from './common/StickyButton'
+export * from './common/Buttons'
