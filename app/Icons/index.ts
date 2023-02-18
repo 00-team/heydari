@@ -11,6 +11,8 @@ export * from './socials/Telegram'
 export * from './socials/Whatsapp'
 export * from './socials/Instagram'
 
+export * from './models/Arrow'
+
 export interface SvgProps {
     size: number
     style?: React.CSSProperties
