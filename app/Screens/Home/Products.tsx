@@ -4,7 +4,7 @@ import { C } from '@00-team/utils'
 
 import { ColorSvg, HeightSvg, SvgProps, WeightSvg, WidthSvg } from 'Icons'
 
-import ButtonArrow from 'components/common/ButtonArrow'
+import { ButtonArrow } from 'components'
 
 import './style/products.scss'
 
