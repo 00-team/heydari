@@ -5,7 +5,6 @@ import {
     FaxSvg,
     InstagramSvg,
     LocationSvg,
-    SvgProps,
     TelegramSvg,
     WhatsappSvg,
 } from 'Icons'
@@ -128,7 +127,7 @@ const Footer = () => {
 }
 
 interface FooterHeaderRow {
-    Svg: React.FC<SvgProps>
+    Svg: Icon
     holder: string
     data: string
 }
