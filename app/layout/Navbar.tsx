@@ -1,7 +1,23 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import './style/navbar.scss'
 
 export const Navbar: FC = () => {
-    return <nav className='nav-container'></nav>
+    const [Inner, setInner] = useState(innerWidth)
+
+    useEffect(() => {
+        window.onresize = () => {
+            setInner(innerWidth)
+        }
+    }, [])
+
+    return <>{Inner >= 1024 ? <BigNav /> : <SmallNav />}</>
+}
+
+const BigNav: FC = () => {
+    return <nav className='big-nav-container'></nav>
+}
+
+const SmallNav: FC = () => {
+    return <nav className='small-nav-container'></nav>
 }
