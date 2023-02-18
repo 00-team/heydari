@@ -4,6 +4,8 @@ import { C } from '@00-team/utils'
 
 import { ColorSvg, HeightSvg, SvgProps, WeightSvg, WidthSvg } from 'Icons'
 
+import ButtonArrow from 'components/common/ButtonArrow'
+
 import './style/products.scss'
 
 const product_img = require('../../static/products/product.jpg')
@@ -198,6 +200,9 @@ const Products: FC = () => {
                 </span>
             </h2>
             <ProductsWrapper />
+            <ButtonArrow classname='title_small' link='/products'>
+                همه محصولات
+            </ButtonArrow>
         </section>
     )
 }
