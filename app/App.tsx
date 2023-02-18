@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react'
 
-import loadable from '@loadable/component'
+import Home from 'Screens/Home'
+import { Footer, Navbar } from 'layout'
 import {
     Route,
     /* Route */
@@ -10,15 +11,14 @@ import {
 import './style/base.scss'
 import './style/font/imports.scss'
 
-const Home = loadable(() => import('Screens/Home'))
-const Footer = loadable(() => import('layout/Footer'))
-
 const App: FC = () => {
     useEffect(() => {
         window.history.scrollRestoration = 'manual'
     }, [])
+
     return (
         <>
+            <Navbar />
             <MainContent />
             <Footer />
         </>
