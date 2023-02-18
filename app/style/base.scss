@@ -112,3 +112,10 @@ span.logo-text {
     display: grid;
     place-items: center;
 }
+
+// reset
+a {
+    color: unset;
+    text-decoration: none;
+    font: inherit;
+}
