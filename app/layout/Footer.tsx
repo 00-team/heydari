@@ -14,7 +14,7 @@ import './style/footer.scss'
 
 const logo = require('../static/logo.png')
 
-const Footer = () => {
+export const Footer = () => {
     return (
         <footer className='footer-container'>
             <div className='footer-wrapper'>
@@ -147,5 +147,3 @@ const FooterHeaderRow: FC<FooterHeaderRow> = ({ Svg, data, holder }) => {
         </div>
     )
 }
-
-export default Footer
