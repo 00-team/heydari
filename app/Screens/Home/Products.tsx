@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { C } from '@00-team/utils'
 
 import { ColorSvg, HeightSvg, SvgProps, WeightSvg, WidthSvg } from 'Icons'
+import { Link } from 'react-router-dom'
 
 import { ButtonArrow } from 'components'
 
@@ -285,9 +286,9 @@ const ProductsWrapper: FC = () => {
                     })}
                 </div>
 
-                <button className='product-submit title_small'>
+                <Link to={'/product'} className='product-submit title_small'>
                     خرید فوری!
-                </button>
+                </Link>
             </div>
             <div className='products-slider'>
                 {DEBUG_PRODCUTS.map(({ img }, idx0) => {
