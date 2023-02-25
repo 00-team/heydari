@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react'
 
 import Home from 'Screens/Home'
+import Product from 'Screens/Product'
 import { Footer, Navbar } from 'layout'
 import {
     Route,
@@ -29,6 +30,7 @@ const MainContent: FC = () => {
     return (
         <Routes>
             <Route index element={<Home />} />
+            <Route path='/product' element={<Product />} />
         </Routes>
     )
 }
