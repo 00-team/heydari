@@ -53,7 +53,7 @@ const BigNav: FC = () => {
                         </div>
                         <div className='holder'>ارتباط با ما</div>
                     </Link>
-                    <Link to={'/'} className='nav-link title_small'>
+                    <Link to={'/about'} className='nav-link title_small'>
                         <div className='icon'>
                             <CompanySvg size={25} />
                         </div>
