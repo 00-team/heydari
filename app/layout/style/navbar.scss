@@ -36,6 +36,8 @@
     }
 
     &.active {
+        box-shadow: 0px 25px 50px -30px black;
+
         &::after {
             animation: nav-slidein 0.5s cubic-bezier(0.45, 0.02, 0.09, 0.98)
                 forwards;
