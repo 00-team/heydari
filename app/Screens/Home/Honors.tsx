@@ -6,12 +6,12 @@ import Confetti from 'react-confetti'
 
 import './style/honors.scss'
 
-const HONOR_IMG1 = require('../../static/honors/honor1.png')
-const HONOR_IMG2 = require('../../static/honors/honor2.png')
-const HONOR_IMG3 = require('../../static/honors/honor3.png')
-const HONOR_IMG4 = require('../../static/honors/honor4.png')
-const HONOR_IMG5 = require('../../static/honors/honor5.png')
-const HONOR_IMG6 = require('../../static/honors/honor6.png')
+const HONOR_IMG1 = require('../../static/home/honors/honor1.png')
+const HONOR_IMG2 = require('../../static/home/honors/honor2.png')
+const HONOR_IMG3 = require('../../static/home/honors/honor3.png')
+const HONOR_IMG4 = require('../../static/home/honors/honor4.png')
+const HONOR_IMG5 = require('../../static/home/honors/honor5.png')
+const HONOR_IMG6 = require('../../static/home/honors/honor6.png')
 
 const DEBUG_HONORS = [
     {
