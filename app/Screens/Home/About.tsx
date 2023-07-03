@@ -2,11 +2,11 @@ import React, { FC, useEffect, useState } from 'react'
 
 import './style/about.scss'
 
-const about_img1 = require('../../static/about/about.jpg')
-const about_img2 = require('../../static/about/about2.jpg')
-const about_img3 = require('../../static/about/about3.jpg')
-const about_img4 = require('../../static/about/about4.jpg')
-const about_img5 = require('../../static/about/about5.jpg')
+const about_img1 = require('../../static/home/about/about.jpg')
+const about_img2 = require('../../static/home/about/about2.jpg')
+const about_img3 = require('../../static/home/about/about3.jpg')
+const about_img4 = require('../../static/home/about/about4.jpg')
+const about_img5 = require('../../static/home/about/about5.jpg')
 
 const ABOUT_CONTENTS = [
     {
