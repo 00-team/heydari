@@ -52,7 +52,7 @@ export const Footer = () => {
                             <div className='row-wrapper'>
                                 <h2 className='row-header title'>صفحه اصلی</h2>
                                 <Link
-                                    to={'/#about'}
+                                    to={'/about'}
                                     className='row-option title_smaller'
                                 >
                                     درباره ما
