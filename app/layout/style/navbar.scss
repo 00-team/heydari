@@ -30,7 +30,7 @@
                 transform: translateY(0);
             }
             to {
-                transform: translateY(-200%);
+                transform: translateY(-100%);
             }
         }
     }
@@ -42,7 +42,7 @@
 
             @keyframes nav-slidein {
                 from {
-                    transform: translateY(100%);
+                    transform: translateY(-100%);
                 }
                 to {
                     transform: translateY(0);
