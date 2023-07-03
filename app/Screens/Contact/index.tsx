@@ -4,7 +4,7 @@ import { FaxSvg, PhoneSvg } from 'Icons'
 
 import './style/contact.scss'
 
-const img = require('../../static/contactPage/one.png')
+const img = require('../../static/contact/bg.png')
 
 const Contact: FC = () => {
     return (
