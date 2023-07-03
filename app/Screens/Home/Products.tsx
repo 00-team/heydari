@@ -9,11 +9,11 @@ import { ButtonArrow } from 'components'
 
 import './style/products.scss'
 
-const product_img = require('../../static/products/product.jpg')
-const product_img2 = require('../../static/products/product2.jpg')
-const product_img3 = require('../../static/products/product3.jpg')
-const product_img4 = require('../../static/products/product4.jpg')
-const product_img5 = require('../../static/products/product5.jpg')
+const product_img = require('../../static/home/products/product.jpg')
+const product_img2 = require('../../static/home/products/product2.jpg')
+const product_img3 = require('../../static/home/products/product3.jpg')
+const product_img4 = require('../../static/home/products/product4.jpg')
+const product_img5 = require('../../static/home/products/product5.jpg')
 
 interface ProductsModelProps {
     img: string
