@@ -4,9 +4,18 @@ import { FaxSvg, PhoneSvg } from 'Icons'
 
 import './style/contactus.scss'
 
+const img = require('../../static/contactPage/one.png')
+
 const ContactUs: FC = () => {
     return (
         <div className='contact-container'>
+            <img
+                className='contact-img'
+                src={img}
+                decoding={'async'}
+                loading={'lazy'}
+                alt=''
+            />
             <div className='contact-wrapper'>
                 <aside className='contact-data title_small'>
                     <div className='contact-header'>
