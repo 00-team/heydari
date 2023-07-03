@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react'
 
-import ContactUs from 'Screens/ContactUs'
+import About from 'Screens/About'
+import Contact from 'Screens/Contact'
 import Home from 'Screens/Home'
 import Product from 'Screens/Product'
 import { Footer, Navbar } from 'layout'
@@ -32,7 +33,8 @@ const MainContent: FC = () => {
         <Routes>
             <Route index element={<Home />} />
             <Route path='/product' element={<Product />} />
-            <Route path='/contact' element={<ContactUs />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/about' element={<About />} />
         </Routes>
     )
 }
