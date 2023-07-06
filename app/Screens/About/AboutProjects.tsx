@@ -2,6 +2,8 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
+import './style/aboutProjects.scss'
+
 export const AboutProjects: FC = () => {
     const container = useRef<HTMLElement>(null)
     const [Isintersected, setIsintersected] = useState(false)
