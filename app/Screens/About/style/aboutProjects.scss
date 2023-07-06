@@ -85,35 +85,27 @@
         isolation: isolate;
 
         .project {
-            width: clamp(0px, 50%, 800px);
-            height: 100px;
-            background-color: grey;
+            width: clamp(0px, 50%, 600px);
 
             display: grid;
             place-items: center;
+            flex-shrink: 0;
 
             &.prev {
-                background-color: blue;
+                translate: -30%;
+            }
+            &.active {
             }
             &.next {
-                background-color: red;
+                translate: 30%;
             }
 
-            // &.prev {
-            //     translate: -30%;
-            // }
-            // &.active {
-            // }
-            // &.next {
-            //     translate: 30%;
-            // }
-
-            // &.prev,
-            // &.next {
-            //     scale: 0.8;
-            //     z-index: -1;
-            //     opacity: 0.8;
-            // }
+            &.prev,
+            &.next {
+                scale: 0.8;
+                z-index: -1;
+                opacity: 0.8;
+            }
 
             img {
                 width: 100%;
