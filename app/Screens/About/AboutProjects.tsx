@@ -35,9 +35,30 @@ export const AboutProjects: FC = () => {
                 <span>پروژه های ما</span>
             </h2>
             <div className='projects-wrapper'>
-                <div className='project prev'></div>
-                <div className='project active'></div>
-                <div className='project next'></div>
+                <div className='project prev'>
+                    <img
+                        src={'https://picsum.photos/1920/1080'}
+                        decoding={'async'}
+                        loading='lazy'
+                        alt=''
+                    />
+                </div>
+                <div className='project active'>
+                    <img
+                        src={'https://picsum.photos/1920/1080'}
+                        decoding={'async'}
+                        loading='lazy'
+                        alt=''
+                    />
+                </div>
+                <div className='project next'>
+                    <img
+                        src={'https://picsum.photos/1920/1080'}
+                        decoding={'async'}
+                        loading='lazy'
+                        alt=''
+                    />
+                </div>
             </div>
         </section>
     )
