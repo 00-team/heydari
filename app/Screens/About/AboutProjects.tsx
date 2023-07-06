@@ -30,11 +30,15 @@ export const AboutProjects: FC = () => {
     }, [container])
 
     return (
-        <section ref={container} className='about-projects'>
+        <section ref={container} className='about-page-projects'>
             <h2 className={`project-title title_hero ${C(Isintersected)}`}>
                 <span>پروژه های ما</span>
             </h2>
-            <div className='projects-wrapper'></div>
+            <div className='projects-wrapper'>
+                <div className='project prev'></div>
+                <div className='project active'></div>
+                <div className='project next'></div>
+            </div>
         </section>
     )
 }

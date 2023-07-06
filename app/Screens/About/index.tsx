@@ -8,7 +8,7 @@ import './style/about.scss'
 
 const About: FC = () => {
     return (
-        <div className='about-container'>
+        <div className='about-page-container'>
             <AboutHeader />
             <AboutCreator />
             <AboutProjects />

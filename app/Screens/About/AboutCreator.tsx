@@ -4,7 +4,7 @@ import './style/aboutCreator.scss'
 
 export const AboutCreator: FC = () => {
     return (
-        <section className='about-creator'>
+        <section className='about-page-creator'>
             <aside className='creator-data'>
                 <h2 className='data-title title_hero'>
                     <span>محمدرضا حیدری</span>
