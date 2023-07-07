@@ -8,4 +8,70 @@ section.about-page-honors {
 
     // debug
     height: 100vh;
+
+    margin-top: -10vh;
+
+    h2.honors-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: calc(2vw + 3px);
+
+        overflow: hidden;
+        position: relative;
+        isolation: isolate;
+
+        &::after,
+        &::before {
+            content: '';
+            height: 2px;
+            width: 0;
+
+            position: relative;
+        }
+
+        &::after {
+            background-image: linear-gradient(90deg, rgba(0, 0, 0, 0), black);
+        }
+        &::before {
+            background-image: linear-gradient(-90deg, rgba(0, 0, 0, 0), black);
+        }
+
+        span {
+            transform: translateY(200%);
+            display: inline-block;
+            white-space: nowrap;
+
+            @keyframes project-title-slide-in {
+                from {
+                    transform: translateY(200%);
+                }
+                to {
+                    transform: translateY(0%);
+                }
+            }
+        }
+
+        &.active {
+            &::after,
+            &::before {
+                animation: project-title-line-open 1s
+                    cubic-bezier(0.45, 0.02, 0.09, 0.98) 1s forwards;
+
+                @keyframes project-title-line-open {
+                    from {
+                        width: 0;
+                    }
+                    to {
+                        width: 150px;
+                    }
+                }
+            }
+
+            span {
+                animation: project-title-slide-in 1s
+                    cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+            }
+        }
+    }
 }
