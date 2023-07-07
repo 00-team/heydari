@@ -34,8 +34,15 @@ const AboutHonors: FC = () => {
             <h2 className={`honors-title title_hero ${C(Isintersected)}`}>
                 <span>افتخارات</span>
             </h2>
+            <HonorsWrapper />
         </section>
     )
+}
+
+interface HonorsWrapperProps {}
+
+const HonorsWrapper: FC<HonorsWrapperProps> = () => {
+    return <></>
 }
 
 export default AboutHonors
