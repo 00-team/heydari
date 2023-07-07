@@ -32,7 +32,7 @@ export const AboutProjects: FC = () => {
     return (
         <section ref={container} className='about-page-projects'>
             <h2 className={`project-title title_hero ${C(Isintersected)}`}>
-                <span>پروژه های ما</span>
+                <span>پروژه ها</span>
             </h2>
             <ProjectsSlider Isintersected={Isintersected} />
         </section>
