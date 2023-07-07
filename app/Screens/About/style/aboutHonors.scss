@@ -9,7 +9,11 @@ section.about-page-honors {
     // debug
     height: 100vh;
 
-    margin-top: -10vh;
+    margin-top: -15vh;
+
+    @media screen and (max-width: 768px) {
+        margin-top: -35vh;
+    }
 
     h2.honors-title {
         display: flex;
