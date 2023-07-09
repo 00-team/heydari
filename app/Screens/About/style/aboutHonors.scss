@@ -87,11 +87,16 @@ section.about-page-honors {
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: calc(3vw + 5px);
 
         width: 100%;
 
         .honor-card {
             flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             height: 450px;
             aspect-ratio: 0.7/1;
@@ -102,6 +107,12 @@ section.about-page-honors {
             box-shadow: 0px 5px 10px -5px black;
 
             overflow: hidden;
+
+            img {
+                object-fit: contain;
+                width: 100%;
+                max-height: 100%;
+            }
         }
     }
 }
