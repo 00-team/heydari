@@ -50,6 +50,7 @@ const AboutHonors: FC = () => {
 interface HonorsWrapperProps {}
 
 const HonorsWrapper: FC<HonorsWrapperProps> = () => {
+    const container = useRef(null)
     const returnTransform = (index: number) => {
         var middle = Math.floor((honors.length - 1) / 2)
 
@@ -59,8 +60,12 @@ const HonorsWrapper: FC<HonorsWrapperProps> = () => {
         return 0
     }
 
+    useEffect(() => {
+        console.log(container.current)
+    }, [container.current])
+
     return (
-        <div className='honors-wrapper'>
+        <div className='honors-wrapper' ref={container}>
             {honors.map(({ img }, index) => {
                 return (
                     <div
