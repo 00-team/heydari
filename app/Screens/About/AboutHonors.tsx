@@ -55,7 +55,7 @@ const HonorsWrapper: FC<HonorsWrapperProps> = () => {
 
         if (index === middle) return 0
         if (index - 1 === middle || index + 1 === middle) return 50
-        if (index - 2 === middle || index + 2 === middle) return 70
+        if (index - 2 === middle || index + 2 === middle) return 80
         return 0
     }
 
