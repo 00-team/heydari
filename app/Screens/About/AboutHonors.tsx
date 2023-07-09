@@ -42,7 +42,11 @@ const AboutHonors: FC = () => {
 interface HonorsWrapperProps {}
 
 const HonorsWrapper: FC<HonorsWrapperProps> = () => {
-    return <></>
+    return (
+        <div className='honors-wrapper'>
+            <div className='honor-card'></div>
+        </div>
+    )
 }
 
 export default AboutHonors
