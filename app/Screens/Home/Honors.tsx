@@ -100,7 +100,7 @@ const Honors: FC = () => {
                     recycle={!ConfettiEnd}
                     numberOfPieces={innerWidth <= 1024 ? 100 : 200}
                     gravity={innerWidth <= 1024 ? 0.3 : 0.1}
-                    style={{ zIndex: 5, position: 'fixed' }}
+                    style={{ zIndex: 9, position: 'fixed' }}
                 />
             )}
             <HonorsWrapper isIntersecting={isIntersecting} />
