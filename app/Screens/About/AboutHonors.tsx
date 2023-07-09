@@ -4,6 +4,12 @@ import { C } from '@00-team/utils'
 
 import './style/aboutHonors.scss'
 
+const DEBUG_HONOR1 = require('../../static/home/honors/honor1.png')
+const DEBUG_HONOR2 = require('../../static/home/honors/honor2.png')
+const DEBUG_HONOR3 = require('../../static/home/honors/honor3.png')
+const DEBUG_HONOR4 = require('../../static/home/honors/honor4.png')
+const DEBUG_HONOR5 = require('../../static/home/honors/honor5.png')
+
 const AboutHonors: FC = () => {
     const container = useRef<HTMLElement>(null)
     const [Isintersected, setIsintersected] = useState(false)
@@ -44,7 +50,46 @@ interface HonorsWrapperProps {}
 const HonorsWrapper: FC<HonorsWrapperProps> = () => {
     return (
         <div className='honors-wrapper'>
-            <div className='honor-card'></div>
+            <div className='honor-card'>
+                <img
+                    src={DEBUG_HONOR1}
+                    decoding={'async'}
+                    loading={'lazy'}
+                    alt=''
+                />
+            </div>
+            <div className='honor-card'>
+                <img
+                    src={DEBUG_HONOR2}
+                    decoding={'async'}
+                    loading={'lazy'}
+                    alt=''
+                />
+            </div>
+            <div className='honor-card'>
+                <img
+                    src={DEBUG_HONOR3}
+                    decoding={'async'}
+                    loading={'lazy'}
+                    alt=''
+                />
+            </div>
+            <div className='honor-card'>
+                <img
+                    src={DEBUG_HONOR4}
+                    decoding={'async'}
+                    loading={'lazy'}
+                    alt=''
+                />
+            </div>
+            <div className='honor-card'>
+                <img
+                    src={DEBUG_HONOR5}
+                    decoding={'async'}
+                    loading={'lazy'}
+                    alt=''
+                />
+            </div>
         </div>
     )
 }
