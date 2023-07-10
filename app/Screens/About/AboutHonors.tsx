@@ -50,7 +50,9 @@ const AboutHonors: FC = () => {
 interface HonorsWrapperProps {}
 
 const HonorsWrapper: FC<HonorsWrapperProps> = () => {
-    const container = useRef(null)
+    const container = useRef<HTMLDivElement>(null)
+    const [containerY, setcontainerY] = useState(0)
+
     const returnTransform = (index: number) => {
         var middle = Math.floor((honors.length - 1) / 2)
 
@@ -61,20 +63,36 @@ const HonorsWrapper: FC<HonorsWrapperProps> = () => {
     }
 
     useEffect(() => {
-        console.log(container.current)
+        document.addEventListener('scroll', () => {
+            if (!container.current || !container.current.offsetTop) return
+
+            if (container.current.offsetTop - scrollY <= 1200) {
+                console.log(container.current.offsetTop - scrollY - 550 <= 0)
+                if (container.current.offsetTop - scrollY - 550 <= 0)
+                    return setcontainerY(0)
+
+                return setcontainerY(
+                    container.current.offsetTop - scrollY - 550
+                )
+            }
+        })
     }, [container.current])
 
     return (
-        <div className='honors-wrapper' ref={container}>
+        <div
+            className='honors-wrapper'
+            ref={container}
+            style={{ transform: `translateY(${containerY}px)` }}
+        >
             {honors.map(({ img }, index) => {
                 return (
                     <div
                         className='honor-card'
                         key={index}
                         style={{
-                            transform: `translateY(${returnTransform(
-                                index
-                            )}px)`,
+                            transform: `translateY(${
+                                containerY === 0 ? 0 : returnTransform(index)
+                            }px)`,
                         }}
                     >
                         <img
