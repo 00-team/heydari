@@ -53,26 +53,31 @@ const HonorsWrapper: FC<HonorsWrapperProps> = () => {
     const container = useRef<HTMLDivElement>(null)
     const [containerY, setcontainerY] = useState(0)
 
-    const returnTransform = (index: number) => {
+    const returnTransformPc = (index: number) => {
         var middle = Math.floor((honors.length - 1) / 2)
 
         if (index === middle) return 0
         if (index - 1 === middle || index + 1 === middle) return 50
-        if (index - 2 === middle || index + 2 === middle) return 80
+        if (index - 2 === middle || index + 2 === middle) return 100
         return 0
     }
 
+    const returnTransformMobile = (index: number) => {
+        return index * 100
+    }
+
     useEffect(() => {
+        const spaceFromAbove = innerWidth <= 768 ? 400 : 500
+
         document.addEventListener('scroll', () => {
             if (!container.current || !container.current.offsetTop) return
 
             if (container.current.offsetTop - scrollY <= 1200) {
-                console.log(container.current.offsetTop - scrollY - 550 <= 0)
-                if (container.current.offsetTop - scrollY - 550 <= 0)
+                if (container.current.offsetTop - scrollY - spaceFromAbove <= 0)
                     return setcontainerY(0)
 
                 return setcontainerY(
-                    container.current.offsetTop - scrollY - 550
+                    container.current.offsetTop - scrollY - spaceFromAbove
                 )
             }
         })
@@ -91,7 +96,11 @@ const HonorsWrapper: FC<HonorsWrapperProps> = () => {
                         key={index}
                         style={{
                             transform: `translateY(${
-                                containerY === 0 ? 0 : returnTransform(index)
+                                containerY === 0
+                                    ? 0
+                                    : innerWidth <= 768
+                                    ? returnTransformMobile(index)
+                                    : returnTransformPc(index)
                             }px)`,
                         }}
                     >
