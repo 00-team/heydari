@@ -15,7 +15,10 @@ section.about-page-honors {
 
     margin-top: -15vh;
 
+    overflow: hidden;
+
     @media screen and (max-width: 768px) {
+        padding: 7vh 0;
         margin-top: -35vh;
     }
 
@@ -86,12 +89,26 @@ section.about-page-honors {
     .honors-wrapper {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         gap: calc(3vw + 5px);
 
         width: 100%;
 
+        will-change: transform;
         transition: 0.2s linear transform;
+
+        @media screen and (max-width: 768px) {
+            overflow-x: scroll;
+            padding: 1rem 1.5rem;
+
+            // remove scroll bar
+            &::-webkit-scrollbar {
+                display: none; /* Safari and Chrome */
+            }
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+            scrollbar-width: none; /* Firefox */
+            //
+        }
 
         .honor-card {
             flex-shrink: 0;
@@ -112,7 +129,13 @@ section.about-page-honors {
             position: relative;
             isolation: isolate;
 
+            will-change: transform;
             transition: 0.5s ease-in-out transform;
+
+            @media screen and (max-width: 768px) {
+                height: 350px;
+                aspect-ratio: 0.6/1;
+            }
 
             &::after,
             &::before {
