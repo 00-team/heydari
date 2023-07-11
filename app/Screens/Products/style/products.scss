@@ -3,4 +3,24 @@
 
     // debug
     height: 100vh;
+
+    .prodcuts-header {
+        display: grid;
+        place-items: center;
+        color: var(--primary-color);
+
+        width: 100%;
+        aspect-ratio: 1/0.19;
+
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        @media screen and (max-width: 768px) {
+            aspect-ratio: 1/0.3;
+        }
+
+        .header-title {
+            color: white;
+        }
+    }
 }
