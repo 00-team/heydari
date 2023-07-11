@@ -4,6 +4,7 @@ import About from 'Screens/About'
 import Contact from 'Screens/Contact'
 import Home from 'Screens/Home'
 import Product from 'Screens/Product'
+import Products from 'Screens/Products'
 import { Footer, Navbar } from 'layout'
 import {
     Route,
@@ -32,7 +33,9 @@ const MainContent: FC = () => {
     return (
         <Routes>
             <Route index element={<Home />} />
+
             <Route path='/product' element={<Product />} />
+            <Route path='/products' element={<Products />} />
             <Route path='/contact' element={<Contact />} />
             <Route path='/about' element={<About />} />
         </Routes>
