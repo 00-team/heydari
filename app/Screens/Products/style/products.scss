@@ -1,10 +1,14 @@
 .products-page-container {
     width: 100%;
 
+    background-color: var(--accent-color);
+
+    padding-top: 10vh;
+
     // debug
     height: 100vh;
 
-    .prodcuts-header {
+    .products-header {
         display: grid;
         place-items: center;
         color: var(--primary-color);
@@ -14,6 +18,7 @@
 
         background-size: cover;
         background-repeat: no-repeat;
+        background-position: left 40%;
 
         @media screen and (max-width: 768px) {
             aspect-ratio: 1/0.3;
