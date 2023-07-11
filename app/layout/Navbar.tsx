@@ -41,7 +41,7 @@ const BigNav: FC = () => {
                         </div>
                         <div className='holder'>خانه</div>
                     </Link>
-                    <Link to={'/'} className='nav-link title_small'>
+                    <Link to={'/products'} className='nav-link title_small'>
                         <div className='icon'>
                             <ChairSvg size={25} />
                         </div>
