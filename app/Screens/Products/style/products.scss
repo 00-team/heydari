@@ -5,9 +5,6 @@
 
     padding-top: 10vh;
 
-    // debug
-    height: 100vh;
-
     .products-header {
         display: grid;
         place-items: center;
@@ -26,6 +23,27 @@
 
         .header-title {
             color: white;
+        }
+    }
+
+    .products-wrapper {
+        width: 100%;
+
+        // debug
+        height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+
+        .product-card {
+            width: clamp(0px, 100%, 400px);
+            aspect-ratio: 0.8/1;
+
+            background-color: black;
+
+            border-radius: 10px;
         }
     }
 }
