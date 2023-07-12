@@ -4,6 +4,10 @@ import './style/products.scss'
 
 const headerImg = require('../../static/products/header.jpg')
 
+const productImg = require('../../static/products/1.png')
+// const productImg2 = require('../../static/products/2.png')
+// const productImg3 = require('../../static/products/3.png')
+
 const Products: FC = () => {
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -23,13 +27,30 @@ url(${headerImg})`,
             </header>
             <section className='products-wrapper'>
                 <ProductCard />
+                <ProductCard />
+                <ProductCard />
+                <ProductCard />
+                <ProductCard />
             </section>
         </main>
     )
 }
 
 const ProductCard: FC = () => {
-    return <figure className='product-card'></figure>
+    return (
+        <figure className='product-card'>
+            <img
+                className='card-img'
+                src={productImg}
+                decoding={'async'}
+                loading={'lazy'}
+                alt=''
+            />
+            <figcaption className='card-caption title_smaller'>
+                پاف کد F520 چهار پایه پلاستیکی
+            </figcaption>
+        </figure>
+    )
 }
 
 export default Products
