@@ -16,7 +16,9 @@ export * from './models/Home'
 export * from './models/Chair'
 export * from './models/Company'
 
-export * from "./Contact/Phone"
+export * from './Contact/Phone'
+
+export * from './Navbar/Blogs'
 
 export interface SvgProps {
     size: number
