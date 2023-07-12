@@ -8,7 +8,7 @@ const img = require('../../static/contact/bg.png')
 
 const Contact: FC = () => {
     return (
-        <div className='contact-container'>
+        <main className='contact-container'>
             <img
                 className='contact-img'
                 src={img}
@@ -56,7 +56,7 @@ const Contact: FC = () => {
                     ></iframe>
                 </aside>
             </div>
-        </div>
+        </main>
     )
 }
 
