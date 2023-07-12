@@ -36,6 +36,7 @@
         justify-content: space-around;
         flex-wrap: wrap;
         row-gap: calc(5vh + 10px);
+        column-gap: calc(3vw + 5px);
 
         .product-card {
             width: clamp(0px, 100%, 400px);
@@ -48,6 +49,11 @@
             box-shadow: 0px 5px 20px -10px black;
 
             overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+
+            &:hover {
+                transform: translateY(-1rem);
+            }
 
             img.card-img {
                 height: 80%;
