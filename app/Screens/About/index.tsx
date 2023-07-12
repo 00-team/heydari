@@ -13,12 +13,12 @@ const About: FC = () => {
     }, [])
 
     return (
-        <div className='about-page-container'>
+        <main className='about-page-container'>
             <AboutHeader />
             <AboutCreator />
             <AboutProjects />
             <AboutHonors />
-        </div>
+        </main>
     )
 }
 
