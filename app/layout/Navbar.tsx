@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
-import { CallSvg, ChairSvg, CompanySvg, HomeSvg } from 'Icons'
+import { BlogsSvg, CallSvg, ChairSvg, CompanySvg, HomeSvg } from 'Icons'
 import { Link } from 'react-router-dom'
 
 import './style/navbar.scss'
@@ -58,6 +58,12 @@ const BigNav: FC = () => {
                             <CompanySvg size={25} />
                         </div>
                         <div className='holder'>درباره ما</div>
+                    </Link>
+                    <Link to={'/blogs'} className='nav-link title_small'>
+                        <div className='icon'>
+                            <BlogsSvg size={25} />
+                        </div>
+                        <div className='holder'>مقالات </div>
                     </Link>
                 </div>
                 <img
