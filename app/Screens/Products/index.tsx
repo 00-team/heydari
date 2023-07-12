@@ -10,7 +10,7 @@ const Products: FC = () => {
     }, [])
 
     return (
-        <div className='products-page-container'>
+        <main className='products-page-container'>
             <header
                 className='products-header'
                 style={{
@@ -21,9 +21,15 @@ url(${headerImg})`,
             >
                 <div className='header-title title_hero'>محصولات</div>
             </header>
-            <section className='products-wrapper'></section>
-        </div>
+            <section className='products-wrapper'>
+                <ProductCard />
+            </section>
+        </main>
     )
+}
+
+const ProductCard: FC = () => {
+    return <figure className='product-card'></figure>
 }
 
 export default Products
