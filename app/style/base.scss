@@ -34,13 +34,13 @@
         body {
             @include theme.dark;
         }
-        background-color: var(--primary-color);
+        background-color: var(--accent-color);
     }
     @media (prefers-color-scheme: light) {
         body {
             @include theme.dark;
         }
-        background-color: var(--primary-color);
+        background-color: var(--accent-color);
     }
 }
 
