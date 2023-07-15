@@ -3,10 +3,27 @@
     height: 100vh;
 
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10vh;
+    justify-content: center;
 
+    padding: 5vh 5vw;
     padding-top: 10vh;
+
+    .blog-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10vh;
+        width: clamp(0px, 1500px, 100%);
+
+        .blog-img {
+            width: 100%;
+            aspect-ratio: 1/0.3;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        p {
+            font-family: 'yekan';
+        }
+    }
 }
