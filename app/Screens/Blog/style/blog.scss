@@ -21,6 +21,10 @@
             aspect-ratio: 1/0.3;
             object-fit: cover;
             border-radius: 10px;
+
+            @media screen and (max-width: 768px) {
+                aspect-ratio: 1/0.5;
+            }
         }
         p {
             font-family: 'yekan';
