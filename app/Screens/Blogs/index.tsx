@@ -1,5 +1,7 @@
 import React, { FC } from 'react'
 
+import { Link } from 'react-router-dom'
+
 import './style/blogs.scss'
 
 const headerImg = require('../../static/blogs/header.jpg')
@@ -44,7 +46,9 @@ const BlogCard: FC = () => {
                 استفاده از طراحان گرافیک است
             </figcaption>
 
-            <button className='btn-container title_smaller  '>دیدن</button>
+            <Link to={'/blog/1'} className='link-container title_smaller  '>
+                دیدن بیشتر
+            </Link>
         </figure>
     )
 }
