@@ -71,9 +71,12 @@ main.blogs-container {
                 overflow: hidden;
             }
 
-            button {
+            .link-container {
                 border-radius: 5px;
                 border: none;
+
+                text-align: center;
+                color: var(--primary-color);
 
                 padding: 1rem 2rem;
                 width: 90%;
