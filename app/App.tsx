@@ -41,7 +41,7 @@ const MainContent: FC = () => {
             <Route path='/contact' element={<Contact />} />
             <Route path='/about' element={<About />} />
             <Route path='/blogs' element={<Blogs />} />
-            <Route path='/blog/*' element={<Blog />} />
+            <Route path='/blog/' element={<Blog />} />
         </Routes>
     )
 }
