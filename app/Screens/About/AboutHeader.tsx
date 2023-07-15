@@ -14,9 +14,9 @@ linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
 url(${headerImg})`,
             }}
         >
-            <div className='header-title title_hero'>
+            <h2 className='header-title title_hero'>
                 درباره <span>حیدری</span>
-            </div>
+            </h2>
         </header>
     )
 }
