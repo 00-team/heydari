@@ -48,7 +48,7 @@ const BlogCard: FC = () => {
                 استفاده از طراحان گرافیک است
             </figcaption>
 
-            <Link to={'/blog/1'} className='link-container title_smaller  '>
+            <Link to={'/blog/'} className='link-container title_smaller  '>
                 دیدن بیشتر
             </Link>
         </figure>
