@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react'
 
 import About from 'Screens/About'
+import Blog from 'Screens/Blog'
 import Blogs from 'Screens/Blogs'
 import Contact from 'Screens/Contact'
 import Home from 'Screens/Home'
@@ -40,6 +41,7 @@ const MainContent: FC = () => {
             <Route path='/contact' element={<Contact />} />
             <Route path='/about' element={<About />} />
             <Route path='/blogs' element={<Blogs />} />
+            <Route path='/blog/*' element={<Blog />} />
         </Routes>
     )
 }
