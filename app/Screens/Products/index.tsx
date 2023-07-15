@@ -23,7 +23,7 @@ linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
 url(${headerImg})`,
                 }}
             >
-                <div className='header-title title_hero'>محصولات</div>
+                <h2 className='header-title title_hero'>محصولات</h2>
             </header>
             <section className='products-wrapper'>
                 <ProductCard
