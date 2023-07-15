@@ -34,6 +34,8 @@ const BlogCard: FC = () => {
     return (
         <figure className='blog-card'>
             <img
+                decoding={'async'}
+                loading={'lazy'}
                 className='card-img'
                 src='https://picsum.photos/1920/1080'
                 alt=''
