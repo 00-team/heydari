@@ -120,26 +120,27 @@ const SmallNav: FC = () => {
                 />
 
                 <section className='columns-wrapper'>
-                    <div className='nav-column title_small'>
-                        <HomeSvg size={30} />
-                        <div className='holder'>خانه</div>
-                    </div>
-                    <div className='nav-column title_small'>
-                        <ChairSvg size={30} />
-                        <div className='holder'>محصولات</div>
-                    </div>
-                    <div className='nav-column title_small'>
-                        <CallSvg size={30} />
-                        <div className='holder'>ارتباط با ما</div>
-                    </div>
-                    <div className='nav-column title_small'>
-                        <CompanySvg size={30} />
-                        <div className='holder'> درباره ما </div>
-                    </div>
-                    <div className='nav-column title_small'>
-                        <BlogsSvg size={30} />
-                        <div className='holder'> مقالات </div>
-                    </div>
+                    <SmallNavColumn Icon={HomeSvg} link={'/'} title={'خانه'} />
+                    <SmallNavColumn
+                        Icon={ChairSvg}
+                        link={'/products'}
+                        title={'محصولات'}
+                    />
+                    <SmallNavColumn
+                        Icon={CallSvg}
+                        link={'/contact'}
+                        title={'ارتباط با ما'}
+                    />
+                    <SmallNavColumn
+                        Icon={CompanySvg}
+                        link={'/about'}
+                        title={'درباره ما'}
+                    />
+                    <SmallNavColumn
+                        Icon={BlogsSvg}
+                        link={'/blog'}
+                        title={'مقالات'}
+                    />
                 </section>
 
                 {/* debug */}
@@ -147,5 +148,20 @@ const SmallNav: FC = () => {
                 {/* debug */}
             </div>
         </nav>
+    )
+}
+
+interface SmallNavColumn {
+    link: string
+    title: string
+    Icon: Icon
+}
+
+const SmallNavColumn: FC<SmallNavColumn> = ({ Icon, link, title }) => {
+    return (
+        <Link to={link} className='nav-column title'>
+            <Icon size={30} />
+            <div className='holder'>{title}</div>
+        </Link>
     )
 }
