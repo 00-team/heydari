@@ -2,8 +2,15 @@ import React, { FC, useEffect, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
-import { BlogsSvg, CallSvg, ChairSvg, CompanySvg, HomeSvg } from 'Icons'
-import { MenuSvg } from 'Icons/navbar/Menu'
+import {
+    BlogsSvg,
+    CallSvg,
+    ChairSvg,
+    CloseSvg,
+    CompanySvg,
+    HomeSvg,
+    MenuSvg,
+} from 'Icons'
 import { Link } from 'react-router-dom'
 
 import './style/navbar.scss'
@@ -79,9 +86,15 @@ const BigNav: FC = () => {
 }
 
 const SmallNav: FC = () => {
+    const [navActive, setnavActive] = useState(false)
+
     return (
         <nav className='small-nav-container'>
-            <MenuSvg className='menu-icon' size={40} />
+            <MenuSvg
+                className='menu-icon'
+                size={40}
+                onTouchStart={() => setnavActive(true)}
+            />
             <img
                 className='nav-logo'
                 src={navLogo}
@@ -89,9 +102,17 @@ const SmallNav: FC = () => {
                 loading={'lazy'}
                 alt=''
             />
-            <div className='nav-wrapper'>
+            <div className={`nav-wrapper ${C(navActive)}`}>
+                <div
+                    className='close-btn icon'
+                    onTouchStart={() => setnavActive(false)}
+                >
+                    <CloseSvg size={50} />
+                </div>
+
                 <img
                     className='nav-logo'
+                    style={{ width: 80 }}
                     src={navLogo}
                     decoding={'async'}
                     loading={'lazy'}
