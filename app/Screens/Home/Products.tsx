@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
-import { ColorSvg, HeightSvg, SvgProps, WeightSvg, WidthSvg } from 'Icons'
+import { ColorSvg, HeightSvg, WeightSvg, WidthSvg } from 'Icons'
 import { Link } from 'react-router-dom'
 
 import { ButtonArrow } from 'components'
@@ -20,7 +20,7 @@ interface ProductsModelProps {
     name: string
     details: {
         holder: string
-        Svg: React.FC<SvgProps>
+        Svg: Icon
         data: string
     }[]
     link: string
