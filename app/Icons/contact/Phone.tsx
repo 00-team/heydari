@@ -5,10 +5,10 @@ export const PhoneSvg: Icon = ({ size, ...attr }) => {
         <svg
             stroke='currentColor'
             fill='currentColor'
-            stroke-width='0'
+            strokeWidth='0'
             viewBox='0 0 512 512'
-            height='1em'
-            width='1em'
+            height={size}
+            width={size}
             xmlns='http://www.w3.org/2000/svg'
             {...attr}
         >

@@ -5,7 +5,7 @@ export const MenuSvg: Icon = ({ size, ...attr }) => {
         <svg
             stroke='currentColor'
             fill='currentColor'
-            stroke-width='0'
+            strokeWidth='0'
             viewBox='0 0 20 20'
             aria-hidden='true'
             height={size}
