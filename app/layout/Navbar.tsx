@@ -120,23 +120,32 @@ const SmallNav: FC = () => {
                 />
 
                 <section className='columns-wrapper'>
-                    <SmallNavColumn Icon={HomeSvg} link={'/'} title={'خانه'} />
                     <SmallNavColumn
+                        setnavActive={setnavActive}
+                        Icon={HomeSvg}
+                        link={'/'}
+                        title={'خانه'}
+                    />
+                    <SmallNavColumn
+                        setnavActive={setnavActive}
                         Icon={ChairSvg}
                         link={'/products'}
                         title={'محصولات'}
                     />
                     <SmallNavColumn
+                        setnavActive={setnavActive}
                         Icon={CallSvg}
                         link={'/contact'}
                         title={'ارتباط با ما'}
                     />
                     <SmallNavColumn
+                        setnavActive={setnavActive}
                         Icon={CompanySvg}
                         link={'/about'}
                         title={'درباره ما'}
                     />
                     <SmallNavColumn
+                        setnavActive={setnavActive}
                         Icon={BlogsSvg}
                         link={'/blog'}
                         title={'مقالات'}
@@ -155,11 +164,22 @@ interface SmallNavColumn {
     link: string
     title: string
     Icon: Icon
+
+    setnavActive: (active: boolean) => void
 }
 
-const SmallNavColumn: FC<SmallNavColumn> = ({ Icon, link, title }) => {
+const SmallNavColumn: FC<SmallNavColumn> = ({
+    Icon,
+    link,
+    title,
+    setnavActive,
+}) => {
     return (
-        <Link to={link} className='nav-column title'>
+        <Link
+            to={link}
+            className='nav-column title'
+            onTouchStart={() => setnavActive(false)}
+        >
             <Icon size={30} />
             <div className='holder'>{title}</div>
         </Link>
