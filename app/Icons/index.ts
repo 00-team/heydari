@@ -1,3 +1,5 @@
+import { HTMLAttributes } from 'react'
+
 export * from './products/Color'
 export * from './products/Weight'
 export * from './products/Width'
@@ -16,11 +18,11 @@ export * from './models/Home'
 export * from './models/Chair'
 export * from './models/Company'
 
-export * from './Contact/Phone'
+export * from './contact/Phone'
 
-export * from './Navbar/Blogs'
+export * from './navbar/Blogs'
 
-export interface SvgProps {
+export interface SvgProps extends HTMLAttributes<SVGElement> {
     size: number
     style?: React.CSSProperties
 }
