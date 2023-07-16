@@ -21,6 +21,8 @@ export * from './models/Company'
 export * from './contact/Phone'
 
 export * from './navbar/Blogs'
+export * from './navbar/Menu'
+export * from './navbar/Close'
 
 export interface SvgProps extends HTMLAttributes<SVGElement> {
     size: number
