@@ -286,7 +286,7 @@ const ProductsWrapper: FC = () => {
                     })}
                 </div>
 
-                <Link to={'/product'} className='product-submit title_small'>
+                <Link to={'/contact'} className='product-submit title_small'>
                     خرید فوری!
                 </Link>
             </div>
