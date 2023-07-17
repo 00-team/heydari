@@ -4,8 +4,10 @@
 
     padding: 5vh 5vw;
 
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
 
     isolation: isolate;
     position: relative;
