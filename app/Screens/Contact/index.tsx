@@ -22,7 +22,7 @@ const Contact: FC = () => {
                         <div className='link'>
                             <div className='link-holder'>
                                 <div className='icon'>
-                                    <FaxSvg />
+                                    <FaxSvg size={25} />
                                 </div>
                                 <div className='holder'>تلفن دفتر</div>
                             </div>
@@ -31,7 +31,7 @@ const Contact: FC = () => {
                         <div className='link'>
                             <div className='link-holder'>
                                 <div className='icon'>
-                                    <PhoneSvg />
+                                    <PhoneSvg size={25} />
                                 </div>
                                 <div className='holder'>تلفن ثابت</div>
                             </div>
