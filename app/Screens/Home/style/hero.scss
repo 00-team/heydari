@@ -32,7 +32,7 @@ section.hero-container {
             opacity: 0;
             translate: 50%;
 
-            animation: hero-img-slidein 1s 4.75s ease-in-out forwards;
+            animation: hero-img-slidein 1s 5s ease-in-out forwards;
 
             @keyframes hero-img-slidein {
                 from {
