@@ -4,13 +4,18 @@
 
     padding: 5vh 5vw;
 
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
+    display: grid;
+    place-items: center;
 
     isolation: isolate;
     position: relative;
+
+    @media screen and (max-width: 768px) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+    }
 
     .contact-img {
         width: 100%;
