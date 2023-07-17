@@ -51,7 +51,7 @@ section.honors-container {
             .honor-container {
                 .honor-cup {
                     &::after {
-                        animation: after-honor-glass 1s 3s
+                        animation: after-honor-glass 1s 2s
                             cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
 
                         @keyframes after-honor-glass {
@@ -68,7 +68,7 @@ section.honors-container {
                         }
                     }
                     &::before {
-                        animation: before-honor-glass 1s 3s
+                        animation: before-honor-glass 1s 2s
                             cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
 
                         @keyframes before-honor-glass {
@@ -86,8 +86,9 @@ section.honors-container {
                     }
 
                     .cup-img {
-                        animation: honor-cup-img-fadein 2.5s 2.8s
+                        animation: honor-cup-img-fadein 2.5s 1.8s
                             cubic-bezier(0.79, 0.04, 0.09, 0.98) forwards;
+
                         @keyframes honor-cup-img-fadein {
                             0% {
                                 opacity: 0;
