@@ -1,6 +1,6 @@
 {
     "name": "heydari",
-    "version": "0.5.17",
+    "version": "0.5.18",
     "scripts": {
         "start": "webpack serve --config config/webpack/dev.ts",
         "build": "webpack --config config/webpack/build.ts",
