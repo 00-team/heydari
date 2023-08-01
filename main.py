@@ -1,10 +1,20 @@
 
-import uvicorn
-from fastapi import APIRouter, FastAPI
+from pathlib import Path
+
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.routing import APIRoute
 
 # from fastapi.staticfiles import StaticFiles
+
+
+BASE_DIR = Path(__file__).parent
+
+index_path = BASE_DIR / 'static/dist/index.html'
+INDEX_HTML = 'index.html not found :/'
+if index_path.is_file():
+    with open(index_path, 'r') as f:
+        INDEX_HTML = f.read()
 
 
 # TODO: make the doc
@@ -44,7 +54,7 @@ async def shutdown():
 
 @app.get('/')
 async def index():
-    return HTMLResponse('hi')
+    return HTMLResponse(INDEX_HTML)
 
 
 for route in app.routes:
