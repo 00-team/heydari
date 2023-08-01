@@ -5,14 +5,13 @@ import {
     FaxSvg,
     InstagramSvg,
     LocationSvg,
+    Logo,
     TelegramSvg,
     WhatsappSvg,
 } from 'Icons'
 import { Link } from 'react-router-dom'
 
 import './style/footer.scss'
-
-const logo = require('../static/logo.png')
 
 export const Footer = () => {
     return (
@@ -117,7 +116,7 @@ export const Footer = () => {
                         </div>
                     </div>
                     <div className='footer-logo title_small'>
-                        <img className='logo-img' src={logo} />
+                        <Logo />
                         <div className='logo-name'>صنایع تولیدی حیدری</div>
                     </div>
                 </div>
