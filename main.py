@@ -1,7 +1,6 @@
 
-from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
@@ -9,13 +8,6 @@ from fastapi.templating import Jinja2Templates
 
 from deps import get_ip
 from shared import settings
-
-index_path = settings.base_dir / 'static/dist/index.html'
-INDEX_HTML = 'index.html not found :/'
-if index_path.is_file():
-    with open(index_path, 'r') as f:
-        INDEX_HTML = f.read()
-
 
 app = FastAPI(
     title='Heydari',
@@ -42,8 +34,14 @@ async def shutdown():
 
 
 @app.get('/', response_class=HTMLResponse)
-async def index():
-    return templates.TemplateResponse('index.html', {'gg': 12})
+async def index(request: Request):
+    return templates.TemplateResponse(
+        'index.html',
+        {
+            'request': request,
+            'gg': 12
+        }
+    )
 
 
 for route in app.routes:
