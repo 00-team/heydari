@@ -50,7 +50,3 @@ async def index():
 for route in app.routes:
     if isinstance(route, APIRoute):
         route.operation_id = route.name
-
-
-if __name__ == '__main__':
-    uvicorn.run('main:app', port=7000, reload=True)
