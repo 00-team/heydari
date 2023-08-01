@@ -116,7 +116,9 @@ export const Footer = () => {
                         </div>
                     </div>
                     <div className='footer-logo title_small'>
-                        <Logo />
+                        <div className='logo-img'>
+                            <Logo />
+                        </div>
                         <div className='logo-name'>صنایع تولیدی حیدری</div>
                     </div>
                 </div>
