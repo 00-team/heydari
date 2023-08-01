@@ -4,14 +4,12 @@ import { FaxSvg, PhoneSvg } from 'Icons'
 
 import './style/contact.scss'
 
-const img = require('../../static/contact/bg.png')
-
 const Contact: FC = () => {
     return (
         <main className='contact-container'>
             <img
                 className='contact-img'
-                src={img}
+                src='/static/image/contact.webp'
                 decoding={'async'}
                 loading={'lazy'}
                 alt=''
