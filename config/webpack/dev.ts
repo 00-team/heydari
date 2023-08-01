@@ -18,7 +18,7 @@ const DevConfig: Configuration = {
     },
     plugins: [
         ...Base.plugins!,
-        new HtmlPlugin({ template: resolve(APP_DIR, 'template.html') }),
+        new HtmlPlugin({ template: resolve(APP_DIR, 'basic.html') }),
     ],
     devServer: {
         port: 8000,
