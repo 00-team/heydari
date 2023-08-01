@@ -137,7 +137,7 @@ const FooterHeaderRow: FC<FooterHeaderRow> = ({ Svg, data, holder }) => {
         <div className='footer-header-row title_small'>
             <div className='header-icon icon'>
                 <div className='icon-wrapper'>
-                    <Svg size={35} />
+                    <Svg size={25} />
                 </div>
             </div>
             <div className='header-wrapper '>

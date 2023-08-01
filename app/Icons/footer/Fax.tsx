@@ -7,8 +7,8 @@ export const FaxSvg: Icon = ({ size, ...attr }) => {
             fill='currentColor'
             strokeWidth='0'
             viewBox='0 0 512 512'
-            height={25}
-            width={25}
+            height={size}
+            width={size}
             xmlns='http://www.w3.org/2000/svg'
             {...attr}
         >

@@ -178,7 +178,7 @@ const SmallNavColumn: FC<SmallNavColumn> = ({
         <Link
             to={link}
             className='nav-column title'
-            onTouchStart={() => setnavActive(false)}
+            onTouchEnd={() => setnavActive(false)}
         >
             <Icon size={30} />
             <div className='holder'>{title}</div>
