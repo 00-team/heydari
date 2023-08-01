@@ -3,7 +3,7 @@ Description=heydari Gunicorn
 After=syslog.target
 
 [Service]
-ExecStart=/heydari/.env/bin/gunicorn --config /heydari/config/gunicorn.py
+ExecStart=/heydari/.env/bin/gunicorn --config /heydari/config/gunicorn.conf.py
 RuntimeDirectory=heydari_gunicorn
 Restart=always
 KillSignal=SIGQUIT
