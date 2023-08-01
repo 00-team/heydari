@@ -9,13 +9,12 @@ import {
     CloseSvg,
     CompanySvg,
     HomeSvg,
+    Logo,
     MenuSvg,
 } from 'Icons'
 import { Link } from 'react-router-dom'
 
 import './style/navbar.scss'
-
-const navLogo = require('../static/welcome-logo.png')
 
 export const Navbar: FC = () => {
     const [Inner, setInner] = useState(innerWidth)
@@ -74,12 +73,7 @@ const BigNav: FC = () => {
                         <div className='holder'>مقالات </div>
                     </Link>
                 </div>
-                <img
-                    className='nav-logo'
-                    decoding={'async'}
-                    loading={'lazy'}
-                    src={navLogo}
-                />
+                <Logo className='nav-logo' />
             </div>
         </nav>
     )
@@ -95,13 +89,7 @@ const SmallNav: FC = () => {
                 size={40}
                 onTouchStart={() => setnavActive(true)}
             />
-            <img
-                className='nav-logo'
-                src={navLogo}
-                decoding={'async'}
-                loading={'lazy'}
-                alt=''
-            />
+            <Logo className='nav-logo' />
             <div className={`nav-wrapper ${C(navActive)}`}>
                 <div
                     className='close-btn icon'
@@ -110,14 +98,7 @@ const SmallNav: FC = () => {
                     <CloseSvg size={50} />
                 </div>
 
-                <img
-                    className='nav-logo'
-                    style={{ width: 80 }}
-                    src={navLogo}
-                    decoding={'async'}
-                    loading={'lazy'}
-                    alt=''
-                />
+                <Logo className='nav-logo' />
 
                 <section className='columns-wrapper'>
                     <SmallNavColumn
