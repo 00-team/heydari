@@ -8,7 +8,7 @@ const Welcomer: FC = () => {
     return (
         <div className='welcomer title'>
             <div className='welcomer-wrapper'>
-                <Logo />
+                <Logo className='welcomer-logo' />
                 <span>
                     <div className='welcomer-motto ltr'>
                         {'NOT THE FIRST, BUT THE BEST'
