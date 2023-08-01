@@ -1,9 +1,7 @@
 SPACER="============================================================================================"
 EG="🔷"
 
-exit 0
-
-cd /site/heydari/
+cd /heydari/
 source .env/bin/activate
 
 OLD_COMMIT=$(git rev-parse HEAD)
