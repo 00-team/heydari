@@ -12,7 +12,7 @@ const Html = new HtmlPlugin({
     filename: resolve(DIST_DIR, 'index.html'),
     template: resolve(APP_DIR, 'template.html'),
     inject: true,
-    publicPath: '/',
+    publicPath: '/static/dist/',
     minify: false,
 })
 
