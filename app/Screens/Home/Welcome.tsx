@@ -1,20 +1,14 @@
 import React, { FC } from 'react'
 
-import './style/welcome.scss'
+import { Logo } from 'Icons'
 
-const logo = require('../../static/welcome-logo.png')
+import './style/welcome.scss'
 
 const Welcomer: FC = () => {
     return (
         <div className='welcomer title'>
             <div className='welcomer-wrapper'>
-                <img
-                    src={logo}
-                    className='welcomer-logo'
-                    decoding={'async'}
-                    loading={'lazy'}
-                    alt=''
-                />
+                <Logo />
                 <span>
                     <div className='welcomer-motto ltr'>
                         {'NOT THE FIRST, BUT THE BEST'
