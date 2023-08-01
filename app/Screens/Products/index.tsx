@@ -2,11 +2,11 @@ import React, { FC, useEffect } from 'react'
 
 import './style/products.scss'
 
-const headerImg = require('../../static/products/header.jpg')
+const headerImg = '/static/image/header.webp'
 
-const productImg = require('../../static/products/1.png')
-const productImg2 = require('../../static/products/2.png')
-const productImg3 = require('../../static/products/3.png')
+const productImg1 = '/static/image/products/1.webp'
+const productImg2 = '/static/image/products/2.webp'
+const productImg3 = '/static/image/products/3.webp'
 
 const Products: FC = () => {
     useEffect(() => {
@@ -28,7 +28,7 @@ url(${headerImg})`,
             <section className='products-wrapper'>
                 <ProductCard
                     title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg}
+                    img={productImg1}
                 />
                 <ProductCard
                     title='پاف کد F520 چهار پایه پلاستیکی'
@@ -48,7 +48,7 @@ url(${headerImg})`,
                 />
                 <ProductCard
                     title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg}
+                    img={productImg1}
                 />
             </section>
         </main>
