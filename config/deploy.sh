@@ -39,15 +39,15 @@ if check_diff "app/* config/webpack/*"; then
     echo $SPACER
 fi
 
-if check_diff "config/heydari.uwsgi.service"; then
-    echo "$EG update uwsgi service"
-    cp config/heydari.uwsgi.service /etc/systemd/system/ --force
+if check_diff "config/heydari.service"; then
+    echo "$EG update heydari service"
+    cp config/heydari.service /etc/systemd/system/ --force
     systemctl daemon-reload
     echo $SPACER
 fi
 
-echo "$EG restart uwsgi service"
-systemctl restart heydari.uwsgi
+echo "$EG restart heydari service"
+systemctl restart heydari
 echo $SPACER
 
 if check_diff "config/nginx.conf"; then
