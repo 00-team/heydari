@@ -32,13 +32,13 @@ const DevConfig: Configuration = {
         proxy: [
             {
                 context: ['/api', '/static', '/media'],
-                target: 'http://127.0.0.1:7000/',
+                target: 'http://127.0.0.1:7200/',
             },
 
             // static
             {
                 context: ['/favicon.ico'],
-                target: 'http://127.0.0.1:7000/static/',
+                target: 'http://127.0.0.1:7200/static/',
             },
         ],
     },
