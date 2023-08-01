@@ -158,10 +158,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# heydari ignores
-templates/base.html
-database/doom.json
-database/secrets.json
 
-# database
-*.db
+# heydari custom
+.secrets*
