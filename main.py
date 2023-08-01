@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from deps import get_ip
 from shared import settings
@@ -22,6 +23,9 @@ app = FastAPI(
     description='**Heydari api documents**',
     dependencies=[get_ip()]
 )
+templates = Jinja2Templates(
+    directory=settings.base_dir / 'static/templates/'
+)
 
 if settings.debug:
     app.mount('/static', StaticFiles(directory='static'), name='static')
@@ -37,9 +41,9 @@ async def shutdown():
     pass
 
 
-@app.get('/')
+@app.get('/', response_class=HTMLResponse)
 async def index():
-    return HTMLResponse(INDEX_HTML)
+    return templates.TemplateResponse('index.html', {'gg': 12})
 
 
 for route in app.routes:
