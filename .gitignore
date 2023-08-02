@@ -161,3 +161,4 @@ yarn-error.log*
 
 # heydari custom
 .secrets*
+static/templates/head.html
