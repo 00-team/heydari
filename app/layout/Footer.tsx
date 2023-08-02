@@ -40,27 +40,25 @@ export const Footer = () => {
                     <div className='footer-content'>
                         <div className='content-socials'>
                             <a
-                                href={'https://t.me/melobot'}
+                                href={'https://t.me/heydaricoir'}
                                 className='social icon telegram'
                             >
                                 <TelegramSvg size={40} />
                             </a>
                             <a
-                                href={'https://wa.me/+989127388349'}
+                                href={'https://wa.me/+989129429430'}
                                 className='social icon whatsapp'
                             >
                                 <WhatsappSvg size={40} />
                             </a>
                             <a
-                                href={'instagram://user?username=radinhtm'}
+                                href={'instagram://user?username=heydari.chair'}
                                 className='social icon instagram'
                             >
                                 <InstagramSvg size={40} />
                             </a>
                             <button className='social rubika title_small'>
-                                <div className='tooltip'>
-                                    @mahmoodrezarizband25
-                                </div>
+                                <div className='tooltip'>+989129429430</div>
                                 <img
                                     loading={'lazy'}
                                     decoding={'async'}
