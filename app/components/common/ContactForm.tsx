@@ -4,7 +4,7 @@ import { FaxSvg, PhoneSvg } from 'Icons'
 
 import './style/contactform.scss'
 
-const ContactForm: FC = () => {
+export const ContactForm: FC = () => {
     return (
         <div className='contact-wrapper'>
             <aside className='contact-data title_small'>
@@ -54,5 +54,3 @@ const ContactForm: FC = () => {
         </div>
     )
 }
-
-export default ContactForm
