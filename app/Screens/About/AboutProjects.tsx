@@ -4,6 +4,22 @@ import { C } from '@00-team/utils'
 
 import './style/aboutProjects.scss'
 
+const projects1 = '/static/image/about/projects1.jpg'
+const projects2 = '/static/image/about/projects2.jpg'
+const projects3 = '/static/image/about/projects3.jpg'
+const projects4 = '/static/image/about/projects4.jpg'
+const projects5 = '/static/image/about/projects5.jpg'
+const projects6 = '/static/image/about/projects6.jpg'
+
+const SLIDES = [
+    projects1,
+    projects2,
+    projects3,
+    projects4,
+    projects5,
+    projects6,
+]
+
 export const AboutProjects: FC = () => {
     const container = useRef<HTMLElement>(null)
     const [Isintersected, setIsintersected] = useState(false)
@@ -39,15 +55,6 @@ export const AboutProjects: FC = () => {
     )
 }
 
-const DEBUG_SLIDES = [
-    'https://picsum.photos/1920/1079',
-    'https://picsum.photos/1920/1081',
-    'https://picsum.photos/1920/1083',
-    'https://picsum.photos/1920/1078',
-    'https://picsum.photos/1920/1085',
-    'https://picsum.photos/1920/1084',
-]
-
 interface ProjectsSliderProps {
     Isintersected: boolean
 }
@@ -55,7 +62,7 @@ interface ProjectsSliderProps {
 const ProjectsSlider: FC<ProjectsSliderProps> = ({ Isintersected }) => {
     return (
         <div className={`projects-wrapper ${C(Isintersected)}`}>
-            {DEBUG_SLIDES.map((img, index) => {
+            {SLIDES.map((img, index) => {
                 return (
                     <div className='project' key={index}>
                         <img
