@@ -1,5 +1,7 @@
 import React, { FC, useEffect } from 'react'
 
+import { ContactForm } from 'components'
+
 import { AboutCreator } from './AboutCreator'
 import { AboutHeader } from './AboutHeader'
 import AboutHonors from './AboutHonors'
@@ -18,6 +20,7 @@ const About: FC = () => {
             <AboutCreator />
             <AboutProjects />
             <AboutHonors />
+            <ContactForm />
         </main>
     )
 }
