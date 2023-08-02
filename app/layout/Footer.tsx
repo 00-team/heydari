@@ -26,7 +26,7 @@ export const Footer = () => {
                     />
                     <FooterHeaderRow
                         Svg={CallSvg}
-                        data='09120974957'
+                        data='09121890253'
                         holder='شماره تماس'
                     />
                     <FooterHeaderRow

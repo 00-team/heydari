@@ -8,6 +8,8 @@ const productImg = require('../../static/products/1.png')
 const productImg2 = require('../../static/products/2.png')
 const productImg3 = require('../../static/products/3.png')
 
+const imgs = [productImg, productImg2, productImg3]
+
 const Products: FC = () => {
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -26,30 +28,14 @@ url(${headerImg})`,
                 <h2 className='header-title title_hero'>محصولات</h2>
             </header>
             <section className='products-wrapper'>
-                <ProductCard
-                    title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg}
-                />
-                <ProductCard
-                    title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg2}
-                />
-                <ProductCard
-                    title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg3}
-                />
-                <ProductCard
-                    title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg3}
-                />
-                <ProductCard
-                    title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg2}
-                />
-                <ProductCard
-                    title='پاف کد F520 چهار پایه پلاستیکی'
-                    img={productImg}
-                />
+                {imgs.map((img, index) => {
+                    return (
+                        <ProductCard
+                            title={`صندلی کد ${index + 1}`}
+                            img={img}
+                        />
+                    )
+                })}
             </section>
         </main>
     )
