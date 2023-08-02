@@ -25,13 +25,18 @@ master)
     sqlite3 $2 "UPDATE users SET admin = '1' WHERE user_id = $3"
     ;;
 
-tag)
+release)
     if [[ -z $2 ]]; then
         exit
     else
-        git push
-        git tag -a "v$2" -m "release $2"
-        git push origin "v$2"
+        echo $2 > VERSION
+        if [[ -z $(git diff --name-only VERSION) ]]; then
+            echo -e "\n----------\nNo Change\n----------"
+            exit 1
+        fi
+
+        git add VERSION
+        git commit -m "release: $2"
     fi
     ;;
 
