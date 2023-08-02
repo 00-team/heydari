@@ -78,273 +78,273 @@
 
         width: clamp(0px, 100%, 1400px);
 
-        .product-detail-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6vh;
+        // .product-detail-container {
+        //     display: flex;
+        //     flex-direction: column;
+        //     gap: 6vh;
 
-            width: clamp(0px, 100%, 700px);
+        //     width: clamp(0px, 100%, 700px);
 
-            color: black;
-            background: white;
-            padding: 1rem 2rem;
-            border-radius: 15px;
+        //     color: black;
+        //     background: white;
+        //     padding: 1rem 2rem;
+        //     border-radius: 15px;
 
-            .product-name-wrapper {
-                width: 100%;
+        //     .product-name-wrapper {
+        //         width: 100%;
 
-                position: relative;
-                isolation: isolate;
-                overflow: hidden;
+        //         position: relative;
+        //         isolation: isolate;
+        //         overflow: hidden;
 
-                .product-name {
-                    transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+        //         .product-name {
+        //             transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
 
-                    &.center {
-                        text-align: center;
-                    }
+        //             &.center {
+        //                 text-align: center;
+        //             }
 
-                    &:not(.next, .prev, .active) {
-                        position: absolute;
-                        top: 0;
-                        z-index: -1;
-                        opacity: 0;
-                    }
-                    &.prev,
-                    &.next {
-                        position: absolute;
-                        top: 0;
-                        opacity: 0;
-                    }
-                    &.prev {
-                        translate: 200%;
-                    }
-                    &.next {
-                        translate: -200%;
-                    }
-                }
-            }
+        //             &:not(.next, .prev, .active) {
+        //                 position: absolute;
+        //                 top: 0;
+        //                 z-index: -1;
+        //                 opacity: 0;
+        //             }
+        //             &.prev,
+        //             &.next {
+        //                 position: absolute;
+        //                 top: 0;
+        //                 opacity: 0;
+        //             }
+        //             &.prev {
+        //                 translate: 200%;
+        //             }
+        //             &.next {
+        //                 translate: -200%;
+        //             }
+        //         }
+        //     }
 
-            .product-details-wrapper {
-                .product-details {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 3vh;
+        //     .product-details-wrapper {
+        //         .product-details {
+        //             display: flex;
+        //             flex-direction: column;
+        //             gap: 3vh;
 
-                    width: 100%;
+        //             width: 100%;
 
-                    position: relative;
-                    isolation: isolate;
-                    overflow: hidden;
+        //             position: relative;
+        //             isolation: isolate;
+        //             overflow: hidden;
 
-                    .product-detail {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
+        //             .product-detail {
+        //                 display: flex;
+        //                 align-items: center;
+        //                 justify-content: space-between;
 
-                        width: 100%;
+        //                 width: 100%;
 
-                        font-family: 'iranBold';
-                        cursor: default;
+        //                 font-family: 'iranBold';
+        //                 cursor: default;
 
-                        transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+        //                 transition: all 1s cubic-bezier(0.45, 0.02, 0.09, 0.98);
 
-                        .holder {
-                            display: flex;
-                            align-items: center;
-                            gap: 1vw;
+        //                 .holder {
+        //                     display: flex;
+        //                     align-items: center;
+        //                     gap: 1vw;
 
-                            opacity: 0.7;
-                        }
+        //                     opacity: 0.7;
+        //                 }
 
-                        &:hover {
-                            .holder {
-                                .holder-icon {
-                                    svg {
-                                        animation: product-icon-shake 0.75s
-                                            ease-in-out forwards;
-                                        @keyframes product-icon-shake {
-                                            0%,
-                                            100% {
-                                                transform: rotate(0deg);
-                                            }
-                                            20%,
-                                            60% {
-                                                transform: rotate(6deg);
-                                            }
-                                            40%,
-                                            80% {
-                                                transform: rotate(-6deg);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+        //                 &:hover {
+        //                     .holder {
+        //                         .holder-icon {
+        //                             svg {
+        //                                 animation: product-icon-shake 0.75s
+        //                                     ease-in-out forwards;
+        //                                 @keyframes product-icon-shake {
+        //                                     0%,
+        //                                     100% {
+        //                                         transform: rotate(0deg);
+        //                                     }
+        //                                     20%,
+        //                                     60% {
+        //                                         transform: rotate(6deg);
+        //                                     }
+        //                                     40%,
+        //                                     80% {
+        //                                         transform: rotate(-6deg);
+        //                                     }
+        //                                 }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
 
-                        &:not(.next, .prev, .active) {
-                            position: absolute;
-                            top: 0;
-                            z-index: -1;
-                            opacity: 0;
-                        }
-                        &.prev,
-                        &.next {
-                            position: absolute;
-                            opacity: 0;
-                        }
-                        &.prev {
-                            translate: 200%;
-                        }
-                        &.next {
-                            translate: -200%;
-                        }
-                    }
-                }
-            }
+        //                 &:not(.next, .prev, .active) {
+        //                     position: absolute;
+        //                     top: 0;
+        //                     z-index: -1;
+        //                     opacity: 0;
+        //                 }
+        //                 &.prev,
+        //                 &.next {
+        //                     position: absolute;
+        //                     opacity: 0;
+        //                 }
+        //                 &.prev {
+        //                     translate: 200%;
+        //                 }
+        //                 &.next {
+        //                     translate: -200%;
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            .product-submit {
-                width: 100%;
-                padding: 0.75rem 1rem;
+        //     .product-submit {
+        //         width: 100%;
+        //         padding: 0.75rem 1rem;
 
-                background-color: var(--ten-percent);
-                color: white;
+        //         background-color: var(--ten-percent);
+        //         color: white;
 
-                text-align: center;
+        //         text-align: center;
 
-                border-radius: 7.5px;
+        //         border-radius: 7.5px;
 
-                cursor: pointer;
+        //         cursor: pointer;
 
-                // reset
-                border: none;
-                //
+        //         // reset
+        //         border: none;
+        //         //
 
-                overflow: hidden;
-                position: relative;
+        //         overflow: hidden;
+        //         position: relative;
 
-                isolation: isolate;
+        //         isolation: isolate;
 
-                transition: 0.5s ease-in-out;
+        //         transition: 0.5s ease-in-out;
 
-                &:before,
-                &:after {
-                    position: absolute;
-                    top: 50%;
+        //         &:before,
+        //         &:after {
+        //             position: absolute;
+        //             top: 50%;
 
-                    content: '';
+        //             content: '';
 
-                    width: 20px;
-                    height: 20px;
+        //             width: 20px;
+        //             height: 20px;
 
-                    z-index: -1;
+        //             z-index: -1;
 
-                    background-color: var(--sixty-percent);
-                    border-radius: 100vmax;
-                }
+        //             background-color: var(--sixty-percent);
+        //             border-radius: 100vmax;
+        //         }
 
-                &:before {
-                    left: -20px;
-                    transform: translate(-50%, -50%);
-                }
+        //         &:before {
+        //             left: -20px;
+        //             transform: translate(-50%, -50%);
+        //         }
 
-                &:after {
-                    right: -20px;
-                    transform: translate(50%, -50%);
-                }
-                &:before {
-                    animation: criss-cross-left-reverse 0.8s forwards;
-                    animation-direction: alternate;
-                }
+        //         &:after {
+        //             right: -20px;
+        //             transform: translate(50%, -50%);
+        //         }
+        //         &:before {
+        //             animation: criss-cross-left-reverse 0.8s forwards;
+        //             animation-direction: alternate;
+        //         }
 
-                &:after {
-                    animation: criss-cross-right-reverse 0.8s forwards;
-                    animation-direction: alternate;
-                }
+        //         &:after {
+        //             animation: criss-cross-right-reverse 0.8s forwards;
+        //             animation-direction: alternate;
+        //         }
 
-                @keyframes criss-cross-left-reverse {
-                    0% {
-                        left: 50%;
-                        width: 120%;
-                        height: 120%;
-                    }
-                    20% {
-                        width: 20px;
-                        height: 20px;
-                    }
-                    100% {
-                        left: -20px;
-                        width: 20px;
-                        height: 20px;
-                    }
-                }
+        //         @keyframes criss-cross-left-reverse {
+        //             0% {
+        //                 left: 50%;
+        //                 width: 120%;
+        //                 height: 120%;
+        //             }
+        //             20% {
+        //                 width: 20px;
+        //                 height: 20px;
+        //             }
+        //             100% {
+        //                 left: -20px;
+        //                 width: 20px;
+        //                 height: 20px;
+        //             }
+        //         }
 
-                @keyframes criss-cross-right-reverse {
-                    0% {
-                        right: 50%;
+        //         @keyframes criss-cross-right-reverse {
+        //             0% {
+        //                 right: 50%;
 
-                        width: 120%;
-                        height: 120%;
-                    }
-                    20% {
-                        width: 20px;
-                        height: 20px;
-                    }
-                    100% {
-                        right: -20px;
-                        width: 20px;
-                        height: 20px;
-                    }
-                }
+        //                 width: 120%;
+        //                 height: 120%;
+        //             }
+        //             20% {
+        //                 width: 20px;
+        //                 height: 20px;
+        //             }
+        //             100% {
+        //                 right: -20px;
+        //                 width: 20px;
+        //                 height: 20px;
+        //             }
+        //         }
 
-                &:hover {
-                    // color: var(--sixty-percent);
-                    &:before {
-                        animation: criss-cross-left 0.8s both;
-                        animation-direction: alternate;
-                    }
+        //         &:hover {
+        //             // color: var(--sixty-percent);
+        //             &:before {
+        //                 animation: criss-cross-left 0.8s both;
+        //                 animation-direction: alternate;
+        //             }
 
-                    &:after {
-                        animation: criss-cross-right 0.8s both;
-                        animation-direction: alternate;
-                    }
+        //             &:after {
+        //                 animation: criss-cross-right 0.8s both;
+        //                 animation-direction: alternate;
+        //             }
 
-                    @keyframes criss-cross-left {
-                        0% {
-                            left: -20px;
-                        }
-                        50% {
-                            left: 50%;
-                            width: 20px;
-                            height: 20px;
-                        }
-                        100% {
-                            left: 50%;
-                            width: 120%;
-                            height: 120%;
-                        }
-                    }
+        //             @keyframes criss-cross-left {
+        //                 0% {
+        //                     left: -20px;
+        //                 }
+        //                 50% {
+        //                     left: 50%;
+        //                     width: 20px;
+        //                     height: 20px;
+        //                 }
+        //                 100% {
+        //                     left: 50%;
+        //                     width: 120%;
+        //                     height: 120%;
+        //                 }
+        //             }
 
-                    @keyframes criss-cross-right {
-                        0% {
-                            right: -20px;
-                        }
-                        50% {
-                            right: 50%;
+        //             @keyframes criss-cross-right {
+        //                 0% {
+        //                     right: -20px;
+        //                 }
+        //                 50% {
+        //                     right: 50%;
 
-                            width: 20px;
-                            height: 20px;
-                        }
-                        100% {
-                            right: 50%;
+        //                     width: 20px;
+        //                     height: 20px;
+        //                 }
+        //                 100% {
+        //                     right: 50%;
 
-                            width: 120%;
-                            height: 120%;
-                        }
-                    }
-                }
-            }
-        }
+        //                     width: 120%;
+        //                     height: 120%;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         .products-slider {
             width: clamp(0px, 350px, 60%);
             aspect-ratio: 1/1;
@@ -441,5 +441,8 @@
                 }
             }
         }
+    }
+    .products-btn {
+        margin-top: 5vh;
     }
 }
