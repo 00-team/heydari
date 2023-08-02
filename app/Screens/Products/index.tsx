@@ -1,5 +1,7 @@
 import React, { FC, useEffect } from 'react'
 
+import { ContactForm } from 'components'
+
 import './style/products.scss'
 
 const headerImg = '/static/image/header.webp'
@@ -37,6 +39,7 @@ url(${headerImg})`,
                     )
                 })}
             </section>
+            <ContactForm />
         </main>
     )
 }
