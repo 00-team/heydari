@@ -2,8 +2,10 @@ name: Deploy to Server 👻
 
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - main
+    paths:
+      - 'VERSION'
 
 jobs:
   deploy:
@@ -16,4 +18,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script: bash /site/heydari/config/deploy.sh
+          script: bash /heydari/config/deploy.sh

@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 
 import './style/aboutHeader.scss'
 
-const headerImg = require('../../static/about/header.jpg')
+const headerImg = '/static/image/about.webp'
 
 export const AboutHeader: FC = () => {
     return (

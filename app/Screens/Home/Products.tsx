@@ -3,17 +3,17 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { C } from '@00-team/utils'
 
 import { ColorSvg, HeightSvg, WeightSvg, WidthSvg } from 'Icons'
-// import { Link } from 'react-router-dom'
 
+// import { Link } from 'react-router-dom'
 import { ButtonArrow } from 'components'
 
 import './style/products.scss'
 
-const product_img = require('../../static/home/products/product.jpg')
-const product_img2 = require('../../static/home/products/product2.jpg')
-const product_img3 = require('../../static/home/products/product3.jpg')
-const product_img4 = require('../../static/home/products/product4.jpg')
-const product_img5 = require('../../static/home/products/product5.jpg')
+const product_img1 = '/static/image/home/products/product1.webp'
+const product_img2 = '/static/image/home/products/product2.webp'
+const product_img3 = '/static/image/home/products/product3.webp'
+const product_img4 = '/static/image/home/products/product4.webp'
+const product_img5 = '/static/image/home/products/product5.webp'
 
 interface ProductsModelProps {
     img: string
@@ -28,7 +28,7 @@ interface ProductsModelProps {
 
 const DEBUG_PRODCUTS: ProductsModelProps[] = [
     {
-        img: product_img,
+        img: product_img1,
         name: 'صندلی اداری مدل 4312',
         details: [
             {

@@ -2,13 +2,13 @@ import React, { FC, useEffect } from 'react'
 
 import './style/products.scss'
 
-const headerImg = require('../../static/products/header.jpg')
+const headerImg = '/static/image/header.webp'
 
-const productImg = require('../../static/products/1.png')
-const productImg2 = require('../../static/products/2.png')
-const productImg3 = require('../../static/products/3.png')
+const productImg1 = '/static/image/products/1.webp'
+const productImg2 = '/static/image/products/2.webp'
+const productImg3 = '/static/image/products/3.webp'
 
-const imgs = [productImg, productImg2, productImg3]
+const imgs = [productImg1, productImg2, productImg3]
 
 const Products: FC = () => {
     useEffect(() => {

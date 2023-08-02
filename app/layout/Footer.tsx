@@ -5,6 +5,7 @@ import {
     FaxSvg,
     InstagramSvg,
     LocationSvg,
+    Logo,
     TelegramSvg,
     WhatsappSvg,
 } from 'Icons'
@@ -12,7 +13,7 @@ import { Link } from 'react-router-dom'
 
 import './style/footer.scss'
 
-const logo = require('../static/logo.png')
+const rubika = '/static/image/footer/rubika.png'
 
 export const Footer = () => {
     return (
@@ -38,15 +39,36 @@ export const Footer = () => {
                 <div className='footer-content-wrapper'>
                     <div className='footer-content'>
                         <div className='content-socials'>
-                            <div className='social icon telegram'>
+                            <a
+                                href={'https://t.me/melobot'}
+                                className='social icon telegram'
+                            >
                                 <TelegramSvg size={40} />
-                            </div>
-                            <div className='social icon whatsapp'>
+                            </a>
+                            <a
+                                href={'https://wa.me/+989127388349'}
+                                className='social icon whatsapp'
+                            >
                                 <WhatsappSvg size={40} />
-                            </div>
-                            <div className='social icon instagram'>
+                            </a>
+                            <a
+                                href={'instagram://user?username=radinhtm'}
+                                className='social icon instagram'
+                            >
                                 <InstagramSvg size={40} />
-                            </div>
+                            </a>
+                            <button className='social rubika title_small'>
+                                <div className='tooltip'>
+                                    @mahmoodrezarizband25
+                                </div>
+                                <img
+                                    loading={'lazy'}
+                                    decoding={'async'}
+                                    src={rubika}
+                                    width={70}
+                                    height={70}
+                                />
+                            </button>
                         </div>
                         <div className='content-row-wrapper'>
                             <div className='row-wrapper'>
@@ -58,7 +80,7 @@ export const Footer = () => {
                                     درباره ما
                                 </Link>
                                 <Link
-                                    to={''}
+                                    to={'/#honors'}
                                     className='row-option title_smaller'
                                 >
                                     افتخارات ما
@@ -117,7 +139,9 @@ export const Footer = () => {
                         </div>
                     </div>
                     <div className='footer-logo title_small'>
-                        <img className='logo-img' src={logo} />
+                        <div className='logo-img'>
+                            <Logo />
+                        </div>
                         <div className='logo-name'>صنایع تولیدی حیدری</div>
                     </div>
                 </div>

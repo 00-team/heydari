@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
-import { createRoot } from 'react-dom/client'
+import { hydrateRoot } from 'react-dom/client'
 
+// import { renderToString } from 'react-dom/server'
 import { Options, Provider as AlertProvider } from '@00-team/react-alert'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -26,4 +27,4 @@ const Root: FC = () => {
 }
 
 const container = document.getElementById('root')!
-createRoot(container).render(<Root />)
+hydrateRoot(container, <Root />).render(<Root />)

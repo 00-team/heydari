@@ -6,7 +6,7 @@ import { StickyButton } from 'components'
 
 import './style/hero.scss'
 
-const heroImg = require('../../static/chair.png')
+const heroImg = '/static/image/chair.webp'
 
 const HeroSection: FC = () => {
     return (
@@ -51,7 +51,13 @@ const HeroSection: FC = () => {
                         </a>
                     </div>
                 </div>
-                <img className='hero-img' src={heroImg} alt='' />
+                <img
+                    className='hero-img'
+                    src={heroImg}
+                    loading={'lazy'}
+                    decoding={'async'}
+                    alt=''
+                />
             </div>
         </section>
     )

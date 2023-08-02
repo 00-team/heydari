@@ -21,3 +21,5 @@ export * from './contact/Phone'
 export * from './navbar/Blogs'
 export * from './navbar/Menu'
 export * from './navbar/Close'
+
+export * from './heydari'

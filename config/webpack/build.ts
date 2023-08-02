@@ -1,18 +1,18 @@
 import Compression from 'compression-webpack-plugin'
-import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizer from 'css-minimizer-webpack-plugin'
 import HtmlPlugin from 'html-webpack-plugin'
 import { Configuration } from 'webpack'
 
 import Base from './base'
-import { APP_DIR, DIST_DIR, resolve } from './config/path'
+import { APP_DIR, TEMPLATES_DIR, resolve } from './config/path'
 import { BuildStyle, CssExtract } from './config/style'
 
 const Html = new HtmlPlugin({
-    filename: resolve(DIST_DIR, 'index.html'),
-    template: resolve(APP_DIR, 'template.html'),
-    inject: true,
-    publicPath: '/',
+    // filename: entry => resolve(TEMPLATES_DIR, entry + '.html'),
+    filename: resolve(TEMPLATES_DIR, 'head.html'),
+    template: resolve(APP_DIR, 'template.ejs'),
+    inject: false,
+    publicPath: '/static/dist/',
     minify: false,
 })
 
@@ -27,11 +27,6 @@ const BuildConfig: Configuration = {
         new CssExtract(),
         new Compression({ exclude: /\.(html)$/ }),
         Html,
-        new CopyPlugin({
-            patterns: [
-                { from: resolve(APP_DIR, 'static/favicon.ico'), to: DIST_DIR },
-            ],
-        }),
     ],
     optimization: {
         emitOnErrors: false,

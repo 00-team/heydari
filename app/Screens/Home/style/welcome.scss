@@ -45,6 +45,8 @@
 
             animation: fadein 7s ease-in-out forwards;
 
+            fill: var(--sixty-percent);
+
             @keyframes logo-fadein {
                 0% {
                     opacity: 0;

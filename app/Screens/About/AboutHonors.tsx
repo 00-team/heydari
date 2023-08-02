@@ -5,11 +5,11 @@ import { C } from '@00-team/utils'
 import './style/aboutHonors.scss'
 
 const honors = [
-    { img: require('../../static/home/honors/honor1.png') },
-    { img: require('../../static/home/honors/honor2.png') },
-    { img: require('../../static/home/honors/honor3.png') },
-    { img: require('../../static/home/honors/honor4.png') },
-    { img: require('../../static/home/honors/honor5.png') },
+    { img: '/static/image/home/honors/honor1.webp' },
+    { img: '/static/image/home/honors/honor2.webp' },
+    { img: '/static/image/home/honors/honor3.webp' },
+    { img: '/static/image/home/honors/honor4.webp' },
+    { img: '/static/image/home/honors/honor5.webp' },
 ]
 
 const AboutHonors: FC = () => {
@@ -38,7 +38,7 @@ const AboutHonors: FC = () => {
     }, [container])
 
     return (
-        <section className='about-page-honors' ref={container}>
+        <section id='honors' className='about-page-honors' ref={container}>
             <h2 className={`honors-title title_hero ${C(Isintersected)}`}>
                 <span>افتخارات</span>
             </h2>

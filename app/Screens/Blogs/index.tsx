@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import './style/blogs.scss'
 
-const headerImg = require('../../static/blogs/header.jpg')
+const headerImg = '/static/image/header.webp'
 
 const Blogs: FC = () => {
     return (

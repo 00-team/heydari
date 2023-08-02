@@ -18,7 +18,7 @@ const DevConfig: Configuration = {
     },
     plugins: [
         ...Base.plugins!,
-        new HtmlPlugin({ template: resolve(APP_DIR, 'template.html') }),
+        new HtmlPlugin({ template: resolve(APP_DIR, 'basic.html') }),
     ],
     devServer: {
         port: 8000,
@@ -32,13 +32,15 @@ const DevConfig: Configuration = {
         proxy: [
             {
                 context: ['/api', '/static', '/media'],
-                target: 'http://127.0.0.1:7000/',
+                target: 'https://heydari-mi.com/',
+                changeOrigin: true,
             },
 
             // static
             {
                 context: ['/favicon.ico'],
-                target: 'http://127.0.0.1:7000/static/',
+                target: 'https://heydari-mi.com/static/',
+                changeOrigin: true,
             },
         ],
     },
