@@ -1,10 +1,13 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 
 import { FaxSvg, PhoneSvg } from 'Icons'
 
 import './style/contact.scss'
 
 const Contact: FC = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
     return (
         <main className='contact-container'>
             <img
