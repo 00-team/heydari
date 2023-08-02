@@ -19,10 +19,10 @@ export const Footer = () => {
     return (
         <footer className='footer-container'>
             <div className='footer-wrapper'>
-                <div className='footer-header'>
+                <Link to={'/contact'} className='footer-header'>
                     <FooterHeaderRow
                         Svg={LocationSvg}
-                        data='یوسف اباد، پلاک 21، زنگ 5'
+                        data='تهران ، صالح آباد شرقی ، نبش میدان شهید خالقی پ ۲'
                         holder='آدرس'
                     />
                     <FooterHeaderRow
@@ -35,7 +35,7 @@ export const Footer = () => {
                         data='02188359411'
                         holder='شماره فکس'
                     />
-                </div>
+                </Link>
                 <div className='footer-content-wrapper'>
                     <div className='footer-content'>
                         <div className='content-socials'>
