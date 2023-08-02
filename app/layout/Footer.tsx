@@ -63,8 +63,8 @@ export const Footer = () => {
                                     loading={'lazy'}
                                     decoding={'async'}
                                     src={rubika}
-                                    width={70}
-                                    height={70}
+                                    width={60}
+                                    height={60}
                                 />
                             </button>
                         </div>
