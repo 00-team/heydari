@@ -3,7 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { C } from '@00-team/utils'
 
 import { ColorSvg, HeightSvg, WeightSvg, WidthSvg } from 'Icons'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 import { ButtonArrow } from 'components'
 
@@ -165,7 +165,7 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
 ]
 
 // BASE_PRODUCT_DETAIL_DELAY
-const BPDD = 0.2
+// const BPDD = 0.2
 
 const Products: FC = () => {
     const LazyRef = useRef<HTMLDivElement>(null)
@@ -201,7 +201,7 @@ const Products: FC = () => {
                 </span>
             </h2>
             <ProductsWrapper />
-            <ButtonArrow classname='title_small' link='/products'>
+            <ButtonArrow classname='title_small products-btn' link='/products'>
                 همه محصولات
             </ButtonArrow>
         </section>
@@ -235,7 +235,7 @@ const ProductsWrapper: FC = () => {
 
     return (
         <div className='products-wrapper'>
-            <div className='product-detail-container'>
+            {/* <div className='product-detail-container'>
                 <div className='product-name-wrapper'>
                     {DEBUG_PRODCUTS.map(({ name }, index) => {
                         return (
@@ -289,7 +289,7 @@ const ProductsWrapper: FC = () => {
                 <Link to={'/contact'} className='product-submit title_small'>
                     خرید فوری!
                 </Link>
-            </div>
+            </div> */}
             <div className='products-slider'>
                 {DEBUG_PRODCUTS.map(({ img }, idx0) => {
                     return (
