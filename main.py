@@ -39,7 +39,6 @@ async def index(request: Request):
         'index.html',
         {
             'request': request,
-            'gg': 12
         }
     )
 
