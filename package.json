@@ -3,6 +3,7 @@
     "version": "0.5.19",
     "scripts": {
         "start": "webpack serve --config config/webpack/dev.ts",
+        "dev": "local=1 webpack serve --config config/webpack/dev.ts",
         "build": "webpack --config config/webpack/build.ts",
         "build:watch": "webpack --config config/webpack/build.ts --watch"
     },
