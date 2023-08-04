@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from 'react'
 
+// import { renderToString } from 'react-dom/server'
 import About from 'Screens/About'
 import Blog from 'Screens/Blog'
 import Blogs from 'Screens/Blogs'
@@ -45,5 +46,20 @@ const MainContent: FC = () => {
         </Routes>
     )
 }
+
+// console.log('--- products ---')
+// console.log(renderToString(<Products />))
+
+// console.log('--- contact ---')
+// console.log(renderToString(<Contact />))
+
+// console.log('--- about ---')
+// console.log(renderToString(<About />))
+
+// console.log('--- blog ---')
+// console.log(renderToString(<Blog />))
+
+// console.log('--- blogs ---')
+// console.log(renderToString(<Blogs />))
 
 export default App
