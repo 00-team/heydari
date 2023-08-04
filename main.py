@@ -9,7 +9,7 @@ from fastapi.templating import Jinja2Templates
 
 import shared.logger
 from deps import get_ip
-from shared import settings
+from shared import redis, settings
 from shared.errors import Error, all_errors
 
 app = FastAPI(
@@ -33,12 +33,12 @@ async def error_exception_handler(request, exc: Error):
 
 @app.on_event('startup')
 async def startup():
-    pass
+    await redis.ping()
 
 
 @app.on_event('shutdown')
 async def shutdown():
-    pass
+    await redis.connection_pool.disconnect()
 
 
 @app.get('/rapidoc/', include_in_schema=False)

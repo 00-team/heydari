@@ -25,8 +25,6 @@ class Settings(BaseSettings):
     record_dir: Path = base_dir / 'records/'
 
     redis_pass: str
-    alchemy_test_token: str
-    alchemy_main_token: str
 
     verification_expire: int = 2 * 60
     verification_code_len: int = 5
