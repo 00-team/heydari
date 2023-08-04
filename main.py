@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 
 from deps import get_ip
 from shared import settings
+from shared.errors import Error
 
 app = FastAPI(
     title='Heydari',
@@ -21,6 +22,11 @@ templates = Jinja2Templates(
 
 if settings.debug:
     app.mount('/static', StaticFiles(directory='static'), name='static')
+
+
+@app.exception_handler(Error)
+async def error_exception_handler(request, exc: Error):
+    return exc.json()
 
 
 @app.on_event('startup')
