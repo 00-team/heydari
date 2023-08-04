@@ -1,4 +1,5 @@
 
+from enum import Enum
 from functools import cached_property
 from hashlib import sha3_256
 from pathlib import Path
@@ -27,7 +28,13 @@ class RecordTable(BaseTable):
     mime = Column(String, nullable=False, server_default='unknown')
     ext = Column(String, nullable=False)
     item = Column(Integer, index=True)
+    item_table = Column(Integer, server_default=text('0'))
     timestamp = Column(Integer, nullable=False, server_default=text('0'))
+
+
+class RecordItemTable(int, Enum):
+    LOST = 0
+    BLOG = 1
 
 
 class RecordModel(BaseModel):
@@ -39,6 +46,7 @@ class RecordModel(BaseModel):
     ext: str
     timestamp: int
     item: int | None = None
+    item_table: RecordItemTable
 
     @cached_property
     def name(self) -> str:
