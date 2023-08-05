@@ -9,11 +9,9 @@ import { ButtonArrow } from 'components'
 
 import './style/products.scss'
 
-const product_img1 = '/static/image/home/products/product1.webp'
-const product_img2 = '/static/image/home/products/product2.webp'
-const product_img3 = '/static/image/home/products/product3.webp'
-const product_img4 = '/static/image/home/products/product4.webp'
-const product_img5 = '/static/image/home/products/product5.webp'
+const product_img1 = '/static/image/home/products/1.webp'
+const product_img2 = '/static/image/home/products/2.webp'
+const product_img3 = '/static/image/home/products/3.webp'
 
 interface ProductsModelProps {
     img: string
