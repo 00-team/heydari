@@ -27,3 +27,19 @@ async def record_add(**values: dict) -> int:
 
 async def record_delete(*where) -> int:
     return await sqlx.execute(delete(RecordTable).where(*where))
+
+
+async def record_list(record_ids: list[int]) -> dict[int, RecordModel]:
+    value = '(' + ','.join((str(i) for i in record_ids)) + ')'
+    rows = await sqlx.fetch_all(f'''
+        SELECT * FROM records
+        WHERE record_id IN {value}
+    ''')
+
+    result = {}
+
+    for r in rows:
+        record = RecordModel(**r)
+        result[record.record_id] = record
+
+    return result

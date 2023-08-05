@@ -7,9 +7,10 @@ from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import api
 import shared.logger
 from deps import get_ip
-from shared import redis, settings
+from shared import redis, settings, sqlx
 from shared.errors import Error, all_errors
 
 app = FastAPI(
@@ -18,12 +19,14 @@ app = FastAPI(
     description='**Heydari api documents**',
     dependencies=[get_ip()]
 )
+app.include_router(api.router)
 templates = Jinja2Templates(
     directory=settings.base_dir / 'static/templates/'
 )
 
 if settings.debug:
     app.mount('/static', StaticFiles(directory='static'), name='static')
+    app.mount('/records', StaticFiles(directory='records'), name='records')
 
 
 @app.exception_handler(Error)
@@ -34,11 +37,13 @@ async def error_exception_handler(request, exc: Error):
 @app.on_event('startup')
 async def startup():
     await redis.ping()
+    await sqlx.connect()
 
 
 @app.on_event('shutdown')
 async def shutdown():
     await redis.connection_pool.disconnect()
+    await sqlx.disconnect()
 
 
 @app.get('/rapidoc/', include_in_schema=False)
@@ -54,7 +59,7 @@ async def rapidoc():
     show-header="false" /></body> </html>''')
 
 
-@app.get('/', response_class=HTMLResponse)
+@app.get('/', response_class=HTMLResponse, include_in_schema=False)
 async def index(request: Request):
     return templates.TemplateResponse(
         'index.html',
@@ -65,8 +70,31 @@ async def index(request: Request):
 
 
 for route in app.routes:
-    if isinstance(route, APIRoute):
-        route.operation_id = route.name
+    if not isinstance(route, APIRoute):
+        continue
+
+    errors = []
+
+    for d in route.dependencies:
+        errors.extend(getattr(d, 'errors', []))
+
+    oid = route.path.replace('/', '_').strip('_')
+    oid += '_' + '_'.join(route.methods)
+    route.operation_id = oid
+
+    errors.extend((route.openapi_extra or {}).pop('errors', []))
+
+    for e in errors:
+        route.responses[e.code] = {
+            'description': f'{e.title} - {e.status}',
+            'content': {
+                'application/json': {
+                    'schema': {
+                        '$ref': f'#/errors/{e.code}',
+                    }
+                }
+            }
+        }
 
 
 def custom_openapi():
