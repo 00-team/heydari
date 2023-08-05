@@ -3,6 +3,8 @@
 from pydantic import BaseModel
 from sqlalchemy import TEXT, Column, ForeignKey, Integer, String, text
 
+from db.models import RecordTable
+
 from .common import BaseTable
 
 
@@ -22,6 +24,10 @@ class BlogTable(BaseTable):
         index=True, server_default=text('-1')
     )
     timestamp = Column(Integer, nullable=False, server_default=text('0'))
+    thumbnail = Column(
+        Integer,
+        ForeignKey(RecordTable.record_id, ondelete='SET NULL')
+    )
 
 
 class BlogTagTable(BaseModel):
@@ -39,7 +45,8 @@ class BlogModel(BaseModel):
     blog_id: int
     slug: str
     title: str
-    description: str
+    description: str | None = None
     content: str
     author: int
     timestamp: int
+    thumbnail: int | None = None
