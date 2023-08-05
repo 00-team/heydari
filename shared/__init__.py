@@ -17,7 +17,7 @@ class Connection(sqlite3.Connection):
 
 class Settings(BaseSettings):
     base_dir: Path = Path(__file__).parent.parent
-    debug: bool = False
+    debug: bool = True
 
     version: str = '0.0.1-beta'
 
