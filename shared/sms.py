@@ -6,7 +6,7 @@ from shared import settings
 # BASE_API = 'https://console.melipayamak.com/api'
 
 
-async def send_code_sms(phone: str, code: str):
+async def sms_send_code(phone: str, code: str):
     if True or settings.debug:
         print(
             '--------------------\n'
