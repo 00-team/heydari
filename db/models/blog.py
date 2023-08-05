@@ -1,7 +1,7 @@
 
 
 from pydantic import BaseModel
-from sqlalchemy import TEXT, Column, Integer, String, text
+from sqlalchemy import TEXT, Column, ForeignKey, Integer, String, text
 
 from .common import BaseTable
 
@@ -22,6 +22,17 @@ class BlogTable(BaseTable):
         index=True, server_default=text('-1')
     )
     timestamp = Column(Integer, nullable=False, server_default=text('0'))
+
+
+class BlogTagTable(BaseModel):
+    __tablename__ = 'blog_tag'
+
+    blog = Column(
+        Integer,
+        ForeignKey(BlogTable.blog_id, ondelete='CASCADE'),
+        nullable=False
+    )
+    tag = Column(String, nullable=False)
 
 
 class BlogModel(BaseModel):
