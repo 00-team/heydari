@@ -9,8 +9,28 @@ const headerImg = '/static/image/header.webp'
 const productImg1 = '/static/image/products/1.webp'
 const productImg2 = '/static/image/products/2.webp'
 const productImg3 = '/static/image/products/3.webp'
+const productImg4 = '/static/image/products/4.webp'
+const productImg5 = '/static/image/products/5.webp'
+const productImg6 = '/static/image/products/6.webp'
+const productImg7 = '/static/image/products/7.webp'
+const productImg8 = '/static/image/products/8.webp'
+const productImg9 = '/static/image/products/9.webp'
+const productImg10 = '/static/image/products/10.webp'
+const productImg11 = '/static/image/products/11.webp'
 
-const imgs = [productImg1, productImg2, productImg3]
+const imgs = [
+    productImg1,
+    productImg2,
+    productImg3,
+    productImg4,
+    productImg5,
+    productImg6,
+    productImg7,
+    productImg8,
+    productImg9,
+    productImg10,
+    productImg11,
+]
 
 const Products: FC = () => {
     useEffect(() => {
