@@ -3,7 +3,7 @@
 from pydantic import BaseModel
 from sqlalchemy import TEXT, Column, ForeignKey, Integer, String, text
 
-from db.models import RecordTable
+from db.models.record import RecordTable
 
 from .common import BaseTable
 
@@ -30,9 +30,13 @@ class BlogTable(BaseTable):
     )
 
 
-class BlogTagTable(BaseModel):
+class BlogTagTable(BaseTable):
     __tablename__ = 'blog_tag'
 
+    blog_tag_id = Column(
+        Integer, primary_key=True,
+        autoincrement=True
+    )
     blog = Column(
         Integer,
         ForeignKey(BlogTable.blog_id, ondelete='CASCADE'),
