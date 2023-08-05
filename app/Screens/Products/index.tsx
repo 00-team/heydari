@@ -17,6 +17,8 @@ const productImg8 = '/static/image/products/8.webp'
 const productImg9 = '/static/image/products/9.webp'
 const productImg10 = '/static/image/products/10.webp'
 const productImg11 = '/static/image/products/11.webp'
+const productImg12 = '/static/image/products/12.webp'
+const productImg13 = '/static/image/products/13.webp'
 
 const imgs = [
     productImg1,
@@ -30,6 +32,8 @@ const imgs = [
     productImg9,
     productImg10,
     productImg11,
+    productImg12,
+    productImg13,
 ]
 
 const Products: FC = () => {
