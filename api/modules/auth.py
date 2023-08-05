@@ -25,6 +25,7 @@ class LoginBody(BaseModel):
 class LoginResponse(BaseModel):
     user: UserModel
     token: str
+    created: bool
 
 
 @router.post(
@@ -62,7 +63,8 @@ async def login(response: Response, body: LoginBody):
                 'admin': None,
                 'token': token_hash[:32],
             },
-            'token': token
+            'token': token,
+            'created': True,
         }
 
     await user_update(UserTable.user_id == user.user_id, token=token_hash)
@@ -79,4 +81,5 @@ async def login(response: Response, body: LoginBody):
     return {
         'user': user,
         'token': token,
+        'created': False,
     }
