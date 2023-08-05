@@ -27,7 +27,7 @@ if check_diff "requirements.txt"; then
     echo $SPACER
 fi
 
-if check_diff "package.json package-lock.json"; then
+if check_diff "package.json"; then
     echo "$EG install npm packages"
     npm ci
     echo $SPACER
