@@ -10,6 +10,16 @@ interface Configuration extends WConf {
     devServer: DConf
 }
 
+let host = ''
+if (process.env.local) {
+    host = 'http://localhost:7200'
+} else {
+    host = 'https://heydari-mi.com'
+}
+
+console.log('proxy host: ' + host)
+
+
 const DevConfig: Configuration = {
     ...Base,
     mode: 'development',
@@ -31,15 +41,8 @@ const DevConfig: Configuration = {
         },
         proxy: [
             {
-                context: ['/api', '/static', '/media'],
-                target: 'https://heydari-mi.com/',
-                changeOrigin: true,
-            },
-
-            // static
-            {
-                context: ['/favicon.ico'],
-                target: 'https://heydari-mi.com/static/',
+                context: ['/api', '/static', '/media', '/favicon.ico'],
+                target: host,
                 changeOrigin: true,
             },
         ],

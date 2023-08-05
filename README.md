@@ -2,4 +2,6 @@
 
 ## Todos
 
-none
+-   [ ] users
+-   [ ] admins
+-   [ ] blogs
