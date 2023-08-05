@@ -164,3 +164,4 @@ yarn-error.log*
 static/templates/head.html
 db/files/
 db/versions/
+package-lock.json
