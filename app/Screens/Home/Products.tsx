@@ -9,11 +9,9 @@ import { ButtonArrow } from 'components'
 
 import './style/products.scss'
 
-const product_img1 = '/static/image/home/products/product1.webp'
-const product_img2 = '/static/image/home/products/product2.webp'
-const product_img3 = '/static/image/home/products/product3.webp'
-const product_img4 = '/static/image/home/products/product4.webp'
-const product_img5 = '/static/image/home/products/product5.webp'
+const product_img1 = '/static/image/home/products/1.webp'
+const product_img2 = '/static/image/home/products/2.webp'
+const product_img3 = '/static/image/home/products/3.webp'
 
 interface ProductsModelProps {
     img: string
@@ -108,60 +106,60 @@ const DEBUG_PRODCUTS: ProductsModelProps[] = [
         ],
         link: '/',
     },
-    {
-        img: product_img4,
-        name: 'صندلی اداری مدل 124',
-        details: [
-            {
-                holder: 'رنگ',
-                Svg: ColorSvg,
-                data: 'زرد',
-            },
-            {
-                holder: 'طول',
-                Svg: HeightSvg,
-                data: '150',
-            },
-            {
-                holder: 'عرض',
-                Svg: WidthSvg,
-                data: '20',
-            },
-            {
-                holder: 'وزن',
-                Svg: WeightSvg,
-                data: '4',
-            },
-        ],
-        link: '/',
-    },
-    {
-        img: product_img5,
-        name: 'صندلی اداری مدل 213',
-        details: [
-            {
-                holder: 'رنگ',
-                Svg: ColorSvg,
-                data: 'نارنجی',
-            },
-            {
-                holder: 'طول',
-                Svg: HeightSvg,
-                data: '100',
-            },
-            {
-                holder: 'عرض',
-                Svg: WidthSvg,
-                data: '30',
-            },
-            {
-                holder: 'وزن',
-                Svg: WeightSvg,
-                data: '30',
-            },
-        ],
-        link: '/',
-    },
+    // {
+    //     img: product_img4,
+    //     name: 'صندلی اداری مدل 124',
+    //     details: [
+    //         {
+    //             holder: 'رنگ',
+    //             Svg: ColorSvg,
+    //             data: 'زرد',
+    //         },
+    //         {
+    //             holder: 'طول',
+    //             Svg: HeightSvg,
+    //             data: '150',
+    //         },
+    //         {
+    //             holder: 'عرض',
+    //             Svg: WidthSvg,
+    //             data: '20',
+    //         },
+    //         {
+    //             holder: 'وزن',
+    //             Svg: WeightSvg,
+    //             data: '4',
+    //         },
+    //     ],
+    //     link: '/',
+    // },
+    // {
+    //     img: product_img5,
+    //     name: 'صندلی اداری مدل 213',
+    //     details: [
+    //         {
+    //             holder: 'رنگ',
+    //             Svg: ColorSvg,
+    //             data: 'نارنجی',
+    //         },
+    //         {
+    //             holder: 'طول',
+    //             Svg: HeightSvg,
+    //             data: '100',
+    //         },
+    //         {
+    //             holder: 'عرض',
+    //             Svg: WidthSvg,
+    //             data: '30',
+    //         },
+    //         {
+    //             holder: 'وزن',
+    //             Svg: WeightSvg,
+    //             data: '30',
+    //         },
+    //     ],
+    //     link: '/',
+    // },
 ]
 
 // BASE_PRODUCT_DETAIL_DELAY
