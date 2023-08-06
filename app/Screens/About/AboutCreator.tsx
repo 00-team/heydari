@@ -22,7 +22,7 @@ export const AboutCreator: FC = () => {
                     src='https://picsum.photos/800/500'
                     loading={'lazy'}
                     decoding={'async'}
-                    alt=''
+                    alt={'بنیان گذار صنایع تولیدی حیدری'}
                 />
             </aside>
         </section>
