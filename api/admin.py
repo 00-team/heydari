@@ -6,13 +6,13 @@ from typing import ClassVar, Literal
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, EmailStr, Field, constr
 
-from db.blog import blog_add, blog_update
+from db.blog import blog_add, blog_get, blog_update
 from db.models import BlogModel, BlogTable, BlogTagTable, UserModel
 from db.record import record_exists
 from db.user import user_exists, user_update
 from deps import admin_required, rate_limit, user_required
 from shared import settings, sqlx
-from shared.errors import bad_id, no_change
+from shared.errors import bad_id, no_change, not_unique
 from shared.models import IDModel, OkModel
 from shared.tools import utc_now
 
@@ -27,14 +27,14 @@ class AddBlogBody(BaseModel):
     slug: str
     title: str
     description: str = None
-    content: str
+    content: str = ''
     author: int = None
     thumbnail: int = None
 
 
 @router.post(
     '/blogs/', response_model=IDModel,
-    openapi_extra={'errors': [bad_id]}
+    openapi_extra={'errors': [bad_id, not_unique]}
 )
 async def add_blog(request: Request, body: AddBlogBody):
     user: UserModel = request.state.user
@@ -46,6 +46,9 @@ async def add_blog(request: Request, body: AddBlogBody):
     if body.author is not None:
         if not (await user_exists(body.author)):
             raise bad_id('User', body.author, id=body.author)
+
+    if (await blog_get(BlogTable.slug == body.slug)):
+        raise not_unique(body.slug, 'slug', value=body.slug)
 
     blog_id = await blog_add(
         slug=body.slug,
