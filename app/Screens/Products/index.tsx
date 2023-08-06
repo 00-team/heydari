@@ -82,7 +82,7 @@ const ProductCard: FC<ProductCardProps> = ({ img, title }) => {
                 src={img}
                 decoding={'async'}
                 loading={'lazy'}
-                alt=''
+                alt='صندلی صنایع تولیدی حیدری'
             />
             <figcaption className='card-caption title_smaller'>
                 {title}

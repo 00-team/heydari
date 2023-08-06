@@ -160,7 +160,7 @@ const ProductsWrapper: FC = () => {
                                 loading='lazy'
                                 draggable={'false'}
                                 src={img}
-                                alt=''
+                                alt='صندلی صنایع تولیدی حیدری'
                             />
                         </div>
                     )

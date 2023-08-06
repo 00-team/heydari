@@ -124,7 +124,7 @@ const About: FC = () => {
                                     loading='lazy'
                                     draggable={'false'}
                                     src={img}
-                                    alt=''
+                                    alt='درباره صنایع تولیدی حیدری'
                                 />
                             </div>
                         )

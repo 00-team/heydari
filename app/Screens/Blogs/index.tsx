@@ -38,7 +38,7 @@ const BlogCard: FC = () => {
                 loading={'lazy'}
                 className='card-img'
                 src='https://picsum.photos/1920/1080'
-                alt=''
+                alt='مقاله صنایع تولیدی حیدری'
             />
             <figcaption className='card-caption title_smaller'>
                 لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با

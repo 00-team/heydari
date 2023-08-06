@@ -108,7 +108,7 @@ const HonorsWrapper: FC<HonorsWrapperProps> = () => {
                             src={img}
                             decoding={'async'}
                             loading={'lazy'}
-                            alt=''
+                            alt='افتخارات صنایع تولیدی حیدری'
                         />
                     </div>
                 )
