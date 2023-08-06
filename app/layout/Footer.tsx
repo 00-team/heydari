@@ -13,29 +13,31 @@ import { Link } from 'react-router-dom'
 
 import './style/footer.scss'
 
-const rubika = '/static/image/footer/rubika.png'
+const rubika = '/static/image/footer/rubika.webp'
 
 export const Footer = () => {
     return (
         <footer className='footer-container'>
             <div className='footer-wrapper'>
-                <Link to={'/contact'} className='footer-header'>
+                <div className='footer-header'>
                     <FooterHeaderRow
                         Svg={LocationSvg}
                         data='تهران ، صالح آباد شرقی ، نبش میدان شهید خالقی پ ۲'
                         holder='آدرس'
+                        className='address'
                     />
                     <FooterHeaderRow
                         Svg={CallSvg}
-                        data='9129429430'
+                        data='+98-9129429430'
                         holder='شماره تماس'
+                        link='tel:9129429430'
                     />
                     <FooterHeaderRow
                         Svg={FaxSvg}
-                        data='02155004245'
+                        data='02155009865'
                         holder='شماره فکس'
                     />
-                </Link>
+                </div>
                 <div className='footer-content-wrapper'>
                     <div className='footer-content'>
                         <div className='content-socials'>
@@ -153,20 +155,53 @@ interface FooterHeaderRow {
     Svg: Icon
     holder: string
     data: string
+    className?: string
+    link?: string
 }
 
-const FooterHeaderRow: FC<FooterHeaderRow> = ({ Svg, data, holder }) => {
+const FooterHeaderRow: FC<FooterHeaderRow> = ({
+    Svg,
+    data,
+    holder,
+    className,
+    link,
+}) => {
     return (
-        <div className='footer-header-row title_small'>
-            <div className='header-icon icon'>
-                <div className='icon-wrapper'>
-                    <Svg size={25} />
+        <>
+            {link ? (
+                <a
+                    href={link}
+                    className={`footer-header-row title_small ${
+                        className && className
+                    }`}
+                >
+                    <div className='header-icon icon'>
+                        <div className='icon-wrapper'>
+                            <Svg size={25} />
+                        </div>
+                    </div>
+                    <div className='header-wrapper '>
+                        <div className='holder title_smaller'>{holder} </div>
+                        <div className='data '>{data}</div>
+                    </div>
+                </a>
+            ) : (
+                <div
+                    className={`footer-header-row title_small ${
+                        className && className
+                    }`}
+                >
+                    <div className='header-icon icon'>
+                        <div className='icon-wrapper'>
+                            <Svg size={25} />
+                        </div>
+                    </div>
+                    <div className='header-wrapper '>
+                        <div className='holder title_smaller'>{holder} </div>
+                        <div className='data '>{data}</div>
+                    </div>
                 </div>
-            </div>
-            <div className='header-wrapper '>
-                <div className='holder title_smaller'>{holder} </div>
-                <div className='data '>{data}</div>
-            </div>
-        </div>
+            )}
+        </>
     )
 }
