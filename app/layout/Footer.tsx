@@ -14,6 +14,8 @@ import { Link } from 'react-router-dom'
 import './style/footer.scss'
 
 const rubika = '/static/image/footer/rubika.webp'
+const bale = '/static/image/footer/bale.webp'
+const ita = '/static/image/footer/ita.webp'
 
 export const Footer = () => {
     return (
@@ -59,12 +61,36 @@ export const Footer = () => {
                             >
                                 <InstagramSvg size={40} />
                             </a>
+                        </div>
+                        <div className='content-socials'>
                             <button className='social rubika title_small'>
                                 <div className='tooltip'>+989129429430</div>
                                 <img
                                     loading={'lazy'}
                                     decoding={'async'}
                                     src={rubika}
+                                    width={60}
+                                    height={60}
+                                    alt={'ارتباط با حیدری'}
+                                />
+                            </button>
+                            <button className='social rubika title_small'>
+                                <div className='tooltip'>+989129429430</div>
+                                <img
+                                    loading={'lazy'}
+                                    decoding={'async'}
+                                    src={bale}
+                                    width={60}
+                                    height={60}
+                                    alt={'ارتباط با حیدری'}
+                                />
+                            </button>
+                            <button className='social rubika title_small'>
+                                <div className='tooltip'>+989129429430</div>
+                                <img
+                                    loading={'lazy'}
+                                    decoding={'async'}
+                                    src={ita}
                                     width={60}
                                     height={60}
                                     alt={'ارتباط با حیدری'}
