@@ -65,6 +65,7 @@ export const Footer = () => {
                                     src={rubika}
                                     width={60}
                                     height={60}
+                                    alt={'ارتباط با حیدری'}
                                 />
                             </button>
                         </div>
