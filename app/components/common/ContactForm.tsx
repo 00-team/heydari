@@ -9,33 +9,33 @@ export const ContactForm: FC = () => {
         <div className='contact-wrapper'>
             <aside className='contact-data title_small'>
                 <div className='contact-header'>
-                    <div className='link'>
+                    <a className='link call' href='tel:02155004626'>
                         <div className='link-holder'>
                             <div className='icon'>
                                 <FaxSvg size={25} />
                             </div>
-                            <div className='holder'>تلفن دفتر</div>
+                            <div className='holder'>تلفن کارخانه</div>
                         </div>
                         <div className='data'>021 - 55004626</div>
-                    </div>
-                    <div className='link'>
+                    </a>
+                    <a className='link call' href='tel:02155005158'>
                         <div className='link-holder'>
                             <div className='icon'>
                                 <FaxSvg size={25} />
                             </div>
-                            <div className='holder'>تلفن دفتر</div>
+                            <div className='holder'>تلفن کارخانه</div>
                         </div>
                         <div className='data'>021 - 55005158</div>
-                    </div>
-                    <div className='link'>
+                    </a>
+                    <a className='link call' href='tel:9129429430'>
                         <div className='link-holder'>
                             <div className='icon'>
                                 <PhoneSvg size={25} />
                             </div>
-                            <div className='holder'>تلفن ثابت</div>
+                            <div className='holder'>تلفن همراه</div>
                         </div>
-                        <div className='data'>09121890253</div>
-                    </div>
+                        <div className='data'>+98 - 9129429430</div>
+                    </a>
                 </div>
                 <div className='contact-body'>
                     <p className='title_small'>

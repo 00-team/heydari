@@ -75,6 +75,13 @@ footer.footer-container {
                         -webkit-box-orient: vertical;
                         overflow: hidden;
                         text-overflow: ellipsis;
+
+                        direction: ltr;
+                    }
+                }
+                &.address {
+                    .data {
+                        direction: rtl;
                     }
                 }
             }
