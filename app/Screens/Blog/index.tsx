@@ -11,7 +11,7 @@ const Blog: FC = () => {
                     src={'https://picsum.photos/1920/1080'}
                     decoding={'async'}
                     loading={'lazy'}
-                    alt=''
+                    alt={'مقاله صنایع تولیدی حیدری'}
                 />
                 <p className='title_small'>
                     لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
