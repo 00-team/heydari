@@ -59,6 +59,7 @@ url(${headerImg})`,
                         <ProductCard
                             title={`صندلی کد ${index + 1}`}
                             img={img}
+                            key={index}
                         />
                     )
                 })}
