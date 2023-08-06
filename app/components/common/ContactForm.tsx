@@ -14,7 +14,7 @@ export const ContactForm: FC = () => {
                             <div className='icon'>
                                 <FaxSvg size={25} />
                             </div>
-                            <div className='holder'>تلفن دفتر</div>
+                            <div className='holder'>تلفن کارخانه</div>
                         </div>
                         <div className='data'>021 - 55004626</div>
                     </div>
@@ -23,7 +23,7 @@ export const ContactForm: FC = () => {
                             <div className='icon'>
                                 <FaxSvg size={25} />
                             </div>
-                            <div className='holder'>تلفن دفتر</div>
+                            <div className='holder'>تلفن کارخانه</div>
                         </div>
                         <div className='data'>021 - 55005158</div>
                     </div>
@@ -32,9 +32,9 @@ export const ContactForm: FC = () => {
                             <div className='icon'>
                                 <PhoneSvg size={25} />
                             </div>
-                            <div className='holder'>تلفن ثابت</div>
+                            <div className='holder'>تلفن همراه</div>
                         </div>
-                        <div className='data'>09121890253</div>
+                        <div className='data'>9129429430</div>
                     </div>
                 </div>
                 <div className='contact-body'>
