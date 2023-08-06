@@ -9,7 +9,7 @@ from pydantic import BaseModel, EmailStr, Field, constr
 from db.blog import blog_add, blog_update
 from db.models import BlogModel, BlogTable, BlogTagTable, UserModel
 from db.record import record_exists
-from db.user import user_update
+from db.user import user_exists, user_update
 from deps import admin_required, rate_limit, user_required
 from shared import settings, sqlx
 from shared.errors import bad_id, no_change
@@ -42,6 +42,10 @@ async def add_blog(request: Request, body: AddBlogBody):
     if body.thumbnail is not None:
         if not (await record_exists(body.thumbnail)):
             raise bad_id('Record', body.thumbnail, id=body.thumbnail)
+
+    if body.author is not None:
+        if not (await user_exists(body.author)):
+            raise bad_id('User', body.author, id=body.author)
 
     blog_id = await blog_add(
         slug=body.slug,
