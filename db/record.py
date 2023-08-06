@@ -6,6 +6,12 @@ from shared import sqlx
 from .models import RecordModel, RecordTable
 
 
+async def record_exists(record_id: int) -> bool:
+    return bool(await sqlx.fetch_one(
+        select(RecordTable).where(RecordTable.record_id == record_id)
+    ))
+
+
 async def record_get(*where) -> RecordModel | None:
     row = await sqlx.fetch_one(select(RecordTable).where(*where))
     if row is None:
