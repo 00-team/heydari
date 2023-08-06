@@ -32,6 +32,7 @@ class BlogItem(BaseModel):
     title: str
     description: str | None
     timestamp: int
+    last_update: int
     thumbnail: str | None
     author: UserPublic
 
@@ -77,6 +78,7 @@ async def get_blogs(request: Request, body: GetBlogsBody):
             title=blog.title,
             description=blog.description,
             timestamp=blog.timestamp,
+            last_update=blog.last_update,
             thumbnail=thumbnail,
             author=authors[blog.author],
         ))
