@@ -110,6 +110,12 @@ bad_file = Error(
     'invalid or unknown file',
     400
 )
+not_unique = Error(
+    40014, 'Not Unique',
+    '{} is not a unique {}',
+    400, extra={'value': 'xxx'}
+)
+
 
 database_error = Error(50001, 'Database Error', 'Database Error', 500)
 
@@ -117,7 +123,7 @@ database_error = Error(50001, 'Database Error', 'Database Error', 500)
 all_errors = [
     forbidden, bad_verification,
     no_change, bad_id, bad_auth, rate_limited,
-    bad_args, bad_file,
+    bad_args, bad_file, not_unique,
 
     database_error
 ]
