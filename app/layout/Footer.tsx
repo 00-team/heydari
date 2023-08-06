@@ -27,12 +27,12 @@ export const Footer = () => {
                     />
                     <FooterHeaderRow
                         Svg={CallSvg}
-                        data='09121890253'
+                        data='9129429430'
                         holder='شماره تماس'
                     />
                     <FooterHeaderRow
                         Svg={FaxSvg}
-                        data='02188359411'
+                        data='02155004245'
                         holder='شماره فکس'
                     />
                 </Link>
