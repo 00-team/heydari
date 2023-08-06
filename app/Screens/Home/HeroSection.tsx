@@ -64,7 +64,7 @@ const HeroSection: FC = () => {
                     src={heroImg}
                     loading={'lazy'}
                     decoding={'async'}
-                    alt=''
+                    alt='صنایع تولیدی حیدری'
                 />
             </div>
         </section>
