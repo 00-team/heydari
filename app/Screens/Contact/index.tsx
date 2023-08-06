@@ -15,7 +15,7 @@ const Contact: FC = () => {
                 src='/static/image/contact.webp'
                 decoding={'async'}
                 loading={'lazy'}
-                alt=''
+                alt='ارتباط با صنایع تولیدی حیدری'
             />
             <ContactForm />
         </main>
