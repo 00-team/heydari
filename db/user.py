@@ -6,6 +6,12 @@ from shared import sqlx
 from .models import UserModel, UserPublic, UserTable
 
 
+async def user_exists(user_id: int) -> bool:
+    return bool(await sqlx.fetch_one(
+        select(UserTable).where(UserTable.user_id == user_id)
+    ))
+
+
 async def user_get(*where) -> UserModel | None:
     row = await sqlx.fetch_one(select(UserTable).where(*where))
     if row is None:
