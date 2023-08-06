@@ -4,12 +4,12 @@ import { C } from '@00-team/utils'
 
 import './style/aboutProjects.scss'
 
-const projects1 = '/static/image/about/projects1.jpg'
-const projects2 = '/static/image/about/projects2.jpg'
-const projects3 = '/static/image/about/projects3.jpg'
-const projects4 = '/static/image/about/projects4.jpg'
-const projects5 = '/static/image/about/projects5.jpg'
-const projects6 = '/static/image/about/projects6.jpg'
+const projects1 = '/static/image/about/projects1.webp'
+const projects2 = '/static/image/about/projects2.webp'
+const projects3 = '/static/image/about/projects3.webp'
+const projects4 = '/static/image/about/projects4.webp'
+const projects5 = '/static/image/about/projects5.webp'
+const projects6 = '/static/image/about/projects6.webp'
 
 const SLIDES = [
     projects1,
