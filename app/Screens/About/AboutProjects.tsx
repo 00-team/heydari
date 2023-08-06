@@ -70,7 +70,7 @@ const ProjectsSlider: FC<ProjectsSliderProps> = ({ Isintersected }) => {
                             decoding={'async'}
                             loading='lazy'
                             draggable={false}
-                            alt=''
+                            alt={'پروژه های صنایع تولیدی حیدری'}
                         />
                     </div>
                 )
