@@ -145,7 +145,11 @@ const HonorsWrapper: FC<HonorsWrapperProps> = ({ isIntersecting }) => {
                     >
                         <div className='honor-cup'>
                             <div className='cup-glass'></div>
-                            <img src={img} alt='' className='cup-img' />
+                            <img
+                                src={img}
+                                alt='افتخار صنایع تولیدی حیدری'
+                                className='cup-img'
+                            />
                         </div>
                         <div className='honor-content'>
                             <div className='honor-name title'>
