@@ -60,12 +60,12 @@
             }
 
             img.card-img {
-                height: 80%;
+                height: 85%;
                 max-width: 100%;
 
                 flex: 1;
 
-                object-fit: contain;
+                object-fit: cover;
             }
             figcaption.card-caption {
                 width: 100%;
