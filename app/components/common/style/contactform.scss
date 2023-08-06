@@ -73,6 +73,13 @@
                     .data {
                         direction: ltr;
                     }
+
+                    &.call {
+                        .data {
+                            color: rgb(79, 79, 255);
+                            text-decoration: underline;
+                        }
+                    }
                 }
             }
             .contact-body {
