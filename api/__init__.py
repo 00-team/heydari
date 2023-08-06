@@ -1,7 +1,7 @@
 
 from fastapi import APIRouter
 
-from api import blog
+from api import admin, blog
 from shared.errors import bad_verification
 
 from .modules import auth, user
@@ -24,5 +24,6 @@ router.add_api_route(
 
 
 router.include_router(auth.router)
+router.include_router(admin.router)
 router.include_router(blog.router)
 router.include_router(user.router)
