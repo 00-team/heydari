@@ -24,6 +24,7 @@ class BlogTable(BaseTable):
         index=True, server_default=text('-1')
     )
     timestamp = Column(Integer, nullable=False, server_default=text('0'))
+    last_update = Column(Integer, nullable=False, server_default=text('0'))
     thumbnail = Column(
         Integer,
         ForeignKey(RecordTable.record_id, ondelete='SET NULL')
@@ -53,4 +54,5 @@ class BlogModel(BaseModel):
     content: str
     author: int
     timestamp: int
+    last_update: int
     thumbnail: int | None = None
