@@ -2,8 +2,6 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { C } from '@00-team/utils'
 
-import { ColorSvg, HeightSvg, WeightSvg, WidthSvg } from 'Icons'
-
 // import { Link } from 'react-router-dom'
 import { ButtonArrow } from 'components'
 
@@ -12,154 +10,17 @@ import './style/products.scss'
 const product_img1 = '/static/image/home/products/1.webp'
 const product_img2 = '/static/image/home/products/2.webp'
 const product_img3 = '/static/image/home/products/3.webp'
+const product_img4 = '/static/image/home/products/4.webp'
+const product_img5 = '/static/image/home/products/5.webp'
+const product_img6 = '/static/image/home/products/6.webp'
 
-interface ProductsModelProps {
-    img: string
-    name: string
-    details: {
-        holder: string
-        Svg: Icon
-        data: string
-    }[]
-    link: string
-}
-
-const DEBUG_PRODCUTS: ProductsModelProps[] = [
-    {
-        img: product_img1,
-        name: 'صندلی اداری مدل 4312',
-        details: [
-            {
-                holder: 'رنگ',
-                Svg: ColorSvg,
-                data: 'ابی',
-            },
-            {
-                holder: 'طول',
-                Svg: WidthSvg,
-                data: '123',
-            },
-            {
-                holder: 'عرض',
-                Svg: HeightSvg,
-                data: '33',
-            },
-            {
-                holder: 'وزن',
-                Svg: WeightSvg,
-                data: '3',
-            },
-        ],
-        link: '/',
-    },
-    {
-        img: product_img2,
-        name: 'صندلی اداری مدل 213',
-        details: [
-            {
-                holder: 'رنگ',
-                Svg: ColorSvg,
-                data: 'بنفش',
-            },
-            {
-                holder: 'طول',
-                Svg: HeightSvg,
-                data: '132',
-            },
-            {
-                holder: 'عرض',
-                Svg: WidthSvg,
-                data: '31',
-            },
-            {
-                holder: 'وزن',
-                Svg: WeightSvg,
-                data: '1',
-            },
-        ],
-        link: '/',
-    },
-    {
-        img: product_img3,
-        name: 'صندلی اداری مدل 321',
-        details: [
-            {
-                holder: 'رنگ',
-                Svg: ColorSvg,
-                data: 'سیاه',
-            },
-            {
-                holder: 'طول',
-                Svg: HeightSvg,
-                data: '142',
-            },
-            {
-                holder: 'عرض',
-                Svg: WidthSvg,
-                data: '41',
-            },
-            {
-                holder: 'وزن',
-                Svg: WeightSvg,
-                data: '5',
-            },
-        ],
-        link: '/',
-    },
-    // {
-    //     img: product_img4,
-    //     name: 'صندلی اداری مدل 124',
-    //     details: [
-    //         {
-    //             holder: 'رنگ',
-    //             Svg: ColorSvg,
-    //             data: 'زرد',
-    //         },
-    //         {
-    //             holder: 'طول',
-    //             Svg: HeightSvg,
-    //             data: '150',
-    //         },
-    //         {
-    //             holder: 'عرض',
-    //             Svg: WidthSvg,
-    //             data: '20',
-    //         },
-    //         {
-    //             holder: 'وزن',
-    //             Svg: WeightSvg,
-    //             data: '4',
-    //         },
-    //     ],
-    //     link: '/',
-    // },
-    // {
-    //     img: product_img5,
-    //     name: 'صندلی اداری مدل 213',
-    //     details: [
-    //         {
-    //             holder: 'رنگ',
-    //             Svg: ColorSvg,
-    //             data: 'نارنجی',
-    //         },
-    //         {
-    //             holder: 'طول',
-    //             Svg: HeightSvg,
-    //             data: '100',
-    //         },
-    //         {
-    //             holder: 'عرض',
-    //             Svg: WidthSvg,
-    //             data: '30',
-    //         },
-    //         {
-    //             holder: 'وزن',
-    //             Svg: WeightSvg,
-    //             data: '30',
-    //         },
-    //     ],
-    //     link: '/',
-    // },
+const PRODUCTS_SLIDER = [
+    product_img1,
+    product_img2,
+    product_img3,
+    product_img4,
+    product_img5,
+    product_img6,
 ]
 
 // BASE_PRODUCT_DETAIL_DELAY
@@ -213,7 +74,7 @@ const ProductsWrapper: FC = () => {
         if (ActiveProduct === idx0) return 'active'
         if (ActiveProduct - 1 === idx0) return 'next'
         if (ActiveProduct + 1 === idx0) return 'prev'
-        if (ActiveProduct === DEBUG_PRODCUTS.length - 1 && idx0 === 0)
+        if (ActiveProduct === PRODUCTS_SLIDER.length - 1 && idx0 === 0)
             return 'prev'
         return ''
     }
@@ -221,7 +82,7 @@ const ProductsWrapper: FC = () => {
     useEffect(() => {
         const inverval = setInterval(() => {
             setActiveProduct(value => {
-                if (value + 2 > DEBUG_PRODCUTS.length) {
+                if (value + 2 > PRODUCTS_SLIDER.length) {
                     return 1
                 }
                 return value + 1
@@ -289,7 +150,7 @@ const ProductsWrapper: FC = () => {
                 </Link>
             </div> */}
             <div className='products-slider'>
-                {DEBUG_PRODCUTS.map(({ img }, idx0) => {
+                {PRODUCTS_SLIDER.map((img, idx0) => {
                     return (
                         <div
                             key={idx0}
