@@ -345,7 +345,6 @@
         // }
         .products-slider {
             width: clamp(0px, 350px, 60%);
-            aspect-ratio: 1/1;
 
             display: grid;
             align-items: start;
@@ -354,6 +353,10 @@
             isolation: isolate;
             .product-slider {
                 width: 100%;
+                aspect-ratio: 1/1;
+
+                border-radius: 10px;
+                overflow: hidden;
 
                 &:not(.prev, .active, .next) {
                     position: absolute;
@@ -433,9 +436,11 @@
                 }
 
                 img {
+                    height: 100%;
                     width: 100%;
                     object-fit: cover;
-                    border-radius: 10px;
+
+                    background-color: white;
                 }
             }
         }
