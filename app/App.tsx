@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, StrictMode, useEffect } from 'react'
 
 import About from 'Screens/About'
 import Blog from 'Screens/Blog'
@@ -23,11 +23,11 @@ const App: FC = () => {
     }, [])
 
     return (
-        <>
+        <StrictMode>
             <Navbar />
             <MainContent />
             <Footer />
-        </>
+        </StrictMode>
     )
 }
 

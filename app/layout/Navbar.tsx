@@ -6,72 +6,79 @@ import {
     BlogsSvg,
     CallSvg,
     ChairSvg,
-    CloseSvg,
+    CloseSvg, // CloseSvg,
     CompanySvg,
     HomeSvg,
     Logo,
     MenuSvg,
 } from 'Icons'
-import { Link } from 'react-router-dom'
 
+// import { Link } from 'react-router-dom'
 import './style/navbar.scss'
 
 export const Navbar: FC = () => {
-    const [Inner, setInner] = useState(innerWidth)
+    const [scrolled, setScrolled] = useState(false)
+    const [showSmall, setShowSmall] = useState(false)
+    const [openSmall, setOpenSmall] = useState(false)
 
     useEffect(() => {
-        window.onresize = () => {
-            setInner(innerWidth)
-        }
-    }, [])
-
-    return <>{Inner >= 1024 ? <BigNav /> : <SmallNav />}</>
-}
-
-const BigNav: FC = () => {
-    const [navActive, setnavActive] = useState(false)
-
-    useEffect(() => {
-        window.onscroll = () => {
-            if (scrollY >= 10) setnavActive(true)
-            else setnavActive(false)
-        }
+        window.onscroll = () => setScrolled(scrollY > 10)
+        window.onresize = () => setShowSmall(innerWidth < 1024)
     }, [])
 
     return (
-        <nav className={`big-nav-container ${C(navActive)}`}>
-            <div className='big-nav-wrapper'>
-                <div className='nav-content'>
-                    <Link to={'/'} className='nav-link title_small'>
-                        <div className='icon'>
-                            <HomeSvg size={25} />
-                        </div>
-                        <div className='holder'>خانه</div>
-                    </Link>
-                    <Link to={'/products'} className='nav-link title_small'>
-                        <div className='icon'>
-                            <ChairSvg size={25} />
-                        </div>
-                        <div className='holder'>محصولات</div>
-                    </Link>
-                    <Link to={'/contact'} className='nav-link title_small'>
-                        <div className='icon'>
-                            <CallSvg size={25} />
-                        </div>
-                        <div className='holder'>ارتباط با ما</div>
-                    </Link>
-                    <Link to={'/about'} className='nav-link title_small'>
-                        <div className='icon'>
-                            <CompanySvg size={25} />
-                        </div>
-                        <div className='holder'>درباره ما</div>
-                    </Link>
-                    <Link to={'/blogs'} className='nav-link title_small'>
-                        <div className='icon'>
-                            <BlogsSvg size={25} />
-                        </div>
-                        <div className='holder'>مقالات </div>
-                    </Link>
+        <nav
+            className={
+                'nav-container' +
+                C(openSmall, 'opensmall') +
+                C(scrolled, 'scrolled') +
+                (showSmall ? ' small ' : ' big ')
+            }
+        >
+            <div className='nav-wrapper'>
+                <MenuSvg
+                    className='small-open'
+                    size={40}
+                    onClick={() => setOpenSmall(true)}
+                />
+                <div className='just-for-small'>
+                    <CloseSvg
+                        size={50}
+                        onClick={() => setOpenSmall(false)}
+                        className='small-close'
+                    />
+                    <div className='nav-content'>
+                        <a href='/' className='nav-link title_small'>
+                            <div className='icon'>
+                                <HomeSvg size={25} />
+                            </div>
+                            <div className='holder'>خانه</div>
+                        </a>
+                        <a href={'/products'} className='nav-link title_small'>
+                            <div className='icon'>
+                                <ChairSvg size={25} />
+                            </div>
+                            <div className='holder'>محصولات</div>
+                        </a>
+                        <a href={'/contact'} className='nav-link title_small'>
+                            <div className='icon'>
+                                <CallSvg size={25} />
+                            </div>
+                            <div className='holder'>ارتباط با ما</div>
+                        </a>
+                        <a href={'/about'} className='nav-link title_small'>
+                            <div className='icon'>
+                                <CompanySvg size={25} />
+                            </div>
+                            <div className='holder'>درباره ما</div>
+                        </a>
+                        <a href={'/blogs'} className='nav-link title_small'>
+                            <div className='icon'>
+                                <BlogsSvg size={25} />
+                            </div>
+                            <div className='holder'>مقالات </div>
+                        </a>
+                    </div>
                 </div>
                 <Logo className='nav-logo' />
             </div>
@@ -79,7 +86,7 @@ const BigNav: FC = () => {
     )
 }
 
-const SmallNav: FC = () => {
+/* const SmallNav: FC = () => {
     const [navActive, setnavActive] = useState(false)
 
     return (
@@ -87,13 +94,13 @@ const SmallNav: FC = () => {
             <MenuSvg
                 className='menu-icon'
                 size={40}
-                onTouchStart={() => setnavActive(true)}
+                onClick={() => setnavActive(true)}
             />
             <Logo className='nav-logo' />
             <div className={`nav-wrapper ${C(navActive)}`}>
                 <div
                     className='close-btn icon'
-                    onTouchStart={() => setnavActive(false)}
+                    onClick={() => setnavActive(false)}
                 >
                     <CloseSvg size={50} />
                 </div>
@@ -133,9 +140,7 @@ const SmallNav: FC = () => {
                     />
                 </section>
 
-                {/* debug */}
                 <div></div>
-                {/* debug */}
             </div>
         </nav>
     )
@@ -159,10 +164,10 @@ const SmallNavColumn: FC<SmallNavColumn> = ({
         <Link
             to={link}
             className='nav-column title'
-            onTouchEnd={() => setnavActive(false)}
+            onClick={() => setnavActive(false)}
         >
             <Icon size={30} />
             <div className='holder'>{title}</div>
         </Link>
     )
-}
+} */
