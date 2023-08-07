@@ -1,22 +1,21 @@
 
-import logging
+# import logging
 import mimetypes
 import os
-from sqlite3 import IntegrityError
+# from sqlite3 import IntegrityError
 from typing import Annotated, Literal
 
 import magic
 from fastapi import APIRouter, Form, Request, UploadFile
-from pydantic import BaseModel, EmailStr, Field, constr
+from pydantic import BaseModel, constr
 
 from db.blog import blog_add, blog_get, blog_update
 from db.models import AdminPerms as AP
-from db.models import BlogModel, BlogTable, BlogTagTable, RecordItemTable
-from db.models import RecordModel, RecordPublic, RecordTable, UserModel
-from db.models import UserPublic
+from db.models import BlogTable, RecordItemTable, RecordModel, RecordPublic
+from db.models import RecordTable, UserModel, UserPublic
 from db.record import record_add, record_delete, record_exists, record_get
-from db.user import user_exists, user_public, user_update
-from deps import admin_required, rate_limit, user_required
+from db.user import user_exists, user_public
+from deps import admin_required
 from shared import settings, sqlx
 from shared.errors import bad_file, bad_id, no_change, not_unique
 from shared.models import IDModel, OkModel
@@ -148,19 +147,12 @@ async def delete_record(request: Request, record_id: int):
     user: UserModel = request.state.user
     user.admin_assert(AP.D_RECORD)
 
-    record = await record_get(
-        RecordTable.record_id == record_id,
-        RecordTable.owner == user.user_id
-    )
+    record = await record_get(RecordTable.record_id == record_id)
     if record is None:
         raise bad_id('Record', record_id, id=record_id)
 
     record.path.unlink(True)
-
-    await record_delete(
-        RecordTable.record_id == record_id,
-        RecordTable.owner == user.user_id
-    )
+    await record_delete(RecordTable.record_id == record_id)
 
     return {'ok': True}
 
@@ -222,6 +214,9 @@ async def add_record(
     '/records/', response_model=list[RecordPublic],
 )
 async def get_records(request: Request, page: int = 0):
+    user: UserModel = request.state.user
+    user.admin_assert(AP.V_RECORD)
+
     rows = await sqlx.fetch_all(
         f'''
         SELECT * from records
