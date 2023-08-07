@@ -167,3 +167,4 @@ db/versions/
 package-lock.json
 records/
 media/
+static/style/
