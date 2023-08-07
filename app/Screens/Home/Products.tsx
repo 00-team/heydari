@@ -157,7 +157,8 @@ const ProductsWrapper: FC = () => {
                             className={`product-slider ${returnClass(idx0)}`}
                         >
                             <img
-                                loading='lazy'
+                                decoding={'async'}
+                                loading={'lazy'}
                                 draggable={'false'}
                                 src={img}
                                 alt='صندلی صنایع تولیدی حیدری'
