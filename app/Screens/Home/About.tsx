@@ -121,7 +121,8 @@ const About: FC = () => {
                                 className={`about-slider ${returnClass()}`}
                             >
                                 <img
-                                    loading='lazy'
+                                    decoding={'async'}
+                                    loading={'lazy'}
                                     draggable={'false'}
                                     src={img}
                                     alt='درباره صنایع تولیدی حیدری'
