@@ -6,7 +6,7 @@ import {
     BlogsSvg,
     CallSvg,
     ChairSvg,
-    CloseSvg, // CloseSvg,
+    CloseSvg,
     CompanySvg,
     HomeSvg,
     Logo,
@@ -22,6 +22,7 @@ export const Navbar: FC = () => {
     const [openSmall, setOpenSmall] = useState(false)
 
     useEffect(() => {
+        setShowSmall(innerWidth < 1024)
         window.onscroll = () => setScrolled(scrollY > 10)
         window.onresize = () => setShowSmall(innerWidth < 1024)
     }, [])
