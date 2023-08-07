@@ -7,6 +7,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from sqlalchemy import BLOB, Column, Integer, String, text
 
+from db.models.user import UserPublic
 from shared import settings
 
 from .common import BaseTable
@@ -45,6 +46,9 @@ class RecordPublic(BaseModel):
     timestamp: int
     url: str
     name: str
+    owner: UserPublic
+    item: int | None = None
+    item_table: RecordItemTable
 
 
 class RecordModel(BaseModel):
@@ -72,7 +76,7 @@ class RecordModel(BaseModel):
     def path(self) -> Path:
         return settings.record_dir / (self.name + '.' + self.ext)
 
-    def public(self) -> RecordPublic:
+    def public(self, owner: UserPublic) -> RecordPublic:
         return RecordPublic(
             record_id=self.record_id,
             size=self.size,
@@ -81,4 +85,7 @@ class RecordModel(BaseModel):
             timestamp=self.timestamp,
             url=self.url,
             name=self.name,
+            owner=owner,
+            item=self.item,
+            item_table=self.item_table,
         )
