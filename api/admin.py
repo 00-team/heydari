@@ -13,8 +13,9 @@ from db.blog import blog_add, blog_get, blog_update
 from db.models import AdminPerms as AP
 from db.models import BlogModel, BlogTable, BlogTagTable, RecordItemTable
 from db.models import RecordModel, RecordPublic, RecordTable, UserModel
+from db.models import UserPublic
 from db.record import record_add, record_delete, record_exists, record_get
-from db.user import user_exists, user_update
+from db.user import user_exists, user_public, user_update
 from deps import admin_required, rate_limit, user_required
 from shared import settings, sqlx
 from shared.errors import bad_file, bad_id, no_change, not_unique
@@ -212,4 +213,36 @@ async def add_record(
         while (chunk := file.file.read(1024)):
             f.write(chunk)
 
-    return record.public()
+    return record.public(
+        UserPublic(user_id=user.user_id, name=user.name)
+    )
+
+
+@router.get(
+    '/records/', response_model=list[RecordPublic],
+)
+async def get_records(request: Request, page: int = 0):
+    rows = await sqlx.fetch_all(
+        f'''
+        SELECT * from records
+        LIMIT {settings.page_size} OFFSET {page * settings.page_size}
+        '''
+    )
+
+    user_ids = set()
+    records = []
+
+    for row in rows:
+        record = RecordModel(**row)
+        records.append(record)
+        user_ids.add(record.owner)
+
+    owners = await user_public(user_ids)
+    result = []
+
+    for record in records:
+        result.append(record.public(
+            owners[record.owner]
+        ))
+
+    return result
