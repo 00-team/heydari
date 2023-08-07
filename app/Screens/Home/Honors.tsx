@@ -149,6 +149,8 @@ const HonorsWrapper: FC<HonorsWrapperProps> = ({ isIntersecting }) => {
                                 src={img}
                                 alt='افتخار صنایع تولیدی حیدری'
                                 className='cup-img'
+                                decoding={'async'}
+                                loading={'lazy'}
                             />
                         </div>
                         <div className='honor-content'>
