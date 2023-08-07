@@ -37,6 +37,16 @@ class RecordItemTable(int, Enum):
     BLOG = 1
 
 
+class RecordPublic(BaseModel):
+    record_id: int
+    size: int
+    mime: str
+    ext: str
+    timestamp: int
+    url: str
+    name: str
+
+
 class RecordModel(BaseModel):
     record_id: int
     salt: bytes
@@ -49,6 +59,10 @@ class RecordModel(BaseModel):
     item_table: RecordItemTable
 
     @cached_property
+    def url(self) -> str:
+        return f'{settings.record_dir.name}/{self.name}.{self.ext}'
+
+    @cached_property
     def name(self) -> str:
         return sha3_256(
             self.record_id.to_bytes(12, byteorder='little') + self.salt
@@ -58,6 +72,13 @@ class RecordModel(BaseModel):
     def path(self) -> Path:
         return settings.record_dir / (self.name + '.' + self.ext)
 
-    @cached_property
-    def url(self) -> str:
-        return f'{settings.record_dir.name}/{self.name}.{self.ext}'
+    def public(self) -> RecordPublic:
+        return RecordPublic(
+            record_id=self.record_id,
+            size=self.size,
+            mime=self.mime,
+            ext=self.ext,
+            timestamp=self.timestamp,
+            url=self.url,
+            name=self.name,
+        )
