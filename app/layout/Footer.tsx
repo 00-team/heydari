@@ -17,7 +17,7 @@ const rubika = '/static/image/footer/rubika.webp'
 const bale = '/static/image/footer/bale.webp'
 const ita = '/static/image/footer/ita.webp'
 
-export const Footer = () => {
+export const Footer: FC = () => {
     return (
         <footer className='footer-container'>
             <div className='footer-wrapper'>
