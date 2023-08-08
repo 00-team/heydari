@@ -165,3 +165,6 @@ static/templates/head.html
 db/files/
 db/versions/
 package-lock.json
+records/
+media/
+static/style/

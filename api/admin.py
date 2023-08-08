@@ -1,19 +1,23 @@
 
-import logging
-from sqlite3 import IntegrityError
-from typing import ClassVar, Literal
+# import logging
+import mimetypes
+import os
+# from sqlite3 import IntegrityError
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, Request
-from pydantic import BaseModel, EmailStr, Field, constr
+import magic
+from fastapi import APIRouter, Form, Request, UploadFile
+from pydantic import BaseModel, constr
 
 from db.blog import blog_add, blog_get, blog_update
 from db.models import AdminPerms as AP
-from db.models import BlogModel, BlogTable, BlogTagTable, UserModel
-from db.record import record_exists
-from db.user import user_exists, user_update
-from deps import admin_required, rate_limit, user_required
+from db.models import BlogTable, RecordItemTable, RecordModel, RecordPublic
+from db.models import RecordTable, UserModel, UserPublic
+from db.record import record_add, record_delete, record_exists, record_get
+from db.user import user_exists, user_public
+from deps import admin_required
 from shared import settings, sqlx
-from shared.errors import bad_id, no_change, not_unique
+from shared.errors import bad_file, bad_id, no_change, not_unique
 from shared.models import IDModel, OkModel
 from shared.tools import utc_now
 
@@ -133,3 +137,107 @@ async def update_blog(request: Request, blog_id: int, body: UpdateBlogBody):
     await blog_update(BlogTable.blog_id == blog_id, **patch)
 
     return {'ok': True}
+
+
+@router.delete(
+    '/records/{record_id}/', response_model=OkModel,
+    openapi_extra={'errors': [bad_id]}
+)
+async def delete_record(request: Request, record_id: int):
+    user: UserModel = request.state.user
+    user.admin_assert(AP.D_RECORD)
+
+    record = await record_get(RecordTable.record_id == record_id)
+    if record is None:
+        raise bad_id('Record', record_id, id=record_id)
+
+    record.path.unlink(True)
+    await record_delete(RecordTable.record_id == record_id)
+
+    return {'ok': True}
+
+
+@router.post(
+    '/', response_model=RecordPublic,
+    openapi_extra={'errors': [bad_file]}
+)
+async def add_record(
+    request: Request,
+    file: UploadFile,
+    item: Annotated[int, Form()] = None,
+    item_table: Annotated[RecordItemTable, Form()] = RecordItemTable.LOST,
+):
+    user: UserModel = request.state.user
+    user.admin_assert(AP.A_RECORD)
+
+    mime = magic.from_buffer(file.file.read(2048), mime=True)
+    if mime is None:
+        raise bad_file
+
+    ext = mimetypes.guess_extension(mime)
+    if ext is None or len(ext) < 2:
+        raise bad_file
+
+    if file.size > 40 * 1024 * 1024:
+        raise bad_file
+
+    file.file.seek(0)
+    record = RecordModel(
+        record_id=0,
+        salt=os.urandom(4),
+        owner=user.user_id,
+        size=file.size,
+        mime=mime,
+        ext=ext[1:],
+        timestamp=utc_now(),
+        item=item,
+        item_table=item_table,
+    )
+
+    args = record.dict()
+    args.pop('record_id')
+
+    record_id = await record_add(**args)
+    record.record_id = record_id
+
+    path = settings.record_dir / (record.name + ext)
+    with open(path, 'wb') as f:
+        while (chunk := file.file.read(1024)):
+            f.write(chunk)
+
+    return record.public(
+        UserPublic(user_id=user.user_id, name=user.name)
+    )
+
+
+@router.get(
+    '/records/', response_model=list[RecordPublic],
+)
+async def get_records(request: Request, page: int = 0):
+    user: UserModel = request.state.user
+    user.admin_assert(AP.V_RECORD)
+
+    rows = await sqlx.fetch_all(
+        f'''
+        SELECT * from records
+        LIMIT {settings.page_size} OFFSET {page * settings.page_size}
+        '''
+    )
+
+    user_ids = set()
+    records = []
+
+    for row in rows:
+        record = RecordModel(**row)
+        records.append(record)
+        user_ids.add(record.owner)
+
+    owners = await user_public(user_ids)
+    result = []
+
+    for record in records:
+        result.append(record.public(
+            owners[record.owner]
+        ))
+
+    return result
