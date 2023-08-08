@@ -62,6 +62,7 @@ const HeroSection: FC = () => {
                 <img
                     className='hero-img'
                     src={heroImg}
+                    width='450'
                     loading={'lazy'}
                     decoding={'async'}
                     alt='صنایع تولیدی حیدری'
