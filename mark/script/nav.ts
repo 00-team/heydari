@@ -1,3 +1,4 @@
+export {}
 var x: number | null = null
 
 x = 12
