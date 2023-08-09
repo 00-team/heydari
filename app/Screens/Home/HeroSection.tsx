@@ -33,11 +33,7 @@ const HeroSection: FC = () => {
                         صنایع تولیدی{' '}
                         <span className='section_title'>حیدری</span>
                     </div>
-                    <div
-                        className={`detail ${
-                            innerWidth >= 768 ? 'title_smaller' : 'title_small'
-                        }`}
-                    >
+                    <div className={`detail title_small`}>
                         ما مفتخریم در طول 40 سال فعالیت تولیدی، همواره کیفیت
                         برتر را جهت فراهم نمودن رضایت مشتریان بعنوان هدف اصلی در
                         نظر گرفته و در عرصه تولید ملی در زمینه صندلی آموزشی و
@@ -62,6 +58,7 @@ const HeroSection: FC = () => {
                 <img
                     className='hero-img'
                     src={heroImg}
+                    width='450'
                     loading={'lazy'}
                     decoding={'async'}
                     alt='صنایع تولیدی حیدری'

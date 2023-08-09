@@ -46,24 +46,30 @@ export const Footer: FC = () => {
                             <a
                                 href={'https://t.me/heydaricoir'}
                                 className='social icon telegram'
+                                aria-label='ارتباط با صنایع تولیدی حیدری از طریق تلگرام'
                             >
                                 <TelegramSvg size={40} />
                             </a>
                             <a
                                 href={'https://wa.me/+989129429430'}
                                 className='social icon whatsapp'
+                                aria-label='ارتباط با صنایع تولیدی حیدری از طریق واتساپ'
                             >
                                 <WhatsappSvg size={40} />
                             </a>
                             <a
                                 href={'instagram://user?username=heydari.chair'}
                                 className='social icon instagram'
+                                aria-label='ارتباط با صنایع تولیدی حیدری از طریق اینستاگرام'
                             >
                                 <InstagramSvg size={40} />
                             </a>
                         </div>
                         <div className='content-socials'>
-                            <button className='social rubika title_small'>
+                            <button
+                                className='social rubika title_small'
+                                aria-label='ارتباط با صنایع تولیدی حیدری از طریق روبیکا'
+                            >
                                 <div className='tooltip'>+989129429430</div>
                                 <img
                                     loading={'lazy'}
@@ -74,7 +80,10 @@ export const Footer: FC = () => {
                                     alt={'ارتباط با حیدری'}
                                 />
                             </button>
-                            <button className='social rubika title_small'>
+                            <button
+                                className='social rubika title_small'
+                                aria-label='ارتباط با صنایع تولیدی حیدری از طریق بله'
+                            >
                                 <div className='tooltip'>+989129429430</div>
                                 <img
                                     loading={'lazy'}
@@ -85,7 +94,10 @@ export const Footer: FC = () => {
                                     alt={'ارتباط با حیدری'}
                                 />
                             </button>
-                            <button className='social rubika title_small'>
+                            <button
+                                className='social rubika title_small'
+                                aria-label='ارتباط با صنایع تولیدی حیدری از طریق ایتا'
+                            >
                                 <div className='tooltip'>+989129429430</div>
                                 <img
                                     loading={'lazy'}

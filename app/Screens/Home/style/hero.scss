@@ -28,8 +28,10 @@ section.hero-container {
         row-gap: calc(5vh + 20px);
         flex-wrap: wrap;
 
+        color: black;
+
         .hero-img {
-            width: clamp(0px, 450px, 100%);
+            // width: clamp(0px, 450px, 100%);
 
             object-fit: cover;
 
@@ -62,12 +64,21 @@ section.hero-container {
             }
 
             .typer-wrapper {
+                font-family: 'yekan';
                 @media screen and (max-width: 1024px) {
                     min-height: 60px;
                 }
                 .word {
                     color: black;
                     border-bottom: 1px solid black;
+
+                    font-family: 'iranBold';
+                }
+            }
+
+            .detail {
+                @media screen and (min-width: 768px) {
+                    font-family: 'yekan';
                 }
             }
 
@@ -86,7 +97,6 @@ section.hero-container {
 
                     font: inherit;
                     font-family: iranBold;
-                    color: var(--accent-color);
 
                     white-space: nowrap;
 
@@ -105,7 +115,8 @@ section.hero-container {
                     &.sec {
                         background-color: var(--sixty-percent);
                         box-shadow: none;
-                        border: 1px solid white;
+                        border: 1px solid black;
+                        color: black;
                     }
                 }
             }

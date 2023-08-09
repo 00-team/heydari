@@ -107,13 +107,16 @@
         overflow: unset;
 
         .just-for-small {
-            background-color: #222;
+            background-color: rgb(255, 255, 255);
+
             display: flex;
             justify-content: center;
             position: absolute;
             inset: 0;
             height: 100vh;
             transform: translateX(100%);
+
+            transition: transform 0.5s ease-in-out;
         }
 
         .small-open {
