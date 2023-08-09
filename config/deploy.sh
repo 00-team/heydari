@@ -46,6 +46,18 @@ if check_diff "app/* config/webpack/*"; then
     echo $SPACER
 fi
 
+if check_diff "mark/style/*"; then
+    echo "$EG build mark style"
+    npm run style
+    echo $SPACER
+fi
+
+if check_diff "mark/script/*"; then
+    echo "$EG build mark script"
+    npm run mark
+    echo $SPACER
+fi
+
 if check_diff "config/heydari.service"; then
     echo "$EG update heydari service"
     cp config/heydari.service /etc/systemd/system/ --force
