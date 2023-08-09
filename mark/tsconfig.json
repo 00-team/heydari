@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "rootDir": "./",
+        "outDir": "../static/js/",
+        "declaration": false
+    },
+    "include": ["./"],
+    "exclude": []
+}

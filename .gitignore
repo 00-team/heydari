@@ -168,3 +168,4 @@ package-lock.json
 records/
 media/
 static/style/
+static/js/mark/

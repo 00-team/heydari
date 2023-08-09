@@ -6,8 +6,10 @@
         "dev": "local=1 webpack serve --config config/webpack/dev.ts",
         "build": "webpack --config config/webpack/build.ts",
         "build:watch": "webpack --config config/webpack/build.ts --watch",
-        "style": "sass style:static/style -s compressed",
-        "style:watch": "sass style:static/style -w -c"
+        "style": "sass mark/style:static/style -s compressed",
+        "style:watch": "sass mark/style:static/style -w -c",
+        "mark": "webpack --config config/webpack/mark.ts",
+        "mark:watch": "webpack --config config/webpack/mark.ts --watch"
     },
     "dependencies": {
         "@00-team/react-alert": "^2.0.0",
@@ -31,6 +33,7 @@
         "copy-webpack-plugin": "^11.0.0",
         "css-loader": "^6.7.3",
         "css-minimizer-webpack-plugin": "^4.2.2",
+        "glob": "^10.3.3",
         "html-webpack-plugin": "^5.5.0",
         "mini-css-extract-plugin": "^2.7.2",
         "postcss-loader": "^7.0.2",
