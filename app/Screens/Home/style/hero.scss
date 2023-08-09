@@ -76,6 +76,12 @@ section.hero-container {
                 }
             }
 
+            .detail {
+                @media screen and (min-width: 768px) {
+                    font-family: 'yekan';
+                }
+            }
+
             .cta-wrapper {
                 display: flex;
                 gap: calc(3vw + 10px);
