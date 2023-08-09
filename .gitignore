@@ -168,3 +168,5 @@ package-lock.json
 records/
 media/
 static/style/
+static/js/mark/
+mark/tmpl/head.html

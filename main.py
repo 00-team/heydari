@@ -21,7 +21,7 @@ app = FastAPI(
 )
 app.include_router(api.router)
 templates = Jinja2Templates(
-    directory=settings.base_dir / 'static/templates/'
+    directory=settings.base_dir / 'mark/tmpl/'
 )
 
 if settings.debug:
