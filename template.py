@@ -1,20 +1,20 @@
 
 
 # from shared import settings
+from pathlib import Path
+
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from pathlib import Path
-
 base_dir: Path = Path(__file__).parent
 
 
 app = FastAPI()
 templates = Jinja2Templates(
-    directory=base_dir / 'static/templates/'
+    directory=base_dir / 'mark/tmpl/'
 )
 
 # if settings.debug:
