@@ -61,6 +61,15 @@ async def contact(request: Request):
         }
     )
 
+@app.get('/blogs', response_class=HTMLResponse, include_in_schema=False)
+async def contact(request: Request):
+    return templates.TemplateResponse(
+        'blogs/index.html',
+        {
+            'request': request,
+        }
+    )
+
 
 if __name__ == '__main__':
     uvicorn.run(app, port=7201)
