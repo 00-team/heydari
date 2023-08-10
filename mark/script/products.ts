@@ -9,7 +9,7 @@ const addClass = () => {
     return
 }
 
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
     var observer = new IntersectionObserver(
         ([entry]) => {
             if (entry && entry.isIntersecting) {
@@ -23,4 +23,4 @@ window.onload = () => {
     )
 
     observer.observe(productsElem)
-}
+})
