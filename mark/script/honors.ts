@@ -6,9 +6,6 @@ const addClass = () => {
     let honorsWrapper = document.querySelector('.honors-wrapper')
     let honorsHeader = document.querySelector('.honor-header')
 
-    console.log(honorsWrapper)
-    console.log(honorsHeader)
-
     HonorsElem.className += ' active'
     honorsWrapper.className += ' active'
     honorsHeader.className += ' active'
