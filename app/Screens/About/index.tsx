@@ -1,4 +1,5 @@
 import React, { FC, useEffect } from 'react'
+import { renderToString } from 'react-dom/server'
 
 import { ContactForm } from 'components'
 
@@ -24,5 +25,7 @@ const About: FC = () => {
         </main>
     )
 }
+
+console.log(renderToString(<About />))
 
 export default About
