@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#f4a000" />
+        <meta name="description" content="صفحه اصلی صنایع تولیدی حیدری" />
+
+        <title>صنایع تولیدی حیدری</title>
+
+        <link rel="icon" href="/static/icon/favicon.ico" type="image/x-icon" />
+
+        <link href="/static/fonts/fonts.css" rel="stylesheet" />
+
+        <link href="/static/style/config/index.css" rel="stylesheet" />
+
+        <link href="/static/style/base.css" rel="stylesheet" />
+
+        <link href="/static/style/layout/nav.css" rel="stylesheet" />
+        <link href="/static/style/layout/footer.css" rel="stylesheet" />
+
+
+
+        {% block header %} {% endblock header %}
+    </head>
+
+    <body>
+        <div id="root" class="root">
+            {% include "./layout/nav.html" %}
+
+
+            {% block content %} {% endblock content %}
+
+            {% include "./layout/footer.html" %}
+        </div>
+    </body>
+</html>
