@@ -62,10 +62,40 @@ async def rapidoc():
 @app.get('/', response_class=HTMLResponse, include_in_schema=False)
 async def index(request: Request):
     return templates.TemplateResponse(
-        'index.html',
-        {
-            'request': request,
-        }
+        'home/index.html',
+        {'request': request}
+    )
+
+
+@app.get('/products/', response_class=HTMLResponse, include_in_schema=False)
+async def products(request: Request):
+    return templates.TemplateResponse(
+        'products/index.html',
+        {'request': request}
+    )
+
+
+@app.get('/contact/', response_class=HTMLResponse, include_in_schema=False)
+async def contact(request: Request):
+    return templates.TemplateResponse(
+        'contact/index.html',
+        {'request': request}
+    )
+
+
+@app.get('/about/', response_class=HTMLResponse, include_in_schema=False)
+async def about(request: Request):
+    return templates.TemplateResponse(
+        'about/index.html',
+        {'request': request}
+    )
+
+
+@app.get('/blogs/', response_class=HTMLResponse, include_in_schema=False)
+async def blogs(request: Request):
+    return templates.TemplateResponse(
+        'blogs/index.html',
+        {'request': request}
     )
 
 
