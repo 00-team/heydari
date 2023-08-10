@@ -35,7 +35,17 @@ async def index(request: Request):
 @app.get('/products', response_class=HTMLResponse, include_in_schema=False)
 async def products(request: Request):
     return templates.TemplateResponse(
-        'products/products.html',
+        'products/index.html',
+        {
+            'request': request,
+        }
+    )
+
+
+@app.get('/contact', response_class=HTMLResponse, include_in_schema=False)
+async def contact(request: Request):
+    return templates.TemplateResponse(
+        'contact/index.html',
         {
             'request': request,
         }
