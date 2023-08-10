@@ -1,11 +1,10 @@
 export {}
 
 const HonorsElem = document.querySelector('.honors-container#honors')
+const honorsWrapper = document.querySelector('.honors-wrapper')
+const honorsHeader = document.querySelector('.honor-header')
 
 const addClass = () => {
-    let honorsWrapper = document.querySelector('.honors-wrapper')
-    let honorsHeader = document.querySelector('.honor-header')
-
     HonorsElem.className += ' active'
     honorsWrapper.className += ' active'
     honorsHeader.className += ' active'

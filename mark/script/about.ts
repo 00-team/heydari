@@ -1,3 +1,3 @@
 export {}
 
-console.log('about')
+window.onload = () => {}
