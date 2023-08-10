@@ -1,5 +1,4 @@
 import React, { FC, useEffect } from 'react'
-import { renderToString } from 'react-dom/server'
 
 import { ContactForm } from 'components'
 
@@ -91,7 +90,5 @@ const ProductCard: FC<ProductCardProps> = ({ img, title }) => {
         </figure>
     )
 }
-
-console.log(renderToString(<Products />))
 
 export default Products
