@@ -19,9 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.onscroll = () => {
-        if (scrollY > 10) scrolled = true
-        else scrolled = false
-        render()
+        if (scrollY > 10 && !scrolled) {
+            scrolled = true
+            render()
+        } else if (scrollY <= 10 && scrolled) {
+            scrolled = false
+            render()
+        }
     }
 })
 
