@@ -45,19 +45,5 @@ const MainContent: FC = () => {
     )
 }
 
-// console.log('--- products ---')
-// console.log(renderToString(<Products />))
-
-// console.log('--- contact ---')
-// console.log(renderToString(<Contact />))
-
-// console.log('--- about ---')
-// console.log(renderToString(<About />))
-
-// console.log('--- blog ---')
-// console.log(renderToString(<Blog />))
-
-// console.log('--- blogs ---')
-// console.log(renderToString(<Blogs />))
 
 export default App
