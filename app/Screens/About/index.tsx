@@ -26,6 +26,4 @@ const About: FC = () => {
     )
 }
 
-console.log(renderToString(<About />))
-
 export default About
