@@ -1,6 +1,5 @@
 export {}
 
-// window.onload = () => {
-//     window.scrollTo(0, 0)
-//     console.log('object')
-// }
+document.addEventListener('DOMContentLoaded', () => {
+    document.documentElement.scrollTop = 0
+})
