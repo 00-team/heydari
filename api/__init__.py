@@ -1,11 +1,9 @@
 
 from fastapi import APIRouter
 
-from api import admin, blog
+from api import admin, auth, blog, user
+from api.verification import VerificationResponse, verification
 from shared.errors import bad_verification
-
-from .modules import auth, user
-from .verification import VerificationResponse, verification
 
 router = APIRouter(
     prefix='/api',
