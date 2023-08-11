@@ -48,10 +48,9 @@ async def shutdown():
     await sqlx.disconnect()
 
 
-@app.get('/rapidoc/', include_in_schema=False)
+@app.get('/rapidoc/', response_class=HTMLResponse, include_in_schema=False)
 async def rapidoc(response: Response):
-    response.media_type = 'text/html'
-    response.body = response.render('''<!doctype html>
+    return '''<!doctype html>
     <html><head><meta charset="utf-8">
     <meta name="robots" content="noindex">
     <script type="module" src="/static/rapidoc.js"></script></head><body>
@@ -60,7 +59,7 @@ async def rapidoc(response: Response):
     primary-color="#ff8800" nav-text-color="#eee" font-size="largest"
     allow-spec-url-load="false" allow-spec-file-load="false"
     show-method-in-nav-bar="as-colored-block" response-area-height="500px"
-    show-header="false" /></body> </html>''')
+    show-header="false" /></body> </html>'''
 
 
 class XMLResponse(Response):
@@ -68,12 +67,12 @@ class XMLResponse(Response):
 
 
 @app.get('/robots.txt', response_class=PlainTextResponse)
-async def robots(response: Response):
-    host = ''
+async def robots(request: Request, response: Response):
+    host = request.url.hostname
     content = (
         'User-agent: *',
         'Disallow:\n'
-        f'Sitemap: {host}/sitemap.xml'
+        f'Sitemap: https://{host}/sitemap.xml'
     )
     return '\n'.join(content)
 
@@ -83,7 +82,7 @@ async def robots(response: Response):
 
 @app.get('/sitemap.xml', response_class=XMLResponse)
 async def sitemap(request: Request):
-    host = str(request.base_url)[:-1]
+    host = request.url.hostname
     out = StringIO()
 
     out.write(
@@ -94,7 +93,7 @@ async def sitemap(request: Request):
     for path in ('blogs', 'about', 'products', 'contact'):
         out.write((
             '<url>'
-            f'<loc>{host}/{path}/</loc>'
+            f'<loc>https://{host}/{path}/</loc>'
             '</url>'
         ))
 
