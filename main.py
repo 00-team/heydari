@@ -1,6 +1,8 @@
 
 
-from fastapi import FastAPI, Request
+from io import StringIO
+
+from fastapi import FastAPI, Request, Response
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.routing import APIRoute
@@ -47,8 +49,9 @@ async def shutdown():
 
 
 @app.get('/rapidoc/', include_in_schema=False)
-async def rapidoc():
-    return HTMLResponse('''<!doctype html>
+async def rapidoc(response: Response):
+    response.media_type = 'text/html'
+    response.body = response.render('''<!doctype html>
     <html><head><meta charset="utf-8">
     <meta name="robots" content="noindex">
     <script type="module" src="/static/rapidoc.js"></script></head><body>
@@ -60,12 +63,45 @@ async def rapidoc():
     show-header="false" /></body> </html>''')
 
 
+class XMLResponse(Response):
+    media_type = 'application/xml'
+
+
 @app.get('/robots.txt', response_class=PlainTextResponse)
-async def robots():
-    return '''
-    User-agent: *
-    Disallow:
-    '''
+async def robots(response: Response):
+    host = ''
+    content = (
+        'User-agent: *',
+        'Disallow:\n'
+        f'Sitemap: {host}/sitemap.xml'
+    )
+    return '\n'.join(content)
+
+
+# from xml.etree.ElementTree import tostring, Element, SubElement
+
+
+@app.get('/sitemap.xml', response_class=XMLResponse)
+async def sitemap(request: Request):
+    host = str(request.base_url)[:-1]
+    out = StringIO()
+
+    out.write(
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    )
+
+    for path in ('blogs', 'about', 'products', 'contact'):
+        out.write((
+            '<url>'
+            f'<loc>{host}/{path}/</loc>'
+            '</url>'
+        ))
+
+    out.write('</urlset>')
+
+    out.seek(0)
+    return out.read()
 
 
 @app.get('/', response_class=HTMLResponse, include_in_schema=False)
