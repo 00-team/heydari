@@ -9,7 +9,7 @@ import magic
 from fastapi import APIRouter, Form, Request, UploadFile
 from pydantic import BaseModel, constr
 
-from db.blog import blog_add, blog_get, blog_update
+from db.blog import blog_add, blog_delete, blog_get, blog_update
 from db.models import AdminPerms as AP
 from db.models import BlogTable, RecordItemTable, RecordModel, RecordPublic
 from db.models import RecordTable, UserModel, UserPublic
@@ -140,6 +140,19 @@ async def update_blog(request: Request, blog_id: int, body: UpdateBlogBody):
 
 
 @router.delete(
+    '/blogs/{blog_id}/', response_model=OkModel,
+    openapi_extra={'errors': [bad_id]}
+)
+async def delete_blog(request: Request, blog_id: int):
+    user: UserModel = request.state.user
+    user.admin_assert(AP.D_BLOG)
+
+    return {
+        'ok': bool(await blog_delete(BlogTable.blog_id == blog_id))
+    }
+
+
+@router.delete(
     '/records/{record_id}/', response_model=OkModel,
     openapi_extra={'errors': [bad_id]}
 )
@@ -158,7 +171,7 @@ async def delete_record(request: Request, record_id: int):
 
 
 @router.post(
-    '/', response_model=RecordPublic,
+    '/records/', response_model=RecordPublic,
     openapi_extra={'errors': [bad_file]}
 )
 async def add_record(
