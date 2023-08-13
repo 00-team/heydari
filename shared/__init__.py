@@ -53,6 +53,3 @@ redis = Redis(
 )
 
 sqlx = Database(SQL_URL, factory=Connection)
-
-
-settings = Settings(_env_file='.secrets')
