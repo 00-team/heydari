@@ -2,6 +2,8 @@ import React, { FC } from 'react'
 
 import './style/aboutCreator.scss'
 
+const ownerImg = '/static/image/about/owner.webp'
+
 export const AboutCreator: FC = () => {
     return (
         <section className='about-page-creator'>
@@ -19,7 +21,7 @@ export const AboutCreator: FC = () => {
             </aside>
             <aside className='creator-img'>
                 <img
-                    src='https://picsum.photos/800/500'
+                    src={ownerImg}
                     loading={'lazy'}
                     decoding={'async'}
                     alt={'بنیان گذار صنایع تولیدی حیدری'}
