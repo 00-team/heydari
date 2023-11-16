@@ -1,6 +1,6 @@
 [Unit]
 Description=heydari Gunicorn
-After=syslog.target
+After=syslog.target redis_heydari.service
 
 [Service]
 ExecStart=/heydari/.env/bin/gunicorn --config /heydari/config/gunicorn.py
