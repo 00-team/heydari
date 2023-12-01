@@ -49,7 +49,7 @@ else:
 
 redis = Redis(
     password=settings.redis_pass,
-    unix_socket_path='/run/redis/heydari.sock'
+    unix_socket_path='/run/redis_heydari/heydari.sock'
 )
 
 sqlx = Database(SQL_URL, factory=Connection)
