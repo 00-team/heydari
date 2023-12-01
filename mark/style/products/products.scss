@@ -55,6 +55,9 @@
             overflow: hidden;
             transition: transform 0.3s ease-in-out;
 
+            position: relative;
+            isolation: isolate;
+
             &:hover {
                 transform: translateY(-1rem);
             }
@@ -77,6 +80,24 @@
                 justify-content: center;
 
                 font-family: 'yekanBold';
+                text-align: center;
+            }
+            .coming-soon {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                direction: ltr;
+
+                background-color: rgba(255, 255, 255, 0.2);
+
+                z-index: 1;
+
+                backdrop-filter: blur(1px);
             }
         }
     }
