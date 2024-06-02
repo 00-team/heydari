@@ -13,3 +13,4 @@ dist/
 node_modules/
 main.db*
 .ignore*
+logs/
