@@ -1,5 +1,3 @@
-
-
 # from shared import settings
 from pathlib import Path
 
@@ -13,63 +11,61 @@ base_dir: Path = Path(__file__).parent
 
 
 app = FastAPI()
-templates = Jinja2Templates(
-    directory=base_dir / 'mark/tmpl/'
-)
+templates = Jinja2Templates(directory=base_dir / "templates/")
 
-# if settings.debug:
-app.mount('/static', StaticFiles(directory='static'), name='static')
-# app.mount('/records', StaticFiles(directory='records'), name='records')
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/record", StaticFiles(directory="record"), name="record")
 
 
-@app.get('/', response_class=HTMLResponse, include_in_schema=False)
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def index(request: Request):
     return templates.TemplateResponse(
-        'home/index.html',
+        "home/index.html",
         {
-            'request': request,
-        }
+            "request": request,
+        },
     )
 
 
-@app.get('/products', response_class=HTMLResponse, include_in_schema=False)
+@app.get("/products", response_class=HTMLResponse, include_in_schema=False)
 async def products(request: Request):
     return templates.TemplateResponse(
-        'products/index.html',
+        "products/index.html",
         {
-            'request': request,
-        }
+            "request": request,
+        },
     )
 
 
-@app.get('/contact', response_class=HTMLResponse, include_in_schema=False)
+@app.get("/contact", response_class=HTMLResponse, include_in_schema=False)
 async def contact(request: Request):
     return templates.TemplateResponse(
-        'contact/index.html',
+        "contact/index.html",
         {
-            'request': request,
-        }
+            "request": request,
+        },
     )
 
 
-@app.get('/about', response_class=HTMLResponse, include_in_schema=False)
-async def contact(request: Request):
+@app.get("/about", response_class=HTMLResponse, include_in_schema=False)
+async def about(request: Request):
     return templates.TemplateResponse(
-        'about/index.html',
+        "about/index.html",
         {
-            'request': request,
-        }
+            "request": request,
+        },
     )
 
-@app.get('/blogs', response_class=HTMLResponse, include_in_schema=False)
-async def contact(request: Request):
+
+@app.get("/blogs", response_class=HTMLResponse, include_in_schema=False)
+async def blogs(request: Request):
     return templates.TemplateResponse(
-        'blogs/index.html',
+        "blogs/index.html",
         {
-            'request': request,
-        }
+            "request": request,
+        },
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run(app, port=7201)

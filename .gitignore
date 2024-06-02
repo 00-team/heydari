@@ -158,15 +158,22 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-
-# heydari custom
-.secrets*
-static/templates/head.html
-db/files/
-db/versions/
 package-lock.json
-records/
-media/
+record/
 static/style/
-static/js/mark/
-mark/tmpl/head.html
+static/script/
+
+/target
+old/
+main.db*
+
+debug/
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+.secrets.env
+dist/
+node_modules/
+main.db*
+.ignore*

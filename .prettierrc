@@ -9,23 +9,13 @@
     "arrowParens": "avoid",
     "overrides": [
         {
-            "files": ["*.jsonc", "*.yml"],
+            "files": [
+                "*.jsonc",
+                "*.yml"
+            ],
             "options": {
                 "tabWidth": 2
             }
         }
-    ],
-
-    "importOrderSeparation": true,
-    "importOrder": [
-        "(^react$|^react-dom)",
-        "^@00-team/utils",
-        "<THIRD_PARTY_MODULES>",
-        "^(state|jotai)",
-        "(Login|Dashboard)",
-        "(/?comps/?|/?components/?)",
-        "\\./(?!style)",
-        "/style/",
-        "(/static/|^static)"
     ]
 }

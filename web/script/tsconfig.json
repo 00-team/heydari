@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "rootDir": "./",
+        "outDir": "../../static/script/",
+        "declaration": false
+    },
+    "include": ["./"],
+    "exclude": []
+}
