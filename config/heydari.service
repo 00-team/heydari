@@ -1,0 +1,17 @@
+[Unit]
+Description=heydari backend
+After=syslog.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/heydari/
+EnvironmentFile=/heydari/.env
+ExecStart=/heydari/target/release/heydari
+KillSignal=SIGQUIT
+StandardError=file:/heydari/logs/error.log
+StandardOutput=file:/heydari/logs/output.log
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
