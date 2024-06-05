@@ -56,6 +56,7 @@ pub fn router() -> impl HttpServiceFactory {
         .app_data(Data::new(tmpl_env))
         .service(home)
         .service(products)
+        .service(product)
         .service(contact)
         .service(about)
         .service(blogs)
