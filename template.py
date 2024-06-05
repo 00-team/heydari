@@ -38,7 +38,7 @@ async def products(request: Request):
 
 
 @app.get("/product/1", response_class=HTMLResponse, include_in_schema=False)
-async def products(request: Request):
+async def product(request: Request):
     return templates.TemplateResponse(
         "product/index.html",
         {

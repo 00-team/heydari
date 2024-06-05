@@ -22,6 +22,12 @@ async fn products(env: Data<Environment<'static>>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+#[get("/product")]
+async fn product(env: Data<Environment<'static>>) -> Response {
+    let result = env.get_template("product/index.html")?.render(())?;
+    Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
+}
+
 #[get("/contact")]
 async fn contact(env: Data<Environment<'static>>) -> Response {
     let result = env.get_template("contact/index.html")?.render(())?;
