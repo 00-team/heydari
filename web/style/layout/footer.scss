@@ -9,6 +9,8 @@ footer.footer-container {
     padding: 2rem 3rem;
     padding-left: 0;
 
+    overflow: hidden;
+
     .footer-wrapper {
         width: clamp(0px, 100%, 1500px);
         height: 100%;
