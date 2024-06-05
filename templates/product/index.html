@@ -4,11 +4,14 @@
 
 <link href="/static/style/product/product.css" rel="stylesheet" />
 
+<script src="/static/script/product.js" defer></script>
+
 {% endblock header %}
 
 {% block content %}
 
 <main class="product">
+    <div id="circle" class="circle"></div>
     <div class="product-wrapper">
         <aside class="product-details">
             <h3 class="title_smaller category">
@@ -26,6 +29,9 @@
             </button>
         </aside>
         <aside class="product-img"></aside>
+    </div>
+    <div class="product-banner">
+        <img src="https://picsum.photos/1920/1080" alt="">
     </div>
 </main>
 
