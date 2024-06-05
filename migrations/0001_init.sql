@@ -9,6 +9,12 @@ create table if not exists users (
     banned boolean not null default false
 );
 
+create table if not exists product_tags (
+    id integer primary key not null,
+    name text not null,
+    kind integer not null
+);
+
 create table if not exists products (
     id integer primary key not null,
     name text not null,
