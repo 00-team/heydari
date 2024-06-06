@@ -87,11 +87,13 @@ main.product {
                 opacity: 0.7;
                 margin-bottom: 0.5em;
                 cursor: default;
+                width: max-content;
             }
 
             h2 {
                 margin-bottom: 1em;
                 cursor: default;
+                width: max-content;
             }
 
             p {
@@ -368,6 +370,7 @@ main.product {
                 @media screen and (max-width: 1024px) {
                     padding: 0;
                 }
+
                 .other {
                     height: 100px;
                     aspect-ratio: 1/1;
@@ -387,12 +390,25 @@ main.product {
 
                     overflow: hidden;
 
+                    will-change: transform;
+                    transition: 0.5s ease;
+
                     @media screen and (max-width: 1024px) {
                         height: 70px;
                     }
                     @media screen and (max-width: 768px) {
                         height: 80px;
                         margin: 0 0.5em;
+                    }
+
+                    &:hover {
+                        &:nth-child(even) {
+                            transform: translateY(-25%) rotate(-10deg)
+                                scale(1.2);
+                        }
+                        &:nth-child(odd) {
+                            transform: translateY(-25%) rotate(10deg) scale(1.2);
+                        }
                     }
                 }
             }
@@ -418,10 +434,11 @@ main.product {
         overflow: hidden;
 
         @media screen and (max-width: 768px) {
-            aspect-ratio: 1/0.3;
+            aspect-ratio: 1/0.5;
         }
 
         img {
+            height: 100%;
             width: 100%;
             object-fit: cover;
         }
@@ -430,13 +447,45 @@ main.product {
     section.products-related {
         width: 100%;
 
-        // debug
-        height: 100vh;
+        min-height: 100vh;
 
         display: flex;
         align-items: center;
         flex-direction: column;
         padding: 5vh 3vw;
+
+        position: relative;
+        isolation: isolate;
+
+        &::before,
+        &::after {
+            content: '';
+
+            width: 100%;
+            height: 100%;
+
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+
+            z-index: -1;
+        }
+
+        &::before {
+            background-image: linear-gradient(
+                135deg,
+                var(--sixty-percent) 4%,
+                transparent 12%
+            );
+        }
+        &::after {
+            background-image: linear-gradient(
+                -135deg,
+                var(--sixty-percent) 4%,
+                transparent 12%
+            );
+        }
 
         h4 {
             width: 100%;
@@ -481,6 +530,10 @@ main.product {
                 position: relative;
                 isolation: isolate;
                 overflow: hidden;
+
+                @media screen and (max-width: 768px) {
+                    width: clamp(0px, 100%, 300px);
+                }
 
                 .head {
                     position: absolute;
