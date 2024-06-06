@@ -10,9 +10,7 @@ main.product {
         height: 8px;
         border-radius: 50%;
 
-        position: absolute;
-        // top: var(--mouse-y);
-        // left: var(--mouse-x);
+        position: fixed;
 
         margin: -4px 0 0 -4px;
 
