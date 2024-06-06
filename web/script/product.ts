@@ -8,14 +8,14 @@ let circle = { x: 0, y: 0 }
 document.addEventListener('mousemove', e => {
     if (!productCircle) return
 
-    // @ts-ignore
-    console.log(e.target.className)
+    // // @ts-ignore
+    // console.log(e.target.className)
 
     mouse.x = e.x
     mouse.y = e.y
 
-    // @ts-ignore
-    console.log(e.target.tagName)
+    // // @ts-ignore
+    // console.log(e.target.tagName)
 
     // @ts-ignore
     if (e.target.className.includes('category'))
@@ -47,3 +47,12 @@ const tick = () => {
 }
 
 tick()
+
+const main = document.querySelector<HTMLImageElement>('.main-img')
+const imgs = document.querySelectorAll('.other-img')
+
+imgs.forEach((img: HTMLImageElement) => {
+    img.addEventListener('click', e => {
+        main.src = img.src
+    })
+})
