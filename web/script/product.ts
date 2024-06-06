@@ -8,8 +8,29 @@ let circle = { x: 0, y: 0 }
 document.addEventListener('mousemove', e => {
     if (!productCircle) return
 
+    // @ts-ignore
+    console.log(e.target.className)
+
     mouse.x = e.x
     mouse.y = e.y
+
+    // @ts-ignore
+    console.log(e.target.tagName)
+
+    // @ts-ignore
+    if (e.target.className.includes('category'))
+        return (productCircle.className = 'circle category')
+    // @ts-ignore
+    if (e.target.className.includes('product-desc'))
+        return (productCircle.className = 'circle desc')
+    // @ts-ignore
+    if (e.target.className.includes('product-title'))
+        return (productCircle.className = 'circle title')
+    // @ts-ignore
+    if (e.target.className.includes('banner-img'))
+        return (productCircle.className = 'circle banner')
+
+    return (productCircle.className = 'circle')
 })
 
 const speed = 0.03
