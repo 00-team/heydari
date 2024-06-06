@@ -6,15 +6,13 @@ main.product {
     flex-direction: column;
 
     .circle {
-        $size: 3rem;
-
-        width: $size;
-        height: $size;
+        width: 3rem;
+        height: 3rem;
         border-radius: 100vmax;
 
         position: fixed;
 
-        margin: calc($size / -2) 0 0 calc($size / -2);
+        margin: calc(3rem / -2) 0 0 calc(3rem / -2);
 
         pointer-events: none;
         mix-blend-mode: screen;
@@ -25,10 +23,36 @@ main.product {
 
         z-index: 10;
 
-        will-change: transform;
+        will-change: transform, width, height;
+        transition: 0.5s ease width, 0.5s ease height, 0.5s ease margin,
+            box-shadow 0.5s ease;
 
         @media screen and (max-width: 768px) {
             display: none;
+        }
+
+        &.category {
+            box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 20px #ffeb3b,
+                0px 0px 8px 0px rgba(255, 255, 255, 0.2588235294);
+            width: 4rem;
+        }
+        &.desc {
+            box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 20px #ffeb3b,
+                0px 0px 8px 0px rgba(255, 255, 255, 0.2588235294);
+            width: 25rem;
+            margin: calc(3rem / -2) 0 0 calc(25rem / -2);
+        }
+        &.title {
+            box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 20px #ffeb3b,
+                0px 0px 8px 0px rgba(255, 255, 255, 0.2588235294);
+            width: 10rem;
+            margin: calc(3rem / -2) 0 0 calc(7rem / -2);
+        }
+        &.banner {
+            box-shadow: none;
+            width: 13rem;
+            height: 13rem;
+            margin: calc(13rem / -2) 0 0 calc(13rem / -2);
         }
     }
 
@@ -62,14 +86,17 @@ main.product {
             h3 {
                 opacity: 0.7;
                 margin-bottom: 0.5em;
+                cursor: default;
             }
 
             h2 {
                 margin-bottom: 1em;
+                cursor: default;
             }
 
             p {
                 line-height: 1.8em;
+                cursor: default;
             }
 
             button {
@@ -448,6 +475,8 @@ main.product {
 
                 background-color: white;
                 border-radius: 1rem;
+
+                cursor: pointer;
 
                 position: relative;
                 isolation: isolate;
