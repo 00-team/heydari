@@ -399,4 +399,16 @@ main.product {
             object-fit: cover;
         }
     }
+
+    section.products-related {
+        width: 100%;
+
+        // debug
+        height: 100vh;
+
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        padding: 5vh 3vw;
+    }
 }
