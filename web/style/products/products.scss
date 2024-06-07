@@ -15,7 +15,7 @@
         color: var(--primary-color);
 
         width: 100%;
-        aspect-ratio: 1/0.19;
+        aspect-ratio: 1/0.16;
 
         background-size: cover;
         background-repeat: no-repeat;
@@ -27,6 +27,58 @@
 
         .header-title {
             color: white;
+        }
+    }
+
+    .searchbar-container {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        margin-bottom: -3vh;
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            width: clamp(0px, 100%, 1000px);
+            border-radius: 100vmax;
+
+            background-color: white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+            overflow: hidden;
+
+            .search-inp {
+                flex: 1 0 0;
+                height: 100%;
+
+                padding: 1em;
+
+                color: black;
+
+                border: none;
+                background-color: inherit;
+            }
+            .icon {
+                height: 70px;
+                aspect-ratio: 1 / 1;
+
+                color: black;
+
+                margin: 7px;
+
+                border-radius: 100vmax;
+                background-color: var(--sixty-percent);
+
+                cursor: pointer;
+            }
         }
     }
 
