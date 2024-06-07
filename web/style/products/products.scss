@@ -181,130 +181,270 @@
                 }
             }
         }
-        .categories {
+        .filters {
             width: 100%;
-
             display: flex;
             align-items: center;
-            gap: 1em;
+            justify-content: space-between;
+
+            flex-wrap: wrap;
 
             margin-top: 1em;
-            margin-right: 0.5em;
-            margin-left: auto;
 
-            @media screen and (max-width: 768px) {
-                margin: 0 auto;
-                margin-top: 2em;
-                flex-direction: column;
-            }
+            .categories {
+                display: flex;
+                align-items: center;
+                gap: 1em;
 
-            .dropdown {
-                width: clamp(0px, 100%, 200px);
+                margin-right: 0.5em;
 
-                position: relative;
-                isolation: isolate;
+                @media screen and (max-width: 768px) {
+                    flex-direction: column;
+                }
 
-                cursor: pointer;
+                .dropdown {
+                    width: clamp(0px, 100%, 200px);
 
-                &.show {
-                    .drop-links {
-                        transform: translateY(0%);
-                        visibility: visible;
-                        opacity: 1;
+                    position: relative;
+                    isolation: isolate;
 
-                        .drop-link {
-                            transform: translateX(0);
+                    cursor: pointer;
+
+                    &.show {
+                        .drop-links {
+                            transform: translateY(0%);
+                            visibility: visible;
+                            opacity: 1;
+
+                            .drop-link {
+                                transform: translateX(0);
+                            }
                         }
                     }
-                }
 
-                .drop-active {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 1em;
+                    .drop-active {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 1em;
 
-                    min-width: 10em;
+                        min-width: 10em;
 
-                    padding: 0.8em 1em;
-                    background: var(--ten-percent);
-                    border-radius: 1rem;
-                    color: white;
+                        padding: 0.8em 1em;
+                        background: var(--ten-percent);
+                        border-radius: 1rem;
+                        color: white;
 
-                    span {
-                        margin: 0 auto;
+                        span {
+                            margin: 0 auto;
+                        }
                     }
-                }
-                .drop-links {
-                    position: absolute;
-                    top: 70px;
-
-                    width: 100%;
-                    right: 0;
-
-                    display: flex;
-                    align-items: center;
-                    flex-direction: column;
-
-                    background-color: white;
-
-                    border-radius: 10px;
-                    filter: drop-shadow(2px 4px 6px var(--sixty-percent));
-
-                    visibility: hidden;
-                    opacity: 0;
-
-                    transform: translateY(-25%);
-                    transition: 0.5s ease;
-                    overflow: hidden;
-
-                    &::before {
-                        content: '';
-                        width: 100%;
-                        height: 3.5em;
-
+                    .drop-links {
                         position: absolute;
-                        top: var(--top, 0);
+                        top: 70px;
 
-                        background-color: var(--ten-percent);
-
-                        will-change: top;
-                        transition: 0.3s ease;
-                    }
-
-                    .drop-link {
                         width: 100%;
-                        height: 3.5em;
+                        right: 0;
 
                         display: flex;
                         align-items: center;
+                        flex-direction: column;
 
-                        gap: 1em;
-                        padding: 1em;
+                        background-color: white;
 
-                        position: relative;
-                        isolation: isolate;
+                        border-radius: 10px;
+                        filter: drop-shadow(2px 4px 6px var(--sixty-percent));
+
+                        visibility: hidden;
+                        opacity: 0;
+
+                        transform: translateY(-25%);
+                        transition: 0.5s ease;
                         overflow: hidden;
 
-                        transform: translateX(200%);
+                        &::before {
+                            content: '';
+                            width: 100%;
+                            height: 3.5em;
 
-                        transition: 0.3s ease,
-                            transform 0.3s cubic-bezier(0.45, 0.02, 0.09, 0.98),
-                            color 0.3s;
+                            position: absolute;
+                            top: var(--top, 0);
 
-                        @for $i from 1 through 50 {
-                            &:nth-child(#{$i}) {
-                                transition: 0.3s ease,
-                                    transform
-                                        #{$i *
-                                        200ms}
-                                        cubic-bezier(0.45, 0.02, 0.09, 0.98),
-                                    color 0.3s;
-                            }
+                            background-color: var(--ten-percent);
+
+                            will-change: top;
+                            transition: 0.3s ease;
                         }
 
-                        &:hover {
-                            color: white;
+                        .drop-link {
+                            width: 100%;
+                            height: 3.5em;
+
+                            display: flex;
+                            align-items: center;
+
+                            gap: 1em;
+                            padding: 1em;
+
+                            position: relative;
+                            isolation: isolate;
+                            overflow: hidden;
+
+                            transform: translateX(200%);
+
+                            transition: 0.3s ease,
+                                transform 0.3s
+                                    cubic-bezier(0.45, 0.02, 0.09, 0.98),
+                                color 0.3s;
+
+                            @for $i from 1 through 50 {
+                                &:nth-child(#{$i}) {
+                                    transition: 0.3s ease,
+                                        transform
+                                            #{$i *
+                                            200ms}
+                                            cubic-bezier(
+                                                0.45,
+                                                0.02,
+                                                0.09,
+                                                0.98
+                                            ),
+                                        color 0.3s;
+                                }
+                            }
+
+                            &:hover {
+                                color: white;
+                            }
+                        }
+                    }
+                }
+            }
+            .order {
+                display: flex;
+                align-items: center;
+                gap: 1em;
+
+                margin-right: 0.5em;
+
+                @media screen and (max-width: 768px) {
+                    flex-direction: column;
+                }
+
+                .dropdown {
+                    width: clamp(0px, 100%, 200px);
+
+                    position: relative;
+                    isolation: isolate;
+
+                    cursor: pointer;
+
+                    &.show {
+                        .drop-links {
+                            transform: translateY(0%);
+                            visibility: visible;
+                            opacity: 1;
+
+                            .drop-link {
+                                transform: translateX(0);
+                            }
+                        }
+                    }
+
+                    .drop-active {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 1em;
+
+                        min-width: 10em;
+
+                        padding: 0.8em 1em;
+                        background: var(--ten-percent);
+                        border-radius: 1rem;
+                        color: white;
+
+                        span {
+                            margin: 0 auto;
+                        }
+                    }
+                    .drop-links {
+                        position: absolute;
+                        top: 70px;
+
+                        width: 100%;
+                        right: 0;
+
+                        display: flex;
+                        align-items: center;
+                        flex-direction: column;
+
+                        background-color: white;
+
+                        border-radius: 10px;
+                        filter: drop-shadow(2px 4px 6px var(--sixty-percent));
+
+                        visibility: hidden;
+                        opacity: 0;
+
+                        transform: translateY(-25%);
+                        transition: 0.5s ease;
+                        overflow: hidden;
+
+                        &::before {
+                            content: '';
+                            width: 100%;
+                            height: 3.5em;
+
+                            position: absolute;
+                            top: var(--top, 0);
+
+                            background-color: var(--ten-percent);
+
+                            will-change: top;
+                            transition: 0.3s ease;
+                        }
+
+                        .drop-link {
+                            width: 100%;
+                            height: 3.5em;
+
+                            display: flex;
+                            align-items: center;
+
+                            gap: 1em;
+                            padding: 1em;
+
+                            position: relative;
+                            isolation: isolate;
+                            overflow: hidden;
+
+                            transform: translateX(200%);
+
+                            transition: 0.3s ease,
+                                transform 0.3s
+                                    cubic-bezier(0.45, 0.02, 0.09, 0.98),
+                                color 0.3s;
+
+                            @for $i from 1 through 50 {
+                                &:nth-child(#{$i}) {
+                                    transition: 0.3s ease,
+                                        transform
+                                            #{$i *
+                                            200ms}
+                                            cubic-bezier(
+                                                0.45,
+                                                0.02,
+                                                0.09,
+                                                0.98
+                                            ),
+                                        color 0.3s;
+                                }
+                            }
+
+                            &:hover {
+                                color: white;
+                            }
                         }
                     }
                 }
