@@ -23,9 +23,27 @@ links.forEach((link: HTMLElement, index) => {
         dropdown.style.setProperty('--top', `${3.5 * index}em`)
     })
     link.addEventListener('click', () => {
+        let newCategory = link.innerText
+
         toggleDropdown()
 
-        activeSpan.innerText = link.innerText
+        productCards.forEach((card: HTMLElement) => {
+            let category =
+                card.querySelector<HTMLElement>('.product-category').innerText
+
+            let hasCategory = category.includes(newCategory)
+
+            if (hasCategory) {
+                card.className = 'product-card'
+                return
+            }
+
+            if (card.classList.contains('hide')) return
+
+            card.className = 'product-card hide'
+        })
+
+        activeSpan.innerText = newCategory
     })
 })
 
@@ -41,8 +59,6 @@ input.addEventListener('input', e => {
             let title = card.querySelector<HTMLElement>('figcaption').innerText
             let code =
                 card.querySelector<HTMLElement>('.product-code').innerText
-            let category =
-                card.querySelector<HTMLElement>('.product-category').innerText
 
             let hasTitle = title.includes(value)
             let hasCode = code.includes(value)
@@ -54,7 +70,7 @@ input.addEventListener('input', e => {
 
             if (card.classList.contains('hide')) return
 
-            card.className += ' hide'
+            card.className = 'product-card hide'
         })
     } else {
         productCards.forEach((card: HTMLElement) => {
