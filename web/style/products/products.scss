@@ -78,6 +78,37 @@
                 background-color: var(--sixty-percent);
 
                 cursor: pointer;
+
+                &:hover {
+                    svg {
+                        transform: translateY(-10%) translateX(-10%);
+                        animation: shake 1s ease infinite;
+                    }
+                }
+
+                svg {
+                    transition: 0.3s ease;
+                    @keyframes shake {
+                        0% {
+                            rotate: 0;
+                        }
+                        20% {
+                            rotate: 8deg;
+                        }
+                        40% {
+                            rotate: -8deg;
+                        }
+                        60% {
+                            rotate: 5deg;
+                        }
+                        80% {
+                            rotate: -5deg;
+                        }
+                        100% {
+                            rotate: 0deg;
+                        }
+                    }
+                }
             }
         }
     }
