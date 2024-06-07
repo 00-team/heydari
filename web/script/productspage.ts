@@ -28,3 +28,37 @@ links.forEach((link: HTMLElement, index) => {
         activeSpan.innerText = link.innerText
     })
 })
+
+const input = document.querySelector<HTMLInputElement>('.search-inp')
+const productCards = document.querySelectorAll('.product-card')
+
+input.addEventListener('input', e => {
+    // @ts-ignore
+    let value = e.currentTarget.value
+
+    if (value) {
+        productCards.forEach((card: HTMLElement) => {
+            let title = card.querySelector<HTMLElement>('figcaption').innerText
+            let code =
+                card.querySelector<HTMLElement>('.product-code').innerText
+            let category =
+                card.querySelector<HTMLElement>('.product-category').innerText
+
+            let hasTitle = title.includes(value)
+            let hasCode = code.includes(value)
+
+            if (hasTitle || hasCode) {
+                card.className = 'product-card'
+                return
+            }
+
+            if (card.classList.contains('hide')) return
+
+            card.className += ' hide'
+        })
+    } else {
+        productCards.forEach((card: HTMLElement) => {
+            card.className = card.className.replace(' hide', '')
+        })
+    }
+})
