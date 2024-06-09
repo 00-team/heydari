@@ -10,7 +10,7 @@ use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
 use crate::models::user::Admin;
 use crate::models::{AppErr, AppErrBadRequest, ListInput, Response};
 // use crate::models::{Admin, ListInput, Photos, Product, Response, UpdatePhoto};
-use crate::utils::{self, get_random_bytes, remove_photo, save_photo, CutOff};
+use crate::utils::{self, CutOff};
 use crate::AppState;
 
 #[derive(OpenApi)]
@@ -19,7 +19,10 @@ use crate::AppState;
     paths(
         product_list, product_get, product_add, product_update, product_delete
     ),
-    components(schemas(Product, ProductAddBody, ProductUpdateBody)),
+    components(schemas(
+        Product, ProductTag, ProductKind, ProductPart,
+        ProductAddBody, ProductUpdateBody
+    )),
     servers((url = "/products")),
     modifiers(&UpdatePaths)
 )]
@@ -35,11 +38,11 @@ pub struct ApiDoc;
 async fn product_list(
     _: Admin, query: Query<ListInput>, state: Data<AppState>,
 ) -> Response<Vec<Product>> {
-    let offset = i64::from(query.page) * 30;
+    let offset = i64::from(query.page) * 32;
 
     let products = sqlx::query_as! {
         Product,
-        "select * from products limit 30 offset ?",
+        "select * from products order by id desc limit 32 offset ?",
         offset
     }
     .fetch_all(&state.sql)
