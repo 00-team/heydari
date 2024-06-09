@@ -33,23 +33,10 @@ pub struct ProductTag {
     pub count: i64,
 }
 
-/*
-create table if not exists products (
-    id integer primary key not null,
-    name text not null,
-    code text not null,
-    detail text not null default "",
-    timestamp integer not null,
-    thumbnail text not null,
-    photos text not null default "[]",
-    leg_tag integer references product_tags(id) on delete set null,
-    bed_tag integer references product_tags(id) on delete set null
-);
-*/
-
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Default)]
 pub struct Product {
     pub id: i64,
+    pub kind: ProductKind,
     pub name: String,
     pub code: String,
     pub detail: String,
