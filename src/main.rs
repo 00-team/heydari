@@ -18,7 +18,6 @@ mod admin;
 mod api;
 mod config;
 mod docs;
-mod general;
 mod models;
 mod utils;
 mod web;
