@@ -23,7 +23,7 @@ use crate::AppState;
     servers((url = "/products")),
     modifiers(&UpdatePaths)
 )]
-pub struct Doc;
+pub struct ApiDoc;
 
 #[utoipa::path(
     get,
