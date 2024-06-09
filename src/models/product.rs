@@ -47,14 +47,14 @@ create table if not exists products (
 );
 */
 
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Default)]
 pub struct Product {
     pub id: i64,
     pub name: String,
     pub code: String,
     pub detail: String,
     pub timestamp: i64,
-    pub thumbnail: String,
+    pub thumbnail: Option<String>,
     #[schema(value_type = Vec<String>)]
     pub photos: JsonStr<Vec<String>>,
     pub tag_leg: Option<i64>,
