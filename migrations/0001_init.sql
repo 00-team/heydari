@@ -25,7 +25,7 @@ create table if not exists products (
     timestamp integer not null,
     thumbnail text not null,
     photos text not null default "[]",
-    leg_tag integer references product_tags(id) on delete set null,
-    bed_tag integer references product_tags(id) on delete set null
+    tag_leg integer references product_tags(id) on delete set null,
+    tag_bed integer references product_tags(id) on delete set null
 );
 
