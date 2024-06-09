@@ -20,7 +20,7 @@ create table if not exists product_tags (
 create table if not exists products (
     id integer primary key not null,
     name text not null,
-    code text not null,
+    code text unique not null,
     detail text not null default "",
     timestamp integer not null,
     thumbnail text,
