@@ -6,7 +6,10 @@ use serde::Deserialize;
 use utoipa::{OpenApi, ToSchema};
 
 use crate::docs::UpdatePaths;
-use crate::models::{Admin, ListInput, Photos, Product, Response, UpdatePhoto};
+use crate::models::product::Product;
+use crate::models::user::Admin;
+use crate::models::{AppErrBadRequest, ListInput, Response};
+// use crate::models::{Admin, ListInput, Photos, Product, Response, UpdatePhoto};
 use crate::utils::{get_random_bytes, remove_photo, save_photo, CutOff};
 use crate::AppState;
 
@@ -26,9 +29,7 @@ pub struct Doc;
 #[utoipa::path(
     get,
     params(("page" = u32, Query, example = 0)),
-    responses(
-        (status = 200, body = Vec<Product>)
-    )
+    responses((status = 200, body = Vec<Product>))
 )]
 /// Product List
 #[get("/")]
@@ -84,7 +85,7 @@ async fn product_add(
     let mut body = body;
     body.title.cut_off(100);
     if body.end != 0 && body.start >= body.end {
-        return Err(ErrorBadRequest("invalid start and end times"));
+        return Err(AppErrBadRequest("invalid start and end times"));
     }
 
     let result = sqlx::query_as! {

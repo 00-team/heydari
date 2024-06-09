@@ -72,7 +72,8 @@ impl<T: DeserializeOwned + Default> From<String> for JsonStr<T> {
 }
 
 macro_rules! sql_enum {
-    ($vis:vis enum $name:ident { $($member:ident,)* }) => {
+    ( $($vis:vis enum $name:ident { $($member:ident,)* } )* ) => {
+        $(
         #[derive(PartialEq, Default, Clone, Debug, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]
         #[serde(rename_all = "snake_case")]
         $vis enum $name {
@@ -104,6 +105,7 @@ macro_rules! sql_enum {
                 sqlx::encode::IsNull::No
             }
         }
+        )*
     };
 }
 

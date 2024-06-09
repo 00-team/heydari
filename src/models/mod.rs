@@ -1,5 +1,5 @@
 pub mod common;
-// pub mod order;
+pub mod product;
 // pub mod transaction;
 pub mod user;
 

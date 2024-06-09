@@ -20,8 +20,6 @@ pub struct User {
     pub id: i64,
     pub name: Option<String>,
     pub phone: String,
-    pub wallet: i64,
-    pub in_hold: i64,
     pub token: String,
     pub photo: Option<String>,
     pub admin: bool,
