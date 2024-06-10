@@ -8,47 +8,35 @@ import Alert from 'comps/alert'
 import './style/index.scss'
 
 import Navbar from './layout/navbar'
+import Login from 'layout/login'
 const Orders = lazy(() => import('./layout/orders'))
 const Discounts = lazy(() => import('./layout/discounts'))
 
 const App: Component<RouteSectionProps> = P => {
     return (
-        <>
+        <Show when={self.loged_in && self.user.admin} fallback={<Login />}>
             <Navbar />
             <main>{P.children}</main>
-        </>
+        </Show>
     )
 }
 
 const Root = () => {
-    createEffect(() => {
-        if (!self.loged_in || !self.user.admin) {
-            if (import.meta.env.PROD) {
-                location.replace('/login')
-            } else {
-                console.log('go to login')
-            }
-        }
-    })
-
     return (
-        <Show
-            when={self.loged_in && self.user.admin}
-            fallback={<a href='/login'>Login</a>}
-        >
+        <>
             <Router base='/admin'>
                 <Route path='/' component={App}>
                     <Route
                         path='/'
-                        component={() => <Navigate href='/orders' />}
+                        component={() => <Navigate href='/products/' />}
                     />
-                    <Route path='/orders' component={Orders} />
-                    <Route path='/discounts' component={Discounts} />
+                    <Route path='/products/' component={Orders} />
+                    <Route path='/products-tags/' component={Discounts} />
                     <Route path='*' component={() => <span>Not Found</span>} />
                 </Route>
             </Router>
             <Alert />
-        </Show>
+        </>
     )
 }
 
