@@ -216,7 +216,7 @@
                             visibility: visible;
                             opacity: 1;
 
-                            .drop-link {
+                            .drop-filter {
                                 transform: translateX(0);
                             }
                         }
@@ -276,7 +276,7 @@
                             transition: 0.3s ease;
                         }
 
-                        .drop-link {
+                        .drop-filter {
                             width: 100%;
                             height: 3.5em;
 
@@ -345,7 +345,7 @@
                             visibility: visible;
                             opacity: 1;
 
-                            .drop-link {
+                            .drop-order {
                                 transform: translateX(0);
                             }
                         }
@@ -405,7 +405,7 @@
                             transition: 0.3s ease;
                         }
 
-                        .drop-link {
+                        .drop-order {
                             width: 100%;
                             height: 3.5em;
 
