@@ -9,11 +9,11 @@ let isSmall = false
 let openSmall = false
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (innerWidth < 1024) isSmall = true
+    if (innerWidth < 768) isSmall = true
     render()
 
     window.onresize = () => {
-        if (innerWidth < 1024) isSmall = true
+        if (innerWidth < 768) isSmall = true
         else isSmall = false
         render()
     }
