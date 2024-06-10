@@ -6,13 +6,25 @@
         "style": "sass web/style:static/style -s compressed",
         "style:watch": "sass web/style:static/style -w -c",
         "script": "webpack",
-        "script:watch": "webpack --watch"
+        "script:watch": "webpack --watch",
+        "admin:start": "root=admin vite",
+        "admin:build": "root=admin vite build"
     },
     "devDependencies": {
+        "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+        "@types/node": "^20.14.2",
         "sass": "^1.77.4",
         "ts-loader": "^9.5.1",
         "typescript": "^5.4.5",
+        "vite": "^5.2.13",
+        "vite-plugin-solid": "^2.10.2",
+        "vite-tsconfig-paths": "^4.3.2",
         "webpack": "^5.91.0",
         "webpack-cli": "^5.1.4"
+    },
+    "dependencies": {
+        "@solidjs/router": "^0.13.5",
+        "@splinetool/runtime": "^1.5.5",
+        "solid-js": "^1.8.17"
     }
 }
