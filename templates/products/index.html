@@ -11,11 +11,21 @@
 {% block content %}
 
 <main class="products-page-container">
+
+
+
    <header class="products-header" style="background-image:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
        url(/static/image/header.webp)">
-      <h2 class="header-title title_hero">محصولات</h2>
+      <h2 class="header-title title_hero">محصولات حیدری</h2>
    </header>
+
+
+
+
    <div class="searchbar-container">
+
+
+
       <div class="input-wrapper">
          <input type="text" placeholder="جستجو کنید..." class="search-inp title_small" maxlength="256">
          <div class="icon">
@@ -28,14 +38,25 @@
             </svg>
          </div>
       </div>
+
+
       <div class="filters">
-         <div class="categories">
+
+
+
+
+
+
+
+
+
+         <div class="categories kind">
             <span class="title_small">
-               دسته بندی:
+               نوع :
             </span>
-            <div class="dropdown">
-               <div class="drop-active title_small">
-                  <span class="drop-active-text">
+            <div class="dropdown" id="categories">
+               <div class="drop-active title_small" id="categories">
+                  <span class="drop-active-text" id="categories">
                      اداری
                   </span>
                   <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
@@ -47,49 +68,131 @@
 
                </div>
                <div class="drop-links title_small">
-                  <div class="drop-link">
+                  <div class="drop-filter">
+                     میز
+                  </div>
+                  <div class="drop-filter">
+                     صندلی
+                  </div>
+               </div>
+            </div>
+         </div>
+
+
+
+         <div class="categories paye">
+            <span class="title_small">
+               پایه :
+            </span>
+            <div class="dropdown" id="categories">
+               <div class="drop-active title_small" id="categories">
+                  <span class="drop-active-text" id="categories">
+                     اداری
+                  </span>
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                     width="1em" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                     </path>
+                  </svg>
+
+               </div>
+               <div class="drop-links title_small">
+                  <div class="drop-filter">
                      اداری
                   </div>
-                  <div class="drop-link">
+                  <div class="drop-filter">
                      خانگی
                   </div>
-                  <div class="drop-link">
+                  <div class="drop-filter">
+                     رستورانی
+                  </div>
+                  <div class="drop-filter">
+                     استادیومی
+                  </div>
+               </div>
+            </div>
+         </div>
+
+
+
+         <div class="categories kafi">
+            <span class="title_small">
+               کفی :
+            </span>
+            <div class="dropdown" id="categories">
+               <div class="drop-active title_small" id="categories">
+                  <span class="drop-active-text" id="categories">
+                     اداری
+                  </span>
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                     width="1em" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                     </path>
+                  </svg>
+
+               </div>
+               <div class="drop-links title_small">
+                  <div class="drop-filter">
+                     اداری
+                  </div>
+                  <div class="drop-filter">
+                     خانگی
+                  </div>
+                  <div class="drop-filter">
                      لورم
                   </div>
-                  <div class="drop-link">
+                  <div class="drop-filter">
                      ایپسوم
                   </div>
                </div>
             </div>
          </div>
-         <div class="order">
-            <span class="title_small">
-               تاریخ ساخت:
-            </span>
-            <div class="dropdown">
-               <div class="drop-active title_small">
-                  <span class="drop-active-text">
-                     جدید ترین
-                  </span>
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
-                     width="1em" xmlns="http://www.w3.org/2000/svg">
-                     <path
-                        d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
-                     </path>
-                  </svg>
 
+
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+      <div class="order">
+         <span class="title_small">
+            براساس:
+         </span>
+         <div class="dropdown" id="order">
+            <div class="drop-active title_small" id="order">
+               <span class="drop-active-text" id="order">
+                  جدید ترین
+               </span>
+               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                  width="1em" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                     d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                  </path>
+               </svg>
+
+            </div>
+            <div class="drop-links title_small">
+               <div class="drop-order">
+                  جدید ترین
                </div>
-               <div class="drop-links title_small">
-                  <div class="drop-link">
-                     جدید ترین
-                  </div>
-                  <div class="drop-link">
-                     قدیمی ترین
-                  </div>
+               <div class="drop-order">
+                  قدیمی ترین
                </div>
             </div>
          </div>
       </div>
+
+
+
    </div>
    <section class="products-wrapper">
       <a class="product-card" href="/product/1">

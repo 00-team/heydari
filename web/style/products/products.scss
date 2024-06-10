@@ -3,11 +3,12 @@
 
     display: flex;
     flex-direction: column;
-    row-gap: 10vh;
     align-items: center;
 
     padding: 5vh 0;
     padding-top: 0;
+
+    overflow: hidden;
 
     .products-header {
         display: grid;
@@ -22,7 +23,7 @@
         background-position: left 40%;
 
         @media screen and (max-width: 768px) {
-            aspect-ratio: 1/0.3;
+            aspect-ratio: 1/0.45;
         }
 
         .header-title {
@@ -42,7 +43,7 @@
 
         padding: 0 1em;
 
-        margin-bottom: -3vh;
+        margin: 4em 0 2em 0;
 
         z-index: 2;
 
@@ -72,6 +73,19 @@
                 }
                 to {
                     width: clamp(0px, 100%, 1000px);
+                }
+            }
+            @media screen and (max-width: 768px) {
+                height: 50px;
+                width: 50px;
+
+                @keyframes width {
+                    from {
+                        width: 50px;
+                    }
+                    to {
+                        width: clamp(0px, 100%, 1000px);
+                    }
                 }
             }
 
@@ -141,7 +155,7 @@
                 }
 
                 @media screen and (max-width: 768px) {
-                    height: 40px;
+                    // height: 40px;
 
                     svg {
                         width: 20px;
@@ -185,11 +199,16 @@
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-around;
+
+            row-gap: 2rem;
+            column-gap: 1rem;
 
             flex-wrap: wrap;
 
             margin-top: 1em;
+
+            z-index: 2;
 
             .categories {
                 display: flex;
@@ -200,6 +219,7 @@
 
                 @media screen and (max-width: 768px) {
                     flex-direction: column;
+                    width: 100%;
                 }
 
                 .dropdown {
@@ -216,7 +236,7 @@
                             visibility: visible;
                             opacity: 1;
 
-                            .drop-link {
+                            .drop-filter {
                                 transform: translateX(0);
                             }
                         }
@@ -276,7 +296,7 @@
                             transition: 0.3s ease;
                         }
 
-                        .drop-link {
+                        .drop-filter {
                             width: 100%;
                             height: 3.5em;
 
@@ -320,131 +340,129 @@
                     }
                 }
             }
-            .order {
-                display: flex;
-                align-items: center;
-                gap: 1em;
+        }
+        .order {
+            width: 100%;
 
-                margin-right: 0.5em;
+            margin-top: 1em;
 
-                @media screen and (max-width: 768px) {
-                    flex-direction: column;
+            display: flex;
+            align-items: center;
+            gap: 1em;
+
+            margin-right: 0.5em;
+
+            @media screen and (max-width: 768px) {
+                flex-direction: column;
+            }
+
+            .dropdown {
+                width: clamp(0px, 100%, 200px);
+
+                position: relative;
+                isolation: isolate;
+
+                cursor: pointer;
+
+                &.show {
+                    .drop-links {
+                        transform: translateY(0%);
+                        visibility: visible;
+                        opacity: 1;
+
+                        .drop-order {
+                            transform: translateX(0);
+                        }
+                    }
                 }
 
-                .dropdown {
-                    width: clamp(0px, 100%, 200px);
+                .drop-active {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 1em;
 
-                    position: relative;
-                    isolation: isolate;
+                    min-width: 10em;
 
-                    cursor: pointer;
+                    padding: 0.8em 1em;
+                    background: var(--sixty-percent);
+                    border-radius: 1rem;
+                    color: white;
 
-                    &.show {
-                        .drop-links {
-                            transform: translateY(0%);
-                            visibility: visible;
-                            opacity: 1;
-
-                            .drop-link {
-                                transform: translateX(0);
-                            }
-                        }
+                    span {
+                        margin: 0 auto;
                     }
+                }
+                .drop-links {
+                    position: absolute;
+                    top: 70px;
 
-                    .drop-active {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 1em;
+                    width: 100%;
+                    right: 0;
 
-                        min-width: 10em;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
 
-                        padding: 0.8em 1em;
-                        background: var(--ten-percent);
-                        border-radius: 1rem;
-                        color: white;
+                    background-color: white;
 
-                        span {
-                            margin: 0 auto;
-                        }
-                    }
-                    .drop-links {
-                        position: absolute;
-                        top: 70px;
+                    border-radius: 10px;
+                    filter: drop-shadow(2px 4px 6px var(--sixty-percent));
 
+                    visibility: hidden;
+                    opacity: 0;
+
+                    transform: translateY(-25%);
+                    transition: 0.5s ease;
+                    overflow: hidden;
+
+                    &::before {
+                        content: '';
                         width: 100%;
-                        right: 0;
+                        height: 3.5em;
+
+                        position: absolute;
+                        top: var(--top, 0);
+
+                        background-color: var(--sixty-percent);
+
+                        will-change: top;
+                        transition: 0.3s ease;
+                    }
+
+                    .drop-order {
+                        width: 100%;
+                        height: 3.5em;
 
                         display: flex;
                         align-items: center;
-                        flex-direction: column;
 
-                        background-color: white;
+                        gap: 1em;
+                        padding: 1em;
 
-                        border-radius: 10px;
-                        filter: drop-shadow(2px 4px 6px var(--sixty-percent));
-
-                        visibility: hidden;
-                        opacity: 0;
-
-                        transform: translateY(-25%);
-                        transition: 0.5s ease;
+                        position: relative;
+                        isolation: isolate;
                         overflow: hidden;
 
-                        &::before {
-                            content: '';
-                            width: 100%;
-                            height: 3.5em;
+                        transform: translateX(200%);
 
-                            position: absolute;
-                            top: var(--top, 0);
+                        transition: 0.3s ease,
+                            transform 0.3s cubic-bezier(0.45, 0.02, 0.09, 0.98),
+                            color 0.3s;
 
-                            background-color: var(--ten-percent);
-
-                            will-change: top;
-                            transition: 0.3s ease;
+                        @for $i from 1 through 50 {
+                            &:nth-child(#{$i}) {
+                                transition: 0.3s ease,
+                                    transform
+                                        #{$i *
+                                        200ms}
+                                        cubic-bezier(0.45, 0.02, 0.09, 0.98),
+                                    color 0.3s;
+                            }
                         }
 
-                        .drop-link {
-                            width: 100%;
-                            height: 3.5em;
-
-                            display: flex;
-                            align-items: center;
-
-                            gap: 1em;
-                            padding: 1em;
-
-                            position: relative;
-                            isolation: isolate;
-                            overflow: hidden;
-
-                            transform: translateX(200%);
-
-                            transition: 0.3s ease,
-                                transform 0.3s
-                                    cubic-bezier(0.45, 0.02, 0.09, 0.98),
-                                color 0.3s;
-
-                            @for $i from 1 through 50 {
-                                &:nth-child(#{$i}) {
-                                    transition: 0.3s ease,
-                                        transform
-                                            #{$i *
-                                            200ms}
-                                            cubic-bezier(
-                                                0.45,
-                                                0.02,
-                                                0.09,
-                                                0.98
-                                            ),
-                                        color 0.3s;
-                                }
-                            }
-
-                            &:hover {
-                                color: white;
-                            }
+                        &:hover {
+                            color: white;
                         }
                     }
                 }

@@ -5,57 +5,6 @@ main.product {
     display: flex;
     flex-direction: column;
 
-    .circle {
-        width: 3rem;
-        height: 3rem;
-        border-radius: 100vmax;
-
-        position: fixed;
-
-        margin: calc(3rem / -2) 0 0 calc(3rem / -2);
-
-        pointer-events: none;
-        mix-blend-mode: screen;
-
-        border: 2px solid #fdfca9;
-        box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 0px #ffeb3b,
-            0px 0px 8px 0px #ffffff42;
-
-        z-index: 10;
-
-        will-change: transform, width, height;
-        transition: 0.5s ease width, 0.5s ease height, 0.5s ease margin,
-            box-shadow 0.5s ease;
-
-        @media screen and (max-width: 768px) {
-            display: none;
-        }
-
-        &.category {
-            box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 20px #ffeb3b,
-                0px 0px 8px 0px rgba(255, 255, 255, 0.2588235294);
-            width: 4rem;
-        }
-        &.desc {
-            box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 20px #ffeb3b,
-                0px 0px 8px 0px rgba(255, 255, 255, 0.2588235294);
-            width: 25rem;
-            margin: calc(3rem / -2) 0 0 calc(25rem / -2);
-        }
-        &.title {
-            box-shadow: 0px 0px 8px 0px #fdfca9 inset, 0px 0px 24px 20px #ffeb3b,
-                0px 0px 8px 0px rgba(255, 255, 255, 0.2588235294);
-            width: 10rem;
-            margin: calc(3rem / -2) 0 0 calc(7rem / -2);
-        }
-        &.banner {
-            box-shadow: none;
-            width: 13rem;
-            height: 13rem;
-            margin: calc(13rem / -2) 0 0 calc(13rem / -2);
-        }
-    }
-
     .product-wrapper {
         width: 100%;
         min-height: 80vh;
@@ -334,7 +283,7 @@ main.product {
 
                 border-radius: 1rem;
                 background-color: white;
-                background-image: linear-gradient(45deg, #ffb74d, transparent);
+                // background-image: linear-gradient(45deg, #ffb74d, transparent);
                 box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
                 position: relative;
@@ -378,11 +327,11 @@ main.product {
                     aspect-ratio: 1/1;
 
                     box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 15px;
-                    background-image: linear-gradient(
-                        288deg,
-                        #ffb74d 10%,
-                        transparent 50%
-                    );
+                    // background-image: linear-gradient(
+                    //     288deg,
+                    //     #ffb74d 10%,
+                    //     transparent 50%
+                    // );
                     background-color: white;
                     border-radius: 0.5rem;
 
