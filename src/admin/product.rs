@@ -7,8 +7,7 @@ use utoipa::{OpenApi, ToSchema};
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
 use crate::models::user::{Admin, UpdatePhoto};
-use crate::models::{AppErr, ListInput, Response};
-// use crate::models::{Admin, ListInput, Photos, Product, Response, UpdatePhoto};
+use crate::models::{AppErr, AppErrBadRequest, ListInput, Response};
 use crate::utils::{self, CutOff};
 use crate::AppState;
 
@@ -17,7 +16,7 @@ use crate::AppState;
     tags((name = "admin::product")),
     paths(
         product_list, product_get, product_add, product_update, product_delete,
-        product_thumbnail,
+        product_thumbnail, product_photo_add, product_photo_del
     ),
     components(schemas(
         Product, ProductTag, ProductKind, ProductPart,
@@ -30,7 +29,7 @@ pub struct ApiDoc;
 
 #[utoipa::path(
     get,
-    params(("page" = u32, Query, example = 0)),
+    params(ListInput),
     responses((status = 200, body = Vec<Product>))
 )]
 /// Product List
@@ -54,9 +53,7 @@ async fn product_list(
 #[utoipa::path(
     get,
     params(("id" = i64, Path,)),
-    responses(
-        (status = 200, body = Product)
-    )
+    responses((status = 200, body = Product))
 )]
 /// Product Get
 #[get("/{id}/")]
@@ -175,7 +172,7 @@ async fn product_update(
 #[utoipa::path(
     delete,
     params(("id" = i64, Path,)),
-    responses((status = 200, body = String))
+    responses((status = 200))
 )]
 /// Product Delete
 #[delete("/{id}/")]
@@ -229,40 +226,74 @@ async fn product_thumbnail(
     Ok(Json(product))
 }
 
-// #[utoipa::path(
-//     delete,
-//     params(
-//         ("id" = i64, Path,),
-//         ("idx" = u8, Path,),
-//     ),
-//     responses(
-//         (status = 200, body = String)
-//     )
-// )]
-// /// Product Delete Photo
-// #[delete("/{id}/photo/{idx}/")]
-// async fn product_delete_photo(
-//     _: Admin, product: Product, path: Path<(i64, u8)>, state: Data<AppState>,
-// ) -> Result<&'static str, Error> {
-//     let mut product = product;
-//     let idx: usize = path.1.into();
-//     if idx >= product.photos.salts.len() {
-//         return Err(ErrorBadRequest("photo not found"));
-//     }
-//
-//     let salt = product.photos.salts.remove(idx);
-//     remove_photo(&format!("{}-{}", product.id, salt));
-//
-//     sqlx::query_as! {
-//         Product,
-//         "update products set photos = ? where id = ?",
-//         product.photos, product.id
-//     }
-//     .execute(&state.sql)
-//     .await?;
-//
-//     Ok("photo was removed")
-// }
+#[utoipa::path(
+    put,
+    params(("id" = i64, Path,)),
+    request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
+    responses((status = 200, body = Product))
+)]
+/// Add Photo
+#[put("/{id}/photo/")]
+async fn product_photo_add(
+    _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
+    state: Data<AppState>,
+) -> Response<Product> {
+    if product.photos.len() >= 255 {
+        return Err(AppErrBadRequest("too many photos"));
+    }
+
+    let mut product = product;
+    let salt = loop {
+        let s = utils::get_random_bytes(8);
+        if !product.photos.iter().any(|p| p == &s) {
+            break s
+        }
+    };
+    product.photos.push(salt.clone());
+
+    let filename = format!("pp:{}:{}", product.id, salt);
+    utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
+
+    sqlx::query_as! {
+        Product,
+        "update products set photos = ? where id = ?",
+        product.photos, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(Json(product))
+}
+
+#[utoipa::path(
+    delete,
+    params(("id" = i64, Path,), ("idx" = u8, Path,)),
+    responses((status = 200))
+)]
+/// Delete Photo
+#[delete("/{id}/photo/{idx}/")]
+async fn product_photo_del(
+    _: Admin, product: Product, path: Path<(i64, u8)>, state: Data<AppState>,
+) -> Result<HttpResponse, AppErr> {
+    let mut product = product;
+    let idx: usize = path.1.into();
+    if idx >= product.photos.len() {
+        return Err(AppErrBadRequest("photo not found"));
+    }
+
+    let salt = product.photos.remove(idx);
+    utils::remove_photo(&format!("pp:{}:{}", product.id, salt));
+
+    sqlx::query_as! {
+        Product,
+        "update products set photos = ? where id = ?",
+        product.photos, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(HttpResponse::Ok().finish())
+}
 
 pub fn router() -> Scope {
     Scope::new("/products")
@@ -272,6 +303,6 @@ pub fn router() -> Scope {
         .service(product_update)
         .service(product_delete)
         .service(product_thumbnail)
-    // .service(product_add_photo)
-    // .service(product_delete_photo)
+        .service(product_photo_add)
+        .service(product_photo_del)
 }
