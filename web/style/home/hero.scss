@@ -10,6 +10,7 @@ section.hero-container {
     padding: 3rem 4rem;
 
     background-color: var(--sixty-percent);
+    background-image: linear-gradient(0deg, white, transparent 10%);
 
     @media screen and (max-width: 1024px) {
         padding: 1.5rem 2rem;

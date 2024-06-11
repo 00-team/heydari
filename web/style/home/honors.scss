@@ -39,6 +39,10 @@ section.honors-container {
     }
 
     .honors-wrapper {
+        $glass_delay: 0.5s;
+        $img_delay: 0.3s;
+        $title_delay: 0.7s;
+
         width: clamp(0px, 100%, 1500px);
         height: 100%;
         display: flex;
@@ -51,7 +55,7 @@ section.honors-container {
             .honor-container {
                 .honor-cup {
                     &::after {
-                        animation: after-honor-glass 1s 2s
+                        animation: after-honor-glass 1s $glass_delay
                             cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
 
                         @keyframes after-honor-glass {
@@ -68,7 +72,7 @@ section.honors-container {
                         }
                     }
                     &::before {
-                        animation: before-honor-glass 1s 2s
+                        animation: before-honor-glass 1s $glass_delay
                             cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
 
                         @keyframes before-honor-glass {
@@ -86,7 +90,7 @@ section.honors-container {
                     }
 
                     .cup-img {
-                        animation: honor-cup-img-fadein 2.5s 1.8s
+                        animation: honor-cup-img-fadein 2s $img_delay
                             cubic-bezier(0.79, 0.04, 0.09, 0.98) forwards;
 
                         @keyframes honor-cup-img-fadein {
@@ -107,10 +111,11 @@ section.honors-container {
                 }
                 .honor-content {
                     height: clamp(100px, 100%, 130px);
+
                     .honor-name {
                         span {
-                            animation: honor-name-fadein 1s 1s ease-in-out
-                                forwards;
+                            animation: honor-name-fadein 1s $title_delay
+                                ease-in-out forwards;
 
                             @keyframes honor-name-fadein {
                                 from {
@@ -124,8 +129,8 @@ section.honors-container {
 
                         &::before,
                         &::after {
-                            animation: honor-name-line-fadein 1s 2s ease-in-out
-                                forwards;
+                            animation: honor-name-line-fadein 1s $title_delay
+                                ease-in-out forwards;
 
                             @keyframes honor-name-line-fadein {
                                 from {
@@ -138,8 +143,8 @@ section.honors-container {
                         }
                     }
                     .honor-description {
-                        animation: honor-description-fadein 1s 2s ease-in-out
-                            forwards;
+                        animation: honor-description-fadein 1s $title_delay
+                            ease-in-out forwards;
 
                         @keyframes honor-description-fadein {
                             from {
