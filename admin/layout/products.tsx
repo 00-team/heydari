@@ -2,7 +2,14 @@ import { SetStoreFunction, createStore, produce } from 'solid-js/store'
 import './style/products.scss'
 import { ProductModel } from 'models'
 import { useSearchParams } from '@solidjs/router'
-import { Component, Match, Show, Switch, createEffect } from 'solid-js'
+import {
+    Component,
+    Match,
+    Show,
+    Switch,
+    createEffect,
+    createMemo,
+} from 'solid-js'
 import { httpx } from 'shared'
 import {
     ArmchairIcon,
@@ -11,6 +18,8 @@ import {
     ChevronRightIcon,
     ChevronUpIcon,
     PlusIcon,
+    RotateCcwIcon,
+    SaveIcon,
     TableIcon,
     TrashIcon,
     WrenchIcon,
@@ -103,7 +112,7 @@ const Product: Component<ProductProps> = P => {
         tag_bed: number | null
     }
     const [state, setState] = createStore<State>({
-        edit: false,
+        edit: true,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -140,6 +149,23 @@ const Product: Component<ProductProps> = P => {
         })
     }
 
+    function reset() {
+        setState({
+            name: P.product.name,
+            code: P.product.code,
+            detail: P.product.detail,
+            tag_leg: P.product.tag_leg,
+            tag_bed: P.product.tag_bed,
+        })
+    }
+
+    const changed = createMemo(
+        () =>
+            state.name != P.product.name ||
+            state.code != P.product.code ||
+            state.detail != P.product.detail
+    )
+
     return (
         <div class='product'>
             <div class='top'>
@@ -162,6 +188,22 @@ const Product: Component<ProductProps> = P => {
                     <span>{P.product.name}</span>
                 </div>
                 <div class='actions'>
+                    <Show when={state.edit && changed()}>
+                        <Confact
+                            icon={RotateCcwIcon}
+                            timer_ms={700}
+                            onAct={reset}
+                            color='var(--yellow)'
+                        />
+                    </Show>
+                    <Show when={state.edit && changed()}>
+                        <Confact
+                            icon={SaveIcon}
+                            timer_ms={1200}
+                            onAct={product_update}
+                            color='var(--green)'
+                        />
+                    </Show>
                     <button
                         class='styled icon'
                         onClick={() => setState(s => ({ edit: !s.edit }))}
@@ -203,7 +245,7 @@ const Product: Component<ProductProps> = P => {
                             setState({ code })
                         }}
                     />
-                    <span>Detail</span>
+                    <span>Detail:</span>
                     <textarea
                         rows={4}
                         dir='auto'
