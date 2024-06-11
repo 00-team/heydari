@@ -191,9 +191,8 @@ async fn user_update_photo(
         s
     };
 
-    let filename = format!("{}:{salt}", user.id);
-
-    utils::save_photo(form.photo.file.path(), &filename)?;
+    let filename = format!("up:{}:{salt}", user.id);
+    utils::save_photo(form.photo.file.path(), &filename, (512, 512))?;
 
     sqlx::query_as! {
         User,

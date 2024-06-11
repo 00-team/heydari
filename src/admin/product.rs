@@ -216,12 +216,12 @@ async fn product_thumbnail(
 
     let filename = format!("pt:{}:{}", product.id, salt);
 
-    utils::save_photo(form.photo.file.path(), &filename)?;
+    utils::save_photo(form.photo.file.path(), &filename, (1920, 1080))?;
 
     sqlx::query_as! {
         Product,
         "update products set thumbnail = ? where id = ?",
-        product.photos, product.id
+        product.thumbnail, product.id
     }
     .execute(&state.sql)
     .await?;
