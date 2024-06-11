@@ -169,14 +169,49 @@
             </div>
          </div>
       </div>
-
-
-
    </div>
+
    <section class="products-wrapper">
+        {% for p in products %}
+        <a
+            class="product-card"
+            href="/products/{{ p.id }}"
+            data-kind="{{ p.kind }}"
+            data-tag-leg="{{ p.tag_leg }}"
+            data-tag-bed="{{ p.tag_bed }}"
+        >
+         <div class="head title_smaller">
+            <div class="product-code">{{ p.code }}</div>
+         </div>
+            <img class="card-img" src="/record/pt:{{ p.id }}:{{ p.thumbnail }}" decoding="async" loading="lazy"
+            alt="صندلی صنایع تولیدی حیدری" />
+         <figcaption class="card-caption title_small">
+            <div class="product-title title_small">
+                {{ p.name }}
+            </div>
+            <div class="product-tags title_smaller">
+               <div class="tag">
+                  {{ p.kind }}
+               </div>
+
+                {% if p.tag_leg != none %}
+                <div class="tag">
+                    {{ tags[p.tag_leg] }}
+                </div>
+                {% endif %}
+                
+                {% if p.tag_bed != none %}
+                <div class="tag">
+                    {{ tags[p.tag_bed] }}
+                </div>
+                {% endif %}
+            </div>
+         </figcaption>
+      </a>
+    {% endfor %}
+
       <a class="product-card" href="/product/1">
          <div class="head title_smaller">
-
             <div class="product-code">1101</div>
          </div>
          <img class="card-img" src="/static/image/products/14.webp" decoding="async" loading="lazy"
