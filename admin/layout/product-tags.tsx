@@ -55,7 +55,7 @@ export default () => {
                     <Tag tag={t} update={() => fetch_tags(state.page)} />
                 ))}
             </div>
-            <Show when={state.page != 0 || state.tags.length >= 32}>
+            <Show when={state.page != 0 || state.tags.length >= 64}>
                 <div class='actions'>
                     <button
                         class='styled'
@@ -66,7 +66,7 @@ export default () => {
                     </button>
                     <button
                         class='styled'
-                        disabled={state.tags.length < 32}
+                        disabled={state.tags.length < 64}
                         onClick={() => fetch_tags(state.page + 1)}
                     >
                         <ChevronRightIcon />

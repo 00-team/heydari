@@ -30,11 +30,11 @@ pub struct ApiDoc;
 async fn tag_list(
     _: Admin, query: Query<ListInput>, state: Data<AppState>,
 ) -> Response<Vec<ProductTag>> {
-    let offset = i64::from(query.page) * 32;
+    let offset = i64::from(query.page) * 64;
 
     let result = sqlx::query_as! {
         ProductTag,
-        "select * from product_tags order by id desc limit 32 offset ?",
+        "select * from product_tags order by id desc limit 64 offset ?",
         offset
     }
     .fetch_all(&state.sql)
