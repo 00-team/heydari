@@ -1,6 +1,6 @@
-import { createStore } from 'solid-js/store'
+import { createStore, produce } from 'solid-js/store'
 import './style/products.scss'
-import { ProductModel } from 'models'
+import { ProductModel, ProductTagModel } from 'models'
 import { useSearchParams } from '@solidjs/router'
 import {
     Component,
@@ -9,6 +9,7 @@ import {
     Switch,
     createEffect,
     createMemo,
+    onMount,
 } from 'solid-js'
 import { httpx } from 'shared'
 import {
@@ -28,24 +29,59 @@ import {
 } from 'icons'
 import { Confact } from 'comps'
 
-type ProductsState = {
-    products: ProductModel[]
-    page: number
+type TagState = {
+    [k in ProductTagModel['kind']]: {
+        [k in ProductTagModel['part']]: ProductTagModel[]
+    }
 }
+const [tags, setTags] = createStore<TagState>({
+    chair: { leg: [], bed: [] },
+    table: { leg: [], bed: [] },
+})
 
 export default () => {
     const [params, setParams] = useSearchParams()
-
-    const [state, setState] = createStore<ProductsState>({
+    type State = {
+        products: ProductModel[]
+        page: number
+        loading: boolean
+    }
+    const [state, setState] = createStore<State>({
         products: [],
         page: 0,
+        loading: true,
     })
+
+    onMount(() => load_tags(0))
+
+    function load_tags(page: number) {
+        httpx({
+            url: '/api/admin/product-tags/',
+            method: 'GET',
+            params: { page },
+            onLoad(x) {
+                if (x.status != 200) return
+                let tags: ProductTagModel[] = x.response
+                if (tags.length == 0) return
+                setTags(
+                    produce(s => {
+                        tags.forEach(t => {
+                            s[t.kind][t.part].push(t)
+                        })
+                    })
+                )
+                if (tags.length >= 64) {
+                    return load_tags(page + 1)
+                }
+                setState({ loading: false })
+            },
+        })
+    }
 
     createEffect(() => fetch_products(parseInt(params.page || '0') || 0))
 
     function fetch_products(page: number) {
         setParams({ page })
-        setState({ page })
 
         httpx({
             url: '/api/admin/products/',
@@ -53,17 +89,19 @@ export default () => {
             method: 'GET',
             onLoad(x) {
                 if (x.status != 200) return
-
                 setState({ products: x.response, page })
             },
         })
     }
 
     return (
-        <div class='products-fnd'>
+        <div class='products-fnd' classList={{ loading: state.loading }}>
+            <Show when={state.loading}>
+                <span class='message'>Loading ...</span>
+            </Show>
             <div class='product-list'>
                 <AddProduct update={() => fetch_products(0)} />
-                {state.products.map((p, i) => (
+                {state.products.map(p => (
                     <Product
                         product={p}
                         update={() => fetch_products(state.page)}
