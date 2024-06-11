@@ -536,7 +536,7 @@
                     border-bottom-left-radius: 0.5rem;
                 }
                 .product-code {
-                    border-bottom-right-radius: 0.5rem;
+                    border-bottom-left-radius: 0.5rem;
                 }
             }
 
@@ -549,16 +549,53 @@
                 object-fit: cover;
             }
             figcaption.card-caption {
-                width: 100%;
-                background-color: var(--sixty-percent);
-                height: 15%;
+                position: absolute;
+                bottom: 0;
 
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                gap: 1em;
 
-                font-family: 'yekanBold';
-                text-align: center;
+                width: 100%;
+
+                background: linear-gradient(
+                    0deg,
+                    var(--sixty-percent),
+                    transparent
+                );
+                backdrop-filter: blur(1px);
+
+                padding: 2em 2em 1em 2em;
+
+                .product-tags {
+                    width: 100%;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1em;
+
+                    flex-wrap: wrap;
+
+                    .tag {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        color: unset;
+
+                        width: 60px;
+
+                        padding: 0.5em 1em;
+                        border-radius: 100vmax;
+                        background-color: white;
+                        color: black;
+
+                        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                    }
+                }
             }
             .coming-soon {
                 position: absolute;
