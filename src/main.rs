@@ -36,6 +36,7 @@ async fn openapi() -> impl Responder {
 
     let mut admin_doc = ApiDoc::openapi();
     admin_doc.merge(admin::product::ApiDoc::openapi());
+    admin_doc.merge(admin::product_tag::ApiDoc::openapi());
 
     doc_add_prefix(&mut admin_doc, "/admin", false);
 
@@ -96,13 +97,14 @@ async fn main() -> std::io::Result<()> {
                     // .service(api::product::router())
                     // .service(api::order::router())
                     .service(api::verification::verification)
-                    .service(scope("/admin").service(admin::product::router())),
+                    .service(scope("/admin").service(admin::product::router()))
+                    .service(admin::product_tag::router()),
             )
             .service(web::router())
     });
 
     let server = if cfg!(debug_assertions) {
-        server.bind(("127.0.0.1", 7200)).unwrap()
+        server.bind(("127.0.0.1", 7000)).unwrap()
     } else {
         const PATH: &'static str = "/usr/share/nginx/sockets/heydari.sock";
         let s = server.bind_uds(PATH).expect("could not bind the server");
