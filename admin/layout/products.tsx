@@ -27,7 +27,7 @@ import {
     TrashIcon,
     WrenchIcon,
 } from 'icons'
-import { Confact } from 'comps'
+import { Confact, Select } from 'comps'
 
 type TagState = {
     [k in ProductTagModel['kind']]: {
@@ -140,13 +140,12 @@ const Product: Component<ProductProps> = P => {
         name: string
         code: string
         detail: string
-        // thumbnail: string | null
-        // photos: string[]
         tag_leg: number | null
         tag_bed: number | null
     }
     const [state, setState] = createStore<State>({
-        edit: false,
+        // edit: false,
+        edit: P.product.id == 13,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -197,7 +196,9 @@ const Product: Component<ProductProps> = P => {
         () =>
             state.name != P.product.name ||
             state.code != P.product.code ||
-            state.detail != P.product.detail
+            state.detail != P.product.detail ||
+            state.tag_leg != P.product.tag_leg ||
+            state.tag_bed != P.product.tag_bed
     )
 
     function thumbnail_update() {
@@ -256,6 +257,23 @@ const Product: Component<ProductProps> = P => {
             },
         })
     }
+
+    const leg_tags = createMemo(() =>
+        [{ display: '---', idx: null }].concat(
+            tags[P.product.kind].leg.map(t => ({
+                display: t.name,
+                idx: t.id,
+            }))
+        )
+    )
+    const bed_tags = createMemo(() =>
+        [{ display: '---', idx: null }].concat(
+            tags[P.product.kind].bed.map(t => ({
+                display: t.name,
+                idx: t.id,
+            }))
+        )
+    )
 
     return (
         <div class='product'>
@@ -355,7 +373,23 @@ const Product: Component<ProductProps> = P => {
                             setState({ detail })
                         }}
                     />
-                    <span>thumbnail:</span>
+                    <span>Tag Leg:</span>
+                    <Select
+                        items={leg_tags()}
+                        onChange={v => setState({ tag_leg: v[0].idx })}
+                        defaults={[
+                            leg_tags().find(t => t.idx == state.tag_leg),
+                        ]}
+                    />
+                    <span>Tag Bed:</span>
+                    <Select
+                        items={bed_tags()}
+                        onChange={v => setState({ tag_bed: v[0].idx })}
+                        defaults={[
+                            bed_tags().find(t => t.idx == state.tag_bed),
+                        ]}
+                    />
+                    <span>Thumbnail:</span>
                     <div class='thumbnail' onClick={thumbnail_update}>
                         <Show
                             when={P.product.thumbnail}
