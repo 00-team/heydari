@@ -3,6 +3,10 @@ export {}
 const allDropDowns = document.querySelectorAll('.dropdown')
 
 function toggleDropdown(dropdown: HTMLElement) {
+    if (dropdown.classList.contains('disable')) {
+        return
+    }
+
     if (dropdown.classList.contains('show')) {
         dropdown.className = dropdown.className.replace(' show', '')
     } else {
@@ -20,6 +24,33 @@ function toggleDropdown(dropdown: HTMLElement) {
             let newOrder = link.innerText
 
             active.innerText = newOrder
+
+            const removeDisable = (id: string) => {
+                let drop = document.querySelector(`.dropdown#${id}`)
+                drop.className = drop.className.replace(' disable', '')
+            }
+
+            if (dropdown.id === 'kind') {
+                removeDisable('paye')
+            }
+            if (dropdown.id === 'paye') {
+                removeDisable('kafi')
+            }
+
+            // if (dropdown.id === 'kafi') {
+            //     insertParam('kafi', index)
+            // }
+            // if (dropdown.id === 'paye') {
+            //     insertParam('paye', index)
+            // }
+            // if (dropdown.id === 'kind') {
+            //     insertParam('kind', index)
+            // }
+            // if (dropdown.id === 'order') {
+            //     insertParam('order', index)
+            // }
+
+            // insertParam('test', 'abbbasre')
         })
     })
 }
@@ -59,3 +90,31 @@ input.addEventListener('input', e => {
         })
     }
 })
+
+function insertParam(key, value) {
+    key = encodeURIComponent(key)
+    value = encodeURIComponent(value)
+
+    // kvp looks like ['key1=value1', 'key2=value2', ...]
+    var kvp = document.location.search.substr(1).split('&')
+    let i = 0
+
+    for (; i < kvp.length; i++) {
+        if (kvp[i].startsWith(key + '=')) {
+            let pair = kvp[i].split('=')
+            pair[1] = value
+            kvp[i] = pair.join('=')
+            break
+        }
+    }
+
+    if (i >= kvp.length) {
+        kvp[kvp.length] = [key, value].join('=')
+    }
+
+    // can return this or...
+    let params = kvp.join('&')
+
+    // reload page with new params
+    document.location.search = params
+}
