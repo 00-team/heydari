@@ -1,34 +1,21 @@
-import { SetStoreFunction, createStore } from 'solid-js/store'
+import { SetStoreFunction, createStore, produce } from 'solid-js/store'
 import './style/products.scss'
-import { ProductModel, UserModel } from 'models'
+import { ProductModel } from 'models'
 import { useSearchParams } from '@solidjs/router'
-import {
-    Component,
-    JSX,
-    Match,
-    Show,
-    Switch,
-    createEffect,
-    createSignal,
-    onMount,
-} from 'solid-js'
+import { Component, Match, Show, Switch, createEffect } from 'solid-js'
 import { httpx } from 'shared'
 import {
     ArmchairIcon,
-    BanIcon,
     ChevronDownIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
     ChevronUpIcon,
-    CircleCheckBigIcon,
-    HourglassIcon,
+    PlusIcon,
     TableIcon,
     TrashIcon,
-    UserIcon,
     WrenchIcon,
-    XIcon,
 } from 'icons'
-import { Confact, Copiable, Fanel } from 'comps'
+import { Confact } from 'comps'
 
 type ProductsState = {
     products: ProductModel[]
@@ -61,29 +48,10 @@ export default () => {
         })
     }
 
-    // function update_product(id: number, status: UpdateProductStatus) {
-    //     httpx({
-    //         url: `/api/admin/products/${id}/`,
-    //         method: 'PATCH',
-    //         json: {
-    //             status,
-    //         },
-    //         onLoad(x) {
-    //             if (x.status == 200) {
-    //                 fetch_products(state.page)
-    //             }
-    //         },
-    //     })
-    // }
-
     return (
         <div class='products-fnd'>
-            <div
-                class='product-list'
-                classList={{ message: state.products.length == 0 }}
-            >
-                <Show when={state.products.length == 0}>No Product</Show>
-
+            <div class='product-list'>
+                <AddProduct update={() => fetch_products(0)} />
                 {state.products.map((p, i) => (
                     <Product
                         product={p}
@@ -94,7 +62,6 @@ export default () => {
                     />
                 ))}
             </div>
-
             <Show when={state.page != 0 || state.products.length >= 32}>
                 <div class='actions'>
                     <button
@@ -120,20 +87,11 @@ export default () => {
 type ProductProps = {
     product: ProductModel
     idx: number
-    // update(id: number, status: UpdateProductStatus): void
     update(): void
     state: ProductsState
     setState: SetStoreFunction<ProductsState>
 }
 const Product: Component<ProductProps> = P => {
-    // const [show_data, setShowData] = createSignal(P.product.status == 'wating')
-
-    // const STATUS_ICON: { [k in Prod['status']]: () => JSX.Element } = {
-    //     wating: HourglassIcon,
-    //     done: CircleCheckBigIcon,
-    //     refunded: BanIcon,
-    // }
-    //
     function product_delete() {
         httpx({
             url: `/api/admin/products/${P.product.id}/`,
@@ -171,36 +129,106 @@ const Product: Component<ProductProps> = P => {
                     icon={TrashIcon}
                     color='var(--red)'
                     onAct={product_delete}
-                    timer_ms={2e3}
+                    timer_ms={1300}
                 />
-                {/*<Show when={Object.keys(P.product.data).length != 0}>
-                        <button
-                            class='btn-show-data styled icon'
-                            onclick={() => setShowData(s => !s)}
-                        >
-                            <Show
-                                when={show_data()}
-                                fallback={<ChevronDownIcon />}
-                            >
-                                <ChevronUpIcon />
-                            </Show>
+            </div>
+        </div>
+    )
+}
+
+type AddProductProps = {
+    update(): void
+}
+const AddProduct: Component<AddProductProps> = P => {
+    type State = Pick<ProductModel, 'kind' | 'name' | 'code'> & {
+        show: boolean
+    }
+    const [state, setState] = createStore<State>({
+        show: false,
+        kind: 'chair',
+        name: '',
+        code: '',
+    })
+
+    function add() {
+        httpx({
+            url: '/api/admin/products/',
+            method: 'POST',
+            json: {
+                kind: state.kind,
+                name: state.name,
+                code: state.code,
+            },
+            onLoad(x) {
+                if (x.status != 200) return
+                P.update()
+            },
+        })
+    }
+
+    return (
+        <div class='add-product product'>
+            <div class='top'>
+                <div class='info'>Add a Product</div>
+                <div class='actions'>
+                    <Show when={state.show && state.name && state.code}>
+                        <button class='add-btn styled icon' onClick={add}>
+                            <PlusIcon />
                         </button>
                     </Show>
-                    <Show when={P.product.status === 'wating'}>
-                        <Confact
-                            color='var(--red)'
-                            timer_ms={1e3}
-                            icon={BanIcon}
-                            onAct={() => P.update(P.product.id, 'refunded')}
-                        />
-                        <Confact
-                            color='var(--green)'
-                            timer_ms={1e3}
-                            icon={CircleCheckBigIcon}
-                            onAct={() => P.update(P.product.id, 'done')}
-                        />
-                    </Show>*/}
+                    <button
+                        class='styled icon'
+                        onClick={() => setState(s => ({ show: !s.show }))}
+                    >
+                        <Show when={state.show} fallback={<ChevronDownIcon />}>
+                            <ChevronUpIcon />
+                        </Show>
+                    </button>
+                </div>
             </div>
+            <Show when={state.show}>
+                <div class='bottom'>
+                    <span>Name:</span>
+                    <input
+                        class='styled'
+                        placeholder='product name'
+                        dir='auto'
+                        maxLength={255}
+                        value={state.name}
+                        onInput={e => {
+                            let name = e.currentTarget.value.slice(0, 255)
+                            setState({ name })
+                        }}
+                    />
+                    <span>Code:</span>
+                    <input
+                        class='styled'
+                        placeholder='product code must be unique'
+                        maxLength={255}
+                        value={state.code}
+                        onInput={e => {
+                            let code = e.currentTarget.value.slice(0, 255)
+                            setState({ code })
+                        }}
+                    />
+                    <span>Kind:</span>
+                    <button
+                        class='styled icon'
+                        onClick={() =>
+                            setState(s => ({
+                                kind: s.kind == 'chair' ? 'table' : 'chair',
+                            }))
+                        }
+                    >
+                        <Show
+                            when={state.kind == 'chair'}
+                            fallback={<TableIcon />}
+                        >
+                            <ArmchairIcon />
+                        </Show>
+                    </button>
+                </div>
+            </Show>
         </div>
     )
 }
