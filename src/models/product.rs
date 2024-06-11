@@ -1,16 +1,7 @@
-use std::{future::Future, pin::Pin};
-
-use actix_web::dev::Payload;
-use actix_web::{
-    web::{Data, Path},
-    FromRequest, HttpRequest,
-};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::AppState;
-
-use super::{sql_enum, AppErr, JsonStr};
+use super::{from_request, sql_enum, JsonStr};
 
 sql_enum! {
     pub enum ProductKind {
@@ -33,6 +24,8 @@ pub struct ProductTag {
     pub count: i64,
 }
 
+from_request!(ProductTag, "product_tags");
+
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Default)]
 pub struct Product {
     pub id: i64,
@@ -48,26 +41,4 @@ pub struct Product {
     pub tag_bed: Option<i64>,
 }
 
-impl FromRequest for Product {
-    type Error = AppErr;
-    type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
-
-    fn from_request(req: &HttpRequest, _: &mut Payload) -> Self::Future {
-        let path = Path::<(i64,)>::extract(req);
-        let state = req.app_data::<Data<AppState>>().unwrap();
-        let pool = state.sql.clone();
-
-        Box::pin(async move {
-            let path = path.await?;
-            let result = sqlx::query_as! {
-                Product,
-                "select * from products where id = ?",
-                path.0
-            }
-            .fetch_one(&pool)
-            .await?;
-
-            Ok(result)
-        })
-    }
-}
+from_request!(Product, "products");
