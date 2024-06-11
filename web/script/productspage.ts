@@ -1,87 +1,31 @@
 export {}
 
-const filterDrop = document.querySelector<HTMLElement>('.dropdown#categories')
-const filterActive = document.querySelector<HTMLElement>(
-    '.drop-active#categories'
-)
-const filters = document.querySelectorAll('.drop-filter')
+const allDropDowns = document.querySelectorAll('.dropdown')
 
-const filterActiveSpan = document.querySelector<HTMLElement>(
-    'span.drop-active-text#categories'
-)
-
-function toggleFilterDropdown() {
-    if (filterDrop.classList.contains('show')) {
-        filterDrop.className = filterDrop.className.replace(' show', '')
+function toggleDropdown(dropdown: HTMLElement) {
+    if (dropdown.classList.contains('show')) {
+        dropdown.className = dropdown.className.replace(' show', '')
     } else {
-        filterDrop.className += ' show'
+        dropdown.className += ' show'
     }
-}
 
-filterActive.addEventListener('click', () => {
-    toggleFilterDropdown()
-})
+    const links = dropdown.querySelectorAll('.drop-link')
+    const active = dropdown.querySelector<HTMLElement>('.drop-active-text')
 
-filters.forEach((link: HTMLElement, index) => {
-    link.addEventListener('mouseover', () => {
-        filterDrop.style.setProperty('--top', `${3.5 * index}em`)
-    })
-    link.addEventListener('click', () => {
-        let newCategory = link.innerText
-
-        toggleFilterDropdown()
-
-        productCards.forEach((card: HTMLElement) => {
-            let category =
-                card.querySelector<HTMLElement>('.product-category').innerText
-
-            let hasCategory = category.includes(newCategory)
-
-            if (hasCategory) {
-                card.className = 'product-card'
-                return
-            }
-
-            if (card.classList.contains('hide')) return
-
-            card.className = 'product-card hide'
+    links.forEach((link: HTMLElement, index) => {
+        link.addEventListener('mouseover', () => {
+            dropdown.style.setProperty('--top', `${3.5 * index}em`)
         })
+        link.addEventListener('click', () => {
+            let newOrder = link.innerText
 
-        filterActiveSpan.innerText = newCategory
+            active.innerText = newOrder
+        })
     })
-})
-
-const ordersDrop = document.querySelector<HTMLElement>('.dropdown#order')
-const ordersActive = document.querySelector<HTMLElement>('.drop-active#order')
-const orders = document.querySelectorAll('.drop-order')
-
-const ordersActiveSpan = document.querySelector<HTMLElement>(
-    'span.drop-active-text#order'
-)
-
-function toggleOrdersDropdown() {
-    if (ordersDrop.classList.contains('show')) {
-        ordersDrop.className = ordersDrop.className.replace(' show', '')
-    } else {
-        ordersDrop.className += ' show'
-    }
 }
 
-ordersActive.addEventListener('click', () => {
-    toggleOrdersDropdown()
-})
-
-orders.forEach((link: HTMLElement, index) => {
-    link.addEventListener('mouseover', () => {
-        ordersDrop.style.setProperty('--top', `${3.5 * index}em`)
-    })
-    link.addEventListener('click', () => {
-        let newOrder = link.innerText
-
-        toggleOrdersDropdown()
-
-        ordersActiveSpan.innerText = newOrder
-    })
+allDropDowns.forEach((dropdown: HTMLElement) => {
+    dropdown.addEventListener('click', () => toggleDropdown(dropdown))
 })
 
 const input = document.querySelector<HTMLInputElement>('.search-inp')
