@@ -185,6 +185,40 @@ const Product: Component<ProductProps> = P => {
         el.click()
     }
 
+    function photo_add() {
+        let el = document.createElement('input')
+        el.setAttribute('type', 'file')
+        el.setAttribute('accept', 'image/*')
+        el.onchange = () => {
+            if (!el.files || !el.files[0]) return
+
+            let data = new FormData()
+            data.set('photo', el.files[0])
+
+            httpx({
+                url: `/api/admin/products/${P.product.id}/photos/`,
+                method: 'PUT',
+                data,
+                onLoad(x) {
+                    if (x.status != 200) return
+                    P.update()
+                },
+            })
+        }
+        el.click()
+    }
+
+    function photo_del(idx: number) {
+        httpx({
+            url: `/api/admin/products/${P.product.id}/photos/${idx}/`,
+            method: 'DELETE',
+            onLoad(x) {
+                if (x.status != 200) return
+                P.update()
+            },
+        })
+    }
+
     return (
         <div class='product'>
             <div class='top'>
@@ -293,6 +327,18 @@ const Product: Component<ProductProps> = P => {
                                 src={`/record/pt:${P.product.id}:${P.product.thumbnail}`}
                             />
                         </Show>
+                    </div>
+                    <span>Photos:</span>
+                    <div class='photos'>
+                        <button class='styled icon' onClick={photo_add}>
+                            <PlusIcon />
+                        </button>
+                        {P.product.photos.map((s, i) => (
+                            <div class='image' onClick={() => photo_del(i)}>
+                                <TrashIcon />
+                                <img src={`/record/pp:${P.product.id}:${s}`} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </Show>
