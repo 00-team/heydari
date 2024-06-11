@@ -514,10 +514,6 @@
             &.hide {
                 display: none;
                 opacity: 0;
-
-                @starting-style {
-                    opacity: 0;
-                }
             }
 
             &:hover {
