@@ -116,6 +116,7 @@ struct ProductUpdateBody {
 
 #[utoipa::path(
     patch,
+    params(("id" = i64, Path,)),
     request_body = ProductUpdateBody,
     responses((status = 200, body = Product))
 )]
