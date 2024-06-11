@@ -1,4 +1,4 @@
-import { SetStoreFunction, createStore, produce } from 'solid-js/store'
+import { createStore } from 'solid-js/store'
 import './style/products.scss'
 import { ProductModel } from 'models'
 import { useSearchParams } from '@solidjs/router'
@@ -17,6 +17,7 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     ChevronUpIcon,
+    ImageIcon,
     PlusIcon,
     RotateCcwIcon,
     SaveIcon,
@@ -64,10 +65,7 @@ export default () => {
                 {state.products.map((p, i) => (
                     <Product
                         product={p}
-                        idx={i}
                         update={() => fetch_products(state.page)}
-                        state={state}
-                        setState={setState}
                     />
                 ))}
             </div>
@@ -95,10 +93,7 @@ export default () => {
 
 type ProductProps = {
     product: ProductModel
-    idx: number
     update(): void
-    state: ProductsState
-    setState: SetStoreFunction<ProductsState>
 }
 const Product: Component<ProductProps> = P => {
     type State = {
@@ -112,7 +107,7 @@ const Product: Component<ProductProps> = P => {
         tag_bed: number | null
     }
     const [state, setState] = createStore<State>({
-        edit: true,
+        edit: P.product.id == 13,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -165,6 +160,29 @@ const Product: Component<ProductProps> = P => {
             state.code != P.product.code ||
             state.detail != P.product.detail
     )
+
+    function thumbnail_update() {
+        let el = document.createElement('input')
+        el.setAttribute('type', 'file')
+        el.setAttribute('accept', 'image/*')
+        el.onchange = () => {
+            if (!el.files || !el.files[0]) return
+
+            let data = new FormData()
+            data.set('photo', el.files[0])
+
+            httpx({
+                url: `/api/admin/products/${P.product.id}/thumbnail/`,
+                method: 'PUT',
+                data,
+                onLoad(x) {
+                    if (x.status != 200) return
+                    P.update()
+                },
+            })
+        }
+        el.click()
+    }
 
     return (
         <div class='product'>
@@ -258,6 +276,17 @@ const Product: Component<ProductProps> = P => {
                             setState({ detail })
                         }}
                     />
+                    <span>thumbnail:</span>
+                    <div class='thumbnail' onClick={thumbnail_update}>
+                        <Show
+                            when={P.product.thumbnail}
+                            fallback={<ImageIcon />}
+                        >
+                            <img
+                                src={`/record/pt:${P.product.id}:${P.product.thumbnail}`}
+                            />
+                        </Show>
+                    </div>
                 </div>
             </Show>
         </div>
