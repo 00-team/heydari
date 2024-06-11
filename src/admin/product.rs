@@ -1,5 +1,4 @@
 use actix_multipart::form::MultipartForm;
-use actix_web::error::{Error, ErrorBadRequest};
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
@@ -7,8 +6,8 @@ use utoipa::{OpenApi, ToSchema};
 
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
-use crate::models::user::Admin;
-use crate::models::{AppErr, AppErrBadRequest, ListInput, Response};
+use crate::models::user::{Admin, UpdatePhoto};
+use crate::models::{AppErr, ListInput, Response};
 // use crate::models::{Admin, ListInput, Photos, Product, Response, UpdatePhoto};
 use crate::utils::{self, CutOff};
 use crate::AppState;
@@ -17,7 +16,8 @@ use crate::AppState;
 #[openapi(
     tags((name = "admin::product")),
     paths(
-        product_list, product_get, product_add, product_update, product_delete
+        product_list, product_get, product_add, product_update, product_delete,
+        product_thumbnail,
     ),
     components(schemas(
         Product, ProductTag, ProductKind, ProductPart,
@@ -193,44 +193,42 @@ async fn product_delete(
     Ok(HttpResponse::Ok().finish())
 }
 
-// #[utoipa::path(
-//     put,
-//     params(("id" = i64, Path,)),
-//     request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
-//     responses((status = 200, body = Product))
-// )]
-// /// Product Add Photo
-// #[put("/{id}/photo/")]
-// async fn product_add_photo(
-//     _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
-//     state: Data<AppState>,
-// ) -> Response<Product> {
-//     let mut product = product;
-//     let mut salt = get_random_bytes(8);
-//     loop {
-//         if !product.photos.salts.iter().any(|s| s == &salt) {
-//             break;
-//         }
-//         salt = get_random_bytes(8);
-//     }
-//
-//     product.photos.salts.push(salt.clone());
-//
-//     let filename = format!("{}-{}", product.id, salt);
-//
-//     save_photo(form.photo.file.path(), &filename)?;
-//
-//     sqlx::query_as! {
-//         Product,
-//         "update products set photos = ? where id = ?",
-//         product.photos, product.id
-//     }
-//     .execute(&state.sql)
-//     .await?;
-//
-//     Ok(Json(product))
-// }
-//
+#[utoipa::path(
+    put,
+    params(("id" = i64, Path,)),
+    request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
+    responses((status = 200, body = Product))
+)]
+/// Set Thumbnail
+#[put("/{id}/thumbnail/")]
+async fn product_thumbnail(
+    _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
+    state: Data<AppState>,
+) -> Response<Product> {
+    let mut product = product;
+    let salt = if let Some(s) = &product.thumbnail {
+        s.clone()
+    } else {
+        let s = utils::get_random_bytes(8);
+        product.thumbnail = Some(s.clone());
+        s
+    };
+
+    let filename = format!("pt:{}:{}", product.id, salt);
+
+    utils::save_photo(form.photo.file.path(), &filename)?;
+
+    sqlx::query_as! {
+        Product,
+        "update products set thumbnail = ? where id = ?",
+        product.photos, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(Json(product))
+}
+
 // #[utoipa::path(
 //     delete,
 //     params(
@@ -273,6 +271,7 @@ pub fn router() -> Scope {
         .service(product_add)
         .service(product_update)
         .service(product_delete)
+        .service(product_thumbnail)
     // .service(product_add_photo)
     // .service(product_delete_photo)
 }
