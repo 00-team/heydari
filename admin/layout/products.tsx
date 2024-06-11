@@ -17,6 +17,7 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     ChevronUpIcon,
+    ExternalLinkIcon,
     ImageIcon,
     PlusIcon,
     RotateCcwIcon,
@@ -222,6 +223,12 @@ const Product: Component<ProductProps> = P => {
                             color='var(--green)'
                         />
                     </Show>
+                    <button
+                        class='styled icon'
+                        onClick={() => open('/products/' + P.product.id)}
+                    >
+                        <ExternalLinkIcon />
+                    </button>
                     <button
                         class='styled icon'
                         onClick={() => setState(s => ({ edit: !s.edit }))}
