@@ -256,3 +256,35 @@ export const PlusIcon = () => (
         <path d='M12 5v14' />
     </svg>
 )
+
+export const TableIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <rect width='20' height='5' x='2' y='3' rx='1' />
+        <path d='M 4 8 L 4 20  M 20 8 L 20 20' />
+    </svg>
+)
+
+export const ArmchairIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <path d='M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3' />
+        <path d='M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z' />
+        <path d='M5 18v2' />
+        <path d='M19 18v2' />
+    </svg>
+)
