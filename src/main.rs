@@ -18,7 +18,6 @@ mod admin;
 mod api;
 mod config;
 mod docs;
-mod general;
 mod models;
 mod utils;
 mod web;
@@ -32,11 +31,11 @@ async fn openapi() -> impl Responder {
     let mut doc = ApiDoc::openapi();
     doc.merge(api::user::ApiDoc::openapi());
     doc.merge(api::verification::ApiDoc::openapi());
-    doc.merge(api::product::ApiDoc::openapi());
-    doc.merge(api::order::ApiDoc::openapi());
+    // doc.merge(api::product::ApiDoc::openapi());
+    // doc.merge(api::order::ApiDoc::openapi());
 
     let mut admin_doc = ApiDoc::openapi();
-    admin_doc.merge(admin::order::ApiDoc::openapi());
+    admin_doc.merge(admin::product::ApiDoc::openapi());
 
     doc_add_prefix(&mut admin_doc, "/admin", false);
 
@@ -66,16 +65,14 @@ async fn rapidoc() -> impl Responder {
 
 fn config_static(app: &mut ServiceConfig) {
     if cfg!(debug_assertions) {
-        app.service(af::Files::new("/static", "./static"));
-        // app.service(af::Files::new("/app-assets", "app/dist/app-assets"));
-        // app.service(af::Files::new("/admin-assets", "admin/dist/admin-assets"));
+        app.service(af::Files::new("/static", "static"));
         app.service(af::Files::new("/record", Config::RECORD_DIR));
     }
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenvy::from_path("./.env").expect("could not read .env file");
+    dotenvy::from_path(".env").expect("could not read .env file");
     pretty_env_logger::init();
 
     let _ = std::fs::create_dir(Config::RECORD_DIR);
@@ -96,10 +93,10 @@ async fn main() -> std::io::Result<()> {
             .service(
                 scope("/api")
                     .service(api::user::router())
-                    .service(api::product::router())
-                    .service(api::order::router())
+                    // .service(api::product::router())
+                    // .service(api::order::router())
                     .service(api::verification::verification)
-                    .service(scope("/admin").service(admin::order::router())),
+                    .service(scope("/admin").service(admin::product::router())),
             )
             .service(web::router())
     });
