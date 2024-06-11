@@ -2,6 +2,7 @@ use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
+use sqlx::SqlitePool;
 use utoipa::{OpenApi, ToSchema};
 
 use crate::docs::UpdatePaths;
@@ -102,6 +103,48 @@ async fn product_add(
     }))
 }
 
+async fn update_tag(
+    old: Option<i64>, new: Option<i64>, kind: &ProductKind, part: ProductPart,
+    pool: &SqlitePool,
+) -> Result<Option<i64>, AppErr> {
+    if old.is_none() && new.is_none() {
+        return Ok(None);
+    }
+
+    if matches!((old, new), (Some(a), Some(b)) if a == b) {
+        log::info!("same tag: {old:?} == {new:?}");
+        return Ok(new);
+    }
+
+    if let Some(id) = old {
+        sqlx::query! {
+            "update product_tags set count = count - 1 where id = ?", id
+        }
+        .execute(pool)
+        .await?;
+    }
+
+    if let Some(id) = new {
+        let tag = sqlx::query_as! {
+            ProductTag,
+            "select * from product_tags where id = ? AND kind = ? AND part = ?",
+            id, kind, part
+        }
+        .fetch_one(pool)
+        .await?;
+
+        sqlx::query! {
+            "update product_tags set count = count + 1 where id = ?", tag.id
+        }
+        .execute(pool)
+        .await?;
+
+        return Ok(Some(tag.id));
+    }
+
+    return Ok(None);
+}
+
 #[derive(Deserialize, ToSchema)]
 struct ProductUpdateBody {
     name: String,
@@ -133,29 +176,23 @@ async fn product_update(
     product.code.cut_off(255);
     product.detail.cut_off(2048);
 
-    if let Some(id) = body.tag_leg {
-        let tag = sqlx::query_as! {
-            ProductTag,
-            "select * from product_tags where id = ? AND kind = ? AND part = ?",
-            id, product.kind, ProductPart::Leg
-        }
-        .fetch_one(&state.sql)
-        .await?;
+    product.tag_leg = update_tag(
+        product.tag_leg,
+        body.tag_leg,
+        &product.kind,
+        ProductPart::Leg,
+        &state.sql,
+    )
+    .await?;
 
-        product.tag_leg = Some(tag.id);
-    }
-
-    if let Some(id) = body.tag_bed {
-        let tag = sqlx::query_as! {
-            ProductTag,
-            "select * from product_tags where id = ? AND kind = ? AND part = ?",
-            id, product.kind, ProductPart::Bed
-        }
-        .fetch_one(&state.sql)
-        .await?;
-
-        product.tag_bed = Some(tag.id);
-    }
+    product.tag_bed = update_tag(
+        product.tag_bed,
+        body.tag_bed,
+        &product.kind,
+        ProductPart::Bed,
+        &state.sql,
+    )
+    .await?;
 
     sqlx::query! {
         "update products set name = ?, code = ?, detail = ?, tag_leg = ?,
@@ -246,7 +283,7 @@ async fn product_photo_add(
     let salt = loop {
         let s = utils::get_random_bytes(8);
         if !product.photos.iter().any(|p| p == &s) {
-            break s
+            break s;
         }
     };
     product.photos.push(salt.clone());
