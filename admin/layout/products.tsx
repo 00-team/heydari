@@ -108,7 +108,7 @@ const Product: Component<ProductProps> = P => {
         tag_bed: number | null
     }
     const [state, setState] = createStore<State>({
-        edit: P.product.id == 13,
+        edit: false,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -324,6 +324,9 @@ const Product: Component<ProductProps> = P => {
                             fallback={<ImageIcon />}
                         >
                             <img
+                                draggable={false}
+                                loading='lazy'
+                                decoding='async'
                                 src={`/record/pt:${P.product.id}:${P.product.thumbnail}`}
                             />
                         </Show>
@@ -336,7 +339,12 @@ const Product: Component<ProductProps> = P => {
                         {P.product.photos.map((s, i) => (
                             <div class='image' onClick={() => photo_del(i)}>
                                 <TrashIcon />
-                                <img src={`/record/pp:${P.product.id}:${s}`} />
+                                <img
+                                    draggable={false}
+                                    loading='lazy'
+                                    decoding='async'
+                                    src={`/record/pp:${P.product.id}:${s}`}
+                                />
                             </div>
                         ))}
                     </div>
