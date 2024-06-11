@@ -233,7 +233,7 @@ async fn product_thumbnail(
     responses((status = 200, body = Product))
 )]
 /// Add Photo
-#[put("/{id}/photo/")]
+#[put("/{id}/photos/")]
 async fn product_photo_add(
     _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
     state: Data<AppState>,
@@ -271,7 +271,7 @@ async fn product_photo_add(
     responses((status = 200))
 )]
 /// Delete Photo
-#[delete("/{id}/photo/{idx}/")]
+#[delete("/{id}/photos/{idx}/")]
 async fn product_photo_del(
     _: Admin, product: Product, path: Path<(i64, u8)>, state: Data<AppState>,
 ) -> Result<HttpResponse, AppErr> {
