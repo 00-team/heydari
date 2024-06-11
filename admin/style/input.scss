@@ -5,6 +5,23 @@ input.styled {
     border-radius: var(--radius);
     padding: 0.25rem;
     color: var(--white);
+    font-family: inherit;
+
+    &:focus {
+        border-color: var(--ca);
+        outline: 0;
+    }
+}
+
+textarea.styled {
+    resize: vertical;
+    background-color: var(--cd);
+    border: 2px solid var(--cl);
+    font-size: 18px;
+    border-radius: var(--radius);
+    font-family: inherit;
+    padding: 0.25rem;
+    color: var(--white);
 
     &:focus {
         border-color: var(--ca);
