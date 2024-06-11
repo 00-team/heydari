@@ -23,6 +23,7 @@ import {
     CircleCheckBigIcon,
     HourglassIcon,
     TableIcon,
+    TrashIcon,
     UserIcon,
     WrenchIcon,
     XIcon,
@@ -132,6 +133,17 @@ const Product: Component<ProductProps> = P => {
     //     done: CircleCheckBigIcon,
     //     refunded: BanIcon,
     // }
+    //
+    function product_delete() {
+        httpx({
+            url: `/api/admin/products/${P.product.id}/`,
+            method: 'DELETE',
+            onLoad(x) {
+                if (x.status != 200) return
+                P.update()
+            },
+        })
+    }
 
     return (
         <div class='product'>
@@ -155,6 +167,12 @@ const Product: Component<ProductProps> = P => {
                 <button class='styled icon'>
                     <WrenchIcon />
                 </button>
+                <Confact
+                    icon={TrashIcon}
+                    color='var(--red)'
+                    onAct={product_delete}
+                    timer_ms={2e3}
+                />
                 {/*<Show when={Object.keys(P.product.data).length != 0}>
                         <button
                             class='btn-show-data styled icon'
