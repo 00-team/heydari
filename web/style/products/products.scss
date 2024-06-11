@@ -20,7 +20,7 @@
 
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: left 40%;
+        background-position: 0% 50%;
 
         @media screen and (max-width: 768px) {
             aspect-ratio: 1/0.45;
@@ -229,6 +229,14 @@
                     isolation: isolate;
 
                     cursor: pointer;
+
+                    transition: opacity 0.3s;
+
+                    &.disable {
+                        pointer-events: none;
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                    }
 
                     &.show {
                         .drop-links {
