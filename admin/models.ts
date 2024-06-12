@@ -18,7 +18,7 @@ export type ProductTagModel = {
 
 export type ProductModel = {
     id: number
-    kind: 'chair' | 'table'
+    kind: ProductTagModel['kind']
     name: string
     code: string
     detail: string

@@ -58,6 +58,12 @@ if check_diff "web/script/*"; then
     echo $SPACER
 fi
 
+if check_diff "admin/*"; then
+    echo "$EG build the admin!"
+    npm run admin:build
+    echo $SPACER
+fi
+
 if check_diff "src/* Cargo.toml"; then
     echo "$EG cargo build"
     cargo build --release

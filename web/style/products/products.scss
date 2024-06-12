@@ -504,9 +504,8 @@
 
             transition-property: transform, opacity, display;
             transition-duration: 0.3s;
-            transition-behavior: allow-discrete;
-
-            // transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+            // transition-behavior: allow-discrete;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
 
             position: relative;
             isolation: isolate;
@@ -547,60 +546,50 @@
             img.card-img {
                 height: 85%;
                 max-width: 100%;
-
                 flex: 1;
-
                 object-fit: cover;
             }
+
             figcaption.card-caption {
                 position: absolute;
                 bottom: 0;
-
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
                 gap: 1em;
-
                 width: 100%;
-
                 background: linear-gradient(
                     0deg,
                     var(--sixty-percent),
                     transparent
                 );
                 backdrop-filter: blur(1px);
-
                 padding: 2em 2em 1em 2em;
 
                 .product-tags {
                     width: 100%;
-
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     gap: 1em;
-
                     flex-wrap: wrap;
 
                     .tag {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-
                         color: unset;
-
-                        width: 60px;
-
+                        // width: 60px;
                         padding: 0.5em 1em;
                         border-radius: 100vmax;
                         background-color: white;
                         color: black;
-
                         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
                     }
                 }
             }
+
             .coming-soon {
                 position: absolute;
                 width: 100%;

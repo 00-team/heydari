@@ -256,3 +256,98 @@ export const PlusIcon = () => (
         <path d='M12 5v14' />
     </svg>
 )
+
+export const TableIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <rect width='20' height='5' x='2' y='3' rx='1' />
+        <path d='M 4 8 L 4 20  M 20 8 L 20 20' />
+    </svg>
+)
+
+export const ArmchairIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <path d='M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3' />
+        <path d='M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z' />
+        <path d='M5 18v2' />
+        <path d='M19 18v2' />
+    </svg>
+)
+
+export const SaveIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <path d='M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z' />
+        <path d='M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7' />
+        <path d='M7 3v4a1 1 0 0 0 1 1h7' />
+    </svg>
+)
+
+export const RotateCcwIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <path d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8' />
+        <path d='M3 3v5h5' />
+    </svg>
+)
+
+export const ImageIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <rect width='18' height='18' x='3' y='3' rx='2' ry='2' />
+        <circle cx='9' cy='9' r='2' />
+        <path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21' />
+    </svg>
+)
+
+export const ExternalLinkIcon = () => (
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <path d='M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6' />
+        <path d='m21 3-9 9' />
+        <path d='M15 3h6v6' />
+    </svg>
+)

@@ -31,11 +31,10 @@ async fn openapi() -> impl Responder {
     let mut doc = ApiDoc::openapi();
     doc.merge(api::user::ApiDoc::openapi());
     doc.merge(api::verification::ApiDoc::openapi());
-    // doc.merge(api::product::ApiDoc::openapi());
-    // doc.merge(api::order::ApiDoc::openapi());
 
     let mut admin_doc = ApiDoc::openapi();
     admin_doc.merge(admin::product::ApiDoc::openapi());
+    admin_doc.merge(admin::product_tag::ApiDoc::openapi());
 
     doc_add_prefix(&mut admin_doc, "/admin", false);
 
@@ -66,6 +65,7 @@ async fn rapidoc() -> impl Responder {
 fn config_static(app: &mut ServiceConfig) {
     if cfg!(debug_assertions) {
         app.service(af::Files::new("/static", "static"));
+        app.service(af::Files::new("/admin-assets", "admin/dist/admin-assets"));
         app.service(af::Files::new("/record", Config::RECORD_DIR));
     }
 }
@@ -93,16 +93,18 @@ async fn main() -> std::io::Result<()> {
             .service(
                 scope("/api")
                     .service(api::user::router())
-                    // .service(api::product::router())
-                    // .service(api::order::router())
                     .service(api::verification::verification)
-                    .service(scope("/admin").service(admin::product::router())),
+                    .service(
+                        scope("/admin")
+                            .service(admin::product::router())
+                            .service(admin::product_tag::router()),
+                    ),
             )
             .service(web::router())
     });
 
     let server = if cfg!(debug_assertions) {
-        server.bind(("127.0.0.1", 7200)).unwrap()
+        server.bind(("127.0.0.1", 7000)).unwrap()
     } else {
         const PATH: &'static str = "/usr/share/nginx/sockets/heydari.sock";
         let s = server.bind_uds(PATH).expect("could not bind the server");

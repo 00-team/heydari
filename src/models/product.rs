@@ -1,16 +1,8 @@
-use std::{future::Future, pin::Pin};
-
-use actix_web::dev::Payload;
-use actix_web::{
-    web::{Data, Path},
-    FromRequest, HttpRequest,
-};
 use serde::{Deserialize, Serialize};
+use sqlx::{sqlite::SqliteRow, Row};
 use utoipa::ToSchema;
 
-use crate::AppState;
-
-use super::{sql_enum, AppErr, JsonStr};
+use super::{from_request, sql_enum, JsonStr};
 
 sql_enum! {
     pub enum ProductKind {
@@ -24,7 +16,7 @@ sql_enum! {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Clone)]
 pub struct ProductTag {
     pub id: i64,
     pub name: String,
@@ -33,7 +25,9 @@ pub struct ProductTag {
     pub count: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Default)]
+from_request!(ProductTag, "product_tags");
+
+#[derive(Debug, Serialize, Deserialize, ToSchema, Default)]
 pub struct Product {
     pub id: i64,
     pub kind: ProductKind,
@@ -48,26 +42,32 @@ pub struct Product {
     pub tag_bed: Option<i64>,
 }
 
-impl FromRequest for Product {
-    type Error = AppErr;
-    type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
+from_request!(Product, "products");
 
-    fn from_request(req: &HttpRequest, _: &mut Payload) -> Self::Future {
-        let path = Path::<(i64,)>::extract(req);
-        let state = req.app_data::<Data<AppState>>().unwrap();
-        let pool = state.sql.clone();
+impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
+    fn from_row(row: &'r SqliteRow) -> Result<Self, sqlx::Error> {
+        let id = row.get::<i64, _>("id");
+        let kind = row.get::<i64, _>("kind");
+        let name = row.get::<String, _>("name");
+        let code = row.get::<String, _>("code");
+        let detail = row.get::<String, _>("detail");
+        let timestamp = row.get::<i64, _>("timestamp");
+        let thumbnail = row.get::<Option<String>, _>("thumbnail");
+        let photos = row.get::<String, _>("photos");
+        let tag_leg = row.get::<Option<i64>, _>("tag_leg");
+        let tag_bed = row.get::<Option<i64>, _>("tag_bed");
 
-        Box::pin(async move {
-            let path = path.await?;
-            let result = sqlx::query_as! {
-                Product,
-                "select * from products where id = ?",
-                path.0
-            }
-            .fetch_one(&pool)
-            .await?;
-
-            Ok(result)
+        Ok(Product {
+            id,
+            kind: kind.into(),
+            name,
+            code,
+            detail,
+            timestamp,
+            thumbnail,
+            photos: photos.into(),
+            tag_leg,
+            tag_bed,
         })
     }
 }

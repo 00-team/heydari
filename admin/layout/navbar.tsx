@@ -6,8 +6,8 @@ export default () => {
     return (
         <nav class='navbar-fnd'>
             <div class='links'>
-                <A href='/orders'>Orders</A>
-                <A href='/discounts'>Discounts</A>
+                <A href='/products/'>Products</A>
+                <A href='/product-tags/'>Product Tags</A>
             </div>
         </nav>
     )

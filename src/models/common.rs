@@ -1,5 +1,3 @@
-use std::ops;
-
 use actix_web::web::Json;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use sqlx::{
@@ -7,22 +5,19 @@ use sqlx::{
     sqlite::{SqliteArgumentValue, SqliteTypeInfo},
     Sqlite,
 };
+use std::ops;
+use utoipa::IntoParams;
 
 pub type Response<T> = Result<Json<T>, super::AppErr>;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, IntoParams)]
 pub struct ListInput {
+    #[param(example = 0)]
     pub page: u32,
 }
 
 #[derive(Debug, Deserialize, Default)]
 pub struct JsonStr<T>(pub T);
-
-impl<T> JsonStr<T> {
-    pub fn into_inner(self) -> T {
-        self.0
-    }
-}
 
 impl<T> ops::Deref for JsonStr<T> {
     type Target = T;
@@ -109,4 +104,41 @@ macro_rules! sql_enum {
     };
 }
 
+macro_rules! from_request {
+    ($name:ident, $table:literal) => {
+        impl actix_web::FromRequest for $name {
+            type Error = crate::models::AppErr;
+            type Future = std::pin::Pin<
+                Box<
+                    dyn std::future::Future<Output = Result<Self, Self::Error>>,
+                >,
+            >;
+
+            fn from_request(
+                req: &actix_web::HttpRequest, _: &mut actix_web::dev::Payload,
+            ) -> Self::Future {
+                let path = actix_web::web::Path::<(i64,)>::extract(req);
+                let state = req
+                    .app_data::<actix_web::web::Data<crate::AppState>>()
+                    .unwrap();
+                let pool = state.sql.clone();
+
+                Box::pin(async move {
+                    let path = path.await?;
+                    let result = sqlx::query_as! {
+                        $name,
+                        "select * from " + $table + " where id = ?",
+                        path.0
+                    }
+                    .fetch_one(&pool)
+                    .await?;
+
+                    Ok(result)
+                })
+            }
+        }
+    };
+}
+
+pub(crate) use from_request;
 pub(crate) use sql_enum;

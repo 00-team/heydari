@@ -3,7 +3,6 @@
 {% block header %}
 
 <link href="/static/style/product/product.css" rel="stylesheet" />
-
 <script src="/static/script/product.js" defer></script>
 
 {% endblock header %}
@@ -14,14 +13,20 @@
     <section class="product-wrapper">
         <aside class="product-details">
             <h3 class="title_smaller category">
-                اداری
+                {{ product.kind }} 
+                {% if product.tag_leg in tags %}
+                {{ tags[product.tag_leg].name }}
+                {% endif %}
+                X
+                {% if product.tag_bed in tags %}
+                {{ tags[product.tag_bed].name }}
+                {% endif %}
             </h3>
             <h2 class="product-title title">
-                صندلی اریا کد 1201
+                {{ product.name }}
             </h2>
             <p class="product-desc title_smaller">
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و
-                متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                {{ product.detail }}
             </p>
             <button class="contact-us title_small">
                 <span class="dot dot-1"></span>
@@ -38,120 +43,43 @@
         </aside>
         <aside class="product-img">
             <div class="main-wrapper">
-                <img src="/static/image/products/1.webp" alt="" class="main-img">
+                <img src="/record/pp:{{ product.id }}:{{ product.photos[0] }}" alt="" class="main-img">
             </div>
             <div class="others">
-                <div class="other"> <img src="/static/image/products/1.webp" alt="" class="other-img"></div>
-                <div class="other"> <img src="/static/image/products/2.webp" alt="" class="other-img"></div>
-                <div class="other"> <img src="/static/image/products/3.webp" alt="" class="other-img"></div>
-                <div class="other"> <img src="/static/image/products/4.webp" alt="" class="other-img"></div>
+                {% for p in product.photos %}
+                <div class="other">
+                    <img src="/record/pp:{{ product.id }}:{{ p }}" alt="" class="other-img">
+                </div>
+                {% endfor %}
             </div>
         </aside>
     </section>
     <section class="product-banner">
-        <img src="https://picsum.photos/1100/400" class="banner-img" alt="">
+        <img src="/record/pt:{{ product.id }}:{{ product.thumbnail }}" class="banner-img" alt="">
     </section>
     <section class="products-related">
         <h4 class="title_hero">
             محصولات مشابه
         </h4>
         <div class="related-wrapper title_small">
+            {% for p in related %}
             <a class="related">
                 <div class="head title_smaller">
                     <div class="category">
-                        اداری
+                        {{ p.kind }}
                     </div>
                     <div class="code">
-                        1101
+                        {{ p.code }}
                     </div>
                 </div>
 
-                <img src="/static/image/products/1.webp" alt="">
+                <img src="/record/pp:{{ p.id }}:{{ p.photos[0] }}" alt="">
 
                 <div class="product-title detail title_small">
-                    صندلی اریا لمسر
+                    {{ p.name }}
                 </div>
             </a>
-            <a class="related">
-                <div class="head title_smaller">
-                    <div class="category">
-                        اداری
-                    </div>
-                    <div class="code">
-                        1101
-                    </div>
-                </div>
-
-                <img src="/static/image/products/1.webp" alt="">
-
-                <div class="product-title detail title_small">
-                    صندلی اریا لمسر
-                </div>
-            </a>
-            <a class="related">
-                <div class="head title_smaller">
-                    <div class="category">
-                        اداری
-                    </div>
-                    <div class="code">
-                        1101
-                    </div>
-                </div>
-
-                <img src="/static/image/products/1.webp" alt="">
-
-                <div class="product-title detail title_small">
-                    صندلی اریا لمسر
-                </div>
-            </a>
-            <a class="related">
-                <div class="head title_smaller">
-                    <div class="category">
-                        اداری
-                    </div>
-                    <div class="code">
-                        1101
-                    </div>
-                </div>
-
-                <img src="/static/image/products/1.webp" alt="">
-
-                <div class="product-title detail title_small">
-                    صندلی اریا لمسر
-                </div>
-            </a>
-            <a class="related">
-                <div class="head title_smaller">
-                    <div class="category">
-                        اداری
-                    </div>
-                    <div class="code">
-                        1101
-                    </div>
-                </div>
-
-                <img src="/static/image/products/1.webp" alt="">
-
-                <div class="product-title detail title_small">
-                    صندلی اریا لمسر
-                </div>
-            </a>
-            <a class="related">
-                <div class="head title_smaller">
-                    <div class="category">
-                        اداری
-                    </div>
-                    <div class="code">
-                        1101
-                    </div>
-                </div>
-
-                <img src="/static/image/products/1.webp" alt="">
-
-                <div class="product-title detail title_small">
-                    صندلی اریا لمسر
-                </div>
-            </a>
+            {% endfor %}
         </div>
     </section>
 </main>

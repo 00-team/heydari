@@ -1,15 +1,14 @@
 use actix_multipart::form::MultipartForm;
-use actix_web::error::{Error, ErrorBadRequest};
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
+use sqlx::SqlitePool;
 use utoipa::{OpenApi, ToSchema};
 
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
-use crate::models::user::Admin;
+use crate::models::user::{Admin, UpdatePhoto};
 use crate::models::{AppErr, AppErrBadRequest, ListInput, Response};
-// use crate::models::{Admin, ListInput, Photos, Product, Response, UpdatePhoto};
 use crate::utils::{self, CutOff};
 use crate::AppState;
 
@@ -17,7 +16,8 @@ use crate::AppState;
 #[openapi(
     tags((name = "admin::product")),
     paths(
-        product_list, product_get, product_add, product_update, product_delete
+        product_list, product_get, product_add, product_update, product_delete,
+        product_thumbnail, product_photo_add, product_photo_del
     ),
     components(schemas(
         Product, ProductTag, ProductKind, ProductPart,
@@ -30,7 +30,7 @@ pub struct ApiDoc;
 
 #[utoipa::path(
     get,
-    params(("page" = u32, Query, example = 0)),
+    params(ListInput),
     responses((status = 200, body = Vec<Product>))
 )]
 /// Product List
@@ -54,9 +54,7 @@ async fn product_list(
 #[utoipa::path(
     get,
     params(("id" = i64, Path,)),
-    responses(
-        (status = 200, body = Product)
-    )
+    responses((status = 200, body = Product))
 )]
 /// Product Get
 #[get("/{id}/")]
@@ -105,6 +103,48 @@ async fn product_add(
     }))
 }
 
+async fn update_tag(
+    old: Option<i64>, new: Option<i64>, kind: &ProductKind, part: ProductPart,
+    pool: &SqlitePool,
+) -> Result<Option<i64>, AppErr> {
+    if old.is_none() && new.is_none() {
+        return Ok(None);
+    }
+
+    if matches!((old, new), (Some(a), Some(b)) if a == b) {
+        log::info!("same tag: {old:?} == {new:?}");
+        return Ok(new);
+    }
+
+    if let Some(id) = old {
+        sqlx::query! {
+            "update product_tags set count = count - 1 where id = ?", id
+        }
+        .execute(pool)
+        .await?;
+    }
+
+    if let Some(id) = new {
+        let tag = sqlx::query_as! {
+            ProductTag,
+            "select * from product_tags where id = ? AND kind = ? AND part = ?",
+            id, kind, part
+        }
+        .fetch_one(pool)
+        .await?;
+
+        sqlx::query! {
+            "update product_tags set count = count + 1 where id = ?", tag.id
+        }
+        .execute(pool)
+        .await?;
+
+        return Ok(Some(tag.id));
+    }
+
+    return Ok(None);
+}
+
 #[derive(Deserialize, ToSchema)]
 struct ProductUpdateBody {
     name: String,
@@ -116,6 +156,7 @@ struct ProductUpdateBody {
 
 #[utoipa::path(
     patch,
+    params(("id" = i64, Path,)),
     request_body = ProductUpdateBody,
     responses((status = 200, body = Product))
 )]
@@ -135,29 +176,23 @@ async fn product_update(
     product.code.cut_off(255);
     product.detail.cut_off(2048);
 
-    if let Some(id) = body.tag_leg {
-        let tag = sqlx::query_as! {
-            ProductTag,
-            "select * from product_tags where id = ? AND kind = ? AND part = ?",
-            id, product.kind, ProductPart::Leg
-        }
-        .fetch_one(&state.sql)
-        .await?;
+    product.tag_leg = update_tag(
+        product.tag_leg,
+        body.tag_leg,
+        &product.kind,
+        ProductPart::Leg,
+        &state.sql,
+    )
+    .await?;
 
-        product.tag_leg = Some(tag.id);
-    }
-
-    if let Some(id) = body.tag_bed {
-        let tag = sqlx::query_as! {
-            ProductTag,
-            "select * from product_tags where id = ? AND kind = ? AND part = ?",
-            id, product.kind, ProductPart::Bed
-        }
-        .fetch_one(&state.sql)
-        .await?;
-
-        product.tag_bed = Some(tag.id);
-    }
+    product.tag_bed = update_tag(
+        product.tag_bed,
+        body.tag_bed,
+        &product.kind,
+        ProductPart::Bed,
+        &state.sql,
+    )
+    .await?;
 
     sqlx::query! {
         "update products set name = ?, code = ?, detail = ?, tag_leg = ?,
@@ -174,7 +209,7 @@ async fn product_update(
 #[utoipa::path(
     delete,
     params(("id" = i64, Path,)),
-    responses((status = 200, body = String))
+    responses((status = 200))
 )]
 /// Product Delete
 #[delete("/{id}/")]
@@ -192,78 +227,110 @@ async fn product_delete(
     Ok(HttpResponse::Ok().finish())
 }
 
-// #[utoipa::path(
-//     put,
-//     params(("id" = i64, Path,)),
-//     request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
-//     responses((status = 200, body = Product))
-// )]
-// /// Product Add Photo
-// #[put("/{id}/photo/")]
-// async fn product_add_photo(
-//     _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
-//     state: Data<AppState>,
-// ) -> Response<Product> {
-//     let mut product = product;
-//     let mut salt = get_random_bytes(8);
-//     loop {
-//         if !product.photos.salts.iter().any(|s| s == &salt) {
-//             break;
-//         }
-//         salt = get_random_bytes(8);
-//     }
-//
-//     product.photos.salts.push(salt.clone());
-//
-//     let filename = format!("{}-{}", product.id, salt);
-//
-//     save_photo(form.photo.file.path(), &filename)?;
-//
-//     sqlx::query_as! {
-//         Product,
-//         "update products set photos = ? where id = ?",
-//         product.photos, product.id
-//     }
-//     .execute(&state.sql)
-//     .await?;
-//
-//     Ok(Json(product))
-// }
-//
-// #[utoipa::path(
-//     delete,
-//     params(
-//         ("id" = i64, Path,),
-//         ("idx" = u8, Path,),
-//     ),
-//     responses(
-//         (status = 200, body = String)
-//     )
-// )]
-// /// Product Delete Photo
-// #[delete("/{id}/photo/{idx}/")]
-// async fn product_delete_photo(
-//     _: Admin, product: Product, path: Path<(i64, u8)>, state: Data<AppState>,
-// ) -> Result<&'static str, Error> {
-//     let mut product = product;
-//     let idx: usize = path.1.into();
-//     if idx >= product.photos.salts.len() {
-//         return Err(ErrorBadRequest("photo not found"));
-//     }
-//
-//     let salt = product.photos.salts.remove(idx);
-//     remove_photo(&format!("{}-{}", product.id, salt));
-//
-//     sqlx::query_as! {
-//         Product,
-//         "update products set photos = ? where id = ?",
-//         product.photos, product.id
-//     }
-//     .execute(&state.sql)
-//     .await?;
-//
-//     Ok("photo was removed")
-// }
+#[utoipa::path(
+    put,
+    params(("id" = i64, Path,)),
+    request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
+    responses((status = 200, body = Product))
+)]
+/// Set Thumbnail
+#[put("/{id}/thumbnail/")]
+async fn product_thumbnail(
+    _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
+    state: Data<AppState>,
+) -> Response<Product> {
+    let mut product = product;
+    let salt = if let Some(s) = &product.thumbnail {
+        s.clone()
+    } else {
+        let s = utils::get_random_bytes(8);
+        product.thumbnail = Some(s.clone());
+        s
+    };
+
+    let filename = format!("pt:{}:{}", product.id, salt);
+
+    utils::save_photo(form.photo.file.path(), &filename, (1920, 1080))?;
+
+    sqlx::query_as! {
+        Product,
+        "update products set thumbnail = ? where id = ?",
+        product.thumbnail, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(Json(product))
+}
+
+#[utoipa::path(
+    put,
+    params(("id" = i64, Path,)),
+    request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
+    responses((status = 200, body = Product))
+)]
+/// Add Photo
+#[put("/{id}/photos/")]
+async fn product_photo_add(
+    _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
+    state: Data<AppState>,
+) -> Response<Product> {
+    if product.photos.len() >= 255 {
+        return Err(AppErrBadRequest("too many photos"));
+    }
+
+    let mut product = product;
+    let salt = loop {
+        let s = utils::get_random_bytes(8);
+        if !product.photos.iter().any(|p| p == &s) {
+            break s;
+        }
+    };
+    product.photos.push(salt.clone());
+
+    let filename = format!("pp:{}:{}", product.id, salt);
+    utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
+
+    sqlx::query_as! {
+        Product,
+        "update products set photos = ? where id = ?",
+        product.photos, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(Json(product))
+}
+
+#[utoipa::path(
+    delete,
+    params(("id" = i64, Path,), ("idx" = u8, Path,)),
+    responses((status = 200))
+)]
+/// Delete Photo
+#[delete("/{id}/photos/{idx}/")]
+async fn product_photo_del(
+    _: Admin, product: Product, path: Path<(i64, u8)>, state: Data<AppState>,
+) -> Result<HttpResponse, AppErr> {
+    let mut product = product;
+    let idx: usize = path.1.into();
+    if idx >= product.photos.len() {
+        return Err(AppErrBadRequest("photo not found"));
+    }
+
+    let salt = product.photos.remove(idx);
+    utils::remove_photo(&format!("pp:{}:{}", product.id, salt));
+
+    sqlx::query_as! {
+        Product,
+        "update products set photos = ? where id = ?",
+        product.photos, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(HttpResponse::Ok().finish())
+}
 
 pub fn router() -> Scope {
     Scope::new("/products")
@@ -272,6 +339,7 @@ pub fn router() -> Scope {
         .service(product_add)
         .service(product_update)
         .service(product_delete)
-    // .service(product_add_photo)
-    // .service(product_delete_photo)
+        .service(product_thumbnail)
+        .service(product_photo_add)
+        .service(product_photo_del)
 }
