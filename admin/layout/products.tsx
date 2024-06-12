@@ -60,9 +60,9 @@ export default () => {
             method: 'GET',
             params: { page },
             onLoad(x) {
-                if (x.status != 200) return
+                if (x.status != 200) return setState({ loading: false })
                 let tags: ProductTagModel[] = x.response
-                if (tags.length == 0) return
+                if (tags.length == 0) return setState({ loading: false })
                 setTags(
                     produce(s => {
                         tags.forEach(t => {
