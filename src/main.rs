@@ -103,14 +103,16 @@ async fn main() -> std::io::Result<()> {
             .service(web::router())
     });
 
-    let server = if cfg!(debug_assertions) {
-        server.bind(("127.0.0.1", 7000)).unwrap()
-    } else {
-        const PATH: &'static str = "/usr/share/nginx/sockets/heydari.sock";
-        let s = server.bind_uds(PATH).expect("could not bind the server");
-        std::fs::set_permissions(PATH, std::fs::Permissions::from_mode(0o777))?;
-        s
-    };
+    let server = server.bind(("127.0.0.1", 7000)).unwrap();
+
+    // let server = if cfg!(debug_assertions) {
+    //     server.bind(("127.0.0.1", 7000)).unwrap()
+    // } else {
+    //     const PATH: &'static str = "/usr/share/nginx/sockets/heydari.sock";
+    //     let s = server.bind_uds(PATH).expect("could not bind the server");
+    //     std::fs::set_permissions(PATH, std::fs::Permissions::from_mode(0o777))?;
+    //     s
+    // };
 
     server.run().await
 }
