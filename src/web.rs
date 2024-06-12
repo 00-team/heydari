@@ -118,6 +118,14 @@ async fn product(
     .fetch_one(&state.sql)
     .await?;
 
+    let related = sqlx::query_as! {
+        Product,
+        "select * from products where kind = ? and (tag_leg = ? or tag_bed = ?) limit 4",
+        product.kind, product.tag_leg, product.tag_bed
+    }
+    .fetch_all(&state.sql)
+    .await?;
+
     let tags = sqlx::query_as! {
         ProductTag, "select * from product_tags where id in (?, ?)",
         product.tag_leg, product.tag_bed
@@ -132,6 +140,7 @@ async fn product(
 
     let result = env.get_template("product/index.html")?.render(context! {
         product => product,
+        related => related,
         tags => tags,
     })?;
 
