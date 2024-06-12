@@ -65,6 +65,7 @@ async fn rapidoc() -> impl Responder {
 fn config_static(app: &mut ServiceConfig) {
     if cfg!(debug_assertions) {
         app.service(af::Files::new("/static", "static"));
+        app.service(af::Files::new("/admin-assets", "admin/dist/admin-assets"));
         app.service(af::Files::new("/record", Config::RECORD_DIR));
     }
 }

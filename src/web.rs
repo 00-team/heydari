@@ -2,7 +2,7 @@ use actix_web::dev::HttpServiceFactory;
 use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
 use actix_web::web::{Data, Path, Query};
-use actix_web::{get, FromRequest, HttpRequest, HttpResponse, Scope};
+use actix_web::{get, routes, FromRequest, HttpRequest, HttpResponse, Scope};
 use minijinja::{context, path_loader, Environment};
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -165,6 +165,16 @@ async fn blogs(env: Data<Environment<'static>>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+#[routes]
+#[get("/admin")]
+#[get("/admin/products")]
+#[get("/admin/product-tags")]
+async fn admin_index() -> HttpResponse {
+    let result = std::fs::read_to_string("admin/dist/index.html")
+        .unwrap_or("err reading admin index.html".to_string());
+    HttpResponse::Ok().content_type(ContentType::html()).body(result)
+}
+
 pub fn router() -> impl HttpServiceFactory {
     let tmpl_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("templates");
     let mut tmpl_env = Environment::new();
@@ -179,4 +189,5 @@ pub fn router() -> impl HttpServiceFactory {
         .service(contact)
         .service(about)
         .service(blogs)
+        .service(admin_index)
 }
