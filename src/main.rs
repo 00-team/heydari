@@ -1,4 +1,4 @@
-use std::{env, os::unix::fs::PermissionsExt};
+use std::env;
 
 use crate::config::Config;
 use crate::docs::{doc_add_prefix, ApiDoc};
