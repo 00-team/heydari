@@ -3,10 +3,8 @@ use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
 use actix_web::web::{Data, Path, Query};
 use actix_web::{get, FromRequest, HttpRequest, HttpResponse, Scope};
-use itertools::Itertools;
 use minijinja::{context, path_loader, Environment};
 use serde::Deserialize;
-use sqlx::SqlitePool;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
@@ -20,25 +18,6 @@ type Response = Result<HttpResponse, AppErr>;
 async fn home(env: Data<Environment<'static>>) -> Response {
     let result = env.get_template("home/index.html")?.render(())?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
-}
-
-type Tags = HashMap<i64, (String, i64)>;
-async fn get_tags(
-    ids: Vec<Option<i64>>, pool: &SqlitePool,
-) -> Result<Tags, AppErr> {
-    let ids = ids.iter().flatten().unique().join(",");
-
-    if ids.len() == 0 {
-        return Ok(Tags::new());
-    }
-
-    let tags = sqlx::query_as! {
-        ProductTag, "select * from product_tags where id in (?)", ids
-    }
-    .fetch_all(pool)
-    .await?;
-
-    Ok(tags.iter().map(|v| (v.id, (v.name.clone(), v.count))).collect::<Tags>())
 }
 
 #[derive(Deserialize, Debug)]
@@ -102,11 +81,16 @@ async fn products(
     .fetch_all(&state.sql)
     .await?;
 
-    let tags = get_tags(
-        products.iter().map(|p| [p.tag_leg, p.tag_bed]).flatten().collect(),
-        &state.sql,
-    )
-    .await;
+    let tags = sqlx::query_as! {
+        ProductTag, "select * from product_tags"
+    }
+    .fetch_all(&state.sql)
+    .await?;
+
+    let tags = tags
+        .iter()
+        .map(|v| (v.id, v.clone()))
+        .collect::<HashMap<i64, ProductTag>>();
 
     let result = env.get_template("products/index.html")?.render(context! {
         products => products,
@@ -134,8 +118,17 @@ async fn product(
     .fetch_one(&state.sql)
     .await?;
 
-    let tags = vec![product.tag_leg, product.tag_bed];
-    let tags = get_tags(tags, &state.sql).await;
+    let tags = sqlx::query_as! {
+        ProductTag, "select * from product_tags where id in (?, ?)",
+        product.tag_leg, product.tag_bed
+    }
+    .fetch_all(&state.sql)
+    .await?;
+
+    let tags = tags
+        .iter()
+        .map(|value| (value.id, value.clone()))
+        .collect::<HashMap<_, _>>();
 
     let result = env.get_template("product/index.html")?.render(context! {
         product => product,

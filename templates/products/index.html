@@ -194,17 +194,19 @@
                   {{ p.kind }}
                </div>
 
-                {% if p.tag_leg != none %}
+                {% if p.tag_leg in tags %}
                 <div class="tag">
-                    {{ tags[p.tag_leg] }}
+                    {{ tags[p.tag_leg].name }}
+                </div>
+                {% endif %}
+
+                {% if p.tag_bed in tags %}
+                <div class="tag">
+                    {{ tags[p.tag_bed].name }}
                 </div>
                 {% endif %}
                 
-                {% if p.tag_bed != none %}
-                <div class="tag">
-                    {{ tags[p.tag_bed] }}
-                </div>
-                {% endif %}
+
             </div>
          </figcaption>
       </a>

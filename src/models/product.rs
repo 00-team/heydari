@@ -16,7 +16,7 @@ sql_enum! {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Clone)]
 pub struct ProductTag {
     pub id: i64,
     pub name: String,
