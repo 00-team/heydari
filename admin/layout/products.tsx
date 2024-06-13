@@ -136,6 +136,7 @@ type ProductProps = {
 }
 const Product: Component<ProductProps> = P => {
     type State = {
+        loading: boolean
         edit: boolean
         name: string
         code: string
@@ -144,8 +145,9 @@ const Product: Component<ProductProps> = P => {
         tag_bed: number | null
     }
     const [state, setState] = createStore<State>({
+        loading: P.product.id == 14,
+        edit: P.product.id == 14,
         // edit: false,
-        edit: P.product.id == 13,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -228,21 +230,31 @@ const Product: Component<ProductProps> = P => {
         let el = document.createElement('input')
         el.setAttribute('type', 'file')
         el.setAttribute('accept', 'image/*')
-        el.onchange = () => {
-            if (!el.files || !el.files[0]) return
+        el.setAttribute('multiple', 'true')
+        el.onchange = async () => {
+            if (!el.files || el.files.length == 0) return
 
-            let data = new FormData()
-            data.set('photo', el.files[0])
+            setState({ loading: true })
 
-            httpx({
-                url: `/api/admin/products/${P.product.id}/photos/`,
-                method: 'PUT',
-                data,
-                onLoad(x) {
-                    if (x.status != 200) return
-                    P.update()
-                },
-            })
+            for (let f of el.files) {
+                await new Promise((resolve, reject) => {
+                    let data = new FormData()
+                    data.set('photo', f)
+                    httpx({
+                        url: `/api/admin/products/${P.product.id}/photos/`,
+                        method: 'PUT',
+                        data,
+                        reject,
+                        onLoad(x) {
+                            if (x.status != 200) return
+                            resolve(true)
+                        },
+                    })
+                })
+            }
+
+            setState({ loading: false })
+            P.update()
         }
         el.click()
     }
@@ -276,7 +288,10 @@ const Product: Component<ProductProps> = P => {
     )
 
     return (
-        <div class='product'>
+        <div class='product' classList={{ loading: state.loading }}>
+            <Show when={state.loading}>
+                <span class='message'>Loading...</span>
+            </Show>
             <div class='top'>
                 <div class='info'>
                     <span>{P.product.id}</span>
