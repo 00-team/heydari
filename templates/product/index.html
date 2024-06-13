@@ -79,7 +79,12 @@
             <a class="related">
                 <div class="head title_smaller">
                     <div class="category">
-                        {{ p.kind }}
+                        {% if p.kind == "table" %}
+                        میز
+                        {% endif %}
+                        {% if p.kind == "chair" %}
+                        صندلی
+                        {% endif %}
                     </div>
                     <div class="code">
                         {{ p.code }}
