@@ -7,476 +7,311 @@
 
 {% block content %}
 <main class="products-page-container">
-    <header class="products-header" style="background-image:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+   <header class="products-header" style="background-image:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url(/static/image/header.webp)">
-        <h2 class="header-title title_hero">محصولات حیدری</h2>
-    </header>
+      <h2 class="header-title title_hero">محصولات حیدری</h2>
+   </header>
 
-    <div class="searchbar-container">
-        <div class="input-wrapper">
-            <input type="text" placeholder="جستجو کنید..." class="search-inp title_small" maxlength="256">
-            <div class="icon">
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="35" width="35"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill="none" stroke-miterlimit="10" stroke-width="32"
-                        d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64z"></path>
-                    <path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"
-                        d="M338.29 338.29 448 448"></path>
-                </svg>
-            </div>
-        </div>
-
-
-        <div class="filters">
-            <div class="categories">
-                <span class="title_small">
-                    نوع :
-                </span>
-                <div class="dropdown" id="kind">
-                    <div class="drop-active title_small">
-                        <span class="drop-active-text">
-                            ---
-                        </span>
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
-                            width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
-                            </path>
-                        </svg>
-
-                    </div>
-                    <div class="drop-links title_small">
-                        <div class="drop-link">
-                            میز
-                        </div>
-                        <div class="drop-link">
-                            صندلی
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="categories ">
-                <span class="title_small">
-                    پایه :
-                </span>
-                <div class="dropdown disable" id="paye">
-                    <div class="drop-active title_small">
-                        <span class="drop-active-text">
-                            ---
-                        </span>
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
-                            width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
-                            </path>
-                        </svg>
-
-                    </div>
-                    <div class="drop-links title_small">
-                        {% for k, t in tags | items %}
-                        {% if t.part == "leg" %}
-                        <div class="drop-link">
-                            {{ t.count }} - {{ t.name }}
-                        </div> 
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="categories ">
-                <span class="title_small">
-                    کفی :
-                </span>
-                <div class="dropdown disable" id="kafi">
-                    <div class="drop-active title_small">
-                        <span class="drop-active-text">
-                            ---
-                        </span>
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
-                            width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
-                            </path>
-                        </svg>
-
-                    </div>
-                    <div class="drop-links title_small">
-                        {% for k, t in tags | items %}
-                        {% if t.part == "bed" %}
-                        <div class="drop-link">
-                            {{ t.count }} - {{ t.name }}
-                        </div> 
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+   <div class="searchbar-container">
+      <div class="input-wrapper">
+         <input type="text" placeholder="جستجو کنید..." class="search-inp title_small" maxlength="256">
+         <div class="icon">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="35" width="35"
+               xmlns="http://www.w3.org/2000/svg">
+               <path fill="none" stroke-miterlimit="10" stroke-width="32"
+                  d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64z"></path>
+               <path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"
+                  d="M338.29 338.29 448 448"></path>
+            </svg>
+         </div>
+      </div>
 
 
-        </div>
-
-
-
-        <div class="order">
+      <div class="filters">
+         <div class="categories">
             <span class="title_small">
-                براساس:
+               نوع :
             </span>
-            <div class="dropdown" id="order">
-                <div class="drop-active title_small">
-                    <span class="drop-active-text">
-                        جدید ترین
-                    </span>
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
-                        width="1em" xmlns="http://www.w3.org/2000/svg">
+            <div class="dropdown" id="kind">
+               <div class="drop-active title_small">
+                  <span class="drop-active-text">
+                     ---
+                  </span>
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                     width="1em" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                     </path>
+                  </svg>
+
+               </div>
+               <div class="drop-links title_small">
+                  <div class="drop-link">
+                     میز
+                  </div>
+                  <div class="drop-link">
+                     صندلی
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="categories ">
+            <span class="title_small">
+               پایه :
+            </span>
+            <div class="dropdown disable" id="paye">
+               <div class="drop-active title_small">
+                  <span class="drop-active-text">
+                     ---
+                  </span>
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                     width="1em" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                     </path>
+                  </svg>
+
+               </div>
+               <div class="drop-links title_small">
+                  {% for k, t in tags | items %}
+                  {% if t.part == "leg" %}
+                  <div class="drop-link">
+                     {{ t.name }}
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+         </div>
+
+         <div class="categories ">
+            <span class="title_small">
+               کفی :
+            </span>
+            <div class="dropdown disable" id="kafi">
+               <div class="drop-active title_small">
+                  <span class="drop-active-text">
+                     ---
+                  </span>
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                     width="1em" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                     </path>
+                  </svg>
+
+               </div>
+               <div class="drop-links title_small">
+                  {% for k, t in tags | items %}
+                  {% if t.part == "bed" %}
+                  <div class="drop-link">
+                     {{ t.name }}
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+         </div>
+
+
+      </div>
+
+
+
+      <div class="order">
+         <span class="title_small">
+            براساس:
+         </span>
+         <div class="dropdown" id="order">
+            <div class="drop-active title_small">
+               <span class="drop-active-text">
+                  جدید ترین
+               </span>
+               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                  width="1em" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                     d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                  </path>
+               </svg>
+
+            </div>
+            <div class="drop-links title_small">
+               <div class="drop-link">
+                  جدید ترین
+               </div>
+               <div class="drop-link">
+                  قدیمی ترین
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <section class="products-wrapper">
+      {% for p in products %}
+      <a class="product-card" href="/products/{{ p.id }}" data-kind="{{ p.kind }}" data-tag-leg="{{ p.tag_leg }}"
+         data-tag-bed="{{ p.tag_bed }}">
+         <div class="head title_smaller">
+            <div class="product-code">{{ p.code }}</div>
+         </div>
+         <img class="card-img" src="/record/pp:{{ p.id }}:{{ p.photos[0] }}" decoding="async" loading="lazy"
+            alt="صندلی صنایع تولیدی حیدری" />
+         <figcaption class="card-caption title_small">
+            <div class="product-title title_small">
+               {{ p.name }}
+            </div>
+            <div class="product-tags title_smaller">
+               <div class="tag">
+                  {% if p.kind == "table" %}
+                  میز
+                  {% endif %}
+                  {% if p.kind == "chair" %}
+                  صندلی
+                  {% endif %}
+               </div>
+
+               {% if p.tag_leg in tags %}
+               <div class="tag">
+                  {{ tags[p.tag_leg].name }}
+               </div>
+               {% endif %}
+
+               {% if p.tag_bed in tags %}
+               <div class="tag">
+                  {{ tags[p.tag_bed].name }}
+               </div>
+               {% endif %}
+
+
+            </div>
+         </figcaption>
+      </a>
+      {% endfor %}
+
+      <!-- <a class="product-card" href="/product/1"> -->
+      <!--    <div class="head title_smaller"> -->
+      <!--       <div class="product-code">1101</div> -->
+      <!--    </div> -->
+      <!--    <img class="card-img" src="/static/image/products/14.webp" decoding="async" loading="lazy" -->
+      <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
+      <!--    <figcaption class="card-caption title_small"> -->
+      <!--       <div class="product-title title_small"> -->
+      <!--          صندلی آریا لمسه -->
+      <!--       </div> -->
+      <!--       <div class="product-tags title_smaller"> -->
+      <!--          <div class="tag"> -->
+      <!--             اداری -->
+      <!--          </div> -->
+      <!--          <div class="tag"> -->
+      <!--             میز -->
+      <!--          </div> -->
+      <!--          <div class="tag"> -->
+      <!--             خانگی -->
+      <!--          </div> -->
+      <!--          <div class="tag"> -->
+      <!--             اداری -->
+      <!--          </div> -->
+      <!--       </div> -->
+      <!--    </figcaption> -->
+      <!-- </a> -->
+      <!-- <a class="product-card" href="/product/1"> -->
+      <!--    <div class="head title_smaller"> -->
+      <!---->
+      <!--       <div class="product-code">1101</div> -->
+      <!--    </div> -->
+      <!--    <img class="card-img" src="/static/image/products/30.webp" decoding="async" loading="lazy" -->
+      <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
+      <!--    <figcaption class="card-caption title_small">صندلی کد 30 درسا</figcaption> -->
+      <!--    <div class="coming-soon title"> -->
+      <!--       COMING SOON... -->
+      <!--    </div> -->
+      <!-- </a> -->
+
+   </section>
+   <div class="contact-wrapper">
+      <aside class="contact-data title_small">
+         <div class="contact-header">
+            <a class="link call" href="tel:02155009865">
+               <div class="link-holder">
+                  <div class="icon">
+                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
                         <path
-                            d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
+                           d="M480 160V77.25a32 32 0 0 0-9.38-22.63L425.37 9.37A32 32 0 0 0 402.75 0H160a32 32 0 0 0-32 32v448a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM288 432a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm128 128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-112H192V64h160v48a16 16 0 0 0 16 16h48zM64 128H32a32 32 0 0 0-32 32v320a32 32 0 0 0 32 32h32a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z">
                         </path>
-                    </svg>
-
-                </div>
-                <div class="drop-links title_small">
-                    <div class="drop-link">
-                        جدید ترین
-                    </div>
-                    <div class="drop-link">
-                        قدیمی ترین
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <section class="products-wrapper">
-        {% for p in products %}
-        <a
-            class="product-card"
-            href="/products/{{ p.id }}"
-            data-kind="{{ p.kind }}"
-            data-tag-leg="{{ p.tag_leg }}"
-            data-tag-bed="{{ p.tag_bed }}"
-        >
-            <div class="head title_smaller">
-                <div class="product-code">{{ p.code }}</div>
-            </div>
-            <img class="card-img" src="/record/pt:{{ p.id }}:{{ p.thumbnail }}" decoding="async" loading="lazy"
-                alt="صندلی صنایع تولیدی حیدری" />
-            <figcaption class="card-caption title_small">
-                <div class="product-title title_small">
-                    {{ p.name }}
-                </div>
-                <div class="product-tags title_smaller">
-                    <div class="tag">
-                        {{ p.kind }}
-                    </div>
-
-                    {% if p.tag_leg in tags %}
-                    <div class="tag">
-                        {{ tags[p.tag_leg].name }}
-                    </div>
-                    {% endif %}
-
-                    {% if p.tag_bed in tags %}
-                    <div class="tag">
-                        {{ tags[p.tag_bed].name }}
-                    </div>
-                    {% endif %}
-
-
-                </div>
-            </figcaption>
-        </a>
-        {% endfor %}
-
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/14.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       <div class="product-title title_small"> -->
-        <!--          صندلی آریا لمسه -->
-        <!--       </div> -->
-        <!--       <div class="product-tags title_smaller"> -->
-        <!--          <div class="tag"> -->
-        <!--             اداری -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             میز -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             خانگی -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             اداری -->
-        <!--          </div> -->
-        <!--       </div> -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/16.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       <div class="product-title title_small"> -->
-        <!--          صندلی آریا لمسه -->
-        <!--       </div> -->
-        <!--       <div class="product-tags title_smaller"> -->
-        <!--          <div class="tag"> -->
-        <!--             اداری -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             میز -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             خانگی -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             اداری -->
-        <!--          </div> -->
-        <!--       </div> -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/20.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       <div class="product-title title_small"> -->
-        <!--          صندلی آریا لمسه -->
-        <!--       </div> -->
-        <!--       <div class="product-tags title_smaller"> -->
-        <!--          <div class="tag"> -->
-        <!--             اداری -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             میز -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             خانگی -->
-        <!--          </div> -->
-        <!--          <div class="tag"> -->
-        <!--             اداری -->
-        <!--          </div> -->
-        <!--       </div> -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/3.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی آریا فایبر پایه چوبی -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/4.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی رادین پایه ایفلی فلزی با میز -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/5.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی رادین پایه چوبی با میز -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/7.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی زین اسبی لمسه با میز پایه برتویا -->
-        <!---->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/9.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small">صندلی کد 9</figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/10.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی آریا لمسه با میز پایه برتویا -->
-        <!---->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/11.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی زین اسبی لمسه پایه چوبی با میز -->
-        <!---->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/12.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       نیمکت آموزشی متصل -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/13.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی زین اسبی پایه چوبی -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/18.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small"> -->
-        <!--       صندلی آریا لمسه پایه چوبی با میز -->
-        <!--    </figcaption> -->
-        <!-- </a> -->
-        <!-- <a class="product-card" href="/product/1"> -->
-        <!--    <div class="head title_smaller"> -->
-        <!---->
-        <!--       <div class="product-code">1101</div> -->
-        <!--    </div> -->
-        <!--    <img class="card-img" src="/static/image/products/30.webp" decoding="async" loading="lazy" -->
-        <!--       alt="صندلی صنایع تولیدی حیدری" /> -->
-        <!--    <figcaption class="card-caption title_small">صندلی کد 30 درسا</figcaption> -->
-        <!--    <div class="coming-soon title"> -->
-        <!--       COMING SOON... -->
-        <!--    </div> -->
-        <!-- </a> -->
-
-    </section>
-    <div class="contact-wrapper">
-        <aside class="contact-data title_small">
-            <div class="contact-header">
-                <a class="link call" href="tel:02155009865">
-                    <div class="link-holder">
-                        <div class="icon">
-                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
-                                width="25" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M480 160V77.25a32 32 0 0 0-9.38-22.63L425.37 9.37A32 32 0 0 0 402.75 0H160a32 32 0 0 0-32 32v448a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM288 432a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm128 128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-112H192V64h160v48a16 16 0 0 0 16 16h48zM64 128H32a32 32 0 0 0-32 32v320a32 32 0 0 0 32 32h32a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="holder">تلفن کارخانه</div>
-                    </div>
-                    <div class="data">021 - 55009865</div>
-                </a>
-                <a class="link call" href="tel:02155004626">
-                    <div class="link-holder">
-                        <div class="icon">
-                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
-                                width="25" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M480 160V77.25a32 32 0 0 0-9.38-22.63L425.37 9.37A32 32 0 0 0 402.75 0H160a32 32 0 0 0-32 32v448a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM288 432a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm128 128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-112H192V64h160v48a16 16 0 0 0 16 16h48zM64 128H32a32 32 0 0 0-32 32v320a32 32 0 0 0 32 32h32a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="holder">تلفن کارخانه</div>
-                    </div>
-                    <div class="data">021 - 55004626</div>
-                </a>
-                <a class="link call" href="tel:02155005158">
-                    <div class="link-holder">
-                        <div class="icon">
-                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
-                                width="25" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M480 160V77.25a32 32 0 0 0-9.38-22.63L425.37 9.37A32 32 0 0 0 402.75 0H160a32 32 0 0 0-32 32v448a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM288 432a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm128 128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-112H192V64h160v48a16 16 0 0 0 16 16h48zM64 128H32a32 32 0 0 0-32 32v320a32 32 0 0 0 32 32h32a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="holder">تلفن کارخانه</div>
-                    </div>
-                    <div class="data">021 - 55005158</div>
-                </a>
-                <a class="link call" href="tel:9127026965">
-                    <div class="link-holder">
-                        <div class="icon">
-                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
-                                width="25" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="holder">تلفن مدير فروش</div>
-                    </div>
-                    <div class="data">+98 - 9127026965</div>
-                </a>
-                <a class="link call" href="tel:9129429430">
-                    <div class="link-holder">
-                        <div class="icon">
-                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
-                                width="25" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="holder">تلفن همراه</div>
-                    </div>
-                    <div class="data">+98 - 9129429430</div>
-                </a>
-            </div>
-            <div class="contact-body">
-                <p class="title_small">
-                    آدرس: تهران ، صالح آباد شرقی ، نبش میدان شهید خالقی پ ۲
-                </p>
-            </div>
-        </aside>
-        <aside class="location"><iframe
+                     </svg>
+                  </div>
+                  <div class="holder">تلفن کارخانه</div>
+               </div>
+               <div class="data">021 - 55009865</div>
+            </a>
+            <a class="link call" href="tel:02155004626">
+               <div class="link-holder">
+                  <div class="icon">
+                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                           d="M480 160V77.25a32 32 0 0 0-9.38-22.63L425.37 9.37A32 32 0 0 0 402.75 0H160a32 32 0 0 0-32 32v448a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM288 432a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm128 128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-112H192V64h160v48a16 16 0 0 0 16 16h48zM64 128H32a32 32 0 0 0-32 32v320a32 32 0 0 0 32 32h32a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z">
+                        </path>
+                     </svg>
+                  </div>
+                  <div class="holder">تلفن کارخانه</div>
+               </div>
+               <div class="data">021 - 55004626</div>
+            </a>
+            <a class="link call" href="tel:02155005158">
+               <div class="link-holder">
+                  <div class="icon">
+                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                           d="M480 160V77.25a32 32 0 0 0-9.38-22.63L425.37 9.37A32 32 0 0 0 402.75 0H160a32 32 0 0 0-32 32v448a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM288 432a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm128 128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-128a16 16 0 0 1-16 16h-32a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16h32a16 16 0 0 1 16 16zm0-112H192V64h160v48a16 16 0 0 0 16 16h48zM64 128H32a32 32 0 0 0-32 32v320a32 32 0 0 0 32 32h32a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z">
+                        </path>
+                     </svg>
+                  </div>
+                  <div class="holder">تلفن کارخانه</div>
+               </div>
+               <div class="data">021 - 55005158</div>
+            </a>
+            <a class="link call" href="tel:9127026965">
+               <div class="link-holder">
+                  <div class="icon">
+                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                           d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z">
+                        </path>
+                     </svg>
+                  </div>
+                  <div class="holder">تلفن مدير فروش</div>
+               </div>
+               <div class="data">+98 - 9127026965</div>
+            </a>
+            <a class="link call" href="tel:9129429430">
+               <div class="link-holder">
+                  <div class="icon">
+                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                           d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z">
+                        </path>
+                     </svg>
+                  </div>
+                  <div class="holder">تلفن همراه</div>
+               </div>
+               <div class="data">+98 - 9129429430</div>
+            </a>
+         </div>
+         <div class="contact-body">
+            <p class="title_small">
+               آدرس: تهران ، صالح آباد شرقی ، نبش میدان شهید خالقی پ ۲
+            </p>
+         </div>
+      </aside>
+      <aside class="location"><iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3243.8432237114876!2d51.398114240961355!3d35.60693365010938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f91fee562d59ecd%3A0x6b19f3f9e0e18b6d!2z2LXZhtin24zYuSDYqtmI2YTbjNiv24wg2K3bjNiv2LHbjA!5e0!3m2!1sen!2s!4v1690967302774!5m2!1sen!2s"
             allowfullscreen="" loading="lazy" height="500"></iframe></aside>
-    </div>
+   </div>
 </main>
 {% endblock content %}

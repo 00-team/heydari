@@ -13,13 +13,26 @@
     <section class="product-wrapper">
         <aside class="product-details">
             <h3 class="title_smaller category">
-                {{ product.kind }} 
+
+                <span>
+                    {% if product.kind == "table" %}
+                    میز
+                    {% endif %}
+                    {% if product.kind == "chair" %}
+                    صندلی
+                    {% endif %}
+                </span>
+                -
                 {% if product.tag_leg in tags %}
-                {{ tags[product.tag_leg].name }}
+                <span>
+                    {{ tags[product.tag_leg].name }}
+                </span>
                 {% endif %}
-                X
+                -
                 {% if product.tag_bed in tags %}
-                {{ tags[product.tag_bed].name }}
+                <span>
+                    {{ tags[product.tag_bed].name }}
+                </span>
                 {% endif %}
             </h3>
             <h2 class="product-title title">

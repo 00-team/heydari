@@ -37,6 +37,10 @@ main.product {
                 margin-bottom: 0.5em;
                 cursor: default;
                 width: max-content;
+
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
             }
 
             h2 {

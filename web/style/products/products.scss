@@ -320,16 +320,14 @@
 
                             transform: translateX(200%);
 
-                            transition:
-                                0.3s ease,
+                            transition: 0.3s ease,
                                 transform 0.3s
                                     cubic-bezier(0.45, 0.02, 0.09, 0.98),
                                 color 0.3s;
 
                             @for $i from 1 through 50 {
                                 &:nth-child(#{$i}) {
-                                    transition:
-                                        0.3s ease,
+                                    transition: 0.3s ease,
                                         transform
                                             #{$i *
                                             200ms}
@@ -456,15 +454,13 @@
 
                         transform: translateX(200%);
 
-                        transition:
-                            0.3s ease,
+                        transition: 0.3s ease,
                             transform 0.3s cubic-bezier(0.45, 0.02, 0.09, 0.98),
                             color 0.3s;
 
                         @for $i from 1 through 50 {
                             &:nth-child(#{$i}) {
-                                transition:
-                                    0.3s ease,
+                                transition: 0.3s ease,
                                     transform
                                         #{$i *
                                         200ms}
@@ -509,9 +505,7 @@
             transition-property: transform, opacity, display;
             transition-duration: 0.3s;
             // transition-behavior: allow-discrete;
-            transition:
-                transform 0.3s ease-in-out,
-                width 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
 
             position: relative;
             isolation: isolate;
@@ -519,10 +513,6 @@
             &.hide {
                 display: none;
                 opacity: 0;
-
-                // @starting-style {
-                //     opacity: 0;
-                // }
             }
 
             &:hover {
