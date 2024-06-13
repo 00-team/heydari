@@ -7,8 +7,8 @@
         "style:watch": "sass web/style:static/style -w -c",
         "script": "webpack",
         "script:watch": "webpack --watch",
-        "admin:start": "root=admin vite",
-        "admin:build": "root=admin vite build"
+        "admin:start": "vite",
+        "admin:build": "vite build"
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
