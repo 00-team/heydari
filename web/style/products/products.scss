@@ -519,38 +519,46 @@
                 transform: translateY(-1rem);
             }
 
-            .head {
-                position: absolute;
-                top: 0;
-
+            .card-wrapper {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                justify-content: center;
 
+                height: 100%;
                 width: 100%;
 
-                .product-category,
-                .product-code {
-                    padding: 0.5em;
-                    background-color: var(--ten-percent);
-                    color: white;
+                .head {
+                    position: absolute;
+                    top: 0;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    width: 100%;
+
+                    .product-category,
+                    .product-code {
+                        padding: 0.5em;
+                        background-color: var(--ten-percent);
+                        color: white;
+                    }
+                    .product-category {
+                        border-bottom-left-radius: 0.5rem;
+                    }
+                    .product-code {
+                        border-bottom-left-radius: 0.5rem;
+                    }
                 }
-                .product-category {
-                    border-bottom-left-radius: 0.5rem;
-                }
-                .product-code {
-                    border-bottom-left-radius: 0.5rem;
+
+                img.card-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
                 }
             }
 
-            img.card-img {
-                height: 85%;
-                max-width: 100%;
-                flex: 1;
-                object-fit: cover;
-            }
-
-            figcaption.card-caption {
+            .card-caption {
                 position: absolute;
                 bottom: 0;
                 display: flex;
