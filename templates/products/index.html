@@ -165,7 +165,7 @@
                {{ p.name }}
             </a>
             <div class="product-tags title_smaller">
-               <a class="tag" href="/products?&tag={{ p.kind }}">
+               <a class="tag" href="/products?kind={{ p.kind }}">
                   {% if p.kind == "table" %}
                   میز
                   {% endif %}
@@ -175,13 +175,13 @@
                </a>
 
                {% if p.tag_leg in tags %}
-               <a class="tag" href="/products?&tag={{ p.tags[p.tag_leg].name }}">
+               <a class="tag" href="/products?leg={{ p.tag_leg }}">
                   {{ tags[p.tag_leg].name }}
                </a>
                {% endif %}
 
                {% if p.tag_bed in tags %}
-               <a class="tag" href="/products?&tag={{ tags[p.tag_bed].name }}">
+               <a class="tag" href="/products?leg={{ p.tag_bed }}">
                   {{ tags[p.tag_bed].name }}
                </a>
                {% endif %}
