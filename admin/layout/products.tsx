@@ -210,6 +210,7 @@ const Product: Component<ProductProps> = P => {
         el.onchange = () => {
             if (!el.files || !el.files[0]) return
 
+            setState({ loading: true })
             let data = new FormData()
             data.set('photo', el.files[0])
 
@@ -219,6 +220,8 @@ const Product: Component<ProductProps> = P => {
                 data,
                 onLoad(x) {
                     if (x.status != 200) return
+
+                    setState({ loading: false })
                     P.update()
                 },
             })
