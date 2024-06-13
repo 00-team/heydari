@@ -22,12 +22,12 @@
         &::after {
             display: unset;
         }
+    }
 
-        .message {
-            position: absolute;
-            z-index: 1;
-            font-size: 66px;
-        }
+    .message {
+        position: absolute;
+        z-index: 1;
+        font-size: 66px;
     }
 
     .actions {
@@ -53,6 +53,25 @@
             gap: 1rem;
             overflow: hidden;
             flex-shrink: 0;
+            position: relative;
+
+            &::after {
+                content: '';
+                display: none;
+                backdrop-filter: blur(2px);
+                position: absolute;
+                inset: 0;
+            }
+
+            &.loading {
+                display: grid;
+                place-items: center;
+                pointer-events: none;
+
+                &::after {
+                    display: unset;
+                }
+            }
 
             .top {
                 width: 100%;
