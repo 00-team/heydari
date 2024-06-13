@@ -407,7 +407,7 @@ const Product: Component<ProductProps> = P => {
                             bed_tags().find(t => t.idx == state.tag_bed),
                         ]}
                     />
-                    <span>Thumbnail:</span>
+                    <span>Banner:</span>
                     <div class='thumbnail' onClick={thumbnail_update}>
                         <Show
                             when={P.product.thumbnail}
