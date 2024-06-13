@@ -163,7 +163,16 @@
             </div>
             <div class="product-tags title_smaller">
                <div class="tag">
-                  {{ p.kind }}
+                  {% if p.kind == "table" %}
+                  <div class="tag">
+                     میز
+                  </div>
+                  {% endif %}
+                  {% if p.kind == "chair" %}
+                  <div class="tag">
+                     صندلی
+                  </div>
+                  {% endif %}
                </div>
 
                {% if p.tag_leg in tags %}
