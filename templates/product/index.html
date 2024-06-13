@@ -15,10 +15,14 @@
             <h3 class="title_smaller category">
 
                 <span>
-
-                    {{ product.kind }}
+                    {% if product.kind == "table" %}
+                    میز
+                    {% endif %}
+                    {% if product.kind == "chair" %}
+                    صندلی
+                    {% endif %}
                 </span>
-
+                -
                 {% if product.tag_leg in tags %}
                 <span>
                     {{ tags[product.tag_leg].name }}
