@@ -40,6 +40,7 @@ function toggleDropdown(dropdown: HTMLElement) {
                 tableTags.forEach(
                     (tag: HTMLElement) => (tag.style.display = 'none')
                 )
+                dropdown.style.setProperty('--top', `${0}em`)
             } else if (link.id === 'table') {
                 chairTags.forEach(
                     (tag: HTMLElement) => (tag.style.display = 'none')
@@ -47,6 +48,7 @@ function toggleDropdown(dropdown: HTMLElement) {
                 tableTags.forEach(
                     (tag: HTMLElement) => (tag.style.display = 'flex')
                 )
+                dropdown.style.setProperty('--top', `${0}em`)
             }
 
             if (dropdown.id === 'kind') {
