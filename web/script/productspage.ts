@@ -52,6 +52,12 @@ function toggleDropdown(dropdown: HTMLElement) {
                 removeDisable('paye')
                 removeDisable('kafi')
             }
+
+            let tagName = link.getAttribute('data-name')
+            let tagId = link.getAttribute('data-id')
+
+            insertParam(tagName, tagId)
+
             // if (dropdown.id === 'paye') {
             //     removeDisable('kafi')
             // }
