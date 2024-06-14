@@ -1,5 +1,3 @@
-use std::env;
-
 use crate::config::Config;
 use crate::docs::{doc_add_prefix, ApiDoc};
 use actix_files as af;
@@ -62,56 +60,73 @@ async fn rapidoc() -> impl Responder {
     )
 }
 
-fn config_static(app: &mut ServiceConfig) {
+fn config_app(app: &mut ServiceConfig) {
     if cfg!(debug_assertions) {
         app.service(af::Files::new("/static", "static"));
         app.service(af::Files::new("/admin-assets", "admin/dist/admin-assets"));
         app.service(af::Files::new("/record", Config::RECORD_DIR));
     }
+
+    app.service(openapi).service(rapidoc);
+    app.service(
+        scope("/api")
+            .service(api::user::router())
+            .service(api::verification::verification)
+            .service(
+                scope("/admin")
+                    .service(admin::product::router())
+                    .service(admin::product_tag::router()),
+            ),
+    );
+    app.service(web::router());
 }
 
+#[cfg(unix)]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenvy::from_path(".env").expect("could not read .env file");
     pretty_env_logger::init();
 
     let _ = std::fs::create_dir(Config::RECORD_DIR);
-
-    let pool = SqlitePool::connect(
-        &env::var("DATABASE_URL").expect("DATABASE_URL was not found in env"),
-    )
-    .await
-    .expect("sqlite pool initialization failed");
+    let pool = SqlitePool::connect("sqlite://main.db").await.unwrap();
 
     let server = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::new("%s %r %Ts"))
             .app_data(Data::new(AppState { sql: pool.clone() }))
-            .configure(config_static)
-            .service(openapi)
-            .service(rapidoc)
-            .service(
-                scope("/api")
-                    .service(api::user::router())
-                    .service(api::verification::verification)
-                    .service(
-                        scope("/admin")
-                            .service(admin::product::router())
-                            .service(admin::product_tag::router()),
-                    ),
-            )
-            .service(web::router())
+            .configure(config_app)
     });
 
-    let server = if !cfg!(debug_assertions) && cfg!(unix) {
+    let server = if cfg!(debug_assertions) {
+        server.bind(("127.0.0.1", 7000)).unwrap()
+    } else {
         use std::os::unix::fs::PermissionsExt;
         const PATH: &'static str = "/usr/share/nginx/sockets/heydari.sock";
-        let s = server.bind_uds(PATH).expect("could not bind the server");
+        let server = server.bind_uds(PATH).unwrap();
         std::fs::set_permissions(PATH, std::fs::Permissions::from_mode(0o777))?;
-        s
-    } else {
-        server.bind(("127.0.0.1", 7000)).unwrap()
+        server
     };
 
     server.run().await
+}
+
+#[cfg(windows)]
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    dotenvy::from_path(".env").expect("could not read .env file");
+    pretty_env_logger::init();
+
+    let _ = std::fs::create_dir(Config::RECORD_DIR);
+    let pool = SqlitePool::connect("sqlite://main.db").await.unwrap();
+
+    HttpServer::new(move || {
+        App::new()
+            .wrap(middleware::Logger::new("%s %r %Ts"))
+            .app_data(Data::new(AppState { sql: pool.clone() }))
+            .configure(config_app)
+    })
+    .bind(("127.0.0.1", 7000))
+    .expect("server bind")
+    .run()
+    .await
 }
