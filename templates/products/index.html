@@ -137,12 +137,12 @@
 
             </div>
             <div class="drop-links title_small">
-               <div class="drop-link">
+               <a href="/products?sort=desc" class="drop-link">
                   جدید ترین
-               </div>
-               <div class="drop-link">
+               </a>
+               <a href="/products" class="drop-link">
                   قدیمی ترین
-               </div>
+               </a>
             </div>
          </div>
       </div>
@@ -175,13 +175,13 @@
                </a>
 
                {% if p.tag_leg in tags %}
-               <a class="tag" href="/products?leg={{ p.tag_leg }}">
+               <a class="tag" href="/products?kind={{ p.kind }}&leg={{ p.tag_leg }}">
                   {{ tags[p.tag_leg].name }}
                </a>
                {% endif %}
 
                {% if p.tag_bed in tags %}
-               <a class="tag" href="/products?leg={{ p.tag_bed }}">
+               <a class="tag" href="/products?kind={{ p.kind }}&bed={{ p.tag_bed }}">
                   {{ tags[p.tag_bed].name }}
                </a>
                {% endif %}
