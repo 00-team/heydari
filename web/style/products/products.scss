@@ -290,20 +290,6 @@
                         transition: 0.5s ease;
                         overflow: hidden;
 
-                        &::before {
-                            content: '';
-                            width: 100%;
-                            height: 3.5em;
-
-                            position: absolute;
-                            top: var(--top, 0);
-
-                            background-color: var(--ten-percent);
-
-                            will-change: top;
-                            transition: 0.3s ease;
-                        }
-
                         .drop-link {
                             width: 100%;
                             height: 3.5em;
@@ -425,20 +411,6 @@
                     transition: 0.5s ease;
                     overflow: hidden;
 
-                    &::before {
-                        content: '';
-                        width: 100%;
-                        height: 3.5em;
-
-                        position: absolute;
-                        top: var(--top, 0);
-
-                        background-color: var(--sixty-percent);
-
-                        will-change: top;
-                        transition: 0.3s ease;
-                    }
-
                     .drop-link {
                         width: 100%;
                         height: 3.5em;
@@ -471,7 +443,7 @@
                         }
 
                         &:hover {
-                            background-color: var(--ten-percent);
+                            background-color: var(--sixty-percent);
                             color: white;
                         }
                     }
