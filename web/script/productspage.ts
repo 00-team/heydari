@@ -40,7 +40,6 @@ input.addEventListener('input', e => {
         })
     }
 })
-
 // end search
 
 function toggleDropdown(dropdown: HTMLElement) {
@@ -128,6 +127,11 @@ function getFilters() {
             updateDisable()
         }
     }
+    if (leg) {
+        let dropdown = document.querySelector<HTMLElement>('.dropdown#leg')
+        let activeSpan =
+            dropdown.querySelector<HTMLElement>('.drop-active-text')
+    }
 }
 
 function setTags() {
@@ -135,14 +139,18 @@ function setTags() {
 
     let activeSpan = dropdown.querySelector<HTMLElement>('.drop-active-text')
 
-    console.log(activeSpan.innerText)
-
     if (activeSpan.innerText === 'صندلی') {
-        chairTags.forEach((tag: HTMLElement) => (tag.style.display = 'flex'))
-        tableTags.forEach((tag: HTMLElement) => (tag.style.display = 'none'))
+        chairTags.forEach((tag: HTMLElement) => (tag.className += ' show'))
+        tableTags.forEach(
+            (tag: HTMLElement) =>
+                (tag.className = tag.className.replace(' show', ''))
+        )
     } else if (activeSpan.innerText === 'میز') {
-        chairTags.forEach((tag: HTMLElement) => (tag.style.display = 'none'))
-        tableTags.forEach((tag: HTMLElement) => (tag.style.display = 'flex'))
+        tableTags.forEach((tag: HTMLElement) => (tag.className += ' show'))
+        chairTags.forEach(
+            (tag: HTMLElement) =>
+                (tag.className = tag.className.replace(' show', ''))
+        )
     }
 }
 
@@ -173,3 +181,4 @@ function updateDisable() {
 
 applyFilters()
 getFilters()
+setTags()

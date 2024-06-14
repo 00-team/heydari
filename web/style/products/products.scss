@@ -290,6 +290,12 @@
                         transition: 0.5s ease;
                         overflow: hidden;
 
+                        display: none;
+
+                        &.show {
+                            display: flex;
+                        }
+
                         .drop-link {
                             width: 100%;
                             height: 3.5em;
@@ -428,6 +434,12 @@
                     transform: translateY(-25%);
                     transition: 0.5s ease;
                     overflow: hidden;
+
+                    display: none;
+
+                    &.show {
+                        display: flex;
+                    }
 
                     .drop-link {
                         width: 100%;
