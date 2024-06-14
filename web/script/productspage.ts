@@ -5,87 +5,9 @@ const allDropDowns = document.querySelectorAll('.dropdown')
 const chairTags = document.querySelectorAll('.drop-links.chair-links')
 const tableTags = document.querySelectorAll('.drop-links.table-links')
 
-function toggleDropdown(dropdown: HTMLElement) {
-    if (dropdown.classList.contains('disable')) {
-        return
-    }
+const params = new URLSearchParams(window.location.search)
 
-    if (dropdown.classList.contains('show')) {
-        dropdown.className = dropdown.className.replace(' show', '')
-    } else {
-        dropdown.className += ' show'
-    }
-
-    const links = dropdown.querySelectorAll('.drop-link')
-    const active = dropdown.querySelector<HTMLElement>('.drop-active-text')
-
-    links.forEach((link: HTMLElement) => {
-        link.addEventListener('click', () => {
-            let newOrder = link.innerText
-
-            active.innerText = newOrder
-
-            const removeDisable = (id: string) => {
-                let drop = document.querySelector(`.dropdown#${id}`)
-                drop.className = drop.className.replace(' disable', '')
-            }
-
-            if (link.id === 'chair') {
-                chairTags.forEach(
-                    (tag: HTMLElement) => (tag.style.display = 'flex')
-                )
-                tableTags.forEach(
-                    (tag: HTMLElement) => (tag.style.display = 'none')
-                )
-                dropdown.style.setProperty('--top', `${0}em`)
-            } else if (link.id === 'table') {
-                chairTags.forEach(
-                    (tag: HTMLElement) => (tag.style.display = 'none')
-                )
-                tableTags.forEach(
-                    (tag: HTMLElement) => (tag.style.display = 'flex')
-                )
-                dropdown.style.setProperty('--top', `${0}em`)
-            }
-
-            if (dropdown.id === 'kind') {
-                removeDisable('paye')
-                removeDisable('kafi')
-            }
-
-            let tagName = link.getAttribute('data-name')
-            let tagId = link.getAttribute('data-id')
-
-            console.log(tagName, tagId)
-
-            insertParam(tagName, tagId)
-
-            // if (dropdown.id === 'paye') {
-            //     removeDisable('kafi')
-            // }
-
-            // if (dropdown.id === 'kafi') {
-            //     insertParam('kafi', index)
-            // }
-            // if (dropdown.id === 'paye') {
-            //     insertParam('paye', index)
-            // }
-            // if (dropdown.id === 'kind') {
-            //     insertParam('kind', index)
-            // }
-            // if (dropdown.id === 'order') {
-            //     insertParam('order', index)
-            // }
-
-            // insertParam('test', 'abbbasre')
-        })
-    })
-}
-
-allDropDowns.forEach((dropdown: HTMLElement) => {
-    dropdown.addEventListener('click', () => toggleDropdown(dropdown))
-})
-
+// search product
 const input = document.querySelector<HTMLInputElement>('.search-inp')
 const productCards = document.querySelectorAll('.product-card')
 
@@ -118,42 +40,111 @@ input.addEventListener('input', e => {
     }
 })
 
-function setLinks() {
-    const params = new URLSearchParams(location.search)
+// end search
 
+function toggleDropdown(dropdown: HTMLElement) {
+    if (dropdown.classList.contains('disable')) {
+        return
+    }
+
+    if (dropdown.classList.contains('show')) {
+        dropdown.className = dropdown.className.replace(' show', '')
+    } else {
+        dropdown.className += ' show'
+    }
+
+    const links = dropdown.querySelectorAll('.drop-link')
+    const active = dropdown.querySelector<HTMLElement>('.drop-active-text')
+
+    links.forEach((link: HTMLElement) => {
+        link.addEventListener('click', () => {
+            let newOrder = link.innerText
+
+            active.innerText = newOrder
+
+            setTags()
+
+            if (dropdown.id === 'kind') {
+                removeDisable('leg')
+                removeDisable('bed')
+            }
+        })
+    })
+}
+
+function applyFilters() {
+    const links = document.querySelectorAll('.drop-link')
+
+    links.forEach((link: HTMLElement) => {
+        link.addEventListener('click', () => {
+            let elemTag = link.getAttribute('data-name')
+            let elemId = link.getAttribute('data-id')
+
+            console.log(elemTag, elemId)
+            insertParam(elemTag, elemId)
+        })
+    })
+}
+
+allDropDowns.forEach((dropdown: HTMLElement) => {
+    dropdown.addEventListener('click', () => toggleDropdown(dropdown))
+})
+
+function getFilters() {
     if (params.size <= 0) return
 
     let kind = params.get('kind')
+    let bed = params.get('bed')
+    let leg = params.get('leg')
+    let sort = params.get('sort')
 
-    console.log(params.size)
-}
+    if (kind) {
+        let dropdown = document.querySelector<HTMLElement>('.dropdown#kind')
+        let activeSpan =
+            dropdown.querySelector<HTMLElement>('.drop-active-text')
 
-setLinks()
+        let links = dropdown.querySelector<HTMLElement>('.drop-links')
 
-function insertParam(key, value) {
-    key = encodeURIComponent(key)
-    value = encodeURIComponent(value)
+        let activeLink = links.querySelector<HTMLElement>(`.drop-link#${kind}`)
 
-    // kvp looks like ['key1=value1', 'key2=value2', ...]
-    var kvp = document.location.search.substr(1).split('&')
-    let i = 0
-
-    for (; i < kvp.length; i++) {
-        if (kvp[i].startsWith(key + '=')) {
-            let pair = kvp[i].split('=')
-            pair[1] = value
-            kvp[i] = pair.join('=')
-            break
+        if (activeLink) {
+            activeSpan.innerText = activeLink.innerHTML.replace(/\s/g, '')
+            removeDisable('leg')
+            removeDisable('bed')
         }
     }
-
-    if (i >= kvp.length) {
-        kvp[kvp.length] = [key, value].join('=')
-    }
-
-    // can return this or...
-    let params = kvp.join('&')
-
-    // reload page with new params
-    // document.location.search = params
 }
+
+function setTags() {
+    let dropdown = document.querySelector<HTMLElement>('.dropdown#kind')
+
+    let activeSpan = dropdown.querySelector<HTMLElement>('.drop-active-text')
+
+    console.log(activeSpan.innerText)
+
+    if (activeSpan.innerText === 'صندلی') {
+        chairTags.forEach((tag: HTMLElement) => (tag.style.display = 'flex'))
+        tableTags.forEach((tag: HTMLElement) => (tag.style.display = 'none'))
+    } else if (activeSpan.innerText === 'میز') {
+        chairTags.forEach((tag: HTMLElement) => (tag.style.display = 'none'))
+        tableTags.forEach((tag: HTMLElement) => (tag.style.display = 'flex'))
+    }
+}
+
+function insertParam(name, value) {
+    params.set(name, value)
+    window.history.replaceState(
+        {},
+        '',
+        decodeURIComponent(`${window.location.pathname}?${params}`)
+    )
+    location.reload()
+}
+
+function removeDisable(id: string) {
+    let drop = document.querySelector(`.dropdown#${id}`)
+    drop.className = drop.className.replace(' disable', '')
+}
+
+applyFilters()
+getFilters()
