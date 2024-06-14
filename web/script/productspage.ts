@@ -2,6 +2,9 @@ export {}
 
 const allDropDowns = document.querySelectorAll('.dropdown')
 
+const chairTags = document.querySelectorAll('.drop-links.chair-links')
+const tableTags = document.querySelectorAll('.drop-links.table-links')
+
 function toggleDropdown(dropdown: HTMLElement) {
     if (dropdown.classList.contains('disable')) {
         return
@@ -30,12 +33,29 @@ function toggleDropdown(dropdown: HTMLElement) {
                 drop.className = drop.className.replace(' disable', '')
             }
 
+            if (link.id === 'chair') {
+                chairTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'flex')
+                )
+                tableTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'none')
+                )
+            } else if (link.id === 'table') {
+                chairTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'none')
+                )
+                tableTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'flex')
+                )
+            }
+
             if (dropdown.id === 'kind') {
                 removeDisable('paye')
-            }
-            if (dropdown.id === 'paye') {
                 removeDisable('kafi')
             }
+            // if (dropdown.id === 'paye') {
+            //     removeDisable('kafi')
+            // }
 
             // if (dropdown.id === 'kafi') {
             //     insertParam('kafi', index)
