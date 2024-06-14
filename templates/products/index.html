@@ -76,7 +76,7 @@
                <div class="drop-links chair-links title_small">
                   {% for k, t in tags | items %}
                   {% if t.part == "leg" and t.kind == "chair" %}
-                  <div class="drop-link">
+                  <div class="drop-link" data-name="{{ t.part }}" data-id="{{ t.id }}">
                      {{ t.name }}
                   </div>
                   {% endif %}
@@ -85,7 +85,7 @@
                <div class="drop-links table-links title_small">
                   {% for k, t in tags | items %}
                   {% if t.part == "leg" and t.kind == "table" %}
-                  <div class="drop-link">
+                  <div class="drop-link" data-name="{{ t.part }}" data-id="{{ t.id }}">
                      {{ t.name }}
                   </div>
                   {% endif %}
@@ -114,7 +114,7 @@
                <div class="drop-links table-links title_small">
                   {% for k, t in tags | items %}
                   {% if t.part == "bed" and t.kind == "table" %}
-                  <div class="drop-link">
+                  <div class="drop-link" data-name="{{ t.part }}" data-id="{{ t.id }}">
                      {{ t.name }}
                   </div>
                   {% endif %}
@@ -123,7 +123,7 @@
                <div class="drop-links chair-links title_small">
                   {% for k, t in tags | items %}
                   {% if t.part == "bed" and t.kind == "chair" %}
-                  <div class="drop-link">
+                  <div class="drop-link" data-name="{{ t.part }}" data-id="{{ t.id }}">
                      {{ t.name }}
                   </div>
                   {% endif %}
