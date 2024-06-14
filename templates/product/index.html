@@ -56,19 +56,19 @@
         </aside>
         <aside class="product-img">
             <div class="main-wrapper">
-                <img src="/record/pp:{{ product.id }}:{{ product.photos[0] }}" alt="" class="main-img">
+                <img src="/record/pp-{{ product.id }}-{{ product.photos[0] }}" alt="" class="main-img">
             </div>
             <div class="others">
                 {% for p in product.photos %}
                 <div class="other">
-                    <img src="/record/pp:{{ product.id }}:{{ p }}" alt="" class="other-img">
+                    <img src="/record/pp-{{ product.id }}-{{ p }}" alt="" class="other-img">
                 </div>
                 {% endfor %}
             </div>
         </aside>
     </section>
     <section class="product-banner">
-        <img src="/record/pt:{{ product.id }}:{{ product.thumbnail }}" class="banner-img" alt="">
+        <img src="/record/pt-{{ product.id }}-{{ product.thumbnail }}" class="banner-img" alt="">
     </section>
     <section class="products-related">
         <h4 class="title_hero">
@@ -91,7 +91,7 @@
                     </div>
                 </div>
 
-                <img src="/record/pp:{{ p.id }}:{{ p.photos[0] }}" alt="">
+                <img src="/record/pp-{{ p.id }}-{{ p.photos[0] }}" alt="">
 
                 <div class="product-title detail title_small">
                     {{ p.name }}

@@ -56,6 +56,8 @@ function toggleDropdown(dropdown: HTMLElement) {
             let tagName = link.getAttribute('data-name')
             let tagId = link.getAttribute('data-id')
 
+            console.log(tagName, tagId)
+
             insertParam(tagName, tagId)
 
             // if (dropdown.id === 'paye') {
@@ -116,6 +118,18 @@ input.addEventListener('input', e => {
     }
 })
 
+function setLinks() {
+    const params = new URLSearchParams(location.search)
+
+    if (params.size <= 0) return
+
+    let kind = params.get('kind')
+
+    console.log(params.size)
+}
+
+setLinks()
+
 function insertParam(key, value) {
     key = encodeURIComponent(key)
     value = encodeURIComponent(value)
@@ -141,5 +155,5 @@ function insertParam(key, value) {
     let params = kvp.join('&')
 
     // reload page with new params
-    document.location.search = params
+    // document.location.search = params
 }
