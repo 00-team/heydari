@@ -16,9 +16,12 @@ input.addEventListener('input', e => {
     // @ts-ignore
     let value = e.currentTarget.value
 
+    console.log(value)
+
     if (value) {
         productCards.forEach((card: HTMLElement) => {
-            let title = card.querySelector<HTMLElement>('figcaption').innerText
+            let title =
+                card.querySelector<HTMLElement>('.product-title').innerText
             let code =
                 card.querySelector<HTMLElement>('.product-code').innerText
 
@@ -131,6 +134,10 @@ function getFilters() {
         let dropdown = document.querySelector<HTMLElement>('.dropdown#leg')
         let activeSpan =
             dropdown.querySelector<HTMLElement>('.drop-active-text')
+
+        let links = dropdown.querySelectorAll('.drop-links')
+
+        console.log(links)
     }
 }
 
@@ -180,5 +187,5 @@ function updateDisable() {
 }
 
 applyFilters()
-getFilters()
 setTags()
+getFilters()
