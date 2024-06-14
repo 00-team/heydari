@@ -19,10 +19,17 @@ function toggleDropdown(dropdown: HTMLElement) {
     const links = dropdown.querySelectorAll('.drop-link')
     const active = dropdown.querySelector<HTMLElement>('.drop-active-text')
 
-    links.forEach((link: HTMLElement, index) => {
-        link.addEventListener('mouseover', () => {
-            dropdown.style.setProperty('--top', `${3.5 * index}em`)
-        })
+    if (links.length <= 1) {
+        dropdown.style.setProperty('--top', `${0}em`)
+    } else {
+        links.forEach((link: HTMLElement, index) =>
+            link.addEventListener('mouseover', () => {
+                dropdown.style.setProperty('--top', `${3.5 * index}em`)
+            })
+        )
+    }
+
+    links.forEach((link: HTMLElement) => {
         link.addEventListener('click', () => {
             let newOrder = link.innerText
 
