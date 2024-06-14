@@ -46,10 +46,10 @@
 
                </div>
                <div class="drop-links title_small">
-                  <div class="drop-link">
+                  <div class="drop-link" id="table">
                      میز
                   </div>
-                  <div class="drop-link">
+                  <div class="drop-link" id="chair">
                      صندلی
                   </div>
                </div>
@@ -73,9 +73,18 @@
                   </svg>
 
                </div>
-               <div class="drop-links title_small">
+               <div class="drop-links chair-links title_small">
                   {% for k, t in tags | items %}
-                  {% if t.part == "leg" %}
+                  {% if t.part == "leg" and t.kind == "chair" %}
+                  <div class="drop-link">
+                     {{ t.name }}
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+               </div>
+               <div class="drop-links table-links title_small">
+                  {% for k, t in tags | items %}
+                  {% if t.part == "leg" and t.kind == "table" %}
                   <div class="drop-link">
                      {{ t.name }}
                   </div>
@@ -102,9 +111,18 @@
                   </svg>
 
                </div>
-               <div class="drop-links title_small">
+               <div class="drop-links table-links title_small">
                   {% for k, t in tags | items %}
-                  {% if t.part == "bed" %}
+                  {% if t.part == "bed" and t.kind == "table" %}
+                  <div class="drop-link">
+                     {{ t.name }}
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+               </div>
+               <div class="drop-links chair-links title_small">
+                  {% for k, t in tags | items %}
+                  {% if t.part == "bed" and t.kind == "chair" %}
                   <div class="drop-link">
                      {{ t.name }}
                   </div>
