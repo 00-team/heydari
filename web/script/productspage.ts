@@ -64,11 +64,7 @@ function toggleDropdown(dropdown: HTMLElement) {
             active.innerText = newOrder
 
             setTags()
-
-            if (dropdown.id === 'kind') {
-                removeDisable('leg')
-                removeDisable('bed')
-            }
+            updateDisable()
         })
     })
 }
@@ -129,8 +125,7 @@ function getFilters() {
 
         if (activeLink) {
             activeSpan.innerText = activeLink.innerHTML.replace(/\s/g, '')
-            removeDisable('leg')
-            removeDisable('bed')
+            updateDisable()
         }
     }
 }
@@ -164,6 +159,16 @@ function insertParam(name, value) {
 function removeDisable(id: string) {
     let drop = document.querySelector(`.dropdown#${id}`)
     drop.className = drop.className.replace(' disable', '')
+}
+
+function updateDisable() {
+    let dropdown = document.querySelector<HTMLElement>('.dropdown#kind')
+    let span = dropdown.querySelector<HTMLElement>('.drop-active-text')
+
+    if (span.innerText !== '---') {
+        removeDisable('leg')
+        removeDisable('bed')
+    }
 }
 
 applyFilters()
