@@ -2,6 +2,9 @@ export {}
 
 const allDropDowns = document.querySelectorAll('.dropdown')
 
+const chairTags = document.querySelectorAll('.drop-links.chair-links')
+const tableTags = document.querySelectorAll('.drop-links.table-links')
+
 function toggleDropdown(dropdown: HTMLElement) {
     if (dropdown.classList.contains('disable')) {
         return
@@ -16,10 +19,7 @@ function toggleDropdown(dropdown: HTMLElement) {
     const links = dropdown.querySelectorAll('.drop-link')
     const active = dropdown.querySelector<HTMLElement>('.drop-active-text')
 
-    links.forEach((link: HTMLElement, index) => {
-        link.addEventListener('mouseover', () => {
-            dropdown.style.setProperty('--top', `${3.5 * index}em`)
-        })
+    links.forEach((link: HTMLElement) => {
         link.addEventListener('click', () => {
             let newOrder = link.innerText
 
@@ -30,12 +30,37 @@ function toggleDropdown(dropdown: HTMLElement) {
                 drop.className = drop.className.replace(' disable', '')
             }
 
+            if (link.id === 'chair') {
+                chairTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'flex')
+                )
+                tableTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'none')
+                )
+                dropdown.style.setProperty('--top', `${0}em`)
+            } else if (link.id === 'table') {
+                chairTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'none')
+                )
+                tableTags.forEach(
+                    (tag: HTMLElement) => (tag.style.display = 'flex')
+                )
+                dropdown.style.setProperty('--top', `${0}em`)
+            }
+
             if (dropdown.id === 'kind') {
                 removeDisable('paye')
-            }
-            if (dropdown.id === 'paye') {
                 removeDisable('kafi')
             }
+
+            let tagName = link.getAttribute('data-name')
+            let tagId = link.getAttribute('data-id')
+
+            insertParam(tagName, tagId)
+
+            // if (dropdown.id === 'paye') {
+            //     removeDisable('kafi')
+            // }
 
             // if (dropdown.id === 'kafi') {
             //     insertParam('kafi', index)

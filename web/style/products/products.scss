@@ -290,20 +290,6 @@
                         transition: 0.5s ease;
                         overflow: hidden;
 
-                        &::before {
-                            content: '';
-                            width: 100%;
-                            height: 3.5em;
-
-                            position: absolute;
-                            top: var(--top, 0);
-
-                            background-color: var(--ten-percent);
-
-                            will-change: top;
-                            transition: 0.3s ease;
-                        }
-
                         .drop-link {
                             width: 100%;
                             height: 3.5em;
@@ -342,6 +328,7 @@
                             }
 
                             &:hover {
+                                background-color: var(--ten-percent);
                                 color: white;
                             }
                         }
@@ -424,20 +411,6 @@
                     transition: 0.5s ease;
                     overflow: hidden;
 
-                    &::before {
-                        content: '';
-                        width: 100%;
-                        height: 3.5em;
-
-                        position: absolute;
-                        top: var(--top, 0);
-
-                        background-color: var(--sixty-percent);
-
-                        will-change: top;
-                        transition: 0.3s ease;
-                    }
-
                     .drop-link {
                         width: 100%;
                         height: 3.5em;
@@ -470,6 +443,7 @@
                         }
 
                         &:hover {
+                            background-color: var(--sixty-percent);
                             color: white;
                         }
                     }
@@ -519,45 +493,52 @@
                 transform: translateY(-1rem);
             }
 
-            .head {
-                position: absolute;
-                top: 0;
-
+            .card-wrapper {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                justify-content: center;
 
+                height: 80%;
                 width: 100%;
 
-                .product-category,
-                .product-code {
-                    padding: 0.5em;
-                    background-color: var(--ten-percent);
-                    color: white;
+                .head {
+                    position: absolute;
+                    top: 0;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    width: 100%;
+
+                    .product-category,
+                    .product-code {
+                        padding: 0.5em;
+                        background-color: var(--ten-percent);
+                        color: white;
+                    }
+                    .product-category {
+                        border-bottom-left-radius: 0.5rem;
+                    }
+                    .product-code {
+                        border-bottom-left-radius: 0.5rem;
+                    }
                 }
-                .product-category {
-                    border-bottom-left-radius: 0.5rem;
-                }
-                .product-code {
-                    border-bottom-left-radius: 0.5rem;
+
+                img.card-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
                 }
             }
 
-            img.card-img {
-                height: 85%;
-                max-width: 100%;
-                flex: 1;
-                object-fit: cover;
-            }
-
-            figcaption.card-caption {
+            .card-caption {
                 position: absolute;
                 bottom: 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 1em;
                 width: 100%;
                 background: linear-gradient(
                     0deg,
@@ -565,7 +546,15 @@
                     transparent
                 );
                 backdrop-filter: blur(1px);
-                padding: 2em 2em 1em 2em;
+                // padding: 2em 2em 1em 2em;
+
+                .product-title {
+                    width: 100%;
+                    padding: 1em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
 
                 .product-tags {
                     width: 100%;
@@ -574,6 +563,8 @@
                     justify-content: center;
                     gap: 1em;
                     flex-wrap: wrap;
+
+                    padding: 1em;
 
                     .tag {
                         display: flex;
