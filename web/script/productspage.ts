@@ -1,169 +1,8 @@
-export {}
+const params = new URLSearchParams(location.search)
 
-const allDropDowns = document.querySelectorAll('.dropdown')
-const clearFilterElem = document.querySelectorAll('.clear-filter')
-
-const chairTags = document.querySelectorAll('.drop-links.chair-links')
-const tableTags = document.querySelectorAll('.drop-links.table-links')
-
-const params = new URLSearchParams(window.location.search)
-
-// search product
-const input = document.querySelector<HTMLInputElement>('.search-inp')
-const productCards = document.querySelectorAll('.product-card')
-
-input.addEventListener('input', e => {
-    // @ts-ignore
-    let value = e.currentTarget.value
-
-    console.log(value)
-
-    if (value) {
-        productCards.forEach((card: HTMLElement) => {
-            let title =
-                card.querySelector<HTMLElement>('.product-title').innerText
-            let code =
-                card.querySelector<HTMLElement>('.product-code').innerText
-
-            let hasTitle = title.includes(value)
-            let hasCode = code.includes(value)
-
-            if (hasTitle || hasCode) {
-                card.className = 'product-card'
-                return
-            }
-
-            if (card.classList.contains('hide')) return
-
-            card.className = 'product-card hide'
-        })
-    } else {
-        productCards.forEach((card: HTMLElement) => {
-            card.className = card.className.replace(' hide', '')
-        })
-    }
-})
-// end search
-
-function toggleDropdown(dropdown: HTMLElement) {
-    if (dropdown.classList.contains('disable')) {
-        return
-    }
-
-    if (dropdown.classList.contains('show')) {
-        dropdown.className = dropdown.className.replace(' show', '')
-    } else {
-        dropdown.className += ' show'
-    }
-
-    const links = dropdown.querySelectorAll('.drop-link')
-    const active = dropdown.querySelector<HTMLElement>('.drop-active-text')
-
-    links.forEach((link: HTMLElement) => {
-        link.addEventListener('click', () => {
-            let newOrder = link.innerText
-
-            active.innerText = newOrder
-
-            setTags()
-            updateDisable()
-        })
-    })
-}
-
-// clear filters
-clearFilterElem.forEach((clear: HTMLElement) => {
-    clear.addEventListener('click', () => {
-        let dropdown = clear.previousElementSibling
-
-        let activeSpan =
-            dropdown.querySelector<HTMLElement>('.drop-active-text')
-
-        if (activeSpan.innerText === '---') return
-
-        activeSpan.innerText = '---'
-
-        params.delete(dropdown.id)
-
-        location.search = params.toString()
-    })
-})
-// end clear filters
-
-function applyFilters() {
-    const links = document.querySelectorAll('.drop-link')
-
-    links.forEach((link: HTMLElement) => {
-        link.addEventListener('click', () => {
-            let elemTag = link.getAttribute('data-name')
-            let elemId = link.getAttribute('data-id')
-
-            console.log(elemTag, elemId)
-            insertParam(elemTag, elemId)
-        })
-    })
-}
-
-allDropDowns.forEach((dropdown: HTMLElement) => {
-    dropdown.addEventListener('click', () => toggleDropdown(dropdown))
-})
-
-function getFilters() {
-    if (params.size <= 0) return
-
-    let kind = params.get('kind')
-    let bed = params.get('bed')
-    let leg = params.get('leg')
-    let sort = params.get('sort')
-
-    if (kind) {
-        let dropdown = document.querySelector<HTMLElement>('.dropdown#kind')
-        let activeSpan =
-            dropdown.querySelector<HTMLElement>('.drop-active-text')
-
-        let links = dropdown.querySelector<HTMLElement>('.drop-links')
-
-        let activeLink = links.querySelector<HTMLElement>(`.drop-link#${kind}`)
-
-        if (activeLink) {
-            activeSpan.innerText = activeLink.innerHTML.replace(/\s/g, '')
-            updateDisable()
-        }
-    }
-    if (leg) {
-        let dropdown = document.querySelector<HTMLElement>('.dropdown#leg')
-        let activeSpan =
-            dropdown.querySelector<HTMLElement>('.drop-active-text')
-
-        let links = dropdown.querySelectorAll('.drop-links')
-
-        console.log(links)
-    }
-}
-
-function setTags() {
-    let dropdown = document.querySelector<HTMLElement>('.dropdown#kind')
-
-    let activeSpan = dropdown.querySelector<HTMLElement>('.drop-active-text')
-
-    if (activeSpan.innerText === 'صندلی') {
-        chairTags.forEach((tag: HTMLElement) => (tag.className += ' show'))
-        tableTags.forEach(
-            (tag: HTMLElement) =>
-                (tag.className = tag.className.replace(' show', ''))
-        )
-    } else if (activeSpan.innerText === 'میز') {
-        tableTags.forEach((tag: HTMLElement) => (tag.className += ' show'))
-        chairTags.forEach(
-            (tag: HTMLElement) =>
-                (tag.className = tag.className.replace(' show', ''))
-        )
-    }
-}
-
-function insertParam(name, value) {
+function insert_param(name: string, value: string) {
     params.set(name, value)
-    window.history.replaceState(
+    history.replaceState(
         {},
         '',
         decodeURIComponent(`${window.location.pathname}?${params}`)
@@ -171,21 +10,112 @@ function insertParam(name, value) {
     location.reload()
 }
 
-function removeDisable(id: string) {
-    let drop = document.querySelector(`.dropdown#${id}`)
-    drop.className = drop.className.replace(' disable', '')
+function generic_clear(dd: HTMLDivElement) {
+    if (!dd.dataset.value) return
+    dd.querySelector<HTMLSpanElement>('.drop-active-text').innerText = '---'
+    params.delete(dd.dataset.id)
+    location.search = params.toString()
 }
 
-function updateDisable() {
-    let dropdown = document.querySelector<HTMLElement>('.dropdown#kind')
-    let span = dropdown.querySelector<HTMLElement>('.drop-active-text')
+function generic_load(dd: HTMLDivElement) {
+    let pal = params.get(dd.dataset.id)
+    if (!pal) return
 
-    if (span.innerText !== '---') {
-        removeDisable('leg')
-        removeDisable('bed')
+    let value = dd.querySelector<HTMLDivElement>(
+        `.drop-link[data-value="${pal}"]`
+    )
+    if (!value) return
+    dd.setAttribute('data-value', pal)
+
+    let active = dd.querySelector<HTMLSpanElement>('.drop-active-text')
+    active.innerText = value.dataset.name
+}
+
+function generic_select(dd: HTMLDivElement, dl: HTMLDivElement) {
+    dd.setAttribute('data-value', dl.dataset.value)
+    insert_param(dd.dataset.id, dl.dataset.value)
+}
+
+let dropdown_kind = document.getElementById('dropdown_kind')
+var dropdown_leg = document.getElementById('dropdown_leg')
+let dropdown_bed = document.getElementById('dropdown_bed')
+
+global.kind_clear = generic_clear
+global.kind_select = generic_select
+global.kind_load = (dd: HTMLDivElement) => {
+    let pal = params.get(dd.dataset.id)
+    if (!pal || !['chair', 'table'].includes(pal)) {
+        dropdown_leg.classList.add('disable')
+        dropdown_bed.classList.add('disable')
+        return
     }
+
+    dropdown_bed.classList.add(pal)
+    dropdown_leg.classList.add(pal)
+
+    dd.setAttribute('data-value', pal)
+    let active = dd.querySelector<HTMLSpanElement>('.drop-active-text')
+    active.innerText = pal == 'chair' ? 'صندلی' : 'میز'
 }
 
-applyFilters()
-setTags()
-getFilters()
+global.bed_clear = generic_clear
+global.bed_load = generic_load
+global.bed_select = generic_select
+
+global.leg_clear = generic_clear
+global.leg_load = generic_load
+global.leg_select = generic_select
+
+global.sort_clear = generic_clear
+global.sort_load = generic_load
+global.sort_select = generic_select
+
+document.addEventListener('DOMContentLoaded', () => {
+    document
+        .querySelectorAll<HTMLDivElement>('.filters .dropdown')
+        .forEach(el => {
+            let on_select = global[el.dataset.id + '_select']
+            let on_clear = global[el.dataset.id + '_clear']
+            let on_load = global[el.dataset.id + '_load']
+
+            on_load && on_load(el)
+
+            el.onclick = () => el.classList.toggle('show')
+
+            el.querySelectorAll<HTMLDivElement>('.drop-link').forEach(dl => {
+                dl.onclick = () => on_select(el, dl)
+            })
+
+            el.parentElement.querySelector<HTMLDivElement>(
+                '.clear-filter'
+            ).onclick = () => on_clear(el)
+        })
+})
+
+// search product
+const search_input = document.querySelector<HTMLInputElement>('.search-inp')
+const product_cards = document.querySelectorAll<HTMLDivElement>('.product-card')
+
+search_input.oninput = () => {
+    if (!search_input.value) {
+        product_cards.forEach(p => {
+            p.classList.remove('hide')
+        })
+        return
+    }
+
+    product_cards.forEach(p => {
+        let title = p.querySelector<HTMLElement>('.product-title').textContent
+        let code = p.querySelector<HTMLElement>('.product-code').textContent
+
+        let hasTitle = title.includes(search_input.value)
+        let hasCode = code.includes(search_input.value)
+
+        if (hasTitle || hasCode) {
+            p.classList.remove('hide')
+            return
+        }
+
+        p.classList.add('hide')
+    })
+}
