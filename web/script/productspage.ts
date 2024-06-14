@@ -1,6 +1,7 @@
 export {}
 
 const allDropDowns = document.querySelectorAll('.dropdown')
+const clearFilterElem = document.querySelectorAll('.clear-filter')
 
 const chairTags = document.querySelectorAll('.drop-links.chair-links')
 const tableTags = document.querySelectorAll('.drop-links.table-links')
@@ -71,6 +72,25 @@ function toggleDropdown(dropdown: HTMLElement) {
         })
     })
 }
+
+// clear filters
+clearFilterElem.forEach((clear: HTMLElement) => {
+    clear.addEventListener('click', () => {
+        let dropdown = clear.previousElementSibling
+
+        let activeSpan =
+            dropdown.querySelector<HTMLElement>('.drop-active-text')
+
+        if (activeSpan.innerText === '---') return
+
+        activeSpan.innerText = '---'
+
+        params.delete(dropdown.id)
+
+        location.search = params.toString()
+    })
+})
+// end clear filters
 
 function applyFilters() {
     const links = document.querySelectorAll('.drop-link')
