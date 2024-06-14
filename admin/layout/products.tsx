@@ -417,7 +417,7 @@ const Product: Component<ProductProps> = P => {
                                 draggable={false}
                                 loading='lazy'
                                 decoding='async'
-                                src={`/record/pt:${P.product.id}:${P.product.thumbnail}`}
+                                src={`/record/pt-${P.product.id}-${P.product.thumbnail}`}
                             />
                         </Show>
                     </div>
@@ -433,7 +433,7 @@ const Product: Component<ProductProps> = P => {
                                     draggable={false}
                                     loading='lazy'
                                     decoding='async'
-                                    src={`/record/pp:${P.product.id}:${s}`}
+                                    src={`/record/pp-${P.product.id}-${s}`}
                                 />
                             </div>
                         ))}

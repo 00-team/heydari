@@ -49,7 +49,7 @@ pub fn save_photo(path: &Path, name: &str, size: (u32, u32)) -> io::Result<()> {
     Ok(())
 }
 
-pub fn remove_photo(name: &str) {
+pub fn remove_record(name: &str) {
     let _ = std::fs::remove_file(Path::new(Config::RECORD_DIR).join(name));
 }
 

@@ -248,8 +248,7 @@ async fn product_thumbnail(
         s
     };
 
-    let filename = format!("pt:{}:{}", product.id, salt);
-
+    let filename = format!("pt-{}-{}", product.id, salt);
     utils::save_photo(form.photo.file.path(), &filename, (1920, 1080))?;
 
     sqlx::query_as! {
@@ -288,7 +287,7 @@ async fn product_photo_add(
     };
     product.photos.push(salt.clone());
 
-    let filename = format!("pp:{}:{}", product.id, salt);
+    let filename = format!("pp-{}-{}", product.id, salt);
     utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
 
     sqlx::query_as! {
@@ -319,7 +318,7 @@ async fn product_photo_del(
     }
 
     let salt = product.photos.remove(idx);
-    utils::remove_photo(&format!("pp:{}:{}", product.id, salt));
+    utils::remove_record(&format!("pp-{}-{}", product.id, salt));
 
     sqlx::query_as! {
         Product,
