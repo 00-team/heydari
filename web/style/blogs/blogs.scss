@@ -117,6 +117,13 @@ main.blogs-container {
                             width: 100%;
                         }
                     }
+
+                    &.publish {
+                        &:before {
+                            right: unset;
+                            left: 3px;
+                        }
+                    }
                 }
             }
 
