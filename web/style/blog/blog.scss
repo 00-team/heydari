@@ -27,6 +27,10 @@ main.blog-container {
             object-fit: cover;
 
             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+            @media screen and (max-width: 768px) {
+                max-height: 200px;
+            }
         }
 
         .blog-title {
@@ -38,7 +42,6 @@ main.blog-container {
             width: 100%;
 
             margin-top: 1em;
-            margin-bottom: 2em;
 
             opacity: 0;
             transform: translateY(100%);
@@ -77,6 +80,31 @@ main.blog-container {
             span {
                 padding: 0 1em;
                 white-space: nowrap;
+            }
+        }
+
+        .blog-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            column-gap: 1em;
+            row-gap: 1.5em;
+
+            width: 100%;
+
+            margin: 3em 0;
+
+            .option {
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+
+                .holder {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5em;
+                }
             }
         }
 
