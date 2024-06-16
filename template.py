@@ -77,5 +77,15 @@ async def blogs(request: Request):
     )
 
 
+@app.get("/blog", response_class=HTMLResponse, include_in_schema=False)
+async def blogs(request: Request):
+    return templates.TemplateResponse(
+        "blog/index.html",
+        {
+            "request": request,
+        },
+    )
+
+
 if __name__ == "__main__":
     uvicorn.run(app, port=7201)
