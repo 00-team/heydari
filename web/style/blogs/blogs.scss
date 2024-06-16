@@ -63,6 +63,63 @@ main.blogs-container {
                 margin-top: -2em;
             }
 
+            .details {
+                width: 90%;
+
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                flex-wrap: wrap;
+
+                .detail {
+                    padding: 1em;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.5em;
+
+                    position: relative;
+                    isolation: isolate;
+
+                    transition: 0.5s ease;
+
+                    @media screen and (max-width: 768px) {
+                        color: white;
+                    }
+                    svg {
+                        color: white;
+                    }
+                    &::before {
+                        content: '';
+
+                        position: absolute;
+                        right: 4px;
+                        height: 40px;
+                        width: 40px;
+
+                        border-radius: 100vmax;
+
+                        background-color: var(--ten-percent);
+
+                        z-index: -1;
+
+                        transition: 0.5s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+
+                        @media screen and (max-width: 768px) {
+                            width: 100%;
+                            height: 30px;
+                        }
+                    }
+
+                    &:hover {
+                        color: white;
+                        &::before {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+
             .card-caption {
                 text-align: center;
                 width: 90%;
