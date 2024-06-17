@@ -1,3 +1,4 @@
+use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
@@ -7,7 +8,7 @@ use utoipa::{OpenApi, ToSchema};
 
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
-use crate::models::user::{Admin, UpdatePhoto};
+use crate::models::user::Admin;
 use crate::models::{AppErr, AppErrBadRequest, ListInput, Response};
 use crate::utils::{self, CutOff};
 use crate::AppState;
@@ -17,7 +18,8 @@ use crate::AppState;
     tags((name = "admin::product")),
     paths(
         product_list, product_get, product_add, product_update, product_delete,
-        product_thumbnail, product_photo_add, product_photo_del
+        product_thumbnail_update, product_thumbnail_delete,
+        product_photo_add, product_photo_del
     ),
     components(schemas(
         Product, ProductTag, ProductKind, ProductPart,
@@ -214,12 +216,19 @@ async fn product_update(
 /// Product Delete
 #[delete("/{id}/")]
 async fn product_delete(
-    _: Admin, path: Path<(i64,)>, state: Data<AppState>,
+    _: Admin, product: Product, state: Data<AppState>,
 ) -> Result<HttpResponse, AppErr> {
-    sqlx::query_as! {
-        Product,
+    if let Some(t) = product.thumbnail {
+        utils::remove_record(&format!("pt-{}-{t}", product.id));
+    }
+
+    for p in product.photos.0 {
+        utils::remove_record(&format!("pp-{}-{p}", product.id));
+    }
+
+    sqlx::query! {
         "delete from products where id = ?",
-        path.0
+        product.id
     }
     .execute(&state.sql)
     .await?;
@@ -227,16 +236,23 @@ async fn product_delete(
     Ok(HttpResponse::Ok().finish())
 }
 
+#[derive(Debug, MultipartForm, ToSchema)]
+pub struct ProductPhoto {
+    #[schema(value_type = String, format = Binary)]
+    #[multipart(limit = "20MB")]
+    pub photo: TempFile,
+}
+
 #[utoipa::path(
     put,
     params(("id" = i64, Path,)),
-    request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
+    request_body(content = ProductPhoto, content_type = "multipart/form-data"),
     responses((status = 200, body = Product))
 )]
 /// Set Thumbnail
 #[put("/{id}/thumbnail/")]
-async fn product_thumbnail(
-    _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
+async fn product_thumbnail_update(
+    _: Admin, product: Product, form: MultipartForm<ProductPhoto>,
     state: Data<AppState>,
 ) -> Response<Product> {
     let mut product = product;
@@ -249,7 +265,35 @@ async fn product_thumbnail(
     };
 
     let filename = format!("pt-{}-{}", product.id, salt);
-    utils::save_photo(form.photo.file.path(), &filename, (1920, 1080))?;
+    utils::save_photo(form.photo.file.path(), &filename, (2200, 1000))?;
+
+    sqlx::query_as! {
+        Product,
+        "update products set thumbnail = ? where id = ?",
+        product.thumbnail, product.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(Json(product))
+}
+
+#[utoipa::path(
+    delete,
+    params(("id" = i64, Path,)),
+    responses((status = 200, body = Product))
+)]
+/// Delete Thumbnail
+#[delete("/{id}/thumbnail/")]
+async fn product_thumbnail_delete(
+    _: Admin, product: Product, state: Data<AppState>,
+) -> Response<Product> {
+    let mut product = product;
+
+    if let Some(t) = product.thumbnail {
+        utils::remove_record(&format!("pt-{}-{t}", product.id));
+        product.thumbnail = None;
+    }
 
     sqlx::query_as! {
         Product,
@@ -265,13 +309,13 @@ async fn product_thumbnail(
 #[utoipa::path(
     put,
     params(("id" = i64, Path,)),
-    request_body(content = UpdatePhoto, content_type = "multipart/form-data"),
+    request_body(content = ProductPhoto, content_type = "multipart/form-data"),
     responses((status = 200, body = Product))
 )]
 /// Add Photo
 #[put("/{id}/photos/")]
 async fn product_photo_add(
-    _: Admin, product: Product, form: MultipartForm<UpdatePhoto>,
+    _: Admin, product: Product, form: MultipartForm<ProductPhoto>,
     state: Data<AppState>,
 ) -> Response<Product> {
     if product.photos.len() >= 255 {
@@ -338,7 +382,8 @@ pub fn router() -> Scope {
         .service(product_add)
         .service(product_update)
         .service(product_delete)
-        .service(product_thumbnail)
+        .service(product_thumbnail_update)
+        .service(product_thumbnail_delete)
         .service(product_photo_add)
         .service(product_photo_del)
 }
