@@ -20,3 +20,55 @@ stickyButton.addEventListener('mouseleave', e => {
     stickyButton.style.transform = ''
     stickyButton.style.transition = '0.2s ease'
 })
+
+let htmlWord = document.querySelector<HTMLElement>('span.typer-word')
+const words = ['اداری', 'خانگی', 'استادیومی', 'رستورانی']
+let currentMessage = 0
+const DELETE_DELAY = 1000
+const START_DELAY = 250
+
+function typeMessage() {
+    if (!words[currentMessage]) {
+        currentMessage = 0
+    }
+
+    const currentStr = words[currentMessage]
+
+    currentStr.split('')
+
+    let part = ''
+
+    let currentLetter = 0
+
+    let int1 = setInterval(() => {
+        if (!currentStr[currentLetter]) {
+            currentMessage++
+
+            setTimeout(() => {
+                deleteMessage(part)
+            }, DELETE_DELAY)
+
+            clearInterval(int1)
+        } else {
+            part += currentStr[currentLetter++]
+
+            htmlWord.innerText = part
+        }
+    }, 100)
+}
+function deleteMessage(str) {
+    let int = setInterval(() => {
+        if (str.length === 0) {
+            setTimeout(() => {
+                typeMessage()
+            }, START_DELAY)
+            clearInterval(int)
+        } else {
+            str = str.split('')
+            str.pop()
+            str = str.join('')
+            htmlWord.innerHTML = str
+        }
+    }, 50)
+}
+typeMessage()
