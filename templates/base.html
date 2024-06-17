@@ -1,48 +1,47 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-QSYXB03JXX"
-        ></script>
-        <script>
-            window.dataLayer = window.dataLayer || []
-            function gtag() {
-                dataLayer.push(arguments)
-            }
-            gtag('js', new Date())
 
-            gtag('config', 'G-QSYXB03JXX')
-        </script>
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QSYXB03JXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || []
+        function gtag() {
+            dataLayer.push(arguments)
+        }
+        gtag('js', new Date())
 
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#f4a000" />
-        <meta name="description" content="صفحه اصلی صنایع تولیدی حیدری" />
+        gtag('config', 'G-QSYXB03JXX')
+    </script>
 
-        <title>صنایع تولیدی حیدری</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4a000" />
+    <meta name="description" content="صفحه اصلی صنایع تولیدی حیدری" />
 
-        <link rel="icon" href="/static/icon/favicon.ico" type="image/x-icon" />
+    <title>صنایع تولیدی حیدری</title>
 
-        <link href="/static/fonts/fonts.css" rel="stylesheet" />
+    <link rel="icon" href="/static/icon/favicon.ico" type="image/x-icon" />
 
-        <link href="/static/style/config/index.css" rel="stylesheet" />
+    <link href="/static/fonts/fonts.css" rel="stylesheet" />
 
-        <link href="/static/style/base.css" rel="stylesheet" />
+    <link href="/static/style/config/index.css" rel="stylesheet" />
 
-        <link href="/static/style/layout/nav.css" rel="stylesheet" />
-        <link href="/static/style/layout/footer.css" rel="stylesheet" />
+    <link href="/static/style/base.css" rel="stylesheet" />
 
-        <script src="/static/script/base.js" defer></script>
+    <link href="/static/style/layout/nav.css" rel="stylesheet" />
+    <link href="/static/style/layout/footer.css" rel="stylesheet" />
 
-        {% block header %} {% endblock header %}
-    </head>
+    <script src="/static/script/base.js" defer></script>
 
-    <body>
-        <div id="root" class="root">
-            {% include "layout/nav.html" %} {% block content %} {% endblock
-            content %} {% include "layout/footer.html" %}
-        </div>
-    </body>
+    {% block header %} {% endblock header %}
+</head>
+
+<body>
+    <div id="root" class="root">
+        {% include "layout/nav.html" %} {% block content %} {% endblock
+        content %} {% include "layout/footer.html" %}
+    </div>
+</body>
+
 </html>
