@@ -26,6 +26,7 @@ import {
     TableIcon,
     TrashIcon,
     WrenchIcon,
+    XIcon,
 } from 'icons'
 import { Confact, Select } from 'comps'
 
@@ -101,10 +102,18 @@ export default () => {
             </Show>
             <div class='product-list'>
                 <AddProduct update={() => fetch_products(0)} />
-                {state.products.map(p => (
+                {state.products.map((p, i) => (
                     <Product
                         product={p}
-                        update={() => fetch_products(state.page)}
+                        update={p => {
+                            if (!p) return fetch_products(state.page)
+
+                            setState(
+                                produce(s => {
+                                    s.products[i] = p
+                                })
+                            )
+                        }}
                     />
                 ))}
             </div>
@@ -132,7 +141,7 @@ export default () => {
 
 type ProductProps = {
     product: ProductModel
-    update(): void
+    update(product?: ProductModel): void
 }
 const Product: Component<ProductProps> = P => {
     type State = {
@@ -145,9 +154,8 @@ const Product: Component<ProductProps> = P => {
         tag_bed: number | null
     }
     const [state, setState] = createStore<State>({
-        loading: P.product.id == 14,
-        edit: P.product.id == 14,
-        // edit: false,
+        loading: false,
+        edit: false,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -179,7 +187,7 @@ const Product: Component<ProductProps> = P => {
             },
             onLoad(x) {
                 if (x.status != 200) return
-                P.update()
+                P.update(x.response)
             },
         })
     }
@@ -222,11 +230,22 @@ const Product: Component<ProductProps> = P => {
                     if (x.status != 200) return
 
                     setState({ loading: false })
-                    P.update()
+                    P.update(x.response)
                 },
             })
         }
         el.click()
+    }
+
+    function thumbnail_delete() {
+        httpx({
+            url: `/api/admin/products/${P.product.id}/thumbnail/`,
+            method: 'DELETE',
+            onLoad(x) {
+                if (x.status != 200) return
+                P.update(x.response)
+            },
+        })
     }
 
     function photo_add() {
@@ -413,12 +432,24 @@ const Product: Component<ProductProps> = P => {
                             when={P.product.thumbnail}
                             fallback={<ImageIcon />}
                         >
-                            <img
-                                draggable={false}
-                                loading='lazy'
-                                decoding='async'
-                                src={`/record/pt-${P.product.id}-${P.product.thumbnail}`}
-                            />
+                            <>
+                                <img
+                                    draggable={false}
+                                    loading='lazy'
+                                    decoding='async'
+                                    src={`/record/pt-${P.product.id}-${P.product.thumbnail}`}
+                                />
+                                <button
+                                    class='styled icon remove'
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        thumbnail_delete()
+                                    }}
+                                >
+                                    <XIcon />
+                                </button>
+                            </>
                         </Show>
                     </div>
                     <span>Photos:</span>
