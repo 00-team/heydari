@@ -5,16 +5,18 @@ section.hero-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
 
     padding: 3rem 4rem;
 
     background-color: var(--sixty-percent);
     background-image: linear-gradient(0deg, white, transparent 10%);
 
+    @media screen and (max-width: 1250px) {
+        padding-top: 15vh;
+    }
     @media screen and (max-width: 1024px) {
         padding: 1.5rem 2rem;
-        padding-top: 15vh;
     }
     @media screen and (max-width: 768px) {
         padding: 0.5rem 1rem;
@@ -26,10 +28,14 @@ section.hero-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        row-gap: calc(5vh + 20px);
-        flex-wrap: wrap;
+        // row-gap: calc(5vh + 20px);
+        // flex-wrap: wrap;
 
         color: black;
+
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+        }
 
         .hero-img {
             width: clamp(0px, 500px, 100%);
@@ -40,6 +46,10 @@ section.hero-container {
             translate: 50%;
 
             animation: hero-img-slidein 1s 5s ease-in-out forwards;
+
+            @media screen and (max-width: 1440px) {
+                width: clamp(0px, 350px, 100%);
+            }
 
             @keyframes hero-img-slidein {
                 from {
@@ -69,15 +79,66 @@ section.hero-container {
                 @media screen and (max-width: 1024px) {
                     min-height: 60px;
                 }
-                .word {
+                .typer-word {
                     color: black;
                     border-bottom: 1px solid black;
 
                     font-family: 'iranBold';
                 }
+                .cursor {
+                    display: inline-block;
+                    width: 2px;
+                    height: 1em;
+
+                    background-color: black;
+
+                    transform: scaleY(0);
+
+                    transform-origin: center center;
+
+                    animation: cursor-effect 5s ease-in-out forwards infinite;
+
+                    @keyframes cursor-effect {
+                        0% {
+                            transform: scaleY(0);
+                        }
+                        10% {
+                            transform: scaleY(1);
+                        }
+                        20% {
+                            transform: scaleY(0);
+                        }
+                        30% {
+                            transform: scaleY(1);
+                        }
+                        40% {
+                            transform: scaleY(0);
+                        }
+                        50% {
+                            transform: scaleY(1);
+                        }
+
+                        60% {
+                            transform: scaleY(0);
+                        }
+                        70% {
+                            transform: scaleY(1);
+                        }
+                        80% {
+                            transform: scaleY(0);
+                        }
+                        90% {
+                            transform: scaleY(1);
+                        }
+                        100% {
+                            transform: scaleY(0);
+                        }
+                    }
+                }
             }
 
             .detail {
+                line-height: 1.8em;
                 @media screen and (min-width: 768px) {
                     font-family: 'yekan';
                 }
@@ -88,6 +149,14 @@ section.hero-container {
                 gap: calc(3vw + 10px);
 
                 margin-top: 3vh;
+
+                @media screen and (max-width: 340px) {
+                    flex-direction: column;
+
+                    .hero-button {
+                        text-align: center;
+                    }
+                }
 
                 .hero-button {
                     border: 0;

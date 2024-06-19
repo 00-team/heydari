@@ -76,7 +76,7 @@
         </h4>
         <div class="related-wrapper title_small">
             {% for p in related %}
-            <a class="related">
+            <a class="related" href="/products/{{ p.id }}">
                 <div class="head title_smaller">
                     <div class="category">
                         {% if p.kind == "table" %}
