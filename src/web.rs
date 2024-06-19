@@ -120,8 +120,8 @@ async fn product(
 
     let related = sqlx::query_as! {
         Product,
-        "select * from products where kind = ? and (tag_leg = ? or tag_bed = ?) limit 4",
-        product.kind, product.tag_leg, product.tag_bed
+        "select * from products where id != ? and kind = ? and (tag_leg = ? or tag_bed = ?) limit 4",
+        product.id, product.kind, product.tag_leg, product.tag_bed
     }
     .fetch_all(&state.sql)
     .await?;
