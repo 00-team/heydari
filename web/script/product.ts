@@ -34,9 +34,12 @@ function magnify(img: HTMLImageElement, zoom: number) {
     img.addEventListener('touchmove', moveMagnifier)
 
     function moveMagnifier(e: MouseEvent | TouchEvent) {
-        let pos, x, y
         e.preventDefault()
+
+        let pos, x, y
+
         pos = getCursorPos(e)
+
         x = pos.x
         y = pos.y
 
