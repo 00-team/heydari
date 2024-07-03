@@ -545,5 +545,29 @@
                 backdrop-filter: blur(1px);
             }
         }
+
+        .pagination {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+
+            button {
+                border-radius: 100vmax;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--sixty-percent);
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+                color: white;
+
+                svg {
+                    margin: 10px;
+                }
+            }
+        }
     }
 }
