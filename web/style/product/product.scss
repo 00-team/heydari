@@ -296,6 +296,36 @@ main.product {
                 overflow: hidden;
 
                 z-index: 2;
+
+                img {
+                    object-fit: cover;
+                }
+
+                &:hover {
+                    .img-magnifier-glass {
+                        opacity: 1;
+
+                        transition-duration: 0.5s;
+                    }
+                }
+
+                .img-magnifier-glass {
+                    position: absolute;
+
+                    border: 3px solid #000;
+                    border-radius: 100vmax;
+                    cursor: none;
+
+                    width: 200px;
+                    aspect-ratio: 1;
+
+                    backdrop-filter: blur(3px);
+
+                    opacity: 0;
+
+                    transition: opacity 0.3s
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98);
+                }
             }
             .others {
                 flex: 1 0 0;
