@@ -6,10 +6,11 @@ const imgs = document.querySelectorAll('.other-img')
 imgs.forEach((img: HTMLImageElement) => {
     img.addEventListener('click', e => {
         main.src = img.src
+        updateMagnify()
     })
 })
 
-function magnify(img: HTMLImageElement, zoom) {
+function magnify(img: HTMLImageElement, zoom: number) {
     const parent = img.parentElement
     const glass = document.createElement('DIV')
     glass.setAttribute('class', 'img-magnifier-glass')
@@ -19,7 +20,7 @@ function magnify(img: HTMLImageElement, zoom) {
     const parentWidth = parent.offsetWidth
     const parentHeight = parent.offsetHeight
 
-    glass.style.backgroundImage = `url('${img.src}')`
+    glass.style.backgroundImage = `url('${main.src}')`
     glass.style.backgroundRepeat = 'no-repeat'
     glass.style.backgroundSize = `cover`
 
@@ -83,6 +84,12 @@ function magnify(img: HTMLImageElement, zoom) {
 
         return { x: x, y: y }
     }
+}
+
+function updateMagnify() {
+    let glass = document.querySelector<HTMLElement>('div.img-magnifier-glass')
+
+    glass.style.backgroundImage = `url('${main.src}')`
 }
 
 magnify(main, 3)
