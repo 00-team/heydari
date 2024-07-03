@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 
+{% block title %}
+<title>
+    {{ product.name }} صنایع تولیدی حیدری
+</title>
+
+<meta property="og:image" content="https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}">
+
+<meta name="description" content="{{ product.detail }} محصول {{ product.name }}" />
+
+{% endblock title %}
+
 {% block header %}
 
 <link href="/static/style/product/product.css" rel="stylesheet" />
