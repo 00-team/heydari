@@ -22,7 +22,7 @@ stickyButton.addEventListener('mouseleave', e => {
 })
 
 let htmlWord = document.querySelector<HTMLElement>('span.typer-word')
-const words = ['اداری', 'خانگی', 'استادیومی', 'رستورانی']
+const words = ['اداری', 'خانگی', 'استادیومی', 'رستورانی', 'ویلایی', 'آموزشی']
 let currentMessage = 0
 const DELETE_DELAY = 1000
 const START_DELAY = 250
