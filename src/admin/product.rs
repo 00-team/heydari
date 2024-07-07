@@ -4,12 +4,12 @@ use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
 use sqlx::SqlitePool;
-use utoipa::{OpenApi, ToSchema};
+use utoipa::{IntoParams, OpenApi, ToSchema};
 
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
 use crate::models::user::Admin;
-use crate::models::{AppErr, AppErrBadRequest, ListInput, Response};
+use crate::models::{AppErr, AppErrBadRequest, Response};
 use crate::utils::{self, CutOff};
 use crate::AppState;
 
@@ -30,25 +30,43 @@ use crate::AppState;
 )]
 pub struct ApiDoc;
 
+#[derive(Deserialize, IntoParams)]
+pub struct ProductListBody {
+    #[param(example = 0)]
+    pub page: u32,
+    pub best: Option<bool>,
+}
+
 #[utoipa::path(
     get,
-    params(ListInput),
+    params(ProductListBody),
     responses((status = 200, body = Vec<Product>))
 )]
 /// Product List
 #[get("/")]
 async fn product_list(
-    _: Admin, query: Query<ListInput>, state: Data<AppState>,
+    _: Admin, q: Query<ProductListBody>, state: Data<AppState>,
 ) -> Response<Vec<Product>> {
-    let offset = i64::from(query.page) * 32;
+    let offset = i64::from(q.page) * 32;
 
-    let products = sqlx::query_as! {
-        Product,
-        "select * from products order by id desc limit 32 offset ?",
-        offset
-    }
-    .fetch_all(&state.sql)
-    .await?;
+    let products = if let Some(best) = q.best {
+        sqlx::query_as! {
+            Product,
+            "select * from products where best = ?
+            order by id desc limit 32 offset ?",
+            best, offset
+        }
+        .fetch_all(&state.sql)
+        .await?
+    } else {
+        sqlx::query_as! {
+            Product,
+            "select * from products order by id desc limit 32 offset ?",
+            offset
+        }
+        .fetch_all(&state.sql)
+        .await?
+    };
 
     Ok(Json(products))
 }
@@ -154,6 +172,7 @@ struct ProductUpdateBody {
     detail: String,
     tag_leg: Option<i64>,
     tag_bed: Option<i64>,
+    best: bool,
 }
 
 #[utoipa::path(
@@ -173,6 +192,7 @@ async fn product_update(
     product.name = body.name.clone();
     product.code = body.code.clone();
     product.detail = body.detail.clone();
+    product.best = body.best;
 
     product.name.cut_off(255);
     product.code.cut_off(255);
@@ -197,10 +217,10 @@ async fn product_update(
     .await?;
 
     sqlx::query! {
-        "update products set name = ?, code = ?, detail = ?, tag_leg = ?,
-        tag_bed = ? where id = ?",
-        product.name, product.code, product.detail, product.tag_leg,
-        product.tag_bed, product.id
+        "update products set name = ?, code = ?, detail = ?, best = ?,
+        tag_leg = ?, tag_bed = ? where id = ?",
+        product.name, product.code, product.detail, product.best,
+        product.tag_leg, product.tag_bed, product.id
     }
     .execute(&state.sql)
     .await?;

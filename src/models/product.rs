@@ -40,6 +40,7 @@ pub struct Product {
     pub photos: JsonStr<Vec<String>>,
     pub tag_leg: Option<i64>,
     pub tag_bed: Option<i64>,
+    pub best: bool,
 }
 
 from_request!(Product, "products");
@@ -56,6 +57,7 @@ impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
         let photos = row.get::<String, _>("photos");
         let tag_leg = row.get::<Option<i64>, _>("tag_leg");
         let tag_bed = row.get::<Option<i64>, _>("tag_bed");
+        let best = row.get::<bool, _>("best");
 
         Ok(Product {
             id,
@@ -68,6 +70,7 @@ impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
             photos: photos.into(),
             tag_leg,
             tag_bed,
+            best,
         })
     }
 }
