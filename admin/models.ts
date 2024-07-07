@@ -27,4 +27,5 @@ export type ProductModel = {
     photos: string[]
     tag_leg: number | null
     tag_bed: number | null
+    best: boolean
 }

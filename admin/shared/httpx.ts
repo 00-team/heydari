@@ -33,9 +33,10 @@ function httpx(P: HttpxProps) {
     const oul = typeof url == 'string' ? new URL(url, location.href) : url
 
     if (P.params) {
-        Object.entries(P.params).forEach(([k, v]) =>
+        Object.entries(P.params).forEach(([k, v]) => {
+            if (v == undefined) return
             oul.searchParams.set(k, `${v}`)
-        )
+        })
     }
 
     http.open(P.method, oul, true)

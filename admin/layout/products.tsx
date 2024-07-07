@@ -23,6 +23,9 @@ import {
     PlusIcon,
     RotateCcwIcon,
     SaveIcon,
+    SquareCheckBigIcon,
+    SquareIcon,
+    StarIcon,
     TableIcon,
     TrashIcon,
     WrenchIcon,
@@ -46,6 +49,7 @@ export default () => {
         products: ProductModel[]
         page: number
         loading: boolean
+        best?: true
     }
     const [state, setState] = createStore<State>({
         products: [],
@@ -86,7 +90,7 @@ export default () => {
 
         httpx({
             url: '/api/admin/products/',
-            params: { page },
+            params: { page, best: state.best },
             method: 'GET',
             onLoad(x) {
                 if (x.status != 200) return
@@ -100,6 +104,44 @@ export default () => {
             <Show when={state.loading}>
                 <span class='message'>Loading ...</span>
             </Show>
+
+            <div class='actions'>
+                <div class='left'>
+                    <div class='row'>
+                        Best:
+                        <button
+                            class='styled icon'
+                            onClick={() => {
+                                setState(s => ({
+                                    best: s.best ? undefined : true,
+                                }))
+                                fetch_products(state.page)
+                            }}
+                        >
+                            <Show when={state.best} fallback={<SquareIcon />}>
+                                <SquareCheckBigIcon />
+                            </Show>
+                        </button>
+                    </div>
+                </div>
+                <div class='right'>
+                    <button
+                        class='styled icon'
+                        disabled={state.page <= 0}
+                        onClick={() => fetch_products(state.page - 1)}
+                    >
+                        <ChevronLeftIcon />
+                    </button>
+                    <button
+                        class='styled icon'
+                        disabled={state.products.length < 32}
+                        onClick={() => fetch_products(state.page + 1)}
+                    >
+                        <ChevronRightIcon />
+                    </button>
+                </div>
+            </div>
+
             <div class='product-list'>
                 <AddProduct update={() => fetch_products(0)} />
                 {state.products.map((p, i) => (
@@ -117,24 +159,6 @@ export default () => {
                     />
                 ))}
             </div>
-            <Show when={state.page != 0 || state.products.length >= 32}>
-                <div class='actions'>
-                    <button
-                        class='styled'
-                        disabled={state.page <= 0}
-                        onClick={() => fetch_products(state.page - 1)}
-                    >
-                        <ChevronLeftIcon />
-                    </button>
-                    <button
-                        class='styled'
-                        disabled={state.products.length < 32}
-                        onClick={() => fetch_products(state.page + 1)}
-                    >
-                        <ChevronRightIcon />
-                    </button>
-                </div>
-            </Show>
         </div>
     )
 }
@@ -184,6 +208,25 @@ const Product: Component<ProductProps> = P => {
                 detail: state.detail,
                 tag_leg: state.tag_leg,
                 tag_bed: state.tag_bed,
+            },
+            onLoad(x) {
+                if (x.status != 200) return
+                P.update(x.response)
+            },
+        })
+    }
+
+    function toggle_star() {
+        httpx({
+            url: `/api/admin/products/${P.product.id}/`,
+            method: 'PATCH',
+            json: {
+                name: P.product.name,
+                code: P.product.code,
+                detail: P.product.detail,
+                tag_leg: P.product.tag_leg,
+                tag_bed: P.product.tag_bed,
+                best: !P.product.best,
             },
             onLoad(x) {
                 if (x.status != 200) return
@@ -333,7 +376,7 @@ const Product: Component<ProductProps> = P => {
                     <span>{P.product.code}</span>
                     <span>{P.product.name}</span>
                 </div>
-                <div class='actions'>
+                <div class='product-actions'>
                     <Show when={state.edit && changed()}>
                         <Confact
                             icon={RotateCcwIcon}
@@ -356,6 +399,16 @@ const Product: Component<ProductProps> = P => {
                     >
                         <ExternalLinkIcon />
                     </button>
+                    <Show when={!changed()}>
+                        <button
+                            class='styled icon'
+                            classList={{ active: P.product.best }}
+                            onClick={toggle_star}
+                            style={{ '--color': '#FF6B00' }}
+                        >
+                            <StarIcon />
+                        </button>
+                    </Show>
                     <button
                         class='styled icon'
                         onClick={() => setState(s => ({ edit: !s.edit }))}
@@ -509,7 +562,7 @@ const AddProduct: Component<AddProductProps> = P => {
         <div class='product'>
             <div class='top'>
                 <div class='info'>Add a Product</div>
-                <div class='actions'>
+                <div class='product-actions'>
                     <Show when={state.show && state.name && state.code}>
                         <button class='add-btn styled icon' onClick={add}>
                             <PlusIcon />
