@@ -16,3 +16,4 @@ main.db*
 .ignore*
 logs/
 __pycache__/
+backup/
