@@ -15,8 +15,19 @@ use crate::AppState;
 type Response = Result<HttpResponse, AppErr>;
 
 #[get("/")]
-async fn home(env: Data<Environment<'static>>) -> Response {
-    let result = env.get_template("home/index.html")?.render(())?;
+async fn home(
+    env: Data<Environment<'static>>, state: Data<AppState>,
+) -> Response {
+    let best_products = sqlx::query_as! {
+        Product,
+        "select * from products where best = true"
+    }
+    .fetch_all(&state.sql)
+    .await?;
+
+    let result = env.get_template("home/index.html")?.render(context! {
+        best_products => best_products
+    })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 

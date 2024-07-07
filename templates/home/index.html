@@ -315,26 +315,17 @@
         </h2>
         <div class="products-wrapper">
             <div class="products-slider">
+                {% for p in best_products %}
                 <div class="product-slider ">
-                    <img loading="lazy" decoding="async" draggable="false" src="/static/image/home/products/1.webp"
-                        alt="" />
+                    <img
+                        loading="lazy"
+                        decoding="async"
+                        draggable="false"
+                        src="/record/pp-{{ p.id }}-{{ p.photos[0] }}"
+                        alt=""
+                    />
                 </div>
-                <div class="product-slider">
-                    <img loading="lazy" draggable="false" decoding="async" src="/static/image/home/products/2.webp"
-                        alt="" />
-                </div>
-                <div class="product-slider ">
-                    <img loading="lazy" draggable="false" decoding="async" src="/static/image/home/products/3.webp"
-                        alt="" />
-                </div>
-                <div class="product-slider">
-                    <img loading="lazy" draggable="false" decoding="async" src="/static/image/home/products/4.webp"
-                        alt="" />
-                </div>
-                <div class="product-slider">
-                    <img loading="lazy" draggable="false" decoding="async" src="/static/image/home/products/5.webp"
-                        alt="" />
-                </div>
+                {% endfor %}
             </div>
         </div>
         <a class="arrow-button basic-button title_small" href="/products">
