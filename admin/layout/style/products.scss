@@ -3,7 +3,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    /* gap: 1rem; */
     position: relative;
 
     &::after {
@@ -33,6 +33,22 @@
     .actions {
         display: flex;
         gap: 1rem;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        align-items: center;
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .left,
+        .right {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
     }
 
     .product-list {
@@ -43,6 +59,7 @@
         flex-direction: column;
         gap: 1rem;
         padding: 1rem;
+        padding-top: 0.5rem;
 
         .product {
             border: 2px solid var(--ca);
@@ -79,7 +96,7 @@
                 gap: 1rem;
                 justify-content: space-between;
 
-                .actions {
+                .product-actions {
                     display: flex;
                     gap: 0.4rem;
                     flex-shrink: 0;
