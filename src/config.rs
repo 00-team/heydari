@@ -5,6 +5,8 @@ use std::sync::OnceLock;
 /// Main Config
 pub struct Config {
     pub discord_webhook: String,
+    pub simurgh_api_key: String,
+    pub simurgh_host: String,
 }
 
 impl Config {
@@ -17,7 +19,16 @@ impl Config {
 pub fn config() -> &'static Config {
     static STATE: OnceLock<Config> = OnceLock::new();
 
+    let simurgh_host = if cfg!(debug_assertions) {
+        "http://localhost:7700"
+    } else {
+        "https://simurgh.00-team.org"
+    }
+    .to_string();
+
     STATE.get_or_init(|| Config {
         discord_webhook: evar("DISCORD_WEBHOOK").expect("no DISCORD_WEBHOOK"),
+        simurgh_api_key: evar("SIMURGH_API_KEY").expect("no SIMURGH_API_KEY"),
+        simurgh_host,
     })
 }
