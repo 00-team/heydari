@@ -1,14 +1,14 @@
 use crate::config::Config;
 use crate::docs::{doc_add_prefix, ApiDoc};
 use actix_files as af;
-use actix_web::web::ServiceConfig;
 use actix_web::{
     get,
     http::header::ContentType,
     middleware,
-    web::{scope, Data},
+    web::{scope, Data, Path, Redirect, ServiceConfig},
     App, HttpResponse, HttpServer, Responder,
 };
+use config::config;
 use sqlx::{Pool, Sqlite, SqlitePool};
 use utoipa::OpenApi;
 
@@ -59,12 +59,18 @@ async fn rapidoc() -> impl Responder {
     show-header="false" schema-expand-level="1" /></body> </html>"###,
     )
 }
+#[get("/simurgh-record/{item}")]
+async fn redirect_simrugh_record(path: Path<(String,)>) -> Redirect {
+    Redirect::to(format!("{}/simurgh-record/{}", config().simurgh_host, path.0))
+        .permanent()
+}
 
 fn config_app(app: &mut ServiceConfig) {
     if cfg!(debug_assertions) {
         app.service(af::Files::new("/static", "static"));
         app.service(af::Files::new("/admin-assets", "admin/dist/admin-assets"));
         app.service(af::Files::new("/record", Config::RECORD_DIR));
+        app.service(redirect_simrugh_record);
     }
 
     app.service(openapi).service(rapidoc);

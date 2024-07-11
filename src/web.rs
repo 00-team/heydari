@@ -192,7 +192,6 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
     }
 
     let body = String::from_utf8(result.body().await?.to_vec())?;
-    log::info!("body: {body}");
 
     let result = env.get_template("blogs/index.html")?.render(context! {
         blogs_body => body
