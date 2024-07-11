@@ -8,8 +8,9 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
+use crate::config::{config, Config};
 use crate::models::product::{Product, ProductKind, ProductTag};
-use crate::models::AppErr;
+use crate::models::{AppErr, ListInput};
 use crate::AppState;
 
 type Response = Result<HttpResponse, AppErr>;
@@ -171,8 +172,31 @@ async fn about(env: Data<Environment<'static>>) -> Response {
 }
 
 #[get("/blogs")]
-async fn blogs(env: Data<Environment<'static>>) -> Response {
-    let result = env.get_template("blogs/index.html")?.render(())?;
+async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
+    let mut page = 0;
+
+    if let Ok(q) = Query::<ListInput>::extract(&rq).await {
+        page = q.page;
+    }
+
+    let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
+
+    let client = awc::Client::new();
+    let request = client
+        .get(format!( "{simurgh_host}/api/projects/{simurgh_project}/blogs-ssr/?page={page}"))
+        .insert_header(("authorization", simurgh_auth.as_str()));
+
+    let mut result = request.send().await?;
+    if result.status() != 200 {
+        return Err(result.json::<AppErr>().await?);
+    }
+
+    let body = String::from_utf8(result.body().await?.to_vec())?;
+    log::info!("body: {body}");
+
+    let result = env.get_template("blogs/index.html")?.render(context! {
+        blogs_body => body
+    })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 

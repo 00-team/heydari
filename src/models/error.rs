@@ -3,7 +3,7 @@ use actix_web::{
     ResponseError,
 };
 use awc::error::{JsonPayloadError, SendRequestError};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::{
     fmt,
     num::{ParseFloatError, ParseIntError},
@@ -12,7 +12,7 @@ use std::{
 use tokio::io;
 use utoipa::ToSchema;
 
-#[derive(Clone, Serialize, Debug, ToSchema)]
+#[derive(Clone, Serialize, Debug, ToSchema, Deserialize)]
 pub struct AppErr {
     status: u16,
     subject: String,
