@@ -1,9 +1,6 @@
 pub mod common;
-pub mod product;
-// pub mod transaction;
-pub mod user;
-
 mod error;
-
+pub mod product;
+pub mod user;
 pub use common::*;
 pub use error::{AppErr, AppErrBadRequest, AppErrForbidden};

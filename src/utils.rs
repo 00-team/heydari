@@ -1,8 +1,11 @@
 use crate::config::{config, Config};
 use crate::models::{AppErr, AppErrBadRequest};
+use actix_web::HttpMessage;
+use awc::http::Method;
 use image::io::Reader as ImageReader;
 use image::ImageFormat;
 use rand::Rng;
+use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::io;
 use std::path::Path;
@@ -83,6 +86,21 @@ pub async fn send_webhook(title: &str, desc: &str, color: u32) {
 pub async fn send_sms(phone: &str, text: &str) {
     // let client = awc::Client::new();
     log::info!("\nsending sms to {phone}:\n\n{text}\n");
+}
+
+pub async fn simurgh_request(path: &str) -> Result<String, AppErr> {
+    let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
+    let client = awc::Client::new();
+    let request = client
+        .get(format!("{simurgh_host}/api/projects/{simurgh_project}{path}"))
+        .insert_header(("authorization", simurgh_auth.as_str()));
+
+    let mut result = request.send().await?;
+    if result.status() != 200 {
+        Err(result.json::<AppErr>().await?)
+    } else {
+        Ok(String::from_utf8(result.body().await?.to_vec())?)
+    }
 }
 
 pub trait CutOff {

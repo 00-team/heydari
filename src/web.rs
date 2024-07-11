@@ -8,9 +8,9 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use crate::config::{config, Config};
 use crate::models::product::{Product, ProductKind, ProductTag};
 use crate::models::{AppErr, ListInput};
+use crate::utils::simurgh_request;
 use crate::AppState;
 
 type Response = Result<HttpResponse, AppErr>;
@@ -179,19 +179,7 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
         page = q.page;
     }
 
-    let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
-
-    let client = awc::Client::new();
-    let request = client
-        .get(format!( "{simurgh_host}/api/projects/{simurgh_project}/blogs-ssr/?page={page}"))
-        .insert_header(("authorization", simurgh_auth.as_str()));
-
-    let mut result = request.send().await?;
-    if result.status() != 200 {
-        return Err(result.json::<AppErr>().await?);
-    }
-
-    let body = String::from_utf8(result.body().await?.to_vec())?;
+    let body = simurgh_request(&format!("/blogs-ssr/?page={page}")).await?;
 
     let result = env.get_template("blogs/index.html")?.render(context! {
         blogs_body => body,
@@ -200,25 +188,9 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
 }
 
 #[get("/blogs/{bid}")]
-async fn blog(
-    path: Path<(i64,)>, env: Data<Environment<'static>>,
-) -> Response {
-    let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
+async fn blog(path: Path<(i64,)>, env: Data<Environment<'static>>) -> Response {
+    let body = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await?;
 
-    let client = awc::Client::new();
-    let request = client
-        .get(format!(
-            "{simurgh_host}/api/projects/{simurgh_project}/blogs-ssr/{}/",
-            path.0
-        ))
-        .insert_header(("authorization", simurgh_auth.as_str()));
-
-    let mut result = request.send().await?;
-    if result.status() != 200 {
-        return Err(result.json::<AppErr>().await?);
-    }
-
-    let body = String::from_utf8(result.body().await?.to_vec())?;
     let result = env.get_template("blog/index.html")?.render(context! {
         blog_body => body,
     })?;
