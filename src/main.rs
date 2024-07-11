@@ -59,9 +59,16 @@ async fn rapidoc() -> impl Responder {
     show-header="false" schema-expand-level="1" /></body> </html>"###,
     )
 }
-#[get("/simurgh-record/{item}")]
+
+#[get("/simurgh-record/{path:.*}")]
 async fn redirect_simrugh_record(path: Path<(String,)>) -> Redirect {
     Redirect::to(format!("{}/simurgh-record/{}", config().simurgh_host, path.0))
+        .permanent()
+}
+
+#[get("/simurgh-ssrs/{path:.*}")]
+async fn redirect_simrugh_ssrs(path: Path<(String,)>) -> Redirect {
+    Redirect::to(format!("{}/simurgh-ssrs/{}", config().simurgh_host, path.0))
         .permanent()
 }
 
@@ -71,6 +78,7 @@ fn config_app(app: &mut ServiceConfig) {
         app.service(af::Files::new("/admin-assets", "admin/dist/admin-assets"));
         app.service(af::Files::new("/record", Config::RECORD_DIR));
         app.service(redirect_simrugh_record);
+        app.service(redirect_simrugh_ssrs);
     }
 
     app.service(openapi).service(rapidoc);

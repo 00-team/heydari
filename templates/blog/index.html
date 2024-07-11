@@ -9,6 +9,9 @@
 
 {% block content %}
 <main class="blog-container">
+
+    {{ blog_body | safe }}
+
     <div class="blog-wrapper">
         <img src="https://picsum.photos/2000/700" class="thumbnail">
         <h1 class="blog-title section_title">

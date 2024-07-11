@@ -194,7 +194,33 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
     let body = String::from_utf8(result.body().await?.to_vec())?;
 
     let result = env.get_template("blogs/index.html")?.render(context! {
-        blogs_body => body
+        blogs_body => body,
+    })?;
+    Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
+}
+
+#[get("/blogs/{bid}")]
+async fn blog(
+    path: Path<(i64,)>, env: Data<Environment<'static>>,
+) -> Response {
+    let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
+
+    let client = awc::Client::new();
+    let request = client
+        .get(format!(
+            "{simurgh_host}/api/projects/{simurgh_project}/blogs-ssr/{}/",
+            path.0
+        ))
+        .insert_header(("authorization", simurgh_auth.as_str()));
+
+    let mut result = request.send().await?;
+    if result.status() != 200 {
+        return Err(result.json::<AppErr>().await?);
+    }
+
+    let body = String::from_utf8(result.body().await?.to_vec())?;
+    let result = env.get_template("blog/index.html")?.render(context! {
+        blog_body => body,
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
@@ -223,5 +249,6 @@ pub fn router() -> impl HttpServiceFactory {
         .service(contact)
         .service(about)
         .service(blogs)
+        .service(blog)
         .service(admin_index)
 }
