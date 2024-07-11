@@ -1,11 +1,8 @@
 use crate::config::{config, Config};
 use crate::models::{AppErr, AppErrBadRequest};
-use actix_web::HttpMessage;
-use awc::http::Method;
 use image::io::Reader as ImageReader;
 use image::ImageFormat;
 use rand::Rng;
-use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::io;
 use std::path::Path;
