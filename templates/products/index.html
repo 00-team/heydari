@@ -107,7 +107,7 @@
         <div class="product-card" data-kind="{{ p.kind }}" data-tag-leg="{{ p.tag_leg }}"
             data-tag-bed="{{ p.tag_bed }}">
 
-            <a href="/products/{{ p.id }}" class="card-wrapper">
+            <a href="/products/{{ p.slug }}" class="card-wrapper">
                 <div class="head title_smaller">
                     <div class="product-code">{{ p.code }}</div>
                 </div>
@@ -116,7 +116,7 @@
             </a>
 
             <div class="card-caption title_small">
-                <a class="product-title title_small" href="/products/{{ p.id }}">
+                <a class="product-title title_small" href="/products/{{ p.slug }}">
                     {{ p.name }}
                 </a>
                 <div class="product-tags title_smaller">
