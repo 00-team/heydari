@@ -408,7 +408,7 @@ const Product: Component<ProductProps> = P => {
                     </Show>
                     <button
                         class='styled icon'
-                        onClick={() => open('/products/' + P.product.id)}
+                        onClick={() => open('/products/' + P.product.slug)}
                     >
                         <ExternalLinkIcon />
                     </button>
