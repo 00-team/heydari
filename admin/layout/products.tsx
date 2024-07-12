@@ -171,6 +171,7 @@ const Product: Component<ProductProps> = P => {
     type State = {
         loading: boolean
         edit: boolean
+        slug: string
         name: string
         code: string
         detail: string
@@ -180,6 +181,7 @@ const Product: Component<ProductProps> = P => {
     const [state, setState] = createStore<State>({
         loading: false,
         edit: false,
+        slug: P.product.slug,
         name: P.product.name,
         code: P.product.code,
         detail: P.product.detail,
@@ -203,6 +205,7 @@ const Product: Component<ProductProps> = P => {
             url: `/api/admin/products/${P.product.id}/`,
             method: 'PATCH',
             json: {
+                slug: state.slug,
                 name: state.name,
                 code: state.code,
                 detail: state.detail,
@@ -221,6 +224,7 @@ const Product: Component<ProductProps> = P => {
             url: `/api/admin/products/${P.product.id}/`,
             method: 'PATCH',
             json: {
+                slug: P.product.slug,
                 name: P.product.name,
                 code: P.product.code,
                 detail: P.product.detail,
@@ -237,6 +241,7 @@ const Product: Component<ProductProps> = P => {
 
     function reset() {
         setState({
+            slug: P.product.slug,
             name: P.product.name,
             code: P.product.code,
             detail: P.product.detail,
@@ -247,6 +252,7 @@ const Product: Component<ProductProps> = P => {
 
     const changed = createMemo(
         () =>
+            state.slug != P.product.slug ||
             state.name != P.product.name ||
             state.code != P.product.code ||
             state.detail != P.product.detail ||
@@ -370,10 +376,16 @@ const Product: Component<ProductProps> = P => {
                     </Switch>
                     <span>
                         {new Date(
-                            P.product.timestamp * 1e3
+                            P.product.created_at * 1e3
+                        ).toLocaleDateString()}
+                    </span>
+                    <span>
+                        {new Date(
+                            P.product.updated_at * 1e3
                         ).toLocaleDateString()}
                     </span>
                     <span>{P.product.code}</span>
+                    <span>{P.product.slug}</span>
                     <span>{P.product.name}</span>
                 </div>
                 <div class='product-actions'>
@@ -427,6 +439,17 @@ const Product: Component<ProductProps> = P => {
             </div>
             <Show when={state.edit}>
                 <div class='bottom'>
+                    <span>Slug:</span>
+                    <input
+                        class='styled'
+                        placeholder='product slug'
+                        maxLength={255}
+                        value={state.slug}
+                        onInput={e => {
+                            let slug = e.currentTarget.value.slice(0, 255)
+                            setState({ slug })
+                        }}
+                    />
                     <span>Name:</span>
                     <input
                         class='styled'
@@ -532,12 +555,13 @@ type AddProductProps = {
     update(): void
 }
 const AddProduct: Component<AddProductProps> = P => {
-    type State = Pick<ProductModel, 'kind' | 'name' | 'code'> & {
+    type State = Pick<ProductModel, 'kind' | 'name' | 'slug' | 'code'> & {
         show: boolean
     }
     const [state, setState] = createStore<State>({
         show: false,
         kind: 'chair',
+        slug: '',
         name: '',
         code: '',
     })
@@ -548,6 +572,7 @@ const AddProduct: Component<AddProductProps> = P => {
             method: 'POST',
             json: {
                 kind: state.kind,
+                slug: state.slug,
                 name: state.name,
                 code: state.code,
             },
@@ -563,7 +588,14 @@ const AddProduct: Component<AddProductProps> = P => {
             <div class='top'>
                 <div class='info'>Add a Product</div>
                 <div class='product-actions'>
-                    <Show when={state.show && state.name && state.code}>
+                    <Show
+                        when={
+                            state.show &&
+                            state.name &&
+                            state.code &&
+                            state.slug.length >= 3
+                        }
+                    >
                         <button class='add-btn styled icon' onClick={add}>
                             <PlusIcon />
                         </button>
@@ -580,6 +612,18 @@ const AddProduct: Component<AddProductProps> = P => {
             </div>
             <Show when={state.show}>
                 <div class='bottom'>
+                    <span>Slug:</span>
+                    <input
+                        class='styled'
+                        placeholder='product slug'
+                        dir='auto'
+                        maxLength={255}
+                        value={state.slug}
+                        onInput={e => {
+                            let slug = e.currentTarget.value.slice(0, 255)
+                            setState({ slug })
+                        }}
+                    />
                     <span>Name:</span>
                     <input
                         class='styled'

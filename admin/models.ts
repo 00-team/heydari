@@ -18,11 +18,13 @@ export type ProductTagModel = {
 
 export type ProductModel = {
     id: number
+    slug: string
     kind: ProductTagModel['kind']
     name: string
     code: string
     detail: string
-    timestamp: number
+    created_at: number
+    updated_at: number
     thumbnail: string | null
     photos: string[]
     tag_leg: number | null
