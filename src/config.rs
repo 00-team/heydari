@@ -4,6 +4,7 @@ use std::sync::OnceLock;
 #[derive(Debug)]
 /// Main Config
 pub struct Config {
+    pub host: &'static str,
     pub discord_webhook: String,
     pub simurgh_project: i64,
     pub simurgh_host: String,
@@ -27,7 +28,14 @@ pub fn config() -> &'static Config {
     }
     .to_string();
 
+    let host = if cfg!(debug_assertions) {
+        "http://localhost:7000"
+    } else {
+        "https://heydari-mi.com"
+    };
+
     STATE.get_or_init(|| Config {
+        host,
         discord_webhook: evar("DISCORD_WEBHOOK").expect("no DISCORD_WEBHOOK"),
         simurgh_project: evar("SIMURGH_PROJECT")
             .expect("no SIMURGH_PROJECT")

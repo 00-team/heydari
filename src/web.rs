@@ -223,4 +223,5 @@ pub fn router() -> impl HttpServiceFactory {
         .service(blogs)
         .service(blog)
         .service(admin_index)
+        .service(super::sitemap::router())
 }

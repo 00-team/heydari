@@ -19,6 +19,7 @@ mod docs;
 mod models;
 mod utils;
 mod web;
+mod sitemap;
 
 pub struct AppState {
     pub sql: Pool<Sqlite>,
