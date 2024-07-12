@@ -211,6 +211,7 @@ const Product: Component<ProductProps> = P => {
                 detail: state.detail,
                 tag_leg: state.tag_leg,
                 tag_bed: state.tag_bed,
+                best: P.product.best,
             },
             onLoad(x) {
                 if (x.status != 200) return
