@@ -78,10 +78,8 @@ async fn index(conn: ConnectionInfo) -> HttpResponse {
     let result = rsx! {
         sitemapindex {
             xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
-            sitemap {
-                loc { "{host}/sitemap-web.xml/" }
-                loc { "{host}/sitemap-products.xml/" }
-            }
+            sitemap { loc { "{host}/sitemap-web.xml/" } }
+            sitemap { loc { "{host}/sitemap-products.xml/" } }
         }
     }
     .render();
