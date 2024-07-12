@@ -1,9 +1,0 @@
-[Unit]
-Description=Heydari Backup Timer
-
-[Timer]
-OnUnitActiveSec=10m
-OnBootSec=10m
-
-[Install]
-WantedBy=timers.target

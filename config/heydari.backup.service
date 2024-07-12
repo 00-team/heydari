@@ -1,8 +1,0 @@
-[Unit]
-Description=Heydari Backup
-
-[Service]
-Type=oneshot
-ExecStart=/heydari/config/backup.sh
-WorkingDirectory=/heydari/
-EnvironmentFile=/heydari/.env
