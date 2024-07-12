@@ -87,6 +87,7 @@ struct ProductAddBody {
     name: String,
     code: String,
     kind: ProductKind,
+    slug: String,
 }
 
 #[utoipa::path(
@@ -102,23 +103,27 @@ async fn product_add(
     let now = utils::now();
     let mut body = body;
 
+    utils::verify_slug(&body.slug)?;
+
     body.name.cut_off(255);
     body.code.cut_off(255);
+    body.slug.cut_off(255);
 
-    let result = sqlx::query_as! {
-        Product,
-        "insert into products(kind, name, code, timestamp) values(?,?,?,?)",
-        body.kind, body.name, body.code, now
+    let result = sqlx::query! {
+        "insert into products(slug, kind, name, code, created_at)
+        values(?,?,?,?,?)",
+        body.slug, body.kind, body.name, body.code, now
     }
     .execute(&state.sql)
     .await?;
 
     Ok(Json(Product {
         id: result.last_insert_rowid(),
+        slug: body.slug.clone(),
         kind: body.kind.clone(),
         name: body.name.clone(),
         code: body.code.clone(),
-        timestamp: now,
+        created_at: now,
         ..Default::default()
     }))
 }
@@ -168,6 +173,7 @@ async fn update_tag(
 #[derive(Deserialize, ToSchema)]
 struct ProductUpdateBody {
     name: String,
+    slug: String,
     code: String,
     detail: String,
     tag_leg: Option<i64>,
@@ -189,11 +195,16 @@ async fn product_update(
 ) -> Response<Product> {
     let mut product = product;
 
+    utils::verify_slug(&body.slug)?;
+
+    product.slug = body.slug.clone();
     product.name = body.name.clone();
     product.code = body.code.clone();
     product.detail = body.detail.clone();
     product.best = body.best;
+    product.updated_at = utils::now();
 
+    product.slug.cut_off(255);
     product.name.cut_off(255);
     product.code.cut_off(255);
     product.detail.cut_off(2048);
@@ -217,10 +228,10 @@ async fn product_update(
     .await?;
 
     sqlx::query! {
-        "update products set name = ?, code = ?, detail = ?, best = ?,
-        tag_leg = ?, tag_bed = ? where id = ?",
-        product.name, product.code, product.detail, product.best,
-        product.tag_leg, product.tag_bed, product.id
+        "update products set slug = ?, name = ?, code = ?, detail = ?, best = ?,
+        updated_at = ?, tag_leg = ?, tag_bed = ? where id = ?",
+        product.slug, product.name, product.code, product.detail, product.best,
+        product.updated_at, product.tag_leg, product.tag_bed, product.id
     }
     .execute(&state.sql)
     .await?;

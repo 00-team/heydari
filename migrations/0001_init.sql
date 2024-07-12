@@ -19,14 +19,17 @@ create table if not exists product_tags (
 
 create table if not exists products (
     id integer primary key not null,
+    slug text not null unique,
     kind integer not null,
     name text not null,
     code text unique not null,
     detail text not null default "",
-    timestamp integer not null,
+    created_at integer not null,
+    updated_at integer not null default 0,
     thumbnail text,
     photos text not null default "[]",
     tag_leg integer references product_tags(id) on delete set null,
-    tag_bed integer references product_tags(id) on delete set null
+    tag_bed integer references product_tags(id) on delete set null,
+    best boolean not null default false
 );
 
