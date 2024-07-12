@@ -1,9 +1,9 @@
-use crate::{utils, AppState};
+use crate::AppState;
 use actix_web::dev::{ConnectionInfo, HttpServiceFactory};
 use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
 use actix_web::web::Data;
-use actix_web::{get, HttpResponse, Scope};
+use actix_web::{get, HttpRequest, HttpResponse, Scope};
 use cercis::prelude::*;
 use chrono::TimeZone;
 
@@ -35,13 +35,16 @@ async fn web(conn: ConnectionInfo) -> HttpResponse {
 }
 
 #[get("/sitemap-products.xml")]
-async fn products(conn: ConnectionInfo, state: Data<AppState>) -> HttpResponse {
+async fn products(
+    rq: HttpRequest, conn: ConnectionInfo, state: Data<AppState>,
+) -> HttpResponse {
     let host = format!("{}://{}", conn.scheme(), conn.host());
 
-    let now = utils::now();
-    log::info!("now: {now}");
-    let dt = chrono::Local.timestamp_opt(now, 0).unwrap();
-    log::info!("dt: {}", dt.to_rfc3339());
+    log::info!(
+        "{:?} - {:?}",
+        rq.headers().get("forwarded"),
+        rq.headers().get("x-forwarded-proto")
+    );
 
     let products = sqlx::query! {
         "select slug, created_at, updated_at from products"
