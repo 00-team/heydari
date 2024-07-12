@@ -86,7 +86,7 @@ async fn products(
     };
 
     let products: Vec<Product> = sqlx::query_as(&format!(
-        "select * from products {} order by timestamp {} limit 32 offset ?",
+        "select * from products {} order by created_at {} limit 32 offset ?",
         cond, sort
     ))
     .bind(offset)
@@ -112,20 +112,20 @@ async fn products(
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
-#[get("/products/{id}")]
+#[get("/products/{slug}")]
 async fn product(
     rq: HttpRequest, env: Data<Environment<'static>>, state: Data<AppState>,
 ) -> Response {
-    let path = Path::<(i64,)>::extract(&rq).await;
+    let path = Path::<(String,)>::extract(&rq).await;
     if path.is_err() {
         return Ok(HttpResponse::NotFound()
             .content_type(ContentType::html())
             .body("404"));
     }
 
-    let id = path.unwrap().0;
+    let slug = &path.unwrap().0;
     let product = sqlx::query_as! {
-        Product, "select * from products where id = ?", id
+        Product, "select * from products where slug = ?", slug
     }
     .fetch_one(&state.sql)
     .await?;

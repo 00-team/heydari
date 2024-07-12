@@ -1,10 +1,11 @@
-use crate::AppState;
+use crate::{utils, AppState};
 use actix_web::dev::{ConnectionInfo, HttpServiceFactory};
 use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
 use actix_web::web::Data;
 use actix_web::{get, HttpResponse, Scope};
 use cercis::prelude::*;
+use chrono::TimeZone;
 
 #[get("/sitemap-web.xml")]
 async fn web(conn: ConnectionInfo) -> HttpResponse {
@@ -37,17 +38,34 @@ async fn web(conn: ConnectionInfo) -> HttpResponse {
 async fn products(conn: ConnectionInfo, state: Data<AppState>) -> HttpResponse {
     let host = format!("{}://{}", conn.scheme(), conn.host());
 
-    let products = sqlx::query! { "select id from products" }
-        .fetch_all(&state.sql)
-        .await
-        .unwrap_or_default();
+    let now = utils::now();
+    log::info!("now: {now}");
+    let dt = chrono::Local.timestamp_opt(now, 0).unwrap();
+    log::info!("dt: {}", dt.to_rfc3339());
+
+    let products = sqlx::query! {
+        "select slug, created_at, updated_at from products"
+    }
+    .fetch_all(&state.sql)
+    .await
+    .unwrap_or_default();
+
+    let products = products.iter().map(|r| {
+        let ts = if r.updated_at == 0 { r.created_at } else { r.updated_at };
+        let dt = chrono::Local
+            .timestamp_opt(ts, 0)
+            .latest()
+            .and_then(|v| Some(v.to_rfc3339()));
+        (r.slug.clone(), dt)
+    });
 
     let result = rsx! {
         urlset {
             xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
-            for p in products {
+            for (slug, ts) in products {
                 url {
-                    loc {"{host}/products/{p.id}/"}
+                    loc {"{host}/products/{slug}/"}
+                    if let Some(ts) = ts { lastmod { "{ts}" } }
                 }
             }
         }
