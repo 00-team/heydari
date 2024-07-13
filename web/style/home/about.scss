@@ -73,10 +73,11 @@ section.about-container {
             isolation: isolate;
 
             .about-content {
+                position: relative;
+
                 &:not(.prev, .active, .next) {
                     display: none;
                 }
-                position: relative;
 
                 &.prev,
                 &.next {
