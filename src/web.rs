@@ -187,8 +187,8 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
-#[get("/blogs/{bid}")]
-async fn blog(path: Path<(i64,)>, env: Data<Environment<'static>>) -> Response {
+#[get("/blogs/{slug}")]
+async fn blog(path: Path<(String,)>, env: Data<Environment<'static>>) -> Response {
     let body = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await?;
 
     let result = env.get_template("blog/index.html")?.render(context! {
