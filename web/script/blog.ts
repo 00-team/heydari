@@ -1,25 +1,30 @@
 export {}
 
 document.addEventListener('DOMContentLoaded', () => {
-    let blog = document.querySelector<HTMLElement>('.simurgh--blogs')
-    let blogs = blog.querySelectorAll('figure')
+    let blog = document.querySelector<HTMLElement>('.simurgh--blog-fnd')
 
-    blogs.forEach(b => {
-        let details = b.querySelector<HTMLElement>('div')
+    let details = blog.querySelector<HTMLElement>('.simurgh--blog-options')
 
-        let readtime = details
-            .querySelectorAll<HTMLElement>('.detail-container')[0]
-            .querySelector('span')
-        let readtimeValue = readtime.innerText
+    let readtime = details
+        .querySelectorAll<HTMLElement>('.simurgh--blog-option')[0]
+        .querySelector('span')
+    let readtimeValue = readtime.innerText
 
-        let calendar = details
-            .querySelectorAll<HTMLElement>('.detail-container')[1]
-            .querySelector('span')
-        let calendarValue = calendar.innerText
+    let publishDate = details
+        .querySelectorAll<HTMLElement>('.simurgh--blog-option')[1]
+        .querySelector('span')
+    let publishDateValue = publishDate.innerText
 
-        setReadTime(parseInt(readtimeValue, 10), readtime)
-        setDate(parseInt(calendarValue), calendar)
-    })
+    let UpdateDate = details
+        .querySelectorAll<HTMLElement>('.simurgh--blog-option')[2]
+        .querySelector('span')
+    let UpdateDateValue = UpdateDate.innerText
+
+    setReadTime(parseInt(readtimeValue, 10), readtime)
+
+    setDate(parseInt(publishDateValue), publishDate)
+
+    setDate(parseInt(UpdateDateValue), UpdateDate)
 })
 
 function setReadTime(seconds: number, elem: HTMLElement) {
