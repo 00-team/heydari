@@ -12,6 +12,24 @@ main.blog-container {
 
     overflow: hidden;
 
+    .simurgh--blog-fnd {
+        width: clamp(0px, 100%, 1000px);
+
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .simurgh--blog-preview {
+            p {
+                font-family: 'yekan';
+
+                span {
+                    line-height: 1.8em;
+                }
+            }
+        }
+    }
+
     .blog-wrapper {
         width: clamp(0px, 100%, 1000px);
 
