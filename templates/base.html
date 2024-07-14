@@ -37,6 +37,21 @@
 
     <script src="/static/script/base.js" defer></script>
 
+    <style>
+        :root {
+            --simurgh--font-title: 'iranBold';
+            --simurgh--font-description: 'yekan';
+            --simurgh--font-link: 'yekan';
+            --simurgh--font-number: 'number';
+
+            --simurgh--size-title-hero: clamp(1.2rem, 2.3vw + 0.7rem, 2.1rem);
+            --simurgh--size-title-title: clamp(1.1rem, 0.7rem + 2.1vw, 1.4rem);
+            --simurgh--size-title-title-small: clamp(0.9rem, 0.5rem + 1.9vw, 1.25rem);
+            --simurgh--size-title-title-smaller: clamp(0.8rem, 0.4rem + 1.6vw, 1rem);
+            --simurgh--size-title-title-description: clamp(0.7rem, 0.4rem + 1.4vw, 0.9rem);
+        }
+    </style>
+
     {% block header %} {% endblock header %}
 </head>
 
