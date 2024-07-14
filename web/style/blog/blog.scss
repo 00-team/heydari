@@ -101,8 +101,9 @@ main.blog-container {
                 display: flex;
                 align-items: center;
                 gap: 0.5em;
-                font-size: clamp(0.9rem, 0.5rem + 1.9vw, 1.25rem);
-                font-family: 'yekanBold';
+
+                font-size: clamp(0.8rem, 0.4rem + 1.6vw, 1rem);
+                font-family: 'yekan';
 
                 > div {
                     display: flex;
