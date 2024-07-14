@@ -26,5 +26,5 @@
         url('/static/fonts/vazir/vazir.woff2') format('woff2'),
         url('/static/fonts/vazir/vazir.ttf') format('truetype'),
         url('/static/fonts/vazir/vazir.woff') format('woff');
-    unicode-range: U+0030-0039, U+0660-0669;
+    /* unicode-range: U+0030-0039, U+0660-0669; */
 }
