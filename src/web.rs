@@ -188,14 +188,14 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 enum BlogStatus {
     Draft,
     Published,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 struct Blog {
     id: i64,
     slug: String,
@@ -213,14 +213,16 @@ struct Blog {
     thumbnail: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 struct BlogSSRR {
     blog: Blog,
-    html: String
+    html: String,
 }
 
 #[get("/blogs/{slug}")]
-async fn blog(path: Path<(String,)>, env: Data<Environment<'static>>) -> Response {
+async fn blog(
+    path: Path<(String,)>, env: Data<Environment<'static>>,
+) -> Response {
     let result = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await;
     let result = result?.json::<BlogSSRR>().await?;
 
