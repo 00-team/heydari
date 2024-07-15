@@ -4,7 +4,7 @@ use actix_web::middleware::NormalizePath;
 use actix_web::web::{Data, Path, Query};
 use actix_web::{get, routes, FromRequest, HttpRequest, HttpResponse, Scope};
 use minijinja::{context, path_loader, Environment};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
 
@@ -179,20 +179,56 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
         page = q.page;
     }
 
-    let body = simurgh_request(&format!("/blogs-ssr/?page={page}")).await?;
+    let result = simurgh_request(&format!("/blogs-ssr/?page={page}")).await;
+    let result = String::from_utf8(result?.body().await?.to_vec())?;
 
     let result = env.get_template("blogs/index.html")?.render(context! {
-        blogs_body => body,
+        blogs_body => result
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+enum BlogStatus {
+    Draft,
+    Published,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Blog {
+    id: i64,
+    slug: String,
+    status: BlogStatus,
+    author: Option<i64>,
+    project: Option<i64>,
+    category: Option<i64>,
+    created_at: i64,
+    updated_at: i64,
+    title: String,
+    detail: String,
+    html: String,
+    data: serde_json::Value,
+    read_time: i64,
+    thumbnail: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct BlogSSRR {
+    blog: Blog,
+    html: String,
+}
+
 #[get("/blogs/{slug}")]
-async fn blog(path: Path<(String,)>, env: Data<Environment<'static>>) -> Response {
-    let body = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await?;
+async fn blog(
+    path: Path<(String,)>, env: Data<Environment<'static>>,
+) -> Response {
+    let result = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await;
+    let result = result?.json::<BlogSSRR>().await?;
 
     let result = env.get_template("blog/index.html")?.render(context! {
-        blog_body => body,
+        blog_body => result.html,
+        blog => result.blog,
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }

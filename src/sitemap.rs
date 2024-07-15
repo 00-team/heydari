@@ -1,3 +1,4 @@
+use crate::models::AppErr;
 use crate::{utils, AppState};
 use actix_web::dev::{ConnectionInfo, HttpServiceFactory};
 use actix_web::http::header::ContentType;
@@ -39,9 +40,16 @@ async fn blogs(conn: ConnectionInfo) -> HttpResponse {
     let base_url = format!("{}://{}/blogs", conn.scheme(), conn.host());
 
     let url = format!("/blogs-sitemap/?base_url={base_url}");
-    let sitemap = utils::simurgh_request(&url).await.unwrap_or_default();
 
-    HttpResponse::Ok().content_type(ContentType::xml()).body(sitemap)
+    let result: Result<String, AppErr> = async move {
+        let result = utils::simurgh_request(&url).await;
+        Ok(String::from_utf8(result?.body().await?.to_vec())?)
+    }
+    .await;
+
+    HttpResponse::Ok()
+        .content_type(ContentType::xml())
+        .body(result.unwrap_or_default())
 }
 
 #[get("/sitemap-products.xml")]
