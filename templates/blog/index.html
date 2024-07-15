@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 
+{% block title %}
+
+<title>
+    {{ blog.title }} - تولید انواع صندلی‌های آموزشی و اداری
+</title>
+<meta name="description" content="{{ blog.detail }} صنایع تولیدی حیدری" />
+
+{% endblock title %}
+
 {% block header %}
 
 <link href="/static/style/blog/blog.css" rel="stylesheet" />
 
-<title>
-    مقالات صنایع تولیدی حیدری - تولید انواع صندلی‌های آموزشی و اداری
-
-</title>
+<link rel="canonical" href="https://heydari-mi.com/blog/{{  }}">
+<link rel="alternate" hreflang="fa" href="https://heydari-mi.com/blog/{{  }}">
 
 {% endblock header %}
 
