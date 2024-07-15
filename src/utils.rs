@@ -1,5 +1,8 @@
 use crate::config::{config, Config};
 use crate::models::{AppErr, AppErrBadRequest};
+use actix_http::encoding::Decoder;
+use actix_http::Payload;
+use awc::ClientResponse;
 use image::io::Reader as ImageReader;
 use image::ImageFormat;
 use rand::Rng;
@@ -97,7 +100,9 @@ pub async fn send_sms(phone: &str, text: &str) {
     log::info!("\nsending sms to {phone}:\n\n{text}\n");
 }
 
-pub async fn simurgh_request(path: &str) -> Result<String, AppErr> {
+pub async fn simurgh_request(
+    path: &str,
+) -> Result<ClientResponse<Decoder<Payload>>, AppErr> {
     let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
     let client = awc::Client::new();
     let request = client
@@ -108,7 +113,7 @@ pub async fn simurgh_request(path: &str) -> Result<String, AppErr> {
     if result.status() != 200 {
         Err(result.json::<AppErr>().await?)
     } else {
-        Ok(String::from_utf8(result.body().await?.to_vec())?)
+        Ok(result)
     }
 }
 
