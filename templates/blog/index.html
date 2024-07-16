@@ -12,6 +12,7 @@
 {% block header %}
 
 <link href="/static/style/blog/blog.css" rel="stylesheet" />
+<link href="/simurgh-ssrs/style/blog.css" rel="stylesheet" />
 
 <link rel="canonical" href="https://heydari-mi.com/blog/{{ blog.slug }}/">
 <link rel="alternate" hreflang="fa" href="https://heydari-mi.com/blog/{{ blog.slug }}/">
@@ -22,56 +23,6 @@
 <div class="blog-container">
 
     {{ blog_body | safe }}
-
-    <section class="related-blogs">
-        <h3 class="section_title">
-            مقاله های مشابه
-        </h3>
-        <div class="related-wrapper">
-            <figure class="blog-card">
-                <img decoding="async" loading="lazy" class="card-img" src="https://picsum.photos/1920/1080"
-                    alt="مقاله صنایع تولیدی حیدری">
-                <h2 class="title">
-                    عنوان مقاله
-                </h2>
-                <div class="details">
-                    <div class="detail read-time title_smaller">
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
-                            height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M352 96c0-53.02-42.98-96-96-96s-96 42.98-96 96 42.98 96 96 96 96-42.98 96-96zM233.59 241.1c-59.33-36.32-155.43-46.3-203.79-49.05C13.55 191.13 0 203.51 0 219.14v222.8c0 14.33 11.59 26.28 26.49 27.05 43.66 2.29 131.99 10.68 193.04 41.43 9.37 4.72 20.48-1.71 20.48-11.87V252.56c-.01-4.67-2.32-8.95-6.42-11.46zm248.61-49.05c-48.35 2.74-144.46 12.73-203.78 49.05-4.1 2.51-6.41 6.96-6.41 11.63v245.79c0 10.19 11.14 16.63 20.54 11.9 61.04-30.72 149.32-39.11 192.97-41.4 14.9-.78 26.49-12.73 26.49-27.06V219.14c-.01-15.63-13.56-28.01-29.81-27.09z">
-                            </path>
-                        </svg>
-                        <span class="data ">
-                            10 دقیقه
-                        </span>
-                    </div>
-                    <div class="detail publish title_smaller">
-
-                        <span class="data ">
-                            1400/01/01
-                        </span>
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
-                            height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M0 464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM400 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 112v48h448v-48c0-26.5-21.5-48-48-48z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-                <figcaption class="card-caption title_smaller">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
-                    و با
-                    استفاده از طراحان گرافیک است لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
-                    از
-                    طراحان گرافیک است لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
-                    گرافیک
-                    است
-                </figcaption>
-                <a aria-label="مقالات صنایع تولیدی حیدری" class="link-container title_smaller  " href="/blog/">دیدن
-                    بیشتر</a>
-            </figure>
-        </div>
-    </section>
 
 </div>
 
