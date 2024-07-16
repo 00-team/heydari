@@ -243,6 +243,19 @@ async fn admin_index() -> HttpResponse {
     HttpResponse::Ok().content_type(ContentType::html()).body(result)
 }
 
+#[get("/robots.txt")]
+async fn robots() -> HttpResponse {
+    HttpResponse::Ok().content_type(ContentType::plaintext()).body(
+r###"User-agent: *
+Disallow: /admin/
+
+User-agent: *
+Allow: /
+
+Sitemap: https://heydari-mi.com/sitemap.xml
+"###)
+}
+
 pub fn router() -> impl HttpServiceFactory {
     let tmpl_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("templates");
     let mut tmpl_env = Environment::new();
@@ -259,5 +272,6 @@ pub fn router() -> impl HttpServiceFactory {
         .service(blogs)
         .service(blog)
         .service(admin_index)
+        .service(robots)
         .service(super::sitemap::router())
 }

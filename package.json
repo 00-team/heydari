@@ -3,16 +3,19 @@
     "version": "0.5.20",
     "type": "module",
     "scripts": {
-        "style": "sass web/style:static/style -s compressed",
-        "style:watch": "sass web/style:static/style -w -c",
-        "script": "webpack",
-        "script:watch": "webpack --watch",
         "admin:start": "vite",
-        "admin:build": "vite build"
+        "admin:build": "vite build",
+        "web": "concurrently \"npm:web:style\" \"npm:web:script\" ",
+        "web:watch": "concurrently \"npm:web:style:watch\" \"npm:web:script:watch\" ",
+        "web:style": "sass web/style:static/style -s compressed",
+        "web:script": "webpack",
+        "web:style:watch": "sass web/style:static/style -w -c",
+        "web:script:watch": "webpack --watch"
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "@types/node": "^20.14.2",
+        "concurrently": "^8.2.2",
         "sass": "^1.77.4",
         "ts-loader": "^9.5.1",
         "typescript": "^5.4.5",
