@@ -48,6 +48,14 @@ footer.footer-container {
 
                 cursor: pointer;
 
+                &.address {
+                    .header-wrapper {
+                        .data {
+                            font-weight: bold;
+                        }
+                    }
+                }
+
                 .header-icon {
                     .icon-wrapper {
                         background: var(--sixty-percent);
