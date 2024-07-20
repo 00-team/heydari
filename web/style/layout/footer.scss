@@ -49,10 +49,9 @@ footer.footer-container {
                 cursor: pointer;
 
                 &.address {
-                    .header-wrapper {
-                        .data {
-                            font-weight: bold;
-                        }
+                    .data {
+                        font-family: 'iranBold';
+                        direction: rtl;
                     }
                 }
 
