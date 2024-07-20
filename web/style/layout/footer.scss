@@ -80,8 +80,10 @@ footer.footer-container {
                         direction: ltr;
                     }
                 }
+
                 &.address {
                     .data {
+                        font-family: 'iranBold';
                         direction: rtl;
                     }
                 }
