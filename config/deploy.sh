@@ -46,15 +46,9 @@ if check_diff "package.json"; then
     echo $SPACER
 fi
 
-if check_diff "web/style/*"; then
-    echo "$EG build the style!"
-    npm run style 
-    echo $SPACER
-fi
-
-if check_diff "web/script/*"; then
-    echo "$EG build the script!"
-    npm run script
+if check_diff "web/*"; then
+    echo "$EG build the web!"
+    npm run web
     echo $SPACER
 fi
 
@@ -64,7 +58,7 @@ if check_diff "admin/*"; then
     echo $SPACER
 fi
 
-if check_diff "src/* Cargo.toml"; then
+if check_diff "src/*"; then
     echo "$EG cargo build"
     cargo build --release
     echo $SPACER
