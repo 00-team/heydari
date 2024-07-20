@@ -1,11 +1,10 @@
 export {}
-
 const aboutContents = document.querySelectorAll('.about-content')
 const aboutSliders = document.querySelectorAll('.about-slider')
 
-let current = 1
+let current = 0
 
-const setClass = (index: number) => {
+const setClass = index => {
     aboutContents.forEach((content, idx0) => {
         if (index === idx0) return (content.className = 'about-content active')
         if (index - 1 === idx0)
@@ -29,16 +28,10 @@ const setClass = (index: number) => {
 document.addEventListener(
     'DOMContentLoaded',
     () => {
-        setClass(1)
+        setClass(current) // Initialize with the first content as active
         setInterval(() => {
-            if (current + 2 > aboutContents.length) {
-                current = 0
-                setClass(0)
-            }
-            setClass(current + 1)
-            current += 1
-
-            return
+            current = (current + 1) % aboutContents.length // Circular increment
+            setClass(current)
         }, 7500)
     },
     false
