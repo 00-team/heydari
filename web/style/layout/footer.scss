@@ -48,13 +48,6 @@ footer.footer-container {
 
                 cursor: pointer;
 
-                &.address {
-                    .data {
-                        font-family: 'iranBold';
-                        direction: rtl;
-                    }
-                }
-
                 .header-icon {
                     .icon-wrapper {
                         background: var(--sixty-percent);
@@ -87,8 +80,10 @@ footer.footer-container {
                         direction: ltr;
                     }
                 }
+
                 &.address {
                     .data {
+                        font-family: 'iranBold';
                         direction: rtl;
                     }
                 }
