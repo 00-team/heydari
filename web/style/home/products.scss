@@ -352,6 +352,9 @@
             position: relative;
             isolation: isolate;
             .product-slider {
+                color: unset;
+                text-decoration: none;
+
                 width: 100%;
                 aspect-ratio: 1/1;
 
