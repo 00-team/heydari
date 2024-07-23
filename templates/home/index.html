@@ -310,7 +310,7 @@
         <div class="products-wrapper">
             <div class="products-slider">
                 {% for p in best_products %}
-                <a href="/products/{{ p.id }}" class="product-slider ">
+                <a href="/products/{{ p.slug }}" class="product-slider ">
                     <img loading="lazy" decoding="async" draggable="false" src="/record/pp-{{ p.id }}-{{ p.photos[0] }}"
                         alt=" {{p.name}} با کیفیت بالا از صنایع تولیدی حیدری " />
                 </a>
