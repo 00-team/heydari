@@ -70,7 +70,7 @@ global.sort_clear = generic_clear
 global.sort_load = generic_load
 global.sort_select = generic_select
 
-document.addEventListener('DOMContentLoaded', () => {
+function setProducts() {
     document
         .querySelectorAll<HTMLDivElement>('.filters .dropdown')
         .forEach(el => {
@@ -90,6 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 '.clear-filter'
             ).onclick = () => on_clear(el)
         })
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setProducts()
+    setPagination()
 })
 
 // search product
@@ -119,3 +124,60 @@ search_input.oninput = () => {
         p.classList.add('hide')
     })
 }
+
+// search product end
+
+function setPagination() {
+    const paginationContainer =
+        document.querySelector<HTMLElement>('.pagination')
+    const paginationWrapper = paginationContainer.querySelector<HTMLElement>(
+        '.pagination-wrapper'
+    )
+
+    const totalPages = parseInt(paginationContainer.dataset.pages) || 1
+    let currentPage =
+        parseInt(new URLSearchParams(window.location.search).get('page')) || 1
+
+    console.log(totalPages, currentPage)
+
+    if (totalPages <= 1) return (paginationContainer.innerHTML = '')
+
+    function createPagination(totalPages: number, currentPage: number) {
+        paginationWrapper.innerHTML = ''
+
+        // Previous button
+        const prevButton = paginationContainer.querySelector<HTMLElement>(
+            'button.pagination-prev'
+        )
+        prevButton.addEventListener('click', () => goToPage(currentPage - 1))
+
+        // Next button
+        const nextButton = paginationContainer.querySelector<HTMLElement>(
+            'button.pagination-next'
+        )
+        nextButton.addEventListener('click', () => goToPage(currentPage + 1))
+
+        // Page buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button')
+
+            pageButton.innerText = `${i}`
+
+            pageButton.classList.add('title_smaller')
+
+            if (i === currentPage) {
+                pageButton.classList.add('active')
+            }
+            pageButton.addEventListener('click', () => goToPage(i))
+            paginationWrapper.appendChild(pageButton)
+        }
+    }
+
+    createPagination(totalPages, currentPage)
+
+    function goToPage(page) {
+        insert_param('page', page)
+    }
+}
+
+// pagination
