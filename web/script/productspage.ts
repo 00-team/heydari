@@ -142,38 +142,28 @@ function setPagination() {
 
     if (totalPages <= 1) return (paginationContainer.innerHTML = '')
 
-    function createPagination(totalPages: number, currentPage: number) {
-        paginationWrapper.innerHTML = ''
+    // Previous button
+    const prevButton = paginationContainer.querySelector<HTMLButtonElement>(
+        'button.pagination-prev'
+    )
+    if (currentPage <= 1) prevButton.disabled = true
+    prevButton.addEventListener('click', () => goToPage(currentPage - 1))
 
-        // Previous button
-        const prevButton = paginationContainer.querySelector<HTMLElement>(
-            'button.pagination-prev'
-        )
-        prevButton.addEventListener('click', () => goToPage(currentPage - 1))
+    // Next button
+    const nextButton = paginationContainer.querySelector<HTMLButtonElement>(
+        'button.pagination-next'
+    )
+    if (currentPage >= totalPages) nextButton.disabled = true
+    nextButton.addEventListener('click', () => goToPage(currentPage + 1))
 
-        // Next button
-        const nextButton = paginationContainer.querySelector<HTMLElement>(
-            'button.pagination-next'
-        )
-        nextButton.addEventListener('click', () => goToPage(currentPage + 1))
+    let pageTags = paginationWrapper.querySelectorAll('a')
 
-        // Page buttons
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement('button')
-
-            pageButton.innerText = `${i}`
-
-            pageButton.classList.add('title_smaller')
-
-            if (i === currentPage) {
-                pageButton.classList.add('active')
-            }
-            pageButton.addEventListener('click', () => goToPage(i))
-            paginationWrapper.appendChild(pageButton)
+    // Page buttons
+    for (let i = 1; i <= pageTags.length; i++) {
+        if (i + 1 === currentPage) {
+            pageTags[i].classList.add('active')
         }
     }
-
-    createPagination(totalPages, currentPage)
 
     function goToPage(page) {
         insert_param('page', page)
