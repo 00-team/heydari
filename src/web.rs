@@ -85,6 +85,13 @@ async fn products(
         String::new()
     };
 
+    let products_count = sqlx::query! {
+        "select count(id) as count from products"
+    }
+    .fetch_one(&state.sql)
+    .await?;
+    let pages = (products_count.count as f32 / 32f32).ceil() as u32;
+
     let products: Vec<Product> = sqlx::query_as(&format!(
         "select * from products {} order by created_at {} limit 32 offset ?",
         cond, sort
@@ -107,6 +114,7 @@ async fn products(
     let result = env.get_template("products/index.html")?.render(context! {
         products => products,
         tags => tags,
+        pages => pages,
     })?;
 
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
@@ -246,14 +254,15 @@ async fn admin_index() -> HttpResponse {
 #[get("/robots.txt")]
 async fn robots() -> HttpResponse {
     HttpResponse::Ok().content_type(ContentType::plaintext()).body(
-r###"User-agent: *
+        r###"User-agent: *
 Disallow: /admin/
 
 User-agent: *
 Allow: /
 
 Sitemap: https://heydari-mi.com/sitemap.xml
-"###)
+"###,
+    )
 }
 
 pub fn router() -> impl HttpServiceFactory {
