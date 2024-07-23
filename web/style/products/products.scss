@@ -217,6 +217,10 @@
 
                 margin-right: 0.5em;
 
+                &:last-child {
+                    width: 100%;
+                }
+
                 @media screen and (max-width: 768px) {
                     flex-direction: column;
                     width: 100%;
@@ -313,14 +317,16 @@
 
                             transform: translateX(200%);
 
-                            transition: 0.3s ease,
+                            transition:
+                                0.3s ease,
                                 transform 0.3s
                                     cubic-bezier(0.45, 0.02, 0.09, 0.98),
                                 color 0.3s;
 
                             @for $i from 1 through 50 {
                                 &:nth-child(#{$i}) {
-                                    transition: 0.3s ease,
+                                    transition:
+                                        0.3s ease,
                                         transform
                                             #{$i *
                                             200ms}
@@ -425,7 +431,9 @@
             transition-property: transform, opacity, display;
             transition-duration: 0.3s;
             // transition-behavior: allow-discrete;
-            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+            transition:
+                transform 0.3s ease-in-out,
+                width 0.3s ease-in-out;
 
             position: relative;
             isolation: isolate;
@@ -554,7 +562,7 @@
             justify-content: center;
             gap: 0.5em;
 
-            button {
+            > button {
                 border-radius: 100vmax;
                 display: flex;
                 align-items: center;
@@ -566,6 +574,36 @@
 
                 svg {
                     margin: 10px;
+                }
+            }
+
+            .pagination-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.3rem;
+
+                a {
+                    width: 50px;
+                    aspect-ratio: 1;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    padding: 0.9em;
+                    border-radius: 100vmax;
+
+                    background: white;
+                    color: black;
+                    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+                    overflow: hidden;
+
+                    &.active {
+                        background: var(--sixty-percent);
+                        color: white;
+                    }
                 }
             }
         }
