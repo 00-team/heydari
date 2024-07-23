@@ -85,9 +85,11 @@ async fn products(
         String::new()
     };
 
-    let products_count = sqlx::query! {
-        "select count(id) as count from products"
-    }
+    #[derive(sqlx::FromRow)]
+    struct Count { count: i64 }
+    let products_count: Count = sqlx::query_as(&format!(
+        "select count(id) as count from products {cond}"
+    ))
     .fetch_one(&state.sql)
     .await?;
     let pages = (products_count.count as f32 / 32f32).ceil() as u32;
