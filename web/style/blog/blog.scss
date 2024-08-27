@@ -11,6 +11,8 @@
     overflow: hidden;
 
     .simurgh--blog-fnd {
+        width: 100%;
+
         .simurgh--blog-thumbnail,
         > header,
         .simurgh--blog-options,
@@ -18,12 +20,40 @@
             width: clamp(0px, 100%, 1000px);
         }
 
+        .simurgh--blog-options {
+            @media screen and (max-width: 768px) {
+                margin: 2em 0;
+            }
+        }
+
         .simurgh--blog-thumbnail {
             max-width: unset;
             max-height: unset;
+            height: unset;
 
             width: clamp(0px, 100%, 1200px);
-            height: 400px;
+
+            aspect-ratio: 3 / 1;
+
+            @media screen and (max-width: 768px) {
+                aspect-ratio: 2 / 1;
+            }
+        }
+
+        > header {
+            &::before,
+            &::after {
+                @media screen and (max-width: 768px) {
+                    display: none;
+                }
+            }
+            > span {
+                @media screen and (max-width: 768px) {
+                    padding: 0;
+                    white-space: normal;
+                    text-align: center;
+                }
+            }
         }
     }
 
