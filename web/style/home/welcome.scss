@@ -12,8 +12,7 @@
 
     will-change: transform;
 
-    animation: welcomer-slideOut 0.7s 5.25s cubic-bezier(0.45, 0.02, 0.09, 0.98)
-        forwards;
+    animation: welcomer-slideOut 0.7s var(--SCENE_DUR) ease-in-out forwards;
 
     z-index: 10;
 
@@ -43,7 +42,7 @@
 
             transform: translateY(100%);
 
-            animation: fadein 7s ease-in-out forwards;
+            animation: fadein var(--WRAPPERR_DUR) ease-in-out forwards;
 
             fill: var(--sixty-percent);
 
@@ -84,7 +83,7 @@
 
                     transform: translateY(100%);
 
-                    animation: fadein 7s ease-in-out forwards;
+                    animation: fadein var(--WRAPPERR_DUR) ease-in-out forwards;
 
                     @keyframes fadein {
                         0% {
@@ -96,20 +95,20 @@
                             opacity: 1;
                             transform: translateY(0);
                         }
-                        50% {
+                        100% {
                             opacity: 1;
                             transform: translateY(0);
                         }
 
-                        70% {
-                            transform: translateY(-100%);
-                            opacity: 0;
-                        }
+                        // 70% {
+                        //     transform: translateY(-100%);
+                        //     opacity: 0;
+                        // }
 
-                        100% {
-                            transform: translateY(-70%);
-                            opacity: 0;
-                        }
+                        // 100% {
+                        //     transform: translateY(-70%);
+                        //     opacity: 0;
+                        // }
                     }
                 }
 
@@ -136,7 +135,8 @@
 
             transform: translateY(100%);
 
-            animation: welcomer-companyname-fadein 1s 1.5s ease-in-out forwards;
+            animation: welcomer-companyname-fadein var(--BOTTOM_DUR)
+                var(--BOTTOM_DELLAY) ease-in-out forwards;
 
             @keyframes welcomer-companyname-fadein {
                 from {
@@ -154,7 +154,9 @@
                 height: 2px;
                 background-color: var(--accent-color);
 
-                animation: width-open 0.5s 2.5s ease-in-out forwards;
+                animation: width-open calc(var(--BOTTOM_DELLAY) / 2)
+                    calc(var(--BOTTOM_DELLAY) + var(--BOTTOM_DUR)) ease-in-out
+                    forwards;
 
                 @keyframes width-open {
                     from {

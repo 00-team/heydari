@@ -17,6 +17,14 @@
         .simurgh--blog-preview {
             width: clamp(0px, 100%, 1000px);
         }
+
+        .simurgh--blog-thumbnail {
+            max-width: unset;
+            max-height: unset;
+
+            width: clamp(0px, 100%, 1200px);
+            height: 400px;
+        }
     }
 
     .related-blogs {

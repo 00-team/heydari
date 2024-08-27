@@ -146,13 +146,6 @@ section.about-container {
                     position: absolute;
                 }
 
-                img {
-                    width: 100%;
-                    object-fit: cover;
-
-                    border-radius: 10px;
-                }
-
                 &.next {
                     animation: next-slider 1.5s
                         cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
@@ -229,6 +222,13 @@ section.about-container {
                             opacity: 1;
                         }
                     }
+                }
+
+                img {
+                    width: 100%;
+                    object-fit: cover;
+
+                    border-radius: 10px;
                 }
             }
         }
