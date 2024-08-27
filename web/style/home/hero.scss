@@ -45,7 +45,8 @@ section.hero-container {
             opacity: 0;
             translate: 50%;
 
-            animation: hero-img-slidein 1s 5s ease-in-out forwards;
+            animation: hero-img-slidein 1s calc(var(--SCENE_DUR) + 0.3s)
+                ease-in-out forwards;
 
             @media screen and (max-width: 1440px) {
                 width: clamp(0px, 350px, 100%);
