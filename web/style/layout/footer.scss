@@ -348,6 +348,17 @@ footer.footer-container {
                         }
                     }
                 }
+
+                .enamad {
+                    width: clamp(0px, 100%, 200px);
+                    aspect-ratio: 1/1;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
             }
         }
     }
