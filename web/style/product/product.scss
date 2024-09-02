@@ -5,11 +5,11 @@ main.product {
     display: flex;
     flex-direction: column;
 
+    background: linear-gradient(45deg, var(--sixty-percent), transparent);
+
     .product-wrapper {
         width: 100%;
         min-height: 80vh;
-
-        background: linear-gradient(45deg, var(--sixty-percent), transparent);
 
         display: flex;
         align-items: center;
@@ -335,6 +335,7 @@ main.product {
                     }
                     to {
                         transform: translateY(0) scale(1);
+                        z-index: 2;
                     }
                 }
 
@@ -392,26 +393,86 @@ main.product {
         }
     }
 
-    .product-banner {
+    section.product-about {
+        width: clamp(0px, 100%, 1400px);
+
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
+        flex-direction: column;
 
-        color: var(--primary-color);
+        margin: 0 auto;
+        margin-bottom: 6rem;
 
-        width: 100%;
-        aspect-ratio: 1/0.25;
+        .about-select {
+            width: 100%;
 
-        overflow: hidden;
+            display: flex;
+            gap: 1rem;
 
-        @media screen and (max-width: 768px) {
-            aspect-ratio: 1/0.5;
+            padding-right: 2rem;
+
+            button {
+                padding: 1rem 2rem;
+                border-top-right-radius: 0.7rem;
+                border-top-left-radius: 0.7rem;
+
+                background-color: white;
+                color: black;
+
+                transition: 0.3s ease;
+
+                &.active {
+                    background-color: var(--sixty-percent);
+                    color: white;
+                }
+            }
         }
 
-        img {
-            height: 100%;
+        .about-wrapper {
             width: 100%;
-            object-fit: cover;
+            height: auto;
+
+            min-height: 600px;
+
+            background-color: white;
+
+            border-radius: 1rem;
+
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+
+            .about,
+            .info {
+                padding: 1.5rem;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            .about {
+                line-height: 1.8em;
+
+                transform: translateX(200%);
+
+                transition: 0.5s ease;
+
+                &.active {
+                    transform: translateX(0);
+                }
+            }
+
+            .info {
+                position: absolute;
+                inset: 0;
+
+                transform: translateX(-200%);
+
+                transition: 0.5s ease;
+
+                &.active {
+                    transform: translateX(0);
+                }
+            }
         }
     }
 
@@ -424,6 +485,8 @@ main.product {
         align-items: center;
         flex-direction: column;
         padding: 5vh 3vw;
+
+        background-color: white;
 
         position: relative;
         isolation: isolate;
@@ -459,9 +522,11 @@ main.product {
         }
 
         h4 {
-            width: 100%;
             text-align: center;
             margin-bottom: 2em;
+
+            border-bottom: 2px solid var(--sixty-percent);
+            padding-bottom: 1rem;
         }
 
         .related-wrapper {
