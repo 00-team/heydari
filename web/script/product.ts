@@ -20,6 +20,9 @@ const AboutButton = aboutSelect.querySelector<HTMLButtonElement>('button.about')
 const aboutSection = aboutWrapper.querySelector<HTMLElement>('.about')
 const infoSection = aboutWrapper.querySelector<HTMLElement>('.info')
 
+const aboutText = aboutSection.querySelector<HTMLElement>('p')
+const infoTable = infoSection.querySelector<HTMLTableElement>('table')
+
 let activeSection: 'info' | 'about' = 'about'
 
 function update() {
@@ -29,12 +32,16 @@ function update() {
 
         aboutSection.className = 'about title_smaller active'
         infoSection.className = 'info title_smaller'
+
+        aboutWrapper.style.height = `calc(${aboutText.getBoundingClientRect().height}px + 5rem)`
     } else {
         AboutButton.className = 'title_small about '
         InfoButton.className = 'title_small info active'
 
         aboutSection.className = 'about title_smaller '
         infoSection.className = 'info title_smaller active'
+
+        aboutWrapper.style.height = `calc(${infoTable.getBoundingClientRect().height}px + 5rem)`
     }
 }
 
