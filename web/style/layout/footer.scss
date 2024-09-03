@@ -327,6 +327,18 @@ footer.footer-container {
 
                             @media screen and (max-width: 768px) {
                                 justify-content: center;
+                                flex-direction: column-reverse;
+                                gap: 0.5rem;
+
+                                &::before {
+                                    content: '';
+
+                                    width: 50%;
+                                    height: 2px;
+
+                                    margin: 0 5px;
+                                    background-color: var(--sixty-percent);
+                                }
                             }
 
                             &::before {
