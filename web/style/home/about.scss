@@ -45,11 +45,14 @@ section.about-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
 
         width: clamp(0px, 1300px, 100%);
 
         position: relative;
+
+        @media screen and (max-width: 1024px) {
+            flex-direction: column;
+        }
 
         .about-content {
             display: flex;
@@ -63,6 +66,14 @@ section.about-container {
             }
         }
 
+        .about-img-wrapper {
+            @media screen and (max-width: 1024px) {
+                margin-block: 180px;
+            }
+            @media screen and (max-width: 425px) {
+                margin-block: 50px;
+            }
+        }
         .about-content-wrapper,
         .about-img-wrapper {
             width: clamp(0px, 600px, 100%);
