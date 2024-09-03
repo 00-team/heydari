@@ -177,7 +177,7 @@
             }
 
             .nav-logo-container {
-                animation: 2s nav-active cubic-bezier(0.45, 0.02, 0.09, 0.98)
+                animation: 1s nav-active cubic-bezier(0.45, 0.02, 0.09, 0.98)
                     forwards;
 
                 @keyframes nav-active {
