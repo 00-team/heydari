@@ -1,17 +1,5 @@
-import { createStore, produce } from 'solid-js/store'
-import './style/products.scss'
-import { ProductModel, ProductTagModel } from 'models'
 import { useSearchParams } from '@solidjs/router'
-import {
-    Component,
-    Match,
-    Show,
-    Switch,
-    createEffect,
-    createMemo,
-    onMount,
-} from 'solid-js'
-import { httpx } from 'shared'
+import { Confact, Select } from 'comps'
 import {
     ArmchairIcon,
     ChevronDownIcon,
@@ -19,7 +7,6 @@ import {
     ChevronRightIcon,
     ChevronUpIcon,
     ExternalLinkIcon,
-    ImageIcon,
     PlusIcon,
     RotateCcwIcon,
     SaveIcon,
@@ -29,9 +16,21 @@ import {
     TableIcon,
     TrashIcon,
     WrenchIcon,
-    XIcon,
 } from 'icons'
-import { Confact, Select } from 'comps'
+import { ProductModel, ProductTagModel } from 'models'
+import { httpx } from 'shared'
+import {
+    Component,
+    createEffect,
+    createMemo,
+    For,
+    Match,
+    onMount,
+    Show,
+    Switch,
+} from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
+import './style/products.scss'
 
 type TagState = {
     [k in ProductTagModel['kind']]: {
@@ -174,9 +173,12 @@ const Product: Component<ProductProps> = P => {
         slug: string
         name: string
         code: string
-        detail: string
+        description: string
         tag_leg: number | null
         tag_bed: number | null
+
+        specification: { [key: string]: string }
+        detail: string
     }
     const [state, setState] = createStore<State>({
         loading: false,
@@ -187,6 +189,9 @@ const Product: Component<ProductProps> = P => {
         detail: P.product.detail,
         tag_leg: P.product.tag_leg,
         tag_bed: P.product.tag_bed,
+
+        description: P.product.description,
+        specification: P.product.specification,
     })
 
     function product_delete() {
@@ -212,6 +217,9 @@ const Product: Component<ProductProps> = P => {
                 tag_leg: state.tag_leg,
                 tag_bed: state.tag_bed,
                 best: P.product.best,
+
+                description: state.description,
+                specification: state.specification,
             },
             onLoad(x) {
                 if (x.status != 200) return
@@ -232,6 +240,9 @@ const Product: Component<ProductProps> = P => {
                 tag_leg: P.product.tag_leg,
                 tag_bed: P.product.tag_bed,
                 best: !P.product.best,
+
+                description: P.product.description,
+                specification: P.product.specification,
             },
             onLoad(x) {
                 if (x.status != 200) return
@@ -248,6 +259,8 @@ const Product: Component<ProductProps> = P => {
             detail: P.product.detail,
             tag_leg: P.product.tag_leg,
             tag_bed: P.product.tag_bed,
+            description: P.product.description,
+            specification: P.product.specification,
         })
     }
 
@@ -258,45 +271,47 @@ const Product: Component<ProductProps> = P => {
             state.code != P.product.code ||
             state.detail != P.product.detail ||
             state.tag_leg != P.product.tag_leg ||
-            state.tag_bed != P.product.tag_bed
+            state.tag_bed != P.product.tag_bed ||
+            state.description != P.product.description ||
+            state.specification != P.product.specification
     )
 
-    function thumbnail_update() {
-        let el = document.createElement('input')
-        el.setAttribute('type', 'file')
-        el.setAttribute('accept', 'image/*')
-        el.onchange = () => {
-            if (!el.files || !el.files[0]) return
+    // function thumbnail_update() {
+    //     let el = document.createElement('input')
+    //     el.setAttribute('type', 'file')
+    //     el.setAttribute('accept', 'image/*')
+    //     el.onchange = () => {
+    //         if (!el.files || !el.files[0]) return
 
-            setState({ loading: true })
-            let data = new FormData()
-            data.set('photo', el.files[0])
+    //         setState({ loading: true })
+    //         let data = new FormData()
+    //         data.set('photo', el.files[0])
 
-            httpx({
-                url: `/api/admin/products/${P.product.id}/thumbnail/`,
-                method: 'PUT',
-                data,
-                onLoad(x) {
-                    if (x.status != 200) return
+    //         httpx({
+    //             url: `/api/admin/products/${P.product.id}/thumbnail/`,
+    //             method: 'PUT',
+    //             data,
+    //             onLoad(x) {
+    //                 if (x.status != 200) return
 
-                    setState({ loading: false })
-                    P.update(x.response)
-                },
-            })
-        }
-        el.click()
-    }
+    //                 setState({ loading: false })
+    //                 P.update(x.response)
+    //             },
+    //         })
+    //     }
+    //     el.click()
+    // }
 
-    function thumbnail_delete() {
-        httpx({
-            url: `/api/admin/products/${P.product.id}/thumbnail/`,
-            method: 'DELETE',
-            onLoad(x) {
-                if (x.status != 200) return
-                P.update(x.response)
-            },
-        })
-    }
+    // function thumbnail_delete() {
+    //     httpx({
+    //         url: `/api/admin/products/${P.product.id}/thumbnail/`,
+    //         method: 'DELETE',
+    //         onLoad(x) {
+    //             if (x.status != 200) return
+    //             P.update(x.response)
+    //         },
+    //     })
+    // }
 
     function photo_add() {
         let el = document.createElement('input')
@@ -474,17 +489,20 @@ const Product: Component<ProductProps> = P => {
                             setState({ code })
                         }}
                     />
-                    <span>Detail:</span>
+                    <span>Description:</span>
                     <textarea
                         rows={4}
                         dir='auto'
                         class='styled'
                         placeholder='product detail'
                         maxLength={2047}
-                        value={state.detail}
+                        value={state.description}
                         onInput={e => {
-                            let detail = e.currentTarget.value.slice(0, 2047)
-                            setState({ detail })
+                            let description = e.currentTarget.value.slice(
+                                0,
+                                2047
+                            )
+                            setState({ description })
                         }}
                     />
                     <span>Tag Leg:</span>
@@ -503,35 +521,186 @@ const Product: Component<ProductProps> = P => {
                             bed_tags().find(t => t.idx == state.tag_bed),
                         ]}
                     />
-                    <span>Banner:</span>
-                    <div class='thumbnail' onClick={thumbnail_update}>
-                        <Show
-                            when={P.product.thumbnail}
-                            fallback={<ImageIcon />}
+                    <span>Detail:</span>
+                    <textarea
+                        rows={9}
+                        dir='auto'
+                        class='styled'
+                        placeholder='product description'
+                        maxLength={2047}
+                        value={state.detail}
+                        onInput={e => {
+                            let detail = e.currentTarget.value.slice(0, 2047)
+                            setState({ detail })
+                        }}
+                    />
+                    <span>Table:</span>
+                    <div class='table-container'>
+                        <div class='table-wrapper'>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>عنوان</th>
+                                        <th>توضیح</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <Show
+                                        when={
+                                            Object.keys(state.specification)
+                                                .length > 0
+                                        }
+                                        fallback={
+                                            <tr class='empty'>
+                                                <td colspan='2'>
+                                                    مشخصاتی ثبت نشده!
+                                                </td>
+                                            </tr>
+                                        }
+                                    >
+                                        <For
+                                            each={Object.entries(
+                                                state.specification
+                                            )}
+                                        >
+                                            {([key, value], index) => (
+                                                <tr>
+                                                    {/* Editable key field */}
+                                                    <td>
+                                                        <input
+                                                            type='text'
+                                                            value={key}
+                                                            onBlur={e => {
+                                                                const newKey =
+                                                                    e.target
+                                                                        .value
+                                                                const newValue =
+                                                                    value
+
+                                                                if (
+                                                                    newKey !==
+                                                                    key
+                                                                ) {
+                                                                    setState(
+                                                                        produce(
+                                                                            s => {
+                                                                                s.specification =
+                                                                                    {
+                                                                                        ...Object.fromEntries(
+                                                                                            Object.entries(
+                                                                                                state.specification
+                                                                                            ).map(
+                                                                                                (
+                                                                                                    [
+                                                                                                        k,
+                                                                                                        v,
+                                                                                                    ],
+                                                                                                    i
+                                                                                                ) =>
+                                                                                                    i ===
+                                                                                                    index()
+                                                                                                        ? [
+                                                                                                              newKey,
+                                                                                                              newValue,
+                                                                                                          ]
+                                                                                                        : [
+                                                                                                              k,
+                                                                                                              v,
+                                                                                                          ]
+                                                                                            )
+                                                                                        ),
+                                                                                    }
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    </td>
+
+                                                    <td>
+                                                        <input
+                                                            type='text'
+                                                            value={value}
+                                                            onBlur={e => {
+                                                                const newValue =
+                                                                    e.target
+                                                                        .value
+                                                                const currentKey =
+                                                                    key
+
+                                                                if (
+                                                                    newValue !==
+                                                                    value
+                                                                ) {
+                                                                    setState(
+                                                                        produce(
+                                                                            s => {
+                                                                                s.specification =
+                                                                                    {
+                                                                                        ...Object.fromEntries(
+                                                                                            Object.entries(
+                                                                                                state.specification
+                                                                                            ).map(
+                                                                                                ([
+                                                                                                    k,
+                                                                                                    v,
+                                                                                                ]) =>
+                                                                                                    k ===
+                                                                                                    currentKey
+                                                                                                        ? [
+                                                                                                              k,
+                                                                                                              newValue,
+                                                                                                          ]
+                                                                                                        : [
+                                                                                                              k,
+                                                                                                              v,
+                                                                                                          ]
+                                                                                            )
+                                                                                        ),
+                                                                                    }
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </For>
+                                    </Show>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button
+                            class='styled icon'
+                            onClick={() => {
+                                const newKey = `عنوان جدید ${Object.keys(state.specification).length + 1}`
+                                const newValue = 'توضیح جدید'
+
+                                setState(
+                                    produce(s => {
+                                        s.specification = {
+                                            ...state.specification,
+                                            [newKey]: newValue,
+                                        }
+                                    })
+                                )
+                            }}
                         >
-                            <>
-                                <img
-                                    draggable={false}
-                                    loading='lazy'
-                                    decoding='async'
-                                    src={`/record/pt-${P.product.id}-${P.product.thumbnail}`}
-                                />
-                                <button
-                                    class='styled icon remove'
-                                    onClick={e => {
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                        thumbnail_delete()
-                                    }}
-                                >
-                                    <XIcon />
-                                </button>
-                            </>
-                        </Show>
+                            <PlusIcon />
+                        </button>
                     </div>
+
                     <span>Photos:</span>
                     <div class='photos'>
-                        <button class='styled icon' onClick={photo_add}>
+                        <button
+                            class='styled icon'
+                            style={{ 'margin-left': '-1rem' }}
+                            onClick={photo_add}
+                        >
                             <PlusIcon />
                         </button>
                         {P.product.photos.map((s, i) => (
