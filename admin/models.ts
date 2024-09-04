@@ -30,4 +30,7 @@ export type ProductModel = {
     tag_leg: number | null
     tag_bed: number | null
     best: boolean
+
+    description: string
+    specification: { string: string }[]
 }
