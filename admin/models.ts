@@ -32,5 +32,5 @@ export type ProductModel = {
     best: boolean
 
     description: string
-    specification: { string: string }[]
+    specification: { [key: string]: string }
 }
