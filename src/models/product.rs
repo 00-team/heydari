@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use sqlx::{sqlite::SqliteRow, Row};
 use utoipa::ToSchema;
@@ -43,6 +45,9 @@ pub struct Product {
     pub tag_leg: Option<i64>,
     pub tag_bed: Option<i64>,
     pub best: bool,
+    pub description: String,
+    #[schema(value_type = HashMap<String, String>)]
+    pub specification: JsonStr<HashMap<String, String>>,
 }
 
 from_request!(Product, "products");
@@ -62,6 +67,8 @@ impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
         let tag_leg = row.get::<Option<i64>, _>("tag_leg");
         let tag_bed = row.get::<Option<i64>, _>("tag_bed");
         let best = row.get::<bool, _>("best");
+        let description = row.get::<String, _>("description");
+        let specification = row.get::<String, _>("specification");
 
         Ok(Product {
             id,
@@ -77,6 +84,8 @@ impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
             tag_leg,
             tag_bed,
             best,
+            description,
+            specification: specification.into(),
         })
     }
 }

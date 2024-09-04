@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Path, Query};
@@ -9,7 +11,7 @@ use utoipa::{IntoParams, OpenApi, ToSchema};
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
 use crate::models::user::Admin;
-use crate::models::{AppErr, AppErrBadRequest, Response};
+use crate::models::{AppErr, AppErrBadRequest, JsonStr, Response};
 use crate::utils::{self, CutOff};
 use crate::AppState;
 
@@ -22,8 +24,8 @@ use crate::AppState;
         product_photo_add, product_photo_del
     ),
     components(schemas(
-        Product, ProductTag, ProductKind, ProductPart,
-        ProductAddBody, ProductUpdateBody
+        Product, ProductTag, ProductKind, ProductPart, ProductAddBody,
+        ProductUpdateBody
     )),
     servers((url = "/products")),
     modifiers(&UpdatePaths)
@@ -176,6 +178,8 @@ struct ProductUpdateBody {
     slug: String,
     code: String,
     detail: String,
+    description: String,
+    specification: HashMap<String, String>,
     tag_leg: Option<i64>,
     tag_bed: Option<i64>,
     best: bool,
@@ -201,13 +205,16 @@ async fn product_update(
     product.name = body.name.clone();
     product.code = body.code.clone();
     product.detail = body.detail.clone();
+    product.description = body.description.clone();
+    product.specification = JsonStr(body.specification.clone());
     product.best = body.best;
     product.updated_at = utils::now();
 
-    product.slug.cut_off(255);
-    product.name.cut_off(255);
-    product.code.cut_off(255);
+    product.slug.cut_off(256);
+    product.name.cut_off(256);
+    product.code.cut_off(256);
     product.detail.cut_off(2048);
+    product.description.cut_off(512);
 
     product.tag_leg = update_tag(
         product.tag_leg,
@@ -229,9 +236,11 @@ async fn product_update(
 
     sqlx::query! {
         "update products set slug = ?, name = ?, code = ?, detail = ?, best = ?,
-        updated_at = ?, tag_leg = ?, tag_bed = ? where id = ?",
+        updated_at = ?, tag_leg = ?, tag_bed = ?, description = ?,
+        specification = ? where id = ?",
         product.slug, product.name, product.code, product.detail, product.best,
-        product.updated_at, product.tag_leg, product.tag_bed, product.id
+        product.updated_at, product.tag_leg, product.tag_bed, product.description,
+        product.specification, product.id
     }
     .execute(&state.sql)
     .await?;

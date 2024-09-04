@@ -422,8 +422,8 @@ main.product {
                 border-top-right-radius: 0.7rem;
                 border-top-left-radius: 0.7rem;
 
-                background-color: white;
-                color: black;
+                background-color: var(--sixty-percent);
+                color: white;
 
                 transition: 0.3s ease;
 
@@ -433,8 +433,8 @@ main.product {
                 }
 
                 &.active {
-                    background-color: var(--sixty-percent);
-                    color: white;
+                    background-color: white;
+                    color: black;
                 }
             }
         }

@@ -54,7 +54,7 @@
                 {{ product.name }}
             </h2>
             <p class="product-desc title_smaller">
-                {{ product.detail }}
+                {{ product.description }}
             </p>
             <a href="/contact" target="_blank" class="contact-us title_small">
                 <span class="dot dot-1"></span>
@@ -96,77 +96,18 @@
         <div class="about-wrapper">
             <div class="about ">
                 <p class="title_smaller">
-                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است،
-                    چاپگرها و
-                    متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و
-                    کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و
-                    آینده،
-                    شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی
-                    الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و
-                    دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی
-                    دستاوردهای
-                    اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.لورم ایپسوم متن
-                    ساختگی
-                    با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و
-                    مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف
-                    بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه
-                    و
-                    متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی،
-                    و
-                    فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه
-                    راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی
-                    سوالات
-                    پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                    {{ product.detail }}
                 </p>
             </div>
             <div class="info title_smaller">
                 <table>
                     <tbody>
+                        {% for key, val in product.specification | items %}
                         <tr>
-                            <th class="title_smaller"><strong>وزن</strong></th>
-                            <td class="description">
-                                18.55 کیلوگرم </td>
+                            <th class="title_smaller"><strong>{{ key }}</strong></th>
+                            <td class="description">{{ val }}</td>
                         </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>رنگ بدنه</strong></th>
-                            <td class="description">
-                                طوسی </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>مکانیزم</strong></th>
-                            <td class="description">
-                                کلاچی </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>جنس پایه</strong></th>
-                            <td class="description">
-                                پلاستیک ( پلی آمید تقویت شده ) </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>جنس روکش کفی</strong></th>
-                            <td class="description">
-                                پارچه | چرم مصنوعی </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>جنس روکش پشتی</strong></th>
-                            <td class="description">
-                                مش </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>قابلیت تنظیم ارتفاع</strong></th>
-                            <td class="description">
-                                دارد </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>قابلیت تنظیم دسته</strong></th>
-                            <td class="description">
-                                ندارد </td>
-                        </tr>
-                        <tr>
-                            <th class="title_smaller"><strong>گارانتی</strong></th>
-                            <td class="description">
-                                3 سال پس از تاریخ تولید </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
