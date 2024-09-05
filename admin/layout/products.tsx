@@ -540,6 +540,7 @@ const Product: Component<ProductProps> = P => {
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>حذف</th>
                                         <th>عنوان</th>
                                         <th>توضیح</th>
                                     </tr>
@@ -552,7 +553,7 @@ const Product: Component<ProductProps> = P => {
                                         }
                                         fallback={
                                             <tr class='empty'>
-                                                <td colspan='2'>
+                                                <td colspan='3'>
                                                     مشخصاتی ثبت نشده!
                                                 </td>
                                             </tr>
@@ -565,7 +566,32 @@ const Product: Component<ProductProps> = P => {
                                         >
                                             {([key, value], index) => (
                                                 <tr>
-                                                    {/* Editable key field */}
+                                                    <td class='delete-cta'>
+                                                        <button
+                                                            class='styled icon'
+                                                            onClick={() => {
+                                                                setState(
+                                                                    produce(
+                                                                        s => {
+                                                                            let newSpecs =
+                                                                                {
+                                                                                    ...s.specification,
+                                                                                }
+                                                                            delete newSpecs[
+                                                                                key
+                                                                            ]
+
+                                                                            s.specification =
+                                                                                newSpecs
+                                                                        }
+                                                                    )
+                                                                )
+                                                            }}
+                                                        >
+                                                            <TrashIcon />
+                                                        </button>
+                                                    </td>
+
                                                     <td>
                                                         <input
                                                             type='text'
