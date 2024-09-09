@@ -1,5 +1,6 @@
 import { useSearchParams } from '@solidjs/router'
 import { Confact, Select } from 'comps'
+import { addAlert } from 'comps/alert'
 import {
     ArmchairIcon,
     ChevronDownIcon,
@@ -703,8 +704,17 @@ const Product: Component<ProductProps> = P => {
                         <button
                             class='styled icon'
                             onClick={() => {
-                                const newKey = `عنوان جدید ${Object.keys(state.specification).length + 1}`
+                                const newKey = `عنوان جدید`
                                 const newValue = 'توضیح جدید'
+
+                                if (newKey in state.specification)
+                                    return addAlert({
+                                        type: 'error',
+                                        timeout: 3,
+                                        subject: 'عنوان تکراری!',
+                                        content:
+                                            'عنوان جدید رو به چیزه دیگری تغییر بدید.',
+                                    })
 
                                 setState(
                                     produce(s => {
