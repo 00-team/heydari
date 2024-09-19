@@ -69,6 +69,12 @@ impl From<sqlx::Error> for AppErr {
     }
 }
 
+impl From<&str> for AppErr {
+    fn from(value: &str) -> Self {
+        Self::new(500, value)
+    }
+}
+
 impl From<actix_web::error::Error> for AppErr {
     fn from(value: actix_web::error::Error) -> Self {
         let r = value.error_response();
@@ -105,6 +111,7 @@ impl_from_err!(SendRequestError);
 impl_from_err!(FromUtf8Error);
 impl_from_err!(serde_json::Error);
 impl_from_err!(minijinja::Error);
+impl_from_err!(image::ImageError);
 
 macro_rules! error_helper {
     ($name:ident, $status:ident, $subject:literal) => {

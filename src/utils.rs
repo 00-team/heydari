@@ -3,11 +3,9 @@ use crate::models::{AppErr, AppErrBadRequest};
 use actix_http::encoding::Decoder;
 use actix_http::Payload;
 use awc::ClientResponse;
-use image::io::Reader as ImageReader;
-use image::ImageFormat;
+use image::{EncodableLayout, ImageReader};
 use rand::Rng;
 use serde::Serialize;
-use std::io;
 use std::path::Path;
 
 pub fn phone_validator(phone: &str) -> Result<(), AppErr> {
@@ -48,18 +46,25 @@ pub fn get_random_bytes(len: usize) -> String {
     hex::encode((0..len).map(|_| rng.gen::<u8>()).collect::<Vec<u8>>())
 }
 
-pub fn save_photo(path: &Path, name: &str, size: (u32, u32)) -> io::Result<()> {
+pub fn save_photo(
+    path: &Path, name: &str, size: (u32, u32),
+) -> Result<(), AppErr> {
     let img = ImageReader::open(path)?
         .with_guessed_format()?
-        .decode()
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        .decode()?
+        .thumbnail(size.0, size.1);
 
-    img.thumbnail(size.0, size.1)
-        .save_with_format(
-            Path::new(Config::RECORD_DIR).join(name),
-            ImageFormat::Png,
-        )
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+    let encoder = webp::Encoder::from_image(&img)?;
+    let output = encoder.encode(60.0);
+    let path = Path::new(Config::RECORD_DIR).join(name);
+    std::fs::write(path, output.as_bytes())?;
+
+    // img.thumbnail(size.0, size.1)
+    //     .save_with_format(
+    //         Path::new(Config::RECORD_DIR).join(name),
+    //         ImageFormat::Png,
+    //     )
+    //     .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
     Ok(())
 }
