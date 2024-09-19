@@ -9,8 +9,7 @@ WorkingDirectory=/heydari/
 EnvironmentFile=/heydari/.env
 ExecStart=/heydari/target/release/heydari
 KillSignal=SIGQUIT
-StandardError=file:/heydari/logs/error.log
-StandardOutput=file:/heydari/logs/output.log
+StandardError=file:/heydari/log
 NotifyAccess=all
 
 [Install]
