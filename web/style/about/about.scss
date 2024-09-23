@@ -40,6 +40,11 @@
 
         padding: 1rem 2rem;
 
+        &.reverse {
+            flex-direction: row-reverse;
+            flex-wrap: wrap-reverse;
+        }
+
         .creator-img {
             display: grid;
             place-items: center;
@@ -49,7 +54,7 @@
 
             img {
                 width: 100%;
-                max-height: 100%;
+                max-height: 500px;
                 object-fit: contain;
 
                 border-radius: 10px;
@@ -71,32 +76,10 @@
                 position: relative;
                 isolation: isolate;
 
-                &::after {
-                    content: '';
-
-                    width: 0;
-                    height: 2px;
-                    background-color: black;
-                    margin-right: auto;
-
-                    animation: creator-name-line-slidein 2s 1s
-                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
-
-                    @keyframes creator-name-line-slidein {
-                        from {
-                            width: 0;
-                        }
-                        to {
-                            width: 100%;
-                        }
-                    }
-                }
-
                 span {
                     display: inline-block;
                     transform: translateY(200%);
 
-                    white-space: nowrap;
                     padding: 0 15px;
 
                     animation: creator-name-slidein 1s
@@ -129,9 +112,9 @@
         width: 100%;
 
         padding: 7vh 3vw;
-        background: var(--sixty-percent);
+        background-color: var(--sixty-percent);
 
-        margin-top: -15vh;
+        margin-top: -10vh;
 
         overflow: hidden;
 
@@ -215,25 +198,16 @@
         .honors-wrapper {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
+            flex-wrap: wrap;
             gap: calc(3vw + 5px);
 
             width: 100%;
 
-            will-change: transform;
-            transition: 0.2s linear transform;
-
-            @media screen and (max-width: 768px) {
-                overflow-x: scroll;
-                padding: 1rem 1.5rem;
-
-                // remove scroll bar
-                &::-webkit-scrollbar {
-                    display: none; /* Safari and Chrome */
+            &.active {
+                .honor-card {
+                    transform: translateY(0);
                 }
-                -ms-overflow-style: none; /* Internet Explorer 10+ */
-                scrollbar-width: none; /* Firefox */
-                //
             }
 
             .honor-card {
@@ -247,55 +221,24 @@
                 aspect-ratio: 0.7/1;
                 border-radius: 10px;
 
-                background-color: rgba(255, 255, 255, 0.2);
+                background-color: rgb(255, 255, 255);
                 backdrop-filter: blur(5px);
                 box-shadow: 0px 5px 10px -5px black;
+
+                transform: translateY(300px);
 
                 overflow: hidden;
                 position: relative;
                 isolation: isolate;
 
                 will-change: transform;
-                transition: 0.5s ease-in-out transform;
+                transition: 1s ease-in-out transform;
 
                 @media screen and (max-width: 768px) {
                     height: 350px;
                     aspect-ratio: 0.6/1;
-                }
 
-                &::after,
-                &::before {
-                    content: '';
-                    position: absolute;
-                    width: 50%;
-                    height: 50%;
-                    opacity: 0.32;
-                    z-index: 1;
-                }
-
-                &::before {
-                    background-image: linear-gradient(
-                        226deg,
-                        rgba(255, 255, 255, 0) 0%,
-                        rgba(255, 255, 255, 0) 50%,
-                        white 100%
-                    );
-
-                    top: 100%;
-                    right: 100%;
-                    translate: 100% -100%;
-                }
-                &::after {
-                    background-image: linear-gradient(
-                        45deg,
-                        rgba(255, 255, 255, 0) 0%,
-                        rgba(255, 255, 255, 0) 50%,
-                        white 100%
-                    );
-
-                    bottom: 100%;
-                    left: 100%;
-                    translate: -100% 100%;
+                    transform: translateY(0);
                 }
 
                 img {
