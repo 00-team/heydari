@@ -90,16 +90,6 @@ async fn verification(
     )
     .await;
 
-    utils::send_webhook(
-        "Verificatin",
-        &format!(
-            "act: {:?}\nphone: ||`{}`||\ncode: `{code}`",
-            body.action, body.phone
-        ),
-        2017768,
-    )
-    .await;
-
     vdb.insert(
         body.phone.clone(),
         VerifyData {
