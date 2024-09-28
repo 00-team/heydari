@@ -123,7 +123,7 @@
             margin-top: -35vh;
         }
 
-        h2.honors-title {
+        .honors-title {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -351,6 +351,22 @@
                 }
                 100% {
                     margin-right: 0%;
+                }
+            }
+
+            @media screen and (max-width: 768px) {
+                animation: project-slider 15s 5s linear infinite;
+
+                @keyframes project-slider {
+                    0% {
+                        margin-right: 0%;
+                    }
+                    50% {
+                        margin-right: -900vw;
+                    }
+                    100% {
+                        margin-right: 0%;
+                    }
                 }
             }
 
