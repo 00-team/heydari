@@ -258,14 +258,15 @@
         align-items: center;
         justify-content: flex-start;
 
-        gap: 10vh;
         overflow: hidden;
 
-        h2.project-title {
+        .project-title {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: calc(2vw + 3px);
+
+            margin-bottom: 1em;
 
             overflow: hidden;
             position: relative;
