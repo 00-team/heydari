@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>
-    {{ product.name }} صنایع تولیدی حیدری
-</title>
-<meta name="description" content="صفحه محصول {{ product.name }} صنایع تولیدی حیدری" />
+
+<title>{{ product.name }} | محصولات صنایع تولیدی حیدری</title>
+<meta name="description"
+    content="مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها." />
+
 
 <meta property="og:image" content="https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}">
 
