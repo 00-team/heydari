@@ -26,7 +26,7 @@
 <main class="product">
     <section class="product-wrapper">
         <aside class="product-details">
-            <h3 class="title_smaller category">
+            <h2 class="title_smaller category">
 
                 <span>
                     {% if product.kind == "table" %}
@@ -48,10 +48,10 @@
                     {{ tags[product.tag_bed].name }}
                 </span>
                 {% endif %}
-            </h3>
-            <h2 class="product-title title">
-                {{ product.name }}
             </h2>
+            <h1 class="product-title title">
+                {{ product.name }}
+            </h1>
             <p class="product-desc title_smaller">
                 {{ product.description }}
             </p>
@@ -114,9 +114,9 @@
     </section>
 
     <section class="products-related">
-        <h4 class="title_hero">
+        <h3 class="title_hero">
             محصولات مشابه
-        </h4>
+        </h3>
         <div class="related-wrapper title_small">
             {% for p in related %}
             <a class="related" href="/products/{{ p.slug }}">
