@@ -61,6 +61,11 @@ fi
 if check_diff "src/*"; then
     echo "$EG cargo build"
     cargo build --release
+    echo $SPACER
+fi
+
+if check_diff "src/* templates/*"; then
+    echo "$EG restart heydari"
     systemctl restart heydari
     echo $SPACER
 fi
