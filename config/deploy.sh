@@ -61,11 +61,18 @@ fi
 if check_diff "src/*"; then
     echo "$EG cargo build"
     cargo build --release
+    systemctl restart heydari
     echo $SPACER
 fi
 
-echo "$EG restart backend"
-systemctl restart heydari
-echo $SPACER
+if check_diff "config/nginx.conf"; then
+    echo "$EG restart nginx"
+    if nginx -t; then
+        systemctl restart nginx
+    else
+        echo invalid nginx status ❌
+    fi
+    echo $SPACER
+fi
 
 echo "Deploy is Done! ✅"

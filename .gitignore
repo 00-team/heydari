@@ -17,3 +17,5 @@ main.db*
 logs/
 __pycache__/
 backup/
+log
+*.db*
