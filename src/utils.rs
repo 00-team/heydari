@@ -1,7 +1,6 @@
 use crate::config::{config, Config};
 use crate::models::{AppErr, AppErrBadRequest};
 use actix_http::encoding::Decoder;
-use actix_http::h1::Message;
 use actix_http::Payload;
 use awc::ClientResponse;
 use image::{EncodableLayout, ImageReader};
