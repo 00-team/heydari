@@ -1,6 +1,7 @@
 use crate::config::{config, Config};
 use crate::models::{AppErr, AppErrBadRequest};
 use actix_http::encoding::Decoder;
+use actix_http::h1::Message;
 use actix_http::Payload;
 use awc::ClientResponse;
 use image::{EncodableLayout, ImageReader};
@@ -93,6 +94,23 @@ pub async fn simurgh_request(
     } else {
         Ok(result)
     }
+}
+
+pub async fn heimdall_message(text: &str, tag: &str) {
+    let client = awc::Client::new();
+    let request = client
+        .get(format!("https://heimdall.00-team.org/api/sites/messages/"))
+        .insert_header(("authorization", config().heimdall_token.as_str()));
+
+    #[derive(Serialize)]
+    struct Message {
+        text: String,
+        tag: String,
+    }
+
+    let _ = request
+        .send_json(&Message { text: text.to_string(), tag: tag.to_string() })
+        .await;
 }
 
 pub trait CutOff {

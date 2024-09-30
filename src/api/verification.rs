@@ -84,6 +84,13 @@ async fn verification(
     let code = utils::get_random_string(Config::CODE_ABC, 5);
     log::info!("code: {code}");
 
+    #[cfg(not(debug_assertions))]
+    utils::heimdall_message(
+        &format!("phone: {}\ncode: {code}", body.phone),
+        "verification",
+    )
+    .await;
+
     utils::send_sms(
         &body.phone,
         &format!("heydari-mi.com\nyour login code: {code}"),
