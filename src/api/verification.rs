@@ -86,7 +86,10 @@ async fn verification(
 
     #[cfg(not(debug_assertions))]
     utils::heimdall_message(
-        &format!("phone: {}\ncode: {code}", body.phone),
+        &format!(
+            "action: {:?}\nphone: {}\ncode: {code}",
+            body.action, body.phone
+        ),
         "verification",
     )
     .await;
