@@ -8,6 +8,7 @@
     gap: 12vh;
 
     padding: 5vh 7vw;
+    padding-top: 0;
 
     @media screen and (min-width: 1440px) {
         min-height: 100vh;
@@ -17,6 +18,9 @@
         display: flex;
         align-items: center;
 
+        margin-bottom: 1em;
+        margin-top: 2em;
+
         position: relative;
         isolation: isolate;
         overflow: hidden;
@@ -25,6 +29,7 @@
             overflow: hidden;
             z-index: 2;
             background-color: var(--sixty-percent);
+            color: black;
 
             span {
                 display: inline-block;
@@ -40,7 +45,7 @@
 
             width: 100px;
             height: 3px;
-            background-color: white;
+            background-color: black;
             translate: 100%;
         }
 
@@ -75,6 +80,8 @@
         column-gap: calc(10vw + 50px);
 
         width: clamp(0px, 100%, 1400px);
+
+        margin-bottom: 12vh;
 
         // .product-detail-container {
         //     display: flex;

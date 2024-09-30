@@ -9,8 +9,11 @@ section.honors-container {
     position: relative;
 
     .honor-header {
-        overflow: hidden;
+        color: black;
+
         margin-block: 2em;
+
+        overflow: hidden;
 
         &.active {
             span {

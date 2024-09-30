@@ -15,12 +15,12 @@
     gap: 0.5vw;
 
     padding: 1.5vh 1.6vw;
-    color: white;
+    color: black;
 
     background: none;
 
     border: 2px solid;
-    border-color: var(--accent-color);
+    border-color: black;
     border-radius: 3px;
 
     margin-top: 5vh;
@@ -54,7 +54,8 @@
         backface-visibility: hidden;
         transform: translateZ(0);
         display: grid;
-        transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1),
+        transition:
+            transform 0.5s cubic-bezier(0.86, 0, 0.07, 1),
             opacity 0.4s cubic-bezier(0.86, 0, 0.07, 1);
         &.before {
             transform-origin: left center;
