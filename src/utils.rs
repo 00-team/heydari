@@ -98,7 +98,7 @@ pub async fn simurgh_request(
 pub async fn heimdall_message(text: &str, tag: &str) {
     let client = awc::Client::new();
     let request = client
-        .get(format!("https://heimdall.00-team.org/api/sites/messages/"))
+        .post(format!("https://heimdall.00-team.org/api/sites/messages/"))
         .insert_header(("authorization", config().heimdall_token.as_str()));
 
     #[derive(Serialize)]
