@@ -32,7 +32,7 @@ main.product {
             display: flex;
             flex-direction: column;
 
-            h3 {
+            > .category {
                 opacity: 0.7;
                 margin-bottom: 0.5em;
                 cursor: default;
