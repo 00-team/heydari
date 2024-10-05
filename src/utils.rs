@@ -95,6 +95,23 @@ pub async fn simurgh_request(
     }
 }
 
+pub async fn heimdall_message(text: &str, tag: &str) {
+    let client = awc::Client::new();
+    let request = client
+        .post(format!("https://heimdall.00-team.org/api/sites/messages/"))
+        .insert_header(("authorization", config().heimdall_token.as_str()));
+
+    #[derive(Serialize)]
+    struct Message {
+        text: String,
+        tag: String,
+    }
+
+    let _ = request
+        .send_json(&Message { text: text.to_string(), tag: tag.to_string() })
+        .await;
+}
+
 pub trait CutOff {
     fn cut_off(&mut self, len: usize);
 }
