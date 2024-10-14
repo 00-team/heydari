@@ -14,7 +14,7 @@ pub struct User {
     pub id: i64,
     pub name: Option<String>,
     pub phone: String,
-    pub token: String,
+    pub token: Option<String>,
     pub photo: Option<String>,
     pub admin: bool,
     pub banned: bool,
