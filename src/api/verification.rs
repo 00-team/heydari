@@ -124,7 +124,11 @@ pub async fn verify(
     let mut vdb = VDB.lock().await;
     vdb.retain(|_, v| v.expires - now > 0);
 
-    let v = vdb.get_mut(phone).ok_or(AppErrBadRequest(Some("bad verification")))?;
+    let v = vdb.get_mut(phone);
+    if v.is_none() {
+        return Err(AppErrBadRequest(Some("bad verification")));
+    }
+    let v = v.unwrap();
 
     v.tries += 1;
 
