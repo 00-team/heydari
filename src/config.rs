@@ -26,6 +26,7 @@ macro_rules! evar {
 pub fn config() -> &'static Config {
     static STATE: OnceLock<Config> = OnceLock::new();
 
+    let simurgh_project = evar!("SIMURGH_PROJECT").parse::<i64>().expect("SIMURGH_PROJECT is not i64");
     let simurgh_host = if cfg!(debug_assertions) {
         "http://localhost:7700"
     } else {
@@ -34,10 +35,8 @@ pub fn config() -> &'static Config {
     .to_string();
 
     STATE.get_or_init(|| Config {
-        simurgh_project: evar!("SIMURGH_PROJECT")
-            .parse::<i64>()
-            .expect("invalid SIMURGH_PROJECT"),
-        simurgh_auth: format!("api-key {}", evar!("SIMURGH_API_KEY")),
+        simurgh_auth: format!("project {simurgh_project}:{}", evar!("SIMURGH_API_KEY")),
+        simurgh_project,
         simurgh_host,
         heimdall_token: evar!("HEIMDALL_TOKEN"),
     })
