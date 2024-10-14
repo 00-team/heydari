@@ -183,6 +183,7 @@ struct ProductUpdateBody {
     tag_leg: Option<i64>,
     tag_bed: Option<i64>,
     best: bool,
+    price: i64,
 }
 
 #[utoipa::path(
@@ -209,6 +210,7 @@ async fn product_update(
     product.specification = JsonStr(body.specification.clone());
     product.best = body.best;
     product.updated_at = utils::now();
+    product.price = body.price;
 
     product.slug.cut_off(256);
     product.name.cut_off(256);
@@ -235,12 +237,31 @@ async fn product_update(
     .await?;
 
     sqlx::query! {
-        "update products set slug = ?, name = ?, code = ?, detail = ?, best = ?,
-        updated_at = ?, tag_leg = ?, tag_bed = ?, description = ?,
-        specification = ? where id = ?",
-        product.slug, product.name, product.code, product.detail, product.best,
-        product.updated_at, product.tag_leg, product.tag_bed, product.description,
-        product.specification, product.id
+        "update products set
+        slug = ?,
+        name = ?,
+        code = ?,
+        detail = ?,
+        best = ?,
+        updated_at = ?,
+        tag_leg = ?,
+        tag_bed = ?,
+        description = ?,
+        specification = ?,
+        price = ?
+        where id = ?",
+        product.slug,
+        product.name,
+        product.code,
+        product.detail,
+        product.best,
+        product.updated_at,
+        product.tag_leg,
+        product.tag_bed,
+        product.description,
+        product.specification,
+        product.price,
+        product.id
     }
     .execute(&state.sql)
     .await?;

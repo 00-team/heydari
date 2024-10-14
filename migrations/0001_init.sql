@@ -30,6 +30,9 @@ create table if not exists products (
     photos text not null default "[]",
     tag_leg integer references product_tags(id) on delete set null,
     tag_bed integer references product_tags(id) on delete set null,
-    best boolean not null default false
+    best boolean not null default false,
+    description text not null default "",
+    specification text not null default "{}",
+    price integer not null default 0
 );
 
