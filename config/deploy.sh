@@ -28,18 +28,6 @@ if check_diff "config/heydari.service"; then
     echo $SPACER
 fi
 
-if [ ! -f main.db ]; then
-    echo "$EG setup the database"
-    cargo sqlx db setup
-    echo $SPACER
-fi
-
-if check_diff "migrations/*"; then
-    echo "$EG update the database"
-    cargo sqlx db setup
-    echo $SPACER
-fi
-
 if check_diff "package.json"; then
     echo "$EG install npm packages"
     npm i
