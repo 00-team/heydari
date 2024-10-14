@@ -1,3 +1,4 @@
+use actix_http::header::ToStrError;
 use actix_web::{
     body::BoxBody, error::PayloadError, http::StatusCode, HttpResponse,
     ResponseError,
@@ -112,17 +113,18 @@ impl_from_err!(FromUtf8Error);
 impl_from_err!(serde_json::Error);
 impl_from_err!(minijinja::Error);
 impl_from_err!(image::ImageError);
+impl_from_err!(ToStrError);
 
 macro_rules! error_helper {
     ($name:ident, $status:ident, $subject:literal) => {
         #[doc = concat!("Helper function that wraps any error and generates a `", stringify!($status), "` response.")]
         #[allow(non_snake_case)]
-        pub fn $name(err: &str) -> AppErr {
-            log::error!("err {} - {}", stringify!($status), err);
+        pub fn $name(err: Option<&str>) -> AppErr {
+            log::error!("err {} - {:?}", stringify!($status), err);
             AppErr {
                 status: StatusCode::$status.as_u16(),
                 subject: $subject.to_string(),
-                content: Some(err.to_string())
+                content: err.map(|v| v.to_string())
             }
         }
     };
@@ -130,4 +132,5 @@ macro_rules! error_helper {
 
 error_helper!(AppErrBadRequest, BAD_REQUEST, "درخواست بد");
 error_helper!(AppErrForbidden, FORBIDDEN, "ممنوع");
-error_helper!(AppErrNotFound, NOT_FOUND, "پیدا نشد");
+error_helper!(AppErrBadAuth, FORBIDDEN, "احراز هویت نامعتبر");
+// error_helper!(AppErrNotFound, NOT_FOUND, "پیدا نشد");

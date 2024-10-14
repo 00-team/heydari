@@ -380,7 +380,7 @@ async fn product_photo_add(
     state: Data<AppState>,
 ) -> Response<Product> {
     if product.photos.len() >= 255 {
-        return Err(AppErrBadRequest("too many photos"));
+        return Err(AppErrBadRequest(Some("too many photos")));
     }
 
     let mut product = product;
@@ -419,7 +419,7 @@ async fn product_photo_del(
     let mut product = product;
     let idx: usize = path.1.into();
     if idx >= product.photos.len() {
-        return Err(AppErrBadRequest("photo not found"));
+        return Err(AppErrBadRequest(Some("photo not found")));
     }
 
     let salt = product.photos.remove(idx);
