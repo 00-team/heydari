@@ -3,7 +3,7 @@ create table if not exists users (
     id integer primary key not null,
     name text,
     phone text not null,
-    token text not null,
+    token text,
     photo text,
     admin boolean not null default false,
     banned boolean not null default false
