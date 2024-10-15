@@ -24,7 +24,6 @@ import {
     Component,
     createEffect,
     createMemo,
-    For,
     Match,
     onMount,
     Show,
@@ -177,7 +176,7 @@ const Product: Component<ProductProps> = P => {
         description: string
         tag_leg: number | null
         tag_bed: number | null
-
+        price: number
         specification: { [key: string]: string }
         detail: string
     }
@@ -190,9 +189,9 @@ const Product: Component<ProductProps> = P => {
         detail: P.product.detail,
         tag_leg: P.product.tag_leg,
         tag_bed: P.product.tag_bed,
-
+        price: P.product.price,
         description: P.product.description,
-        specification: P.product.specification,
+        specification: { ...P.product.specification },
     })
 
     function product_delete() {
@@ -218,7 +217,7 @@ const Product: Component<ProductProps> = P => {
                 tag_leg: state.tag_leg,
                 tag_bed: state.tag_bed,
                 best: P.product.best,
-
+                price: state.price,
                 description: state.description,
                 specification: state.specification,
             },
@@ -241,7 +240,7 @@ const Product: Component<ProductProps> = P => {
                 tag_leg: P.product.tag_leg,
                 tag_bed: P.product.tag_bed,
                 best: !P.product.best,
-
+                price: P.product.price,
                 description: P.product.description,
                 specification: P.product.specification,
             },
@@ -261,12 +260,13 @@ const Product: Component<ProductProps> = P => {
             tag_leg: P.product.tag_leg,
             tag_bed: P.product.tag_bed,
             description: P.product.description,
-            specification: P.product.specification,
+            specification: { ...P.product.specification },
+            price: P.product.price,
         })
     }
 
-    const changed = createMemo(
-        () =>
+    const changed = createMemo(() => {
+        let change =
             state.slug != P.product.slug ||
             state.name != P.product.name ||
             state.code != P.product.code ||
@@ -274,8 +274,23 @@ const Product: Component<ProductProps> = P => {
             state.tag_leg != P.product.tag_leg ||
             state.tag_bed != P.product.tag_bed ||
             state.description != P.product.description ||
-            state.specification != P.product.specification
-    )
+            state.price != P.product.price
+
+        if (!change) {
+            if (
+                Object.keys(state.specification).length !=
+                Object.keys(P.product.specification).length
+            )
+                return true
+
+            for (let [k, v] of Object.entries(state.specification)) {
+                let ov = P.product.specification[k]
+                if (ov == undefined || ov != v) return true
+            }
+        }
+
+        return change
+    })
 
     // function thumbnail_update() {
     //     let el = document.createElement('input')
@@ -490,6 +505,17 @@ const Product: Component<ProductProps> = P => {
                             setState({ code })
                         }}
                     />
+                    <span>Price:</span>
+                    <input
+                        class='styled'
+                        type='number'
+                        placeholder='price in IRR'
+                        value={state.price}
+                        onInput={e => {
+                            let price = ~~(parseInt(e.currentTarget.value) || 0)
+                            setState({ price })
+                        }}
+                    />
                     <span>Description:</span>
                     <textarea
                         rows={4}
@@ -546,168 +572,44 @@ const Product: Component<ProductProps> = P => {
                                         <th>توضیح</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <Show
-                                        when={
-                                            Object.keys(state.specification)
-                                                .length > 0
-                                        }
-                                        fallback={
-                                            <tr class='empty'>
-                                                <td colspan='3'>
-                                                    مشخصاتی ثبت نشده!
-                                                </td>
-                                            </tr>
-                                        }
-                                    >
-                                        <For
-                                            each={Object.entries(
-                                                state.specification
-                                            )}
-                                        >
-                                            {([key, value], index) => (
-                                                <tr>
-                                                    <td class='delete-cta'>
-                                                        <button
-                                                            class='styled icon'
-                                                            onClick={() => {
-                                                                setState(
-                                                                    produce(
-                                                                        s => {
-                                                                            let newSpecs =
-                                                                                {
-                                                                                    ...s.specification,
-                                                                                }
-                                                                            delete newSpecs[
-                                                                                key
-                                                                            ]
-
-                                                                            s.specification =
-                                                                                newSpecs
-                                                                        }
-                                                                    )
-                                                                )
-                                                            }}
-                                                        >
-                                                            <TrashIcon />
-                                                        </button>
-                                                    </td>
-
-                                                    <td>
-                                                        <input
-                                                            type='text'
-                                                            value={key}
-                                                            onBlur={e => {
-                                                                const newKey =
-                                                                    e.target
-                                                                        .value
-                                                                const newValue =
-                                                                    value
-
-                                                                if (
-                                                                    newKey !==
-                                                                    key
-                                                                ) {
-                                                                    setState(
-                                                                        produce(
-                                                                            s => {
-                                                                                s.specification =
-                                                                                    {
-                                                                                        ...Object.fromEntries(
-                                                                                            Object.entries(
-                                                                                                state.specification
-                                                                                            ).map(
-                                                                                                (
-                                                                                                    [
-                                                                                                        k,
-                                                                                                        v,
-                                                                                                    ],
-                                                                                                    i
-                                                                                                ) =>
-                                                                                                    i ===
-                                                                                                    index()
-                                                                                                        ? [
-                                                                                                              newKey,
-                                                                                                              newValue,
-                                                                                                          ]
-                                                                                                        : [
-                                                                                                              k,
-                                                                                                              v,
-                                                                                                          ]
-                                                                                            )
-                                                                                        ),
-                                                                                    }
-                                                                            }
-                                                                        )
-                                                                    )
-                                                                }
-                                                            }}
-                                                        />
-                                                    </td>
-
-                                                    <td>
-                                                        <input
-                                                            type='text'
-                                                            value={value}
-                                                            onBlur={e => {
-                                                                const newValue =
-                                                                    e.target
-                                                                        .value
-                                                                const currentKey =
-                                                                    key
-
-                                                                if (
-                                                                    newValue !==
-                                                                    value
-                                                                ) {
-                                                                    setState(
-                                                                        produce(
-                                                                            s => {
-                                                                                s.specification =
-                                                                                    {
-                                                                                        ...Object.fromEntries(
-                                                                                            Object.entries(
-                                                                                                state.specification
-                                                                                            ).map(
-                                                                                                ([
-                                                                                                    k,
-                                                                                                    v,
-                                                                                                ]) =>
-                                                                                                    k ===
-                                                                                                    currentKey
-                                                                                                        ? [
-                                                                                                              k,
-                                                                                                              newValue,
-                                                                                                          ]
-                                                                                                        : [
-                                                                                                              k,
-                                                                                                              v,
-                                                                                                          ]
-                                                                                            )
-                                                                                        ),
-                                                                                    }
-                                                                            }
-                                                                        )
-                                                                    )
-                                                                }
-                                                            }}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        </For>
-                                    </Show>
-                                </tbody>
+                                <SpecificationTable
+                                    s={state.specification}
+                                    del={key =>
+                                        setState(
+                                            produce(s => {
+                                                delete s.specification[key]
+                                            })
+                                        )
+                                    }
+                                    set_key={(old, nky) => {
+                                        setState(
+                                            produce(s => {
+                                                let val = s.specification[old]
+                                                if (val == undefined) return
+                                                s.specification[old]
+                                                delete s.specification[old]
+                                                s.specification[nky] = val
+                                            })
+                                        )
+                                    }}
+                                    set_val={(key, val) => {
+                                        setState(
+                                            produce(s => {
+                                                s.specification[key] = val
+                                            })
+                                        )
+                                    }}
+                                />
                             </table>
                         </div>
 
                         <button
                             class='styled icon'
                             onClick={() => {
-                                const newKey = `عنوان جدید`
-                                const newValue = 'توضیح جدید'
+                                let val = 'توضیحات'
+                                let key = 'عنوان جدید'
 
-                                if (newKey in state.specification)
+                                if (key in state.specification)
                                     return addAlert({
                                         type: 'error',
                                         timeout: 3,
@@ -718,10 +620,7 @@ const Product: Component<ProductProps> = P => {
 
                                 setState(
                                     produce(s => {
-                                        s.specification = {
-                                            ...state.specification,
-                                            [newKey]: newValue,
-                                        }
+                                        s.specification[key] = val
                                     })
                                 )
                             }}
@@ -754,6 +653,62 @@ const Product: Component<ProductProps> = P => {
                 </div>
             </Show>
         </div>
+    )
+}
+
+type SPP = {
+    s: { [key: string]: string }
+    del(key: string): void
+    set_key(old: string, nky: string): void
+    set_val(key: string, val: string): void
+}
+const SpecificationTable: Component<SPP> = P => {
+    return (
+        <tbody>
+            <Show
+                when={Object.keys(P.s).length > 0}
+                fallback={
+                    <tr class='empty'>
+                        <td colspan='3'>مشخصاتی ثبت نشده!</td>
+                    </tr>
+                }
+            >
+                {Object.entries(P.s).map(([key, value]) => (
+                    <tr>
+                        <td class='delete-cta'>
+                            <button
+                                class='styled icon'
+                                onClick={() => {
+                                    P.del(key)
+                                }}
+                            >
+                                <TrashIcon />
+                            </button>
+                        </td>
+
+                        <td>
+                            <input
+                                type='text'
+                                value={key}
+                                onBlur={e =>
+                                    P.set_key(key, e.currentTarget.value)
+                                }
+                            />
+                        </td>
+
+                        <td>
+                            <input
+                                type='text'
+                                value={value}
+                                onBlur={e =>
+                                    P.set_val(key, e.currentTarget.value)
+                                }
+                            />
+                        </td>
+                    </tr>
+                ))}
+            </Show>
+        </tbody>
     )
 }
 

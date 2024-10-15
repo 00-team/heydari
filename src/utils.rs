@@ -10,11 +10,11 @@ use std::path::Path;
 
 pub fn phone_validator(phone: &str) -> Result<(), AppErr> {
     if phone.len() != 11 || !phone.starts_with("09") {
-        return Err(AppErrBadRequest("invalid phone number"));
+        return Err(AppErrBadRequest(Some("invalid phone number")));
     }
 
     if phone.chars().any(|c| !c.is_ascii_digit()) {
-        return Err(AppErrBadRequest("phone number must be all digits"));
+        return Err(AppErrBadRequest(Some("phone number must be all digits")));
     }
 
     Ok(())
@@ -26,11 +26,11 @@ pub fn now() -> i64 {
 
 pub fn verify_slug(slug: &str) -> Result<(), AppErr> {
     if slug.len() < 3 {
-        return Err(AppErrBadRequest("حداقل طول نشانه 3 کاراکتر است"));
+        return Err(AppErrBadRequest(Some("حداقل طول نشانه 3 کاراکتر است")));
     }
 
     if !slug.chars().all(|c| Config::SLUG_ABC.contains(&(c as u8))) {
-        return Err(AppErrBadRequest("نشانه شامل کاراکترهای نامعتبر است"));
+        return Err(AppErrBadRequest(Some("نشانه شامل کاراکترهای نامعتبر است")));
     }
 
     Ok(())

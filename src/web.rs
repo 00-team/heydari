@@ -1,7 +1,7 @@
 use actix_web::dev::HttpServiceFactory;
 use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
-use actix_web::web::{Data, Path, Query};
+use actix_web::web::{self, Data, Path, Query};
 use actix_web::{get, routes, FromRequest, HttpRequest, HttpResponse, Scope};
 use minijinja::{context, path_loader, Environment};
 use serde::{Deserialize, Serialize};
@@ -86,7 +86,9 @@ async fn products(
     };
 
     #[derive(sqlx::FromRow)]
-    struct Count { count: i64 }
+    struct Count {
+        count: i64,
+    }
     let products_count: Count = sqlx::query_as(&format!(
         "select count(id) as count from products {cond}"
     ))
@@ -267,9 +269,27 @@ Sitemap: https://heydari-mi.com/sitemap.xml
     )
 }
 
+pub async fn not_found(env: Data<Environment<'static>>) -> Response {
+    let result = env.get_template("404.html")?.render(())?;
+    Ok(HttpResponse::NotFound().content_type(ContentType::html()).body(result))
+}
+
+pub fn toman(irr: i64) -> String {
+    (irr / 10)
+        .to_string()
+        .as_bytes()
+        .rchunks(3)
+        .rev()
+        .map(std::str::from_utf8)
+        .collect::<Result<Vec<&str>, _>>()
+        .unwrap_or_default()
+        .join(",")
+}
+
 pub fn router() -> impl HttpServiceFactory {
     let tmpl_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("templates");
     let mut tmpl_env = Environment::new();
+    tmpl_env.add_filter("toman", toman);
     tmpl_env.set_loader(path_loader(tmpl_path));
 
     Scope::new("")
@@ -284,5 +304,6 @@ pub fn router() -> impl HttpServiceFactory {
         .service(blog)
         .service(admin_index)
         .service(robots)
+        .service(web::resource("/404/").get(not_found))
         .service(super::sitemap::router())
 }

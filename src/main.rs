@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::config::Config;
 use crate::docs::{doc_add_prefix, ApiDoc};
 use actix_files as af;
@@ -9,6 +11,7 @@ use actix_web::{
     App, HttpResponse, HttpServer, Responder,
 };
 use config::config;
+use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode};
 use sqlx::{Pool, Sqlite, SqlitePool};
 use utoipa::OpenApi;
 
@@ -93,17 +96,27 @@ fn config_app(app: &mut ServiceConfig) {
                     .service(admin::product_tag::router()),
             ),
     );
-    app.service(web::router());
+    app.service(web::router()).default_service(actix_web::web::to(
+        |env: Data<minijinja::Environment<'static>>| web::not_found(env),
+    ));
+}
+
+async fn init() -> SqlitePool {
+    dotenvy::from_path(".env").expect("could not read .env file");
+    pretty_env_logger::init();
+
+    let _ = std::fs::create_dir(Config::RECORD_DIR);
+    let cpt = SqliteConnectOptions::from_str("sqlite://main.db")
+        .expect("could not init sqlite connection options")
+        .journal_mode(SqliteJournalMode::Off);
+
+    SqlitePool::connect_with(cpt).await.expect("sqlite connection")
 }
 
 #[cfg(unix)]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenvy::from_path(".env").expect("could not read .env file");
-    pretty_env_logger::init();
-
-    let _ = std::fs::create_dir(Config::RECORD_DIR);
-    let pool = SqlitePool::connect("sqlite://main.db").await.unwrap();
+    let pool = init().await;
 
     let server = HttpServer::new(move || {
         App::new()
@@ -116,7 +129,7 @@ async fn main() -> std::io::Result<()> {
         server.bind(("127.0.0.1", 7000)).unwrap()
     } else {
         use std::os::unix::fs::PermissionsExt;
-        const PATH: &'static str = "/usr/share/nginx/sockets/heydari.sock";
+        const PATH: &'static str = "/usr/share/nginx/socks/heydari.sock";
         let server = server.bind_uds(PATH).unwrap();
         std::fs::set_permissions(PATH, std::fs::Permissions::from_mode(0o777))?;
         server
@@ -128,11 +141,7 @@ async fn main() -> std::io::Result<()> {
 #[cfg(windows)]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenvy::from_path(".env").expect("could not read .env file");
-    pretty_env_logger::init();
-
-    let _ = std::fs::create_dir(Config::RECORD_DIR);
-    let pool = SqlitePool::connect("sqlite://main.db").await.unwrap();
+    let pool = init().await;
 
     HttpServer::new(move || {
         App::new()
