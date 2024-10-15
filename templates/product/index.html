@@ -64,9 +64,15 @@
                 <span class="dot dot-5"></span>
                 <span class="dot dot-6"></span>
                 <span class="dot dot-7"></span>
+                {% if product.price != 0 %}
+                <div class="text">
+                    قیمت {{ product.price | toman }} تومان
+                </div>
+                {% else %}
                 <div class="text">
                     تماس با ما
                 </div>
+                {% endif %}
             </a>
         </aside>
         <aside class="product-img">

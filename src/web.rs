@@ -274,9 +274,22 @@ pub async fn not_found(env: Data<Environment<'static>>) -> Response {
     Ok(HttpResponse::NotFound().content_type(ContentType::html()).body(result))
 }
 
+pub fn toman(irr: i64) -> String {
+    (irr / 10)
+        .to_string()
+        .as_bytes()
+        .rchunks(3)
+        .rev()
+        .map(std::str::from_utf8)
+        .collect::<Result<Vec<&str>, _>>()
+        .unwrap_or_default()
+        .join(",")
+}
+
 pub fn router() -> impl HttpServiceFactory {
     let tmpl_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("templates");
     let mut tmpl_env = Environment::new();
+    tmpl_env.add_filter("toman", toman);
     tmpl_env.set_loader(path_loader(tmpl_path));
 
     Scope::new("")
