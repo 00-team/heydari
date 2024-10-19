@@ -7,6 +7,7 @@ pub struct Config {
     pub simurgh_host: String,
     pub simurgh_auth: String,
     pub heimdall_token: String,
+    pub melipayamak: String,
 }
 
 impl Config {
@@ -37,6 +38,7 @@ pub fn config() -> &'static Config {
     .to_string();
 
     STATE.get_or_init(|| Config {
+        melipayamak: evar!("MELIPAYAMAK"),
         simurgh_auth: format!(
             "project {simurgh_project}:{}",
             evar!("SIMURGH_API_KEY")
