@@ -97,10 +97,13 @@ pub async fn send_sms_prefab(phone: &str, body_id: i64, args: Vec<String>) {
         args: Vec<String>,
     }
 
-    let res =
-        request.send_json(&Body { body_id, to: phone.to_string(), args }).await;
+    let Ok(mut res) =
+        request.send_json(&Body { body_id, to: phone.to_string(), args }).await
+    else {
+        return;
+    };
 
-    log::info!("res: {res:#?}");
+    log::info!("res: {res:#?} - {:#?}", res.body().await);
 }
 
 pub async fn simurgh_request(
