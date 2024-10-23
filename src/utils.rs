@@ -30,7 +30,9 @@ pub fn verify_slug(slug: &str) -> Result<(), AppErr> {
     }
 
     if !slug.chars().all(|c| Config::SLUG_ABC.contains(&(c as u8))) {
-        return Err(AppErrBadRequest(Some("نشانه شامل کاراکترهای نامعتبر است")));
+        return Err(AppErrBadRequest(Some(
+            "نشانه شامل کاراکترهای نامعتبر است",
+        )));
     }
 
     Ok(())
@@ -76,6 +78,27 @@ pub fn remove_record(name: &str) {
 pub async fn send_sms(phone: &str, text: &str) {
     // let client = awc::Client::new();
     log::info!("\nsending sms to {phone}:\n\n{text}\n");
+}
+
+pub async fn send_sms_prefab(phone: &str, body_id: i64, args: Vec<String>) {
+    log::info!("\nsending sms to {phone}:\n\n{args:?}\n");
+
+    let client = awc::Client::new();
+    let request = client.post(format!(
+        "https://console.melipayamak.com/api/send/shared/{}",
+        config().melipayamak
+    ));
+
+    #[derive(Serialize, Debug)]
+    #[serde(rename_all = "camelCase")]
+    struct Body {
+        body_id: i64,
+        to: String,
+        args: Vec<String>,
+    }
+
+    let body = Body { body_id, to: phone.to_string(), args };
+    let _ = request.send_json(&body).await;
 }
 
 pub async fn simurgh_request(

@@ -94,9 +94,11 @@ async fn verification(
     )
     .await;
 
-    utils::send_sms(
+    #[cfg(not(debug_assertions))]
+    utils::send_sms_prefab(
         &body.phone,
-        &format!("heydari-mi.com\nyour login code: {code}"),
+        259629,
+        vec![body.phone.clone(), code.clone()],
     )
     .await;
 
