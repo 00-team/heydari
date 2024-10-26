@@ -24,6 +24,8 @@ class Perms {
 
     #perms: number[]
     constructor(perms: number[]) {
+        perms = perms.map(p => Math.min(p, 255))
+
         for (let i = 32 - perms.length; i > 0; i--) {
             perms.push(0)
         }
