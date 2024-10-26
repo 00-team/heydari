@@ -22,18 +22,18 @@ class Perms {
     static C_PRODUCT_TAG: Perm = [1, 3]
     static D_PRODUCT_TAG: Perm = [1, 4]
 
-    perms: number[]
+    #perms: number[]
     constructor(perms: number[]) {
         for (let i = 32 - perms.length; i > 0; i--) {
             perms.push(0)
         }
 
         perms = perms.slice(0, 32)
-        this.perms = perms
+        this.#perms = perms
     }
 
     any(): boolean {
-        for (let p of this.perms) {
+        for (let p of this.#perms) {
             if (p != 0) return true
         }
         return false
@@ -50,24 +50,28 @@ class Perms {
     }
 
     get([byte, bit]: Perm): boolean {
-        if (this.perms.length <= byte) {
+        if (this.#perms.length <= byte) {
             throw new Error('invalid byte')
         }
         let f = 1 << bit
-        let n = this.perms[byte]
+        let n = this.#perms[byte]
         return (n & f) == f
     }
 
     set([byte, bit]: Perm, value: boolean) {
-        if (this.perms.length <= byte) {
+        if (this.#perms.length <= byte) {
             throw new Error('invalid byte')
         }
         let f = 1 << bit
         if (value) {
-            this.perms[byte] |= f
+            this.#perms[byte] |= f
         } else {
-            this.perms[byte] &= ~f
+            this.#perms[byte] &= ~f
         }
+    }
+
+    get perms(): number[] {
+        return this.#perms
     }
 }
 
