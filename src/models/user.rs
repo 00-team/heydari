@@ -1,10 +1,9 @@
 use crate::AppState;
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
-use actix_web::{
-    dev::Payload, web::Data, FromRequest, HttpRequest,
-};
+use actix_web::{dev::Payload, web::Data, FromRequest, HttpRequest};
 use serde::{Deserialize, Serialize};
-use std::{future::Future, ops, pin::Pin};
+use shah::perms::Perm;
+use std::{future::Future, pin::Pin};
 use utoipa::ToSchema;
 
 use super::{auth::Authorization, AppErr, AppErrForbidden};
@@ -16,7 +15,7 @@ pub struct User {
     pub phone: String,
     pub token: Option<String>,
     pub photo: Option<String>,
-    pub admin: bool,
+    pub admin: Vec<u8>,
     pub banned: bool,
 }
 
@@ -27,19 +26,64 @@ pub struct UpdatePhoto {
     pub photo: TempFile,
 }
 
-pub struct Admin(pub User);
-
-impl ops::Deref for Admin {
-    type Target = User;
-
-    fn deref(&self) -> &User {
-        &self.0
+pub mod perms {
+    shah::perms! {
+        MASTER,
+        V_USER, A_USER, C_USER, D_USER,
     }
 }
 
-impl ops::DerefMut for Admin {
-    fn deref_mut(&mut self) -> &mut User {
-        &mut self.0
+pub struct Admin {
+    pub user: User,
+    pub perms: [u8; 32],
+}
+
+pub trait Perms {
+    type Error;
+
+    fn perm_get(&self, perm: Perm) -> bool;
+    fn perm_set(&mut self, perm: Perm, value: bool);
+    fn perm_any(&self) -> bool;
+    fn perm_check(&self, perm: Perm) -> Result<(), Self::Error>;
+    fn perm_check_many(&self, perms: &[Perm]) -> Result<(), Self::Error> {
+        for p in perms {
+            self.perm_check(*p)?;
+        }
+
+        Ok(())
+    }
+}
+
+impl Perms for Admin {
+    type Error = AppErr;
+
+    fn perm_check(&self, perm: Perm) -> Result<(), Self::Error> {
+        if self.perm_get(perms::MASTER) || self.perm_get(perm) {
+            Ok(())
+        } else {
+            Err(AppErrForbidden(Some("not enough perms")))
+        }
+    }
+
+    fn perm_any(&self) -> bool {
+        self.perms.iter().any(|v| *v != 0)
+    }
+
+    fn perm_get(&self, (byte, bit): Perm) -> bool {
+        assert!(self.perms.len() > byte);
+        let n = self.perms[byte];
+        let f = 1 << bit;
+        (n & f) == f
+    }
+
+    fn perm_set(&mut self, (byte, bit): Perm, value: bool) {
+        assert!(self.perms.len() > byte);
+        let f = 1 << bit;
+        if value {
+            self.perms[byte] |= f;
+        } else {
+            self.perms[byte] &= !f;
+        }
     }
 }
 
@@ -84,11 +128,20 @@ impl FromRequest for Admin {
         let user = User::from_request(req, payload);
         Box::pin(async {
             let user = user.await?;
-            if !user.admin {
+            let perms: [u8; 32] = if user.admin.len() >= 32 {
+                user.admin[..32].try_into().unwrap()
+            } else {
+                let mut perms = [0u8; 32];
+                user.admin.iter().enumerate().for_each(|(i, b)| perms[i] = *b);
+                perms
+            };
+
+            let admin = Admin { user, perms };
+            if !admin.perm_any() {
                 return Err(AppErrForbidden(None));
             }
 
-            Ok(Admin(user))
+            Ok(admin)
         })
     }
 }
