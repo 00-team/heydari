@@ -1,11 +1,12 @@
 use crate::docs::UpdatePaths;
-use crate::models::user::{perms, Admin, Perms, User};
+use crate::models::user::{perms, Admin, User};
 use crate::models::{AppErrForbidden, ListInput, Response};
 use crate::utils::CutOff;
 use crate::AppState;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{get, patch, Scope};
 use serde::Deserialize;
+use shah::perms::Perms;
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]

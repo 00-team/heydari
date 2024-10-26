@@ -1,12 +1,13 @@
 use crate::docs::UpdatePaths;
 use crate::models::product::{ProductKind, ProductPart, ProductTag};
-use crate::models::user::{perms, Admin, Perms};
+use crate::models::user::{perms, Admin};
 use crate::models::{AppErr, ListInput, Response};
 use crate::utils::CutOff;
 use crate::AppState;
 use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, post, HttpResponse, Scope};
 use serde::Deserialize;
+use shah::perms::Perms;
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]

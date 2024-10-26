@@ -1,7 +1,7 @@
 use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
 use crate::models::user::perms;
-use crate::models::user::{Admin, Perms};
+use crate::models::user::Admin;
 use crate::models::{AppErr, AppErrBadRequest, JsonStr, Response};
 use crate::utils::{self, CutOff};
 use crate::AppState;
@@ -10,6 +10,7 @@ use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
+use shah::perms::Perms;
 use sqlx::SqlitePool;
 use std::collections::HashMap;
 use utoipa::{IntoParams, OpenApi, ToSchema};

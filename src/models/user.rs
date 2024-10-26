@@ -2,7 +2,7 @@ use crate::AppState;
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
 use actix_web::{dev::Payload, web::Data, FromRequest, HttpRequest};
 use serde::{Deserialize, Serialize};
-use shah::perms::Perm;
+use shah::perms::{Perm, Perms};
 use std::{future::Future, pin::Pin};
 use utoipa::ToSchema;
 
@@ -41,22 +41,6 @@ pub struct Admin {
     pub perms: [u8; 32],
 }
 
-pub trait Perms {
-    type Error;
-
-    fn perm_get(&self, perm: Perm) -> bool;
-    fn perm_set(&mut self, perm: Perm, value: bool);
-    fn perm_any(&self) -> bool;
-    fn perm_check(&self, perm: Perm) -> Result<(), Self::Error>;
-    fn perm_check_many(&self, perms: &[Perm]) -> Result<(), Self::Error> {
-        for p in perms {
-            self.perm_check(*p)?;
-        }
-
-        Ok(())
-    }
-}
-
 impl Perms for Admin {
     type Error = AppErr;
 
@@ -69,24 +53,15 @@ impl Perms for Admin {
     }
 
     fn perm_any(&self) -> bool {
-        self.perms.iter().any(|v| *v != 0)
+        self.perms.perm_any()
     }
 
-    fn perm_get(&self, (byte, bit): Perm) -> bool {
-        assert!(self.perms.len() > byte);
-        let n = self.perms[byte];
-        let f = 1 << bit;
-        (n & f) == f
+    fn perm_get(&self, perm: Perm) -> bool {
+        self.perms.perm_get(perm)
     }
 
-    fn perm_set(&mut self, (byte, bit): Perm, value: bool) {
-        assert!(self.perms.len() > byte);
-        let f = 1 << bit;
-        if value {
-            self.perms[byte] |= f;
-        } else {
-            self.perms[byte] &= !f;
-        }
+    fn perm_set(&mut self, perm: Perm, value: bool) {
+        self.perms.perm_set(perm, value)
     }
 }
 
