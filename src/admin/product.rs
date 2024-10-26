@@ -1,19 +1,18 @@
-use std::collections::HashMap;
-
+use crate::docs::UpdatePaths;
+use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
+use crate::models::user::perms;
+use crate::models::user::{Admin, Perms};
+use crate::models::{AppErr, AppErrBadRequest, JsonStr, Response};
+use crate::utils::{self, CutOff};
+use crate::AppState;
 use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
 use sqlx::SqlitePool;
+use std::collections::HashMap;
 use utoipa::{IntoParams, OpenApi, ToSchema};
-
-use crate::docs::UpdatePaths;
-use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
-use crate::models::user::Admin;
-use crate::models::{AppErr, AppErrBadRequest, JsonStr, Response};
-use crate::utils::{self, CutOff};
-use crate::AppState;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -47,10 +46,11 @@ pub struct ProductListBody {
 /// Product List
 #[get("/")]
 async fn product_list(
-    _: Admin, q: Query<ProductListBody>, state: Data<AppState>,
+    admin: Admin, q: Query<ProductListBody>, state: Data<AppState>,
 ) -> Response<Vec<Product>> {
-    let offset = i64::from(q.page) * 32;
+    admin.perm_check(perms::V_PRODUCT)?;
 
+    let offset = i64::from(q.page) * 32;
     let products = if let Some(best) = q.best {
         sqlx::query_as! {
             Product,
@@ -80,8 +80,10 @@ async fn product_list(
 )]
 /// Product Get
 #[get("/{id}/")]
-async fn product_get(_: Admin, product: Product) -> Json<Product> {
-    Json(product)
+async fn product_get(admin: Admin, product: Product) -> Response<Product> {
+    admin.perm_check(perms::V_PRODUCT)?;
+
+    Ok(Json(product))
 }
 
 #[derive(Deserialize, ToSchema)]
@@ -100,8 +102,10 @@ struct ProductAddBody {
 /// Add
 #[post("/")]
 async fn product_add(
-    _: Admin, body: Json<ProductAddBody>, state: Data<AppState>,
+    admin: Admin, body: Json<ProductAddBody>, state: Data<AppState>,
 ) -> Response<Product> {
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::A_PRODUCT])?;
+
     let now = utils::now();
     let mut body = body;
 
@@ -195,9 +199,10 @@ struct ProductUpdateBody {
 /// Update
 #[patch("/{id}/")]
 async fn product_update(
-    _: Admin, product: Product, body: Json<ProductUpdateBody>,
+    admin: Admin, product: Product, body: Json<ProductUpdateBody>,
     state: Data<AppState>,
 ) -> Response<Product> {
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
     let mut product = product;
 
     utils::verify_slug(&body.slug)?;
@@ -277,8 +282,10 @@ async fn product_update(
 /// Product Delete
 #[delete("/{id}/")]
 async fn product_delete(
-    _: Admin, product: Product, state: Data<AppState>,
+    admin: Admin, product: Product, state: Data<AppState>,
 ) -> Result<HttpResponse, AppErr> {
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::D_PRODUCT])?;
+
     if let Some(t) = product.thumbnail {
         utils::remove_record(&format!("pt-{}-{t}", product.id));
     }
@@ -313,9 +320,11 @@ pub struct ProductPhoto {
 /// Set Thumbnail
 #[put("/{id}/thumbnail/")]
 async fn product_thumbnail_update(
-    _: Admin, product: Product, form: MultipartForm<ProductPhoto>,
+    admin: Admin, product: Product, form: MultipartForm<ProductPhoto>,
     state: Data<AppState>,
 ) -> Response<Product> {
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
+
     let mut product = product;
     let salt = if let Some(s) = &product.thumbnail {
         s.clone()
@@ -347,9 +356,9 @@ async fn product_thumbnail_update(
 /// Delete Thumbnail
 #[delete("/{id}/thumbnail/")]
 async fn product_thumbnail_delete(
-    _: Admin, product: Product, state: Data<AppState>,
+    admin: Admin, mut product: Product, state: Data<AppState>,
 ) -> Response<Product> {
-    let mut product = product;
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
 
     if let Some(t) = product.thumbnail {
         utils::remove_record(&format!("pt-{}-{t}", product.id));
@@ -376,9 +385,11 @@ async fn product_thumbnail_delete(
 /// Add Photo
 #[put("/{id}/photos/")]
 async fn product_photo_add(
-    _: Admin, product: Product, form: MultipartForm<ProductPhoto>,
+    admin: Admin, product: Product, form: MultipartForm<ProductPhoto>,
     state: Data<AppState>,
 ) -> Response<Product> {
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
+
     if product.photos.len() >= 255 {
         return Err(AppErrBadRequest(Some("too many photos")));
     }
@@ -414,8 +425,11 @@ async fn product_photo_add(
 /// Delete Photo
 #[delete("/{id}/photos/{idx}/")]
 async fn product_photo_del(
-    _: Admin, product: Product, path: Path<(i64, u8)>, state: Data<AppState>,
+    admin: Admin, product: Product, path: Path<(i64, u8)>,
+    state: Data<AppState>,
 ) -> Result<HttpResponse, AppErr> {
+    admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
+
     let mut product = product;
     let idx: usize = path.1.into();
     if idx >= product.photos.len() {

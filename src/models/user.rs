@@ -26,10 +26,13 @@ pub struct UpdatePhoto {
     pub photo: TempFile,
 }
 
+/// custom perms
 pub mod perms {
     shah::perms! {
         MASTER,
         V_USER, A_USER, C_USER, D_USER,
+        V_PRODUCT, A_PRODUCT, C_PRODUCT, D_PRODUCT,
+        V_PRODUCT_TAG, A_PRODUCT_TAG, C_PRODUCT_TAG, D_PRODUCT_TAG,
     }
 }
 
