@@ -2,10 +2,10 @@ export type UserModel = {
     id: number
     name: string | null
     phone: string
-    token: string
+    token: string | null
     photo: string | null
     banned: boolean
-    admin: boolean
+    admin: number[]
 }
 
 export type ProductTagModel = {
