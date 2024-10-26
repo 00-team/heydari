@@ -5,7 +5,8 @@ create table if not exists users (
     phone text not null,
     token text,
     photo text,
-    admin blob not null default x'',
+    --                           32 u8
+    admin blob not null default x'0000000000000000000000000000000000000000000000000000000000000000',
     banned boolean not null default false
 );
 
