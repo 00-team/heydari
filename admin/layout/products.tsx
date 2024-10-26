@@ -177,6 +177,7 @@ const Product: Component<ProductProps> = P => {
         tag_leg: number | null
         tag_bed: number | null
         price: number
+        count: number
         specification: { [key: string]: string }
         detail: string
     }
@@ -190,6 +191,7 @@ const Product: Component<ProductProps> = P => {
         tag_leg: P.product.tag_leg,
         tag_bed: P.product.tag_bed,
         price: P.product.price,
+        count: P.product.count,
         description: P.product.description,
         specification: { ...P.product.specification },
     })
@@ -218,6 +220,7 @@ const Product: Component<ProductProps> = P => {
                 tag_bed: state.tag_bed,
                 best: P.product.best,
                 price: state.price,
+                count: state.count,
                 description: state.description,
                 specification: state.specification,
             },
@@ -241,6 +244,7 @@ const Product: Component<ProductProps> = P => {
                 tag_bed: P.product.tag_bed,
                 best: !P.product.best,
                 price: P.product.price,
+                count: P.product.count,
                 description: P.product.description,
                 specification: P.product.specification,
             },
@@ -262,6 +266,7 @@ const Product: Component<ProductProps> = P => {
             description: P.product.description,
             specification: { ...P.product.specification },
             price: P.product.price,
+            count: P.product.count,
         })
     }
 
@@ -274,7 +279,8 @@ const Product: Component<ProductProps> = P => {
             state.tag_leg != P.product.tag_leg ||
             state.tag_bed != P.product.tag_bed ||
             state.description != P.product.description ||
-            state.price != P.product.price
+            state.price != P.product.price ||
+            state.count != P.product.count
 
         if (!change) {
             if (
@@ -514,6 +520,17 @@ const Product: Component<ProductProps> = P => {
                         onInput={e => {
                             let price = ~~(parseInt(e.currentTarget.value) || 0)
                             setState({ price })
+                        }}
+                    />
+                    <span>Count:</span>
+                    <input
+                        class='styled'
+                        type='number'
+                        placeholder='count'
+                        value={state.count}
+                        onInput={e => {
+                            let count = ~~(parseInt(e.currentTarget.value) || 0)
+                            setState({ count })
                         }}
                     />
                     <span>Description:</span>

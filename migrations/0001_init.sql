@@ -34,6 +34,7 @@ create table if not exists products (
     best boolean not null default false,
     description text not null default "",
     specification text not null default "{}",
-    price integer not null default 0
+    price integer not null default 0,
+    count integer not null default 0
 );
 

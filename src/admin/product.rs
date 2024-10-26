@@ -188,6 +188,7 @@ struct ProductUpdateBody {
     tag_bed: Option<i64>,
     best: bool,
     price: i64,
+    count: i64,
 }
 
 #[utoipa::path(
@@ -216,6 +217,7 @@ async fn product_update(
     product.best = body.best;
     product.updated_at = utils::now();
     product.price = body.price;
+    product.count = body.count;
 
     product.slug.cut_off(256);
     product.name.cut_off(256);
@@ -253,7 +255,8 @@ async fn product_update(
         tag_bed = ?,
         description = ?,
         specification = ?,
-        price = ?
+        price = ?,
+        count = ?
         where id = ?",
         product.slug,
         product.name,
@@ -266,6 +269,7 @@ async fn product_update(
         product.description,
         product.specification,
         product.price,
+        product.count,
         product.id
     }
     .execute(&state.sql)

@@ -33,4 +33,5 @@ export type ProductModel = {
     description: string
     specification: { [key: string]: string }
     price: number
+    count: number
 }
