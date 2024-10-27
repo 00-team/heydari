@@ -25,6 +25,41 @@
         }
     }
 
+    .simurgh--blog-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        column-gap: 1em;
+        row-gap: 1.5em;
+        width: 100%;
+        margin: 3em 0;
+
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+        }
+
+        .simurgh--blog-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+
+            font-size: clamp(0.8rem, 0.4rem + 1.6vw, 1rem);
+            font-family: 'yekan';
+
+            > div {
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+
+                svg {
+                    width: 22px;
+                    height: 22px;
+                }
+            }
+        }
+    }
+
     img.simurgh--blog-thumbnail {
         width: 100%;
         max-height: 350px;
