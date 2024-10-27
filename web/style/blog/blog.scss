@@ -64,4 +64,32 @@
             margin-top: 2em;
         }
     }
+
+    h1 {
+        margin-bottom: 1em;
+        font-family: 'iranBold';
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'iranSans';
+        margin-bottom: 0.5em;
+    }
+
+    p {
+        margin-bottom: 1em;
+        font-family: 'yekan';
+    }
+
+    hr {
+        margin-block: 2rem;
+    }
+
+    img,
+    video {
+        margin-block: 2rem;
+    }
 }
