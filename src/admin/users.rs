@@ -107,6 +107,12 @@ async fn update(
 
     if let Some(np) = body.perms {
         admin.perm_check(perms::MASTER)?;
+        if user.admin.perm_get(perms::MASTER) {
+            return Err(AppErrForbidden(Some("cannot edit master's perms")));
+        }
+        if np.perm_get(perms::MASTER) {
+            return Err(AppErrForbidden(Some("cannot set master's perms")));
+        }
         user.admin = np.to_vec();
     }
 
