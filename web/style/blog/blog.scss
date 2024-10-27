@@ -20,9 +20,6 @@
         @media screen and (max-width: 1024px) {
             padding: 7vh 1rem;
         }
-        @media screen and (max-width: 1024px) {
-            padding: 7vh 5vw;
-        }
     }
 
     .simurgh--blog-options {
@@ -184,7 +181,6 @@
             font-size: clamp(1.6rem, 2.9vw + 1.3rem, 2.8rem);
             font-family: 'iranBold';
 
-            margin-bottom: 2em;
             margin-top: 4em;
         }
 
@@ -199,6 +195,7 @@
             article {
                 flex-shrink: 0;
                 width: clamp(0px, 100%, 400px);
+                min-height: 600px;
                 aspect-ratio: 0.8 / 1;
                 display: flex;
                 align-items: center;
@@ -224,6 +221,9 @@
                 margin-top: -2em;
                 text-align: center;
                 padding: 1em;
+
+                max-height: 100px;
+                overflow: hidden;
             }
 
             div {
@@ -248,9 +248,6 @@
 
                     transition: 0.5s ease;
 
-                    @media screen and (max-width: 768px) {
-                        color: white;
-                    }
                     svg {
                         fill: white;
                     }
