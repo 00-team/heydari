@@ -14,7 +14,7 @@ const ProductTags = lazy(() => import('./layout/product-tags'))
 
 const App: Component<RouteSectionProps> = P => {
     return (
-        <Show when={self.loged_in && self.user.admin} fallback={<Login />}>
+        <Show when={self.loged_in && self.perms.any()} fallback={<Login />}>
             <Navbar />
             <main>{P.children}</main>
         </Show>

@@ -1,10 +1,9 @@
 use crate::AppState;
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
-use actix_web::{
-    dev::Payload, web::Data, FromRequest, HttpRequest,
-};
+use actix_web::{dev::Payload, web::Data, FromRequest, HttpRequest};
 use serde::{Deserialize, Serialize};
-use std::{future::Future, ops, pin::Pin};
+use shah::perms::{Perm, Perms};
+use std::{future::Future, pin::Pin};
 use utoipa::ToSchema;
 
 use super::{auth::Authorization, AppErr, AppErrForbidden};
@@ -16,7 +15,7 @@ pub struct User {
     pub phone: String,
     pub token: Option<String>,
     pub photo: Option<String>,
-    pub admin: bool,
+    pub admin: Vec<u8>,
     pub banned: bool,
 }
 
@@ -27,19 +26,42 @@ pub struct UpdatePhoto {
     pub photo: TempFile,
 }
 
-pub struct Admin(pub User);
-
-impl ops::Deref for Admin {
-    type Target = User;
-
-    fn deref(&self) -> &User {
-        &self.0
+/// custom perms
+pub mod perms {
+    shah::perms! {
+        MASTER,
+        V_USER, A_USER, C_USER, D_USER,
+        V_PRODUCT, A_PRODUCT, C_PRODUCT, D_PRODUCT,
+        V_PRODUCT_TAG, A_PRODUCT_TAG, C_PRODUCT_TAG, D_PRODUCT_TAG,
     }
 }
 
-impl ops::DerefMut for Admin {
-    fn deref_mut(&mut self) -> &mut User {
-        &mut self.0
+pub struct Admin {
+    pub user: User,
+    pub perms: [u8; 32],
+}
+
+impl Perms for Admin {
+    type Error = AppErr;
+
+    fn perm_check(&self, perm: Perm) -> Result<(), Self::Error> {
+        if self.perm_get(perms::MASTER) || self.perm_get(perm) {
+            Ok(())
+        } else {
+            Err(AppErrForbidden(Some("not enough perms")))
+        }
+    }
+
+    fn perm_any(&self) -> bool {
+        self.perms.perm_any()
+    }
+
+    fn perm_get(&self, perm: Perm) -> bool {
+        self.perms.perm_get(perm)
+    }
+
+    fn perm_set(&mut self, perm: Perm, value: bool) {
+        self.perms.perm_set(perm, value)
     }
 }
 
@@ -84,11 +106,20 @@ impl FromRequest for Admin {
         let user = User::from_request(req, payload);
         Box::pin(async {
             let user = user.await?;
-            if !user.admin {
+            let perms: [u8; 32] = if user.admin.len() >= 32 {
+                user.admin[..32].try_into().unwrap()
+            } else {
+                let mut perms = [0u8; 32];
+                user.admin.iter().enumerate().for_each(|(i, b)| perms[i] = *b);
+                perms
+            };
+
+            let admin = Admin { user, perms };
+            if !admin.perm_any() {
                 return Err(AppErrForbidden(None));
             }
 
-            Ok(Admin(user))
+            Ok(admin)
         })
     }
 }

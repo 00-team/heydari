@@ -5,7 +5,8 @@ create table if not exists users (
     phone text not null,
     token text,
     photo text,
-    admin boolean not null default false,
+    --                           32 u8
+    admin blob not null default x'0000000000000000000000000000000000000000000000000000000000000000',
     banned boolean not null default false
 );
 
@@ -33,6 +34,7 @@ create table if not exists products (
     best boolean not null default false,
     description text not null default "",
     specification text not null default "{}",
-    price integer not null default 0
+    price integer not null default 0,
+    count integer not null default 0
 );
 

@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use crate::config::Config;
 use crate::docs::{doc_add_prefix, ApiDoc};
 use actix_files as af;
@@ -13,6 +11,7 @@ use actix_web::{
 use config::config;
 use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode};
 use sqlx::{Pool, Sqlite, SqlitePool};
+use std::str::FromStr;
 use utoipa::OpenApi;
 
 mod admin;
@@ -37,6 +36,7 @@ async fn openapi() -> impl Responder {
     let mut admin_doc = ApiDoc::openapi();
     admin_doc.merge(admin::product::ApiDoc::openapi());
     admin_doc.merge(admin::product_tag::ApiDoc::openapi());
+    admin_doc.merge(admin::users::ApiDoc::openapi());
 
     doc_add_prefix(&mut admin_doc, "/admin", false);
 
@@ -93,7 +93,8 @@ fn config_app(app: &mut ServiceConfig) {
             .service(
                 scope("/admin")
                     .service(admin::product::router())
-                    .service(admin::product_tag::router()),
+                    .service(admin::product_tag::router())
+                    .service(admin::users::router()),
             ),
     );
     app.service(web::router()).default_service(actix_web::web::to(

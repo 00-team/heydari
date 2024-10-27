@@ -49,6 +49,7 @@ pub struct Product {
     #[schema(value_type = HashMap<String, String>)]
     pub specification: JsonStr<HashMap<String, String>>,
     pub price: i64,
+    pub count: i64,
 }
 
 from_request!(Product, "products");
@@ -71,6 +72,7 @@ impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
         let description = row.get::<String, _>("description");
         let specification = row.get::<String, _>("specification");
         let price = row.get::<i64, _>("price");
+        let count = row.get::<i64, _>("count");
 
         Ok(Product {
             id,
@@ -89,6 +91,7 @@ impl<'r> sqlx::FromRow<'r, SqliteRow> for Product {
             description,
             specification: specification.into(),
             price,
+            count,
         })
     }
 }

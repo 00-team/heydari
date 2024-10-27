@@ -73,10 +73,11 @@ async fn user_login(
             v
         }
         Err(_) => {
+            let perms = [0u8; 32].to_vec();
             let result = sqlx::query_as! {
                 User,
-                "insert into users (phone, token) values(?, ?)",
-                body.phone, token
+                "insert into users (phone, token, admin) values(?,?,?)",
+                body.phone, token, perms
             }
             .execute(&state.sql)
             .await;
@@ -84,6 +85,7 @@ async fn user_login(
             User {
                 phone: body.phone.clone(),
                 token: Some(token.clone()),
+                admin: perms,
                 id: result.unwrap().last_insert_rowid(),
                 ..Default::default()
             }

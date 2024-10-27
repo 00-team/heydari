@@ -1,14 +1,14 @@
-use actix_web::web::{Data, Json, Query};
-use actix_web::{delete, get, patch, post, HttpResponse, Scope};
-use serde::Deserialize;
-use utoipa::{OpenApi, ToSchema};
-
 use crate::docs::UpdatePaths;
 use crate::models::product::{ProductKind, ProductPart, ProductTag};
-use crate::models::user::Admin;
+use crate::models::user::{perms, Admin};
 use crate::models::{AppErr, ListInput, Response};
 use crate::utils::CutOff;
 use crate::AppState;
+use actix_web::web::{Data, Json, Query};
+use actix_web::{delete, get, patch, post, HttpResponse, Scope};
+use serde::Deserialize;
+use shah::perms::Perms;
+use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]
 #[openapi(
@@ -28,10 +28,11 @@ pub struct ApiDoc;
 /// List
 #[get("/")]
 async fn tag_list(
-    _: Admin, query: Query<ListInput>, state: Data<AppState>,
+    admin: Admin, query: Query<ListInput>, state: Data<AppState>,
 ) -> Response<Vec<ProductTag>> {
-    let offset = i64::from(query.page) * 64;
+    admin.perm_check(perms::V_PRODUCT_TAG)?;
 
+    let offset = i64::from(query.page) * 64;
     let result = sqlx::query_as! {
         ProductTag,
         "select * from product_tags order by id desc limit 64 offset ?",
@@ -45,13 +46,14 @@ async fn tag_list(
 
 #[utoipa::path(
     get,
-    params(("id" = i64, Path,)),
+    params(("id" = i64, Path, example = 1)),
     responses((status = 200, body = ProductTag))
 )]
 /// Get
 #[get("/{id}/")]
-async fn tag_get(_: Admin, tag: ProductTag) -> Json<ProductTag> {
-    Json(tag)
+async fn tag_get(admin: Admin, tag: ProductTag) -> Response<ProductTag> {
+    admin.perm_check(perms::V_PRODUCT_TAG)?;
+    Ok(Json(tag))
 }
 
 #[derive(Deserialize, ToSchema)]
@@ -69,9 +71,10 @@ struct ProductTagAddBody {
 /// Add
 #[post("/")]
 async fn tag_add(
-    _: Admin, body: Json<ProductTagAddBody>, state: Data<AppState>,
+    admin: Admin, mut body: Json<ProductTagAddBody>, state: Data<AppState>,
 ) -> Response<ProductTag> {
-    let mut body = body;
+    admin.perm_check_many(&[perms::V_PRODUCT_TAG, perms::A_PRODUCT_TAG])?;
+
     body.name.cut_off(255);
 
     let result = sqlx::query! {
@@ -104,10 +107,11 @@ struct ProductTagUpdateBody {
 /// Update
 #[patch("/{id}/")]
 async fn tag_update(
-    _: Admin, tag: ProductTag, body: Json<ProductTagUpdateBody>,
+    admin: Admin, mut tag: ProductTag, body: Json<ProductTagUpdateBody>,
     state: Data<AppState>,
 ) -> Response<ProductTag> {
-    let mut tag = tag;
+    admin.perm_check_many(&[perms::V_PRODUCT_TAG, perms::C_PRODUCT_TAG])?;
+
     tag.name = body.name.clone();
     tag.name.cut_off(255);
 
@@ -129,8 +133,10 @@ async fn tag_update(
 /// Delete
 #[delete("/{id}/")]
 async fn tag_delete(
-    _: Admin, tag: ProductTag, state: Data<AppState>,
+    admin: Admin, tag: ProductTag, state: Data<AppState>,
 ) -> Result<HttpResponse, AppErr> {
+    admin.perm_check_many(&[perms::V_PRODUCT_TAG, perms::D_PRODUCT_TAG])?;
+
     sqlx::query! {
         "delete from product_tags where id = ?",
         tag.id
