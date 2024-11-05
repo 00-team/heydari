@@ -16,9 +16,7 @@ use crate::AppState;
 type Response = Result<HttpResponse, AppErr>;
 
 #[get("/")]
-async fn home(
-    env: Data<Environment<'static>>, state: Data<AppState>,
-) -> Response {
+async fn home(state: Data<AppState>) -> Response {
     let best_products = sqlx::query_as! {
         Product,
         "select * from products where best = true"
@@ -26,7 +24,7 @@ async fn home(
     .fetch_all(&state.sql)
     .await?;
 
-    let result = env.get_template("home/index.html")?.render(context! {
+    let result = state.env.get_template("home/index.html")?.render(context! {
         best_products => best_products
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
@@ -50,7 +48,7 @@ struct ProductsQuery {
 
 #[get("/products")]
 async fn products(
-    rq: HttpRequest, env: Data<Environment<'static>>, state: Data<AppState>,
+    rq: HttpRequest, state: Data<AppState>,
 ) -> Response {
     let q = Query::<ProductsQuery>::extract(&rq).await;
     let mut sort = "desc";
@@ -115,7 +113,7 @@ async fn products(
         .map(|v| (v.id, v.clone()))
         .collect::<HashMap<i64, ProductTag>>();
 
-    let result = env.get_template("products/index.html")?.render(context! {
+    let result = state.env.get_template("products/index.html")?.render(context! {
         products => products,
         tags => tags,
         pages => pages,
@@ -126,7 +124,7 @@ async fn products(
 
 #[get("/products/{slug}")]
 async fn product(
-    rq: HttpRequest, env: Data<Environment<'static>>, state: Data<AppState>,
+    rq: HttpRequest, state: Data<AppState>,
 ) -> Response {
     let path = Path::<(String,)>::extract(&rq).await;
     if path.is_err() {
@@ -162,7 +160,7 @@ async fn product(
         .map(|value| (value.id, value.clone()))
         .collect::<HashMap<_, _>>();
 
-    let result = env.get_template("product/index.html")?.render(context! {
+    let result = state.env.get_template("product/index.html")?.render(context! {
         product => product,
         related => related,
         tags => tags,
@@ -172,19 +170,19 @@ async fn product(
 }
 
 #[get("/contact")]
-async fn contact(env: Data<Environment<'static>>) -> Response {
-    let result = env.get_template("contact/index.html")?.render(())?;
+async fn contact(state: Data<AppState>) -> Response {
+    let result = state.env.get_template("contact/index.html")?.render(())?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/about")]
-async fn about(env: Data<Environment<'static>>) -> Response {
-    let result = env.get_template("about/index.html")?.render(())?;
+async fn about(state: Data<AppState>) -> Response {
+    let result = state.env.get_template("about/index.html")?.render(())?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/blogs")]
-async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
+async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
     let mut page = 0;
 
     if let Ok(q) = Query::<ListInput>::extract(&rq).await {
@@ -194,7 +192,7 @@ async fn blogs(rq: HttpRequest, env: Data<Environment<'static>>) -> Response {
     let result = simurgh_request(&format!("/blogs-ssr/?page={page}")).await;
     let result = String::from_utf8(result?.body().await?.to_vec())?;
 
-    let result = env.get_template("blogs/index.html")?.render(context! {
+    let result = state.env.get_template("blogs/index.html")?.render(context! {
         blogs_body => result
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
@@ -233,12 +231,12 @@ struct BlogSSRR {
 
 #[get("/blogs/{slug}")]
 async fn blog(
-    path: Path<(String,)>, env: Data<Environment<'static>>,
+    path: Path<(String,)>, state: Data<AppState>,
 ) -> Response {
     let result = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await;
     let result = result?.json::<BlogSSRR>().await?;
 
-    let result = env.get_template("blog/index.html")?.render(context! {
+    let result = state.env.get_template("blog/index.html")?.render(context! {
         blog_body => result.html,
         blog => result.blog,
     })?;
@@ -269,8 +267,8 @@ Sitemap: https://heydari-mi.com/sitemap.xml
     )
 }
 
-pub async fn not_found(env: Data<Environment<'static>>) -> Response {
-    let result = env.get_template("404.html")?.render(())?;
+pub async fn not_found(state: Data<AppState>) -> Response {
+    let result = state.env.get_template("404.html")?.render(())?;
     Ok(HttpResponse::NotFound().content_type(ContentType::html()).body(result))
 }
 
@@ -286,15 +284,17 @@ pub fn toman(irr: i64) -> String {
         .join(",")
 }
 
-pub fn router() -> impl HttpServiceFactory {
+pub fn templates() -> Environment<'static> {
     let tmpl_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("templates");
     let mut tmpl_env = Environment::new();
     tmpl_env.add_filter("toman", toman);
     tmpl_env.set_loader(path_loader(tmpl_path));
+    tmpl_env
+}
 
+pub fn router() -> impl HttpServiceFactory {
     Scope::new("")
         .wrap(NormalizePath::trim())
-        .app_data(Data::new(tmpl_env))
         .service(home)
         .service(products)
         .service(product)

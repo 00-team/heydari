@@ -25,6 +25,7 @@ mod web;
 
 pub struct AppState {
     pub sql: Pool<Sqlite>,
+    pub env: minijinja::Environment<'static>,
 }
 
 #[get("/openapi.json")]
@@ -95,14 +96,18 @@ fn config_app(app: &mut ServiceConfig) {
                     .service(admin::product::router())
                     .service(admin::product_tag::router())
                     .service(admin::users::router()),
+            )
+            .default_service(
+                actix_web::web::route().to(HttpResponse::NotFound),
             ),
     );
-    app.service(web::router()).default_service(actix_web::web::to(
-        |env: Data<minijinja::Environment<'static>>| web::not_found(env),
-    ));
+    app.service(web::router());
+    app.default_service(actix_web::web::to(|state: Data<AppState>| {
+        web::not_found(state)
+    }));
 }
 
-async fn init() -> SqlitePool {
+async fn init() -> Data<AppState> {
     dotenvy::from_path(".env").expect("could not read .env file");
     pretty_env_logger::init();
 
@@ -111,18 +116,19 @@ async fn init() -> SqlitePool {
         .expect("could not init sqlite connection options")
         .journal_mode(SqliteJournalMode::Off);
 
-    SqlitePool::connect_with(cpt).await.expect("sqlite connection")
+    let pool = SqlitePool::connect_with(cpt).await.expect("sqlite connection");
+    Data::new(AppState { sql: pool, env: web::templates() })
 }
 
 #[cfg(unix)]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let pool = init().await;
+    let data = init().await;
 
     let server = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::new("%s %r %Ts"))
-            .app_data(Data::new(AppState { sql: pool.clone() }))
+            .app_data(data.clone())
             .configure(config_app)
     });
 
@@ -142,12 +148,12 @@ async fn main() -> std::io::Result<()> {
 #[cfg(windows)]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let pool = init().await;
+    let data = init().await;
 
     HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::new("%s %r %Ts"))
-            .app_data(Data::new(AppState { sql: pool.clone() }))
+            .app_data(data.clone())
             .configure(config_app)
     })
     .bind(("127.0.0.1", 7000))
