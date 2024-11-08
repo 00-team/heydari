@@ -22,6 +22,11 @@ class Perms {
     static C_PRODUCT_TAG: Perm = [1, 3]
     static D_PRODUCT_TAG: Perm = [1, 4]
 
+    static V_MATERIAL: Perm = [1, 5]
+    static A_MATERIAL: Perm = [1, 6]
+    static C_MATERIAL: Perm = [1, 7]
+    static D_MATERIAL: Perm = [2, 0]
+
     #perms: number[]
     constructor(perms: number[]) {
         perms = perms.map(p => Math.min(p, 255))
