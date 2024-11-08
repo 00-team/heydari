@@ -176,5 +176,13 @@
                 position: static;
             }
         }
+
+        @media screen and (max-width: 768px) {
+            .body {
+                max-height: 220px;
+
+                margin-top: 2vh;
+            }
+        }
     }
 }
