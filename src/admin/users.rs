@@ -13,7 +13,7 @@ use utoipa::{OpenApi, ToSchema};
 #[openapi(
     tags((name = "admin::users")),
     paths(list, get, update),
-    components(schemas(User)),
+    components(schemas(User, AdminUserUpdateBody)),
     servers((url = "/users")),
     modifiers(&UpdatePaths)
 )]
