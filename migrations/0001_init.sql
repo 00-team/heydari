@@ -38,3 +38,12 @@ create table if not exists products (
     count integer not null default 0
 );
 
+create table if not exists materials (
+    id integer primary key not null,
+    name text not null,
+    detail text not null default "",
+    created_at integer not null,
+    updated_at integer not null default 0,
+    photo text,
+    count integer not null default 0
+);
