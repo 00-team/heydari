@@ -1,5 +1,5 @@
 import { useSearchParams } from '@solidjs/router'
-import { ChairIcon, ImageIcon } from 'icons'
+import { ChairIcon, CloseIcon, ImageIcon } from 'icons'
 import { MaterialModel } from 'models'
 import { httpx } from 'shared'
 import { Component, createEffect, For, Show } from 'solid-js'
@@ -108,6 +108,10 @@ const Storage: Component<{}> = props => {
                         e.preventDefault()
                     }}
                 >
+                    <button class='close-form' onclick={() => close_popup()}>
+                        <CloseIcon />
+                    </button>
+
                     <div class='data-wrapper'>
                         <div class='img-container'>
                             <Show when={state.img}>
