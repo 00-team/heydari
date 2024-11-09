@@ -1,5 +1,5 @@
 import { useSearchParams } from '@solidjs/router'
-import { ChairIcon, CloseIcon, ImageIcon } from 'icons'
+import { ChairIcon, CloseIcon, ImageIcon, MinusIcon, PlusIcon } from 'icons'
 import { MaterialModel } from 'models'
 import { httpx } from 'shared'
 import { Component, createEffect, For, Show } from 'solid-js'
@@ -13,6 +13,8 @@ const Storage: Component<{}> = props => {
         img: string | null
         name: string | null
         count: number
+        newCount: number
+        action: 'add' | 'sold'
 
         loading: boolean
 
@@ -26,6 +28,8 @@ const Storage: Component<{}> = props => {
         name: '',
         img: null,
         count: 0,
+        newCount: 0,
+        action: 'add',
 
         items: [],
         loading: true,
@@ -139,6 +143,65 @@ const Storage: Component<{}> = props => {
                                     setState({ name: e.target.value })
                                 }
                             />
+                        </div>
+
+                        <div class='counter-update'>
+                            <div class='main-inp'>
+                                <button
+                                    class='icon plus'
+                                    onclick={() =>
+                                        setState(
+                                            produce(s => {
+                                                s.newCount += 1
+                                            })
+                                        )
+                                    }
+                                >
+                                    <PlusIcon />
+                                </button>
+                                <input
+                                    type='number'
+                                    inputMode='numeric'
+                                    min={0}
+                                    maxLength={1024}
+                                    value={state.newCount}
+                                    oninput={e => {
+                                        let value = e.target.valueAsNumber
+
+                                        setState({ newCount: value })
+                                    }}
+                                />
+                                <button
+                                    class='icon minus'
+                                    onclick={() =>
+                                        setState(
+                                            produce(s => {
+                                                if (s.newCount >= 1)
+                                                    s.newCount -= 1
+                                            })
+                                        )
+                                    }
+                                >
+                                    <MinusIcon />
+                                </button>
+                            </div>
+                            <div
+                                class='counter-action'
+                                classList={{ sold: state.action === 'sold' }}
+                            >
+                                <button
+                                    class='action added'
+                                    onclick={() => setState({ action: 'add' })}
+                                >
+                                    اضافه
+                                </button>
+                                <button
+                                    class='action sold'
+                                    onclick={() => setState({ action: 'sold' })}
+                                >
+                                    فروش
+                                </button>
+                            </div>
                         </div>
 
                         <button class='popup-cta' type='submit'>
