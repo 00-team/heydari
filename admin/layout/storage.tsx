@@ -1,8 +1,8 @@
 import { useSearchParams } from '@solidjs/router'
-import { ImageIcon } from 'icons'
+import { ChairIcon, ImageIcon } from 'icons'
 import { MaterialModel } from 'models'
 import { httpx } from 'shared'
-import { Component, createEffect, For, onMount, Show } from 'solid-js'
+import { Component, createEffect, For, Show } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 import './style/storage.scss'
@@ -11,7 +11,7 @@ const Storage: Component<{}> = props => {
     type stateType = {
         show: boolean
         img: string | null
-        title: string | null
+        name: string | null
         count: number
 
         loading: boolean
@@ -23,7 +23,7 @@ const Storage: Component<{}> = props => {
 
     const [state, setState] = createStore<stateType>({
         show: false,
-        title: '',
+        name: '',
         img: null,
         count: 0,
 
@@ -36,8 +36,6 @@ const Storage: Component<{}> = props => {
     const [params, setParams] = useSearchParams()
 
     createEffect(() => fetch_items(parseInt(params.page || '0') || 0))
-
-    onMount(() => {})
 
     function fetch_items(page: number) {
         setParams({ page })
@@ -59,23 +57,103 @@ const Storage: Component<{}> = props => {
         })
     }
 
+    const close_popup = () => {
+        setState(
+            produce(s => {
+                s.show = false
+                s.name = ''
+                s.img = null
+                s.count = 0
+            })
+        )
+    }
+
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
             <Show when={!state.loading} fallback={<LoadingItems />}>
-                <button class='main-cta'>Add Item</button>
-                <div class='storage-items'>
-                    <Show
-                        when={state.items.length >= 1}
-                        fallback={
-                            <div class='empty-storage'>انبار خالی است!</div>
-                        }
+                <div class='storage-wrapper'>
+                    <button
+                        class='main-cta'
+                        onclick={() => setState({ show: true })}
                     >
-                        <For each={state.items}>
-                            {item => <Item {...item} />}
-                        </For>
-                    </Show>
+                        Add Item
+                    </button>
+                    <div class='storage-items'>
+                        <Show
+                            when={state.items.length >= 1}
+                            fallback={
+                                <div class='empty-storage'>انبار خالی است!</div>
+                            }
+                        >
+                            <For each={state.items}>
+                                {item => <Item {...item} />}
+                            </For>
+                        </Show>
+                    </div>
                 </div>
             </Show>
+
+            <div
+                class='popup-container'
+                classList={{ show: state.show }}
+                onclick={() => close_popup()}
+            >
+                <form
+                    class='popup-wrapper'
+                    onclick={e => {
+                        e.stopImmediatePropagation()
+                        e.stopPropagation()
+                    }}
+                    onsubmit={e => {
+                        e.preventDefault()
+                    }}
+                >
+                    <div class='data-wrapper'>
+                        <div class='img-container'>
+                            <Show when={state.img}>
+                                <img src={state.img} />
+                            </Show>
+                        </div>
+                        <div class='count'>
+                            <span>{state.count.toLocaleString() || 0}</span>
+                        </div>
+                    </div>
+
+                    <div class='inps-wrapper'>
+                        <div class='inp-wrapper'>
+                            <div class='holder'>
+                                <ChairIcon />
+                                اسم آیتم
+                            </div>
+
+                            <input
+                                type='text'
+                                class='name-inp'
+                                placeholder='اسم آیتم...'
+                                value={state.name || ''}
+                                oninput={e =>
+                                    setState({ name: e.target.value })
+                                }
+                            />
+                        </div>
+
+                        <button class='popup-cta' type='submit'>
+                            تایید
+                        </button>
+                    </div>
+
+                    {/* 
+                    <input
+                        type='nunmber'
+                        inputMode='numeric'
+                        class='count-inp'
+                    />
+
+                    <div class='count-action'></div>
+
+                    <button class='poopup-cta'></button> */}
+                </form>
+            </div>
         </div>
     )
 }
