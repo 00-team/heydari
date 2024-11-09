@@ -3,7 +3,7 @@ import { addAlert } from 'comps/alert'
 import { ChairIcon, CloseIcon, MinusIcon, PlusIcon, UploadIcon } from 'icons'
 import { MaterialModel } from 'models'
 import { httpx } from 'shared'
-import { Component, createEffect, For, Show } from 'solid-js'
+import { Component, createEffect, createMemo, For, Show } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 import './style/storage.scss'
@@ -19,8 +19,9 @@ export const IMAGE_MIMETYPE = [
 const Storage: Component<{}> = props => {
     type stateType = {
         show: boolean
-        img: string | null
+        type: 'add' | 'edit'
         name: string | null
+        img: File | null
         count: number
         newCount: number
         action: 'add' | 'sold'
@@ -34,6 +35,7 @@ const Storage: Component<{}> = props => {
 
     const [state, setState] = createStore<stateType>({
         show: false,
+        type: 'add',
         name: '',
         img: null,
         count: 0,
@@ -70,15 +72,49 @@ const Storage: Component<{}> = props => {
         })
     }
 
+    const return_newCount = createMemo((): number =>
+        state.action === 'add'
+            ? state.count + state.newCount
+            : state.count - state.newCount
+    )
+
     const close_popup = () => {
         setState(
             produce(s => {
                 s.show = false
+                s.type = 'add'
                 s.name = ''
                 s.img = null
                 s.count = 0
+                s.newCount = 0
+                s.action = 'add'
             })
         )
+    }
+
+    function save_add_item() {
+        if (state.type === 'add') {
+            httpx({
+                url: '/api/admin/materials/',
+                method: 'POST',
+                json: {
+                    name: state.name,
+                    count: return_newCount(),
+                    detail: '',
+                },
+                onLoad(x) {
+                    if (x.status != 200) return
+
+                    setState(
+                        produce(s => {
+                            let newitems = [...s.items, { ...x.response }]
+                            s.items = newitems
+                        })
+                    )
+                },
+            })
+        } else {
+        }
     }
 
     return (
@@ -99,7 +135,21 @@ const Storage: Component<{}> = props => {
                             }
                         >
                             <For each={state.items}>
-                                {item => <Item {...item} />}
+                                {(item, index) => (
+                                    <Item
+                                        {...item}
+                                        onClick={() =>
+                                            setState(
+                                                produce(s => {
+                                                    s.show = true
+                                                    s.type = 'edit'
+
+                                                    s = { ...item }
+                                                })
+                                            )
+                                        }
+                                    />
+                                )}
                             </For>
                         </Show>
                     </div>
@@ -120,6 +170,23 @@ const Storage: Component<{}> = props => {
                     onsubmit={e => {
                         e.preventDefault()
 
+                        if (state.name.length <= 0)
+                            return addAlert({
+                                type: 'error',
+                                timeout: 5,
+                                content: 'اسم نمیتواند خالی باشد!',
+                                subject: 'خطا!',
+                            })
+                        if (return_newCount() < 0)
+                            return addAlert({
+                                type: 'error',
+                                timeout: 5,
+                                content: 'تعداد آیتم نمیتواند منفی باشد!',
+                                subject: 'خطا!',
+                            })
+
+                        save_add_item()
+
                         close_popup()
                     }}
                 >
@@ -133,8 +200,8 @@ const Storage: Component<{}> = props => {
                                 when={state.img}
                                 fallback={
                                     <UploadImage
-                                        onUpload={photo =>
-                                            setState({ img: photo })
+                                        onUpload={file =>
+                                            setState({ img: file })
                                         }
                                     />
                                 }
@@ -143,7 +210,7 @@ const Storage: Component<{}> = props => {
                                     class='img-wrapper'
                                     onclick={() => setState({ img: null })}
                                 >
-                                    <img src={state.img} />
+                                    <img src={URL.createObjectURL(state.img)} />
                                     <div class='clear-img'>
                                         <CloseIcon />
                                     </div>
@@ -153,20 +220,10 @@ const Storage: Component<{}> = props => {
                         <div
                             class='count'
                             classList={{
-                                error:
-                                    state.action === 'sold' &&
-                                    state.count - state.newCount < 0,
+                                error: return_newCount() < 0,
                             }}
                         >
-                            <span>
-                                {state.action === 'add'
-                                    ? (
-                                          state.count + state.newCount
-                                      ).toLocaleString()
-                                    : (
-                                          state.count - state.newCount
-                                      ).toLocaleString()}
-                            </span>
+                            <span>{return_newCount().toLocaleString()}</span>
                         </div>
                     </div>
 
@@ -191,6 +248,7 @@ const Storage: Component<{}> = props => {
                         <div class='counter-update'>
                             <div class='main-inp'>
                                 <button
+                                    type='button'
                                     class='icon plus'
                                     onclick={() =>
                                         setState(
@@ -221,6 +279,7 @@ const Storage: Component<{}> = props => {
                                     }}
                                 />
                                 <button
+                                    type='button'
                                     class='icon minus'
                                     onclick={() =>
                                         setState(
@@ -241,12 +300,14 @@ const Storage: Component<{}> = props => {
                                 <button
                                     class='action added'
                                     onclick={() => setState({ action: 'add' })}
+                                    type='button'
                                 >
                                     اضافه
                                 </button>
                                 <button
                                     class='action sold'
                                     onclick={() => setState({ action: 'sold' })}
+                                    type='button'
                                 >
                                     فروش
                                 </button>
@@ -275,7 +336,7 @@ const Storage: Component<{}> = props => {
 }
 
 interface UploadImageProps {
-    onUpload: (photo: string) => void
+    onUpload: (file: File) => void
 }
 const UploadImage: Component<UploadImageProps> = P => {
     return (
@@ -298,7 +359,7 @@ const UploadImage: Component<UploadImageProps> = P => {
                         subject: 'خطا!',
                     })
 
-                P.onUpload(URL.createObjectURL(file))
+                P.onUpload(file)
             }}
         >
             <input
@@ -307,7 +368,9 @@ const UploadImage: Component<UploadImageProps> = P => {
                 accept='.jpg, .jpeg, .png, image/jpg, image/jpeg, image/png'
                 onchange={e => {
                     if (!e.target.files || !e.target.files[0]) return
+
                     const file = e.target.files[0]
+
                     if (!IMAGE_MIMETYPE.includes(file.type))
                         return addAlert({
                             type: 'error',
@@ -316,7 +379,7 @@ const UploadImage: Component<UploadImageProps> = P => {
                             subject: 'خطا!',
                         })
 
-                    P.onUpload(URL.createObjectURL(file))
+                    P.onUpload(file)
                 }}
             />
 
@@ -348,9 +411,12 @@ const LoadingItems: Component = P => {
     )
 }
 
-const Item: Component<MaterialModel> = P => {
+interface ItemProps extends MaterialModel {
+    onClick: () => void
+}
+const Item: Component<ItemProps> = P => {
     return (
-        <div class='item'>
+        <div class='item' onclick={P.onClick}>
             <div class='img-container  '>
                 <img src={P.photo} alt='' />
             </div>
