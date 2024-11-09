@@ -282,6 +282,16 @@
 
                 outline: none;
                 border: none;
+
+                svg {
+                    transition: 0.3s;
+                }
+
+                &:hover {
+                    svg {
+                        scale: 1.2;
+                    }
+                }
             }
 
             .data-wrapper {
@@ -425,6 +435,7 @@
 
                             text-align: center;
 
+                            font: inherit;
                             font-weight: bold;
                             font-size: 1.3em;
 
@@ -504,6 +515,21 @@
                             width: 50%;
 
                             padding: 1rem;
+
+                            &.minus {
+                                background-image: linear-gradient(
+                                    45deg,
+                                    #9b2222,
+                                    transparent
+                                );
+                            }
+                            &.plus {
+                                background-image: linear-gradient(
+                                    45deg,
+                                    #229b36,
+                                    transparent
+                                );
+                            }
                         }
                     }
                 }
@@ -513,8 +539,8 @@
                     background: var(--blue);
                     border: none;
                     font-size: 1.3em;
-                    border-radius: 5px;
-                    padding: 0.2em;
+                    border-radius: 8px;
+                    padding: 0.4em;
 
                     margin-top: auto;
                 }
