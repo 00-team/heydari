@@ -1,7 +1,9 @@
+import { useSearchParams } from '@solidjs/router'
 import { ImageIcon } from 'icons'
 import { MaterialModel } from 'models'
-import { Component, For, Show } from 'solid-js'
-import { createStore } from 'solid-js/store'
+import { httpx } from 'shared'
+import { Component, createEffect, For, onMount, Show } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
 
 import './style/storage.scss'
 
@@ -15,6 +17,8 @@ const Storage: Component<{}> = props => {
         loading: boolean
 
         items: MaterialModel[]
+
+        page: number
     }
 
     const [state, setState] = createStore<stateType>({
@@ -23,10 +27,37 @@ const Storage: Component<{}> = props => {
         img: null,
         count: 0,
 
+        items: [],
         loading: true,
 
-        items: [],
+        page: 0,
     })
+
+    const [params, setParams] = useSearchParams()
+
+    createEffect(() => fetch_items(parseInt(params.page || '0') || 0))
+
+    onMount(() => {})
+
+    function fetch_items(page: number) {
+        setParams({ page })
+
+        httpx({
+            url: '/api/admin/materials/',
+            params: { page },
+            method: 'GET',
+            onLoad(x) {
+                if (x.status != 200) return
+
+                setState(
+                    produce(s => {
+                        s.items = x.response
+                        s.loading = false
+                    })
+                )
+            },
+        })
+    }
 
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
