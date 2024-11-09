@@ -178,12 +178,16 @@ const Storage: Component<{}> = props => {
                                     type='number'
                                     inputMode='numeric'
                                     min={0}
-                                    maxLength={1024}
+                                    maxLength={20}
                                     value={state.newCount}
+                                    placeholder={'تعداد...'}
                                     oninput={e => {
+                                        if (e.target.value.length >= 10)
+                                            return e.preventDefault()
+
                                         let value = e.target.valueAsNumber
 
-                                        setState({ newCount: value })
+                                        setState({ newCount: value || 0 })
                                     }}
                                 />
                                 <button
