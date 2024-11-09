@@ -64,7 +64,16 @@ const Storage: Component<{}> = props => {
             <Show when={!state.loading} fallback={<LoadingItems />}>
                 <button class='main-cta'>Add Item</button>
                 <div class='storage-items'>
-                    <For each={state.items}>{item => <Item {...item} />}</For>
+                    <Show
+                        when={state.items.length >= 1}
+                        fallback={
+                            <div class='empty-storage'>انبار خالی است!</div>
+                        }
+                    >
+                        <For each={state.items}>
+                            {item => <Item {...item} />}
+                        </For>
+                    </Show>
                 </div>
             </Show>
         </div>
