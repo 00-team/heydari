@@ -35,3 +35,13 @@ export type ProductModel = {
     price: number
     count: number
 }
+
+export type MaterialModel = {
+    count: number
+    created_at: number
+    detail: string
+    id: number
+    name: string
+    photo: string
+    updated_at: number
+}
