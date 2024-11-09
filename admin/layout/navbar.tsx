@@ -8,6 +8,7 @@ export default () => {
             <div class='links'>
                 <A href='/products/'>Products</A>
                 <A href='/product-tags/'>Product Tags</A>
+                <A href='/storage/'>Storage</A>
             </div>
         </nav>
     )
