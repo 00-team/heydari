@@ -10,6 +10,7 @@ import './style/index.scss'
 import Navbar from './layout/navbar'
 import Login from 'layout/login'
 const Products = lazy(() => import('./layout/products'))
+const Anbar = lazy(() => import('./layout/anbar'))
 const ProductTags = lazy(() => import('./layout/product-tags'))
 
 const App: Component<RouteSectionProps> = P => {
@@ -32,6 +33,7 @@ const Root = () => {
                     />
                     <Route path='/products/' component={Products} />
                     <Route path='/product-tags/' component={ProductTags} />
+                    <Route path='/anbar/' component={Anbar} />
                     <Route path='*' component={() => <span>Not Found</span>} />
                 </Route>
             </Router>
