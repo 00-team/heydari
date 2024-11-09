@@ -1,44 +1,59 @@
 import { ImageIcon } from 'icons'
 import { MaterialModel } from 'models'
-import { Component, For } from 'solid-js'
+import { Component, For, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 import './style/storage.scss'
 
 const Storage: Component<{}> = props => {
-    type state = {
+    type stateType = {
         show: boolean
         img: string | null
         title: string | null
         count: number
 
+        loading: boolean
+
         items: MaterialModel[]
     }
 
-    const [state, setState] = createStore<state>({
+    const [state, setState] = createStore<stateType>({
         show: false,
         title: '',
         img: null,
         count: 0,
 
-        items: [
-            {
-                count: 100,
-                created_at: 100,
-                detail: '',
-                id: 1,
-                name: 'لورم ایپسوم',
-                photo: '',
-                updated_at: 1000,
-            },
-        ],
+        loading: true,
+
+        items: [],
     })
 
     return (
-        <div class='storage-container'>
+        <div class='storage-container' classList={{ loading: state.loading }}>
+            <Show when={!state.loading} fallback={<LoadingItems />}>
+                <button class='main-cta'>Add Item</button>
+                <div class='storage-items'>
+                    <For each={state.items}>{item => <Item {...item} />}</For>
+                </div>
+            </Show>
+        </div>
+    )
+}
+
+const LoadingItems: Component = P => {
+    return (
+        <div class='loading'>
             <button class='main-cta'>Add Item</button>
-            <div class='storage-items'>
-                <For each={state.items}>{item => <Item {...item} />}</For>
+            <div class='loading-wrapper'>
+                <div class='loading-dots'>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <p>لطفا صبر کنید...</p>
             </div>
         </div>
     )
