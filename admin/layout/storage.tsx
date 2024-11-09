@@ -1,11 +1,20 @@
 import { useSearchParams } from '@solidjs/router'
-import { ChairIcon, CloseIcon, ImageIcon, MinusIcon, PlusIcon } from 'icons'
+import { addAlert } from 'comps/alert'
+import { ChairIcon, CloseIcon, MinusIcon, PlusIcon, UploadIcon } from 'icons'
 import { MaterialModel } from 'models'
 import { httpx } from 'shared'
 import { Component, createEffect, For, Show } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 import './style/storage.scss'
+
+export const IMAGE_MIMETYPE = [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/gif',
+    'image/webm',
+]
 
 const Storage: Component<{}> = props => {
     type stateType = {
@@ -110,6 +119,8 @@ const Storage: Component<{}> = props => {
                     }}
                     onsubmit={e => {
                         e.preventDefault()
+
+                        close_popup()
                     }}
                 >
                     <button class='close-form' onclick={() => close_popup()}>
@@ -118,8 +129,25 @@ const Storage: Component<{}> = props => {
 
                     <div class='data-wrapper'>
                         <div class='img-container'>
-                            <Show when={state.img}>
-                                <img src={state.img} />
+                            <Show
+                                when={state.img}
+                                fallback={
+                                    <UploadImage
+                                        onUpload={photo =>
+                                            setState({ img: photo })
+                                        }
+                                    />
+                                }
+                            >
+                                <div
+                                    class='img-wrapper'
+                                    onclick={() => setState({ img: null })}
+                                >
+                                    <img src={state.img} />
+                                    <div class='clear-img'>
+                                        <CloseIcon />
+                                    </div>
+                                </div>
                             </Show>
                         </div>
                         <div
@@ -185,7 +213,9 @@ const Storage: Component<{}> = props => {
                                         if (e.target.value.length >= 10)
                                             return e.preventDefault()
 
-                                        let value = e.target.valueAsNumber
+                                        let value = Math.ceil(
+                                            e.target.valueAsNumber
+                                        )
 
                                         setState({ newCount: value || 0 })
                                     }}
@@ -244,6 +274,61 @@ const Storage: Component<{}> = props => {
     )
 }
 
+interface UploadImageProps {
+    onUpload: (photo: string) => void
+}
+const UploadImage: Component<UploadImageProps> = P => {
+    return (
+        <label
+            class='upload-image'
+            for='image-upload-inp'
+            ondragenter={e => e.preventDefault()}
+            ondragleave={e => e.preventDefault()}
+            ondragover={e => e.preventDefault()}
+            ondrop={e => {
+                e.preventDefault()
+
+                let file = e.dataTransfer.files[0]
+
+                if (!IMAGE_MIMETYPE.includes(file.type))
+                    return addAlert({
+                        type: 'error',
+                        timeout: 5,
+                        content: 'فرمت واردی باید عکس باشد!',
+                        subject: 'خطا!',
+                    })
+
+                P.onUpload(URL.createObjectURL(file))
+            }}
+        >
+            <input
+                type='file'
+                id='image-upload-inp'
+                accept='.jpg, .jpeg, .png, image/jpg, image/jpeg, image/png'
+                onchange={e => {
+                    if (!e.target.files || !e.target.files[0]) return
+                    const file = e.target.files[0]
+                    if (!IMAGE_MIMETYPE.includes(file.type))
+                        return addAlert({
+                            type: 'error',
+                            timeout: 5,
+                            content: 'فرمت واردی باید عکس باشد!',
+                            subject: 'خطا!',
+                        })
+
+                    P.onUpload(URL.createObjectURL(file))
+                }}
+            />
+
+            <UploadIcon />
+
+            <p>آپلود عکس</p>
+
+            <span>فایل خود را اینجا بندازید یا کلیک کنید!</span>
+        </label>
+    )
+}
+
 const LoadingItems: Component = P => {
     return (
         <div class='loading'>
@@ -267,11 +352,7 @@ const Item: Component<MaterialModel> = P => {
     return (
         <div class='item'>
             <div class='img-container  '>
-                {P.photo ? (
-                    <img src='https://picsum.photos/300/300' alt='' />
-                ) : (
-                    <ImageIcon />
-                )}
+                <img src={P.photo} alt='' />
             </div>
 
             <div class='data-wrapper'>
