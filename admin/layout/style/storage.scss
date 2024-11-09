@@ -378,6 +378,125 @@
                         }
                     }
                 }
+                .counter-update {
+                    width: 100%;
+
+                    display: flex;
+                    flex-direction: column;
+
+                    margin-top: 2rem;
+
+                    button {
+                        outline: none;
+                        border: none;
+                        cursor: pointer;
+
+                        font: inherit;
+                    }
+
+                    .main-inp {
+                        width: 100%;
+                        height: 50px;
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 1rem;
+
+                        input {
+                            height: 100%;
+                            width: 100%;
+
+                            background-color: transparent;
+
+                            border: none;
+                            border-bottom: 1px solid white;
+                            outline: none;
+
+                            text-align: center;
+
+                            font-weight: bold;
+                            font-size: 1.3em;
+
+                            &::-webkit-outer-spin-button,
+                            &::-webkit-inner-spin-button {
+                                -webkit-appearance: none;
+                                margin: 0;
+                            }
+
+                            /* Firefox */
+                            &[type='number'] {
+                                -moz-appearance: textfield;
+                            }
+                        }
+
+                        .icon {
+                            height: 100%;
+                            aspect-ratio: 1;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            background: var(--cg);
+
+                            border-radius: 8px;
+                        }
+                    }
+
+                    .counter-action {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        border-radius: 8px;
+
+                        margin-top: 2rem;
+
+                        background: var(--cg);
+
+                        overflow: hidden;
+
+                        position: relative;
+                        isolation: isolate;
+
+                        &::before {
+                            content: '';
+                            width: 50%;
+                            height: 100%;
+
+                            position: absolute;
+                            right: 0;
+
+                            border-radius: inherit;
+
+                            z-index: -1;
+
+                            background-color: var(--green);
+
+                            transition: 0.3s ease;
+                        }
+
+                        &.sold {
+                            &::before {
+                                transform: translateX(-100%);
+                                background-color: var(--red);
+                            }
+                        }
+
+                        .action {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            background-color: transparent;
+
+                            width: 50%;
+
+                            padding: 1rem;
+                        }
+                    }
+                }
 
                 .popup-cta {
                     font: inherit;
