@@ -122,8 +122,23 @@ const Storage: Component<{}> = props => {
                                 <img src={state.img} />
                             </Show>
                         </div>
-                        <div class='count'>
-                            <span>{state.count.toLocaleString() || 0}</span>
+                        <div
+                            class='count'
+                            classList={{
+                                error:
+                                    state.action === 'sold' &&
+                                    state.count - state.newCount < 0,
+                            }}
+                        >
+                            <span>
+                                {state.action === 'add'
+                                    ? (
+                                          state.count + state.newCount
+                                      ).toLocaleString()
+                                    : (
+                                          state.count - state.newCount
+                                      ).toLocaleString()}
+                            </span>
                         </div>
                     </div>
 
