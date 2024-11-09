@@ -246,8 +246,8 @@
         }
 
         .popup-wrapper {
-            width: clamp(0px, 100%, 800px);
-            height: 380px;
+            width: clamp(0px, 100%, 850px);
+            height: 425px;
 
             display: flex;
             align-items: center;
@@ -261,6 +261,28 @@
             border-radius: 12px;
 
             direction: rtl;
+
+            position: relative;
+            isolation: isolate;
+
+            .close-form {
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 10px;
+
+                background-color: transparent;
+
+                cursor: pointer;
+
+                outline: none;
+                border: none;
+            }
 
             .data-wrapper {
                 display: flex;
