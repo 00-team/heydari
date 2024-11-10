@@ -1,5 +1,5 @@
-import { Navigate, Route, RouteSectionProps, Router } from '@solidjs/router'
-import { Component, Show, lazy } from 'solid-js'
+import { Navigate, Route, Router, RouteSectionProps } from '@solidjs/router'
+import { Component, lazy, Show } from 'solid-js'
 import { render } from 'solid-js/web'
 import { self } from 'store/self'
 
@@ -7,9 +7,10 @@ import Alert from 'comps/alert'
 
 import './style/index.scss'
 
-import Navbar from './layout/navbar'
 import Login from 'layout/login'
+import Navbar from './layout/navbar'
 const Products = lazy(() => import('./layout/products'))
+const Storage = lazy(() => import('./layout/storage'))
 const ProductTags = lazy(() => import('./layout/product-tags'))
 
 const App: Component<RouteSectionProps> = P => {
@@ -32,6 +33,7 @@ const Root = () => {
                     />
                     <Route path='/products/' component={Products} />
                     <Route path='/product-tags/' component={ProductTags} />
+                    <Route path='/storage/' component={Storage} />
                     <Route path='*' component={() => <span>Not Found</span>} />
                 </Route>
             </Router>

@@ -14,6 +14,54 @@ export const CircleAlertIcon = () => (
     </svg>
 )
 
+export const ChairIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 448 512'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path d='M248 48V256h48V58.7c23.9 13.8 40 39.7 40 69.3V256h48V128C384 57.3 326.7 0 256 0H192C121.3 0 64 57.3 64 128V256h48V128c0-29.6 16.1-55.5 40-69.3V256h48V48h48zM48 288c-12.1 0-23.2 6.8-28.6 17.7l-16 32c-5 9.9-4.4 21.7 1.4 31.1S20.9 384 32 384l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32V384H352v96c0 17.7 14.3 32 32 32s32-14.3 32-32V384c11.1 0 21.4-5.7 27.2-15.2s6.4-21.2 1.4-31.1l-16-32C423.2 294.8 412.1 288 400 288H48z'></path>
+    </svg>
+)
+
+export const CloseIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='none'
+        stroke-width='0'
+        viewBox='0 0 15 15'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path
+            fill-rule='evenodd'
+            clip-rule='evenodd'
+            d='M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z'
+            fill='currentColor'
+        ></path>
+    </svg>
+)
+
+export const StorageIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 24 24'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path fill='none' d='M0 0h24v24H0V0z'></path>
+        <path d='M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z'></path>
+    </svg>
+)
+
 export const CircleCheckIcon = () => (
     <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -256,6 +304,19 @@ export const PlusIcon = () => (
         <path d='M12 5v14' />
     </svg>
 )
+export const MinusIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 448 512'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path d='M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z'></path>
+    </svg>
+)
 
 export const TableIcon = () => (
     <svg
@@ -333,6 +394,20 @@ export const ImageIcon = () => (
         <rect width='18' height='18' x='3' y='3' rx='2' ry='2' />
         <circle cx='9' cy='9' r='2' />
         <path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21' />
+    </svg>
+)
+
+export const UploadIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 512 512'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path d='M403.002 217.001C388.998 148.002 328.998 96 256 96c-57.998 0-107.998 32.998-132.998 81.001C63.002 183.002 16 233.998 16 296c0 65.996 53.999 120 120 120h260c55 0 100-45 100-100 0-52.998-40.996-96.001-92.998-98.999zM288 276v76h-64v-76h-68l100-100 100 100h-68z'></path>
     </svg>
 )
 
