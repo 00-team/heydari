@@ -54,6 +54,7 @@ async fn list(
 struct MaterialAddBody {
     name: String,
     detail: String,
+    count: i64,
 }
 
 #[utoipa::path(
@@ -74,9 +75,9 @@ async fn add(
     body.detail.cut_off(2047);
 
     let result = sqlx::query! {
-        "insert into materials(name, detail, created_at)
-        values(?,?,?)",
-        body.name, body.detail, now
+        "insert into materials(name, detail, count, created_at)
+        values(?,?,?,?)",
+        body.name, body.detail, body.count, now
     }
     .execute(&state.sql)
     .await?;
@@ -85,6 +86,7 @@ async fn add(
         id: result.last_insert_rowid(),
         name: body.name.clone(),
         detail: body.detail.clone(),
+        count: body.count,
         created_at: now,
         ..Default::default()
     }))
