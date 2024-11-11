@@ -161,7 +161,7 @@
                 padding: 8px;
 
                 width: clamp(0px, 100%, 350px);
-                aspect-ratio: 1 /1.2;
+                aspect-ratio: 1 /1.4;
 
                 background-color: var(--cd);
                 border-radius: 12px;
@@ -216,6 +216,26 @@
                     .item-name {
                         font-size: 1.2em;
                     }
+                }
+
+                .delete-cta {
+                    width: 100%;
+                    padding: 0.7em;
+                    border-radius: 8px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5em;
+
+                    margin-top: 1rem;
+
+                    font: inherit;
+
+                    background-color: var(--red);
+                    border: none;
+
+                    cursor: pointer;
                 }
             }
         }
@@ -554,9 +574,24 @@
                             align-items: center;
                             justify-content: center;
 
-                            background: var(--cg);
+                            background-color: var(--cg);
 
                             border-radius: 8px;
+
+                            &.plus {
+                                background-image: linear-gradient(
+                                    45deg,
+                                    green -50%,
+                                    transparent
+                                );
+                            }
+                            &.minus {
+                                background-image: linear-gradient(
+                                    45deg,
+                                    red -50%,
+                                    transparent
+                                );
+                            }
                         }
                     }
 
