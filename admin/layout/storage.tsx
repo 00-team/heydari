@@ -1,6 +1,8 @@
 import { useSearchParams } from '@solidjs/router'
 import { addAlert } from 'comps/alert'
 import {
+    Calendar2Icon,
+    CalendarIcon,
     ChairIcon,
     CloseIcon,
     DeleteIcon,
@@ -595,6 +597,13 @@ interface ItemProps extends MaterialModel {
     onDel: () => void
 }
 const Item: Component<ItemProps> = P => {
+    function utc_to_date(utc_timestamp: number) {
+        utc_timestamp *= 1000
+        let offset = new Date().getTimezoneOffset() * -60000
+
+        return new Date(utc_timestamp + offset)
+    }
+
     return (
         <div class='item' onclick={P.onClick}>
             <div class='img-container  '>
@@ -607,11 +616,45 @@ const Item: Component<ItemProps> = P => {
             </div>
 
             <div class='data-wrapper'>
-                <div></div>
+                <div class='item-infos'>
+                    <div class='item-info created description'>
+                        <div class='holder'>
+                            <CalendarIcon />
+                            ثبت
+                        </div>
+                        <div class='data'>
+                            {new Date(P.created_at * 1000).toLocaleDateString(
+                                'en-GB',
+                                {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                }
+                            )}
+                        </div>
+                    </div>
+                    <div class='item-info updated description'>
+                        <div class='holder'>
+                            <Calendar2Icon />
+                            بروزرسانی
+                        </div>
+                        <div class='data'>
+                            {P.updated_at <= 0
+                                ? '---'
+                                : new Date(
+                                      P.updated_at * 1000
+                                  ).toLocaleDateString('en-GB', {
+                                      year: 'numeric',
+                                      month: '2-digit',
+                                      day: '2-digit',
+                                  })}
+                        </div>
+                    </div>
+                </div>
 
-                <div class='item-count'>{P.count}</div>
+                <div class='item-count title'>{P.count}</div>
 
-                <div class='item-name'>{P.name}</div>
+                <div class='item-name title'>{P.name}</div>
             </div>
 
             <button
