@@ -1,10 +1,19 @@
 import { useSearchParams } from '@solidjs/router'
 import { addAlert } from 'comps/alert'
-import { ChairIcon, CloseIcon, MinusIcon, PlusIcon, UploadIcon } from 'icons'
+import {
+    ChairIcon,
+    CloseIcon,
+    DeleteIcon,
+    ImageIcon,
+    MinusIcon,
+    PlusIcon,
+    UploadIcon,
+} from 'icons'
 import { MaterialModel } from 'models'
 import { httpx } from 'shared'
 import { Component, createEffect, createMemo, For, Show } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
+import { createStore, produce, SetStoreFunction } from 'solid-js/store'
+import { setPopup } from 'store/popup'
 
 import './style/storage.scss'
 
@@ -16,31 +25,33 @@ export const IMAGE_MIMETYPE = [
     'image/webm',
 ]
 
+type stateType = {
+    show: boolean
+    type: 'edit' | 'add'
+    activeItem: MaterialModel
+
+    loading: boolean
+
+    items: MaterialModel[]
+
+    page: number
+}
+
+const default_item: MaterialModel = {
+    count: 0,
+    created_at: 0,
+    detail: '',
+    name: '',
+    id: 0,
+    photo: null,
+    updated_at: 0,
+}
+
 const Storage: Component<{}> = props => {
-    type stateType = {
-        show: boolean
-        type: 'add' | 'edit'
-        name: string | null
-        img: File | null
-        count: number
-        newCount: number
-        action: 'add' | 'sold'
-
-        loading: boolean
-
-        items: MaterialModel[]
-
-        page: number
-    }
-
     const [state, setState] = createStore<stateType>({
         show: false,
         type: 'add',
-        name: '',
-        img: null,
-        count: 0,
-        newCount: 0,
-        action: 'add',
+        activeItem: { ...default_item },
 
         items: [],
         loading: true,
@@ -72,51 +83,6 @@ const Storage: Component<{}> = props => {
         })
     }
 
-    const return_newCount = createMemo((): number =>
-        state.action === 'add'
-            ? state.count + state.newCount
-            : state.count - state.newCount
-    )
-
-    const close_popup = () => {
-        setState(
-            produce(s => {
-                s.show = false
-                s.type = 'add'
-                s.name = ''
-                s.img = null
-                s.count = 0
-                s.newCount = 0
-                s.action = 'add'
-            })
-        )
-    }
-
-    function save_add_item() {
-        if (state.type === 'add') {
-            httpx({
-                url: '/api/admin/materials/',
-                method: 'POST',
-                json: {
-                    name: state.name,
-                    count: return_newCount(),
-                    detail: '',
-                },
-                onLoad(x) {
-                    if (x.status != 200) return
-
-                    setState(
-                        produce(s => {
-                            let newitems = [...s.items, { ...x.response }]
-                            s.items = newitems
-                        })
-                    )
-                },
-            })
-        } else {
-        }
-    }
-
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
             <Show when={!state.loading} fallback={<LoadingItems />}>
@@ -138,16 +104,42 @@ const Storage: Component<{}> = props => {
                                 {(item, index) => (
                                     <Item
                                         {...item}
-                                        onClick={() =>
+                                        onClick={() => {
                                             setState(
                                                 produce(s => {
                                                     s.show = true
+                                                    s.activeItem = { ...item }
                                                     s.type = 'edit'
-
-                                                    s = { ...item }
                                                 })
                                             )
-                                        }
+                                        }}
+                                        onDel={() => {
+                                            httpx({
+                                                url: `/api/admin/materials/${item.id}/`,
+                                                method: 'DELETE',
+                                                onLoad(x) {
+                                                    if (x.status != 200) return
+
+                                                    setState(
+                                                        produce(s => {
+                                                            const index =
+                                                                s.items.findIndex(
+                                                                    i =>
+                                                                        i.id ===
+                                                                        item.id
+                                                                )
+
+                                                            if (index !== -1) {
+                                                                s.items.splice(
+                                                                    index,
+                                                                    1
+                                                                )
+                                                            }
+                                                        })
+                                                    )
+                                                },
+                                            })
+                                        }}
                                     />
                                 )}
                             </For>
@@ -156,170 +148,355 @@ const Storage: Component<{}> = props => {
                 </div>
             </Show>
 
-            <div
-                class='popup-container'
-                classList={{ show: state.show }}
-                onclick={() => close_popup()}
+            <Popup setState={setState} state={state} />
+        </div>
+    )
+}
+
+interface PopupProps {
+    state: stateType
+    setState: SetStoreFunction<stateType>
+}
+const Popup: Component<PopupProps> = P => {
+    type Pstate = {
+        name: string
+        newCount: number
+        imgUrl: string
+        imgFile: File | null
+
+        action: 'add' | 'sold'
+    }
+
+    const [state, setState] = createStore<Pstate>({
+        name: '',
+        newCount: 0,
+
+        imgFile: null,
+        imgUrl: '',
+
+        action: 'add',
+    })
+
+    // Watch for changes in P.state.activeItem and update local state accordingly
+    createEffect(() => {
+        setState({
+            name: P.state.activeItem.name || '',
+            newCount: 0,
+            imgUrl: P.state.activeItem.photo || '',
+            imgFile: null,
+            action: 'add',
+        })
+    })
+
+    const return_newCount = createMemo((): number =>
+        state.action === 'add'
+            ? P.state.activeItem.count + state.newCount
+            : P.state.activeItem.count - state.newCount
+    )
+
+    const close_popup = () => {
+        P.setState(
+            produce(s => {
+                s.show = false
+                s.activeItem = { ...default_item }
+            })
+        )
+    }
+
+    function on_submit() {
+        if (return_newCount() < 0)
+            return addAlert({
+                type: 'error',
+                timeout: 5,
+                content: 'تعداد در انبار نمیتواند منفی باشد!',
+                subject: 'خطا!',
+            })
+        if (state.name.length <= 0)
+            return addAlert({
+                type: 'error',
+                timeout: 5,
+                content: 'اسم آیتم نمیتواند خالی باشد!',
+                subject: 'خطا!',
+            })
+
+        if (P.state.type === 'add') {
+            let id
+
+            if (!state.imgFile) {
+                return addAlert({
+                    type: 'error',
+                    timeout: 5,
+                    content: 'عکس آیتم نمیتواند خالی باشد!',
+                    subject: 'خطا!',
+                })
+            }
+
+            let data = new FormData()
+            data.set('photo', state.imgFile)
+
+            httpx({
+                url: '/api/admin/materials/',
+                method: 'POST',
+                json: {
+                    count: return_newCount(),
+                    name: state.name,
+                    detail: '',
+                },
+                onLoad(x) {
+                    if (x.status != 200) return
+
+                    id = x.response.id
+
+                    P.setState(
+                        produce(s => {
+                            s.items.unshift(x.response)
+                        })
+                    )
+
+                    httpx({
+                        url: `/api/admin/materials/${id}/photo/`,
+                        method: 'PUT',
+                        data,
+                        onLoad(x) {
+                            if (x.status != 200) return
+
+                            P.setState(
+                                produce(s => {
+                                    s.items[0] = x.response
+                                })
+                            )
+                        },
+                    })
+                },
+            })
+        } else {
+            let id = P.state.activeItem.id
+
+            if (!state.imgUrl)
+                return addAlert({
+                    type: 'error',
+                    timeout: 5,
+                    content: 'عکس آیتم نمیتواند خالی باشد!',
+                    subject: 'خطا!',
+                })
+
+            httpx({
+                url: `/api/admin/materials/${id}/`,
+                method: 'PATCH',
+                json: {
+                    count: return_newCount(),
+                    name: state.name,
+                    detail: '',
+                },
+                onLoad(x) {
+                    if (x.status != 200) return
+
+                    addAlert({
+                        timeout: 5,
+                        type: 'success',
+                        subject: 'موفق!',
+                        content: 'آیتم شما با موفقیت به روز شد!',
+                    })
+
+                    P.setState(
+                        produce(s => {
+                            let index = s.items.findIndex(i => i.id === id)
+
+                            s.items[index] = x.response
+                        })
+                    )
+                },
+            })
+
+            if (state.imgFile) {
+                let data = new FormData()
+                data.set('photo', state.imgFile)
+
+                httpx({
+                    url: `/api/admin/materials/${id}/photo/`,
+                    method: 'PUT',
+                    data,
+                    onLoad(x) {
+                        if (x.status != 200) return
+
+                        P.setState(
+                            produce(s => {
+                                let index = s.items.findIndex(i => i.id === id)
+
+                                s.items[index] = x.response
+                            })
+                        )
+                    },
+                })
+            }
+        }
+
+        close_popup()
+    }
+
+    return (
+        <div
+            class='popup-container'
+            classList={{ show: P.state.show }}
+            onclick={() => close_popup()}
+        >
+            <form
+                class='popup-wrapper'
+                onclick={e => {
+                    e.stopImmediatePropagation()
+                    e.stopPropagation()
+                }}
+                onsubmit={e => {
+                    e.preventDefault()
+
+                    on_submit()
+                }}
             >
-                <form
-                    class='popup-wrapper'
-                    onclick={e => {
-                        e.stopImmediatePropagation()
-                        e.stopPropagation()
-                    }}
-                    onsubmit={e => {
-                        e.preventDefault()
-
-                        if (state.name.length <= 0)
-                            return addAlert({
-                                type: 'error',
-                                timeout: 5,
-                                content: 'اسم نمیتواند خالی باشد!',
-                                subject: 'خطا!',
-                            })
-                        if (return_newCount() < 0)
-                            return addAlert({
-                                type: 'error',
-                                timeout: 5,
-                                content: 'تعداد آیتم نمیتواند منفی باشد!',
-                                subject: 'خطا!',
-                            })
-
-                        save_add_item()
-
-                        close_popup()
-                    }}
+                <button
+                    class='close-form'
+                    type='button'
+                    onclick={() => close_popup()}
                 >
-                    <button class='close-form' onclick={() => close_popup()}>
-                        <CloseIcon />
-                    </button>
+                    <CloseIcon />
+                </button>
 
-                    <div class='data-wrapper'>
-                        <div class='img-container'>
-                            <Show
-                                when={state.img}
-                                fallback={
-                                    <UploadImage
-                                        onUpload={file =>
-                                            setState({ img: file })
-                                        }
-                                    />
-                                }
-                            >
-                                <div
-                                    class='img-wrapper'
-                                    onclick={() => setState({ img: null })}
-                                >
-                                    <img src={URL.createObjectURL(state.img)} />
-                                    <div class='clear-img'>
-                                        <CloseIcon />
-                                    </div>
-                                </div>
-                            </Show>
-                        </div>
-                        <div
-                            class='count'
-                            classList={{
-                                error: return_newCount() < 0,
-                            }}
-                        >
-                            <span>{return_newCount().toLocaleString()}</span>
-                        </div>
-                    </div>
-
-                    <div class='inps-wrapper'>
-                        <div class='inp-wrapper'>
-                            <div class='holder'>
-                                <ChairIcon />
-                                اسم آیتم
-                            </div>
-
-                            <input
-                                type='text'
-                                class='name-inp'
-                                placeholder='اسم آیتم...'
-                                value={state.name || ''}
-                                oninput={e =>
-                                    setState({ name: e.target.value })
-                                }
-                            />
-                        </div>
-
-                        <div class='counter-update'>
-                            <div class='main-inp'>
-                                <button
-                                    type='button'
-                                    class='icon plus'
-                                    onclick={() =>
+                <div class='data-wrapper'>
+                    <div
+                        class='img-container'
+                        onclick={() => {
+                            setState(
+                                produce(s => {
+                                    s.imgFile = null
+                                    s.imgUrl = ''
+                                })
+                            )
+                        }}
+                    >
+                        <Show
+                            when={state.imgUrl || state.imgFile}
+                            fallback={
+                                <UploadImage
+                                    onUpload={file => {
                                         setState(
                                             produce(s => {
-                                                s.newCount += 1
+                                                s.imgFile = file
                                             })
                                         )
-                                    }
-                                >
-                                    <PlusIcon />
-                                </button>
-                                <input
-                                    type='number'
-                                    inputMode='numeric'
-                                    min={0}
-                                    maxLength={20}
-                                    value={state.newCount}
-                                    placeholder={'تعداد...'}
-                                    oninput={e => {
-                                        if (e.target.value.length >= 10)
-                                            return e.preventDefault()
-
-                                        let value = Math.ceil(
-                                            e.target.valueAsNumber
-                                        )
-
-                                        setState({ newCount: value || 0 })
                                     }}
                                 />
-                                <button
-                                    type='button'
-                                    class='icon minus'
-                                    onclick={() =>
-                                        setState(
-                                            produce(s => {
-                                                if (s.newCount >= 1)
-                                                    s.newCount -= 1
-                                            })
-                                        )
+                            }
+                        >
+                            <div class='img-wrapper'>
+                                <img
+                                    src={
+                                        state.imgUrl
+                                            ? `/record/mp-${P.state.activeItem.id}-${state.imgUrl}`
+                                            : URL.createObjectURL(state.imgFile)
                                     }
-                                >
-                                    <MinusIcon />
-                                </button>
+                                />
                             </div>
-                            <div
-                                class='counter-action'
-                                classList={{ sold: state.action === 'sold' }}
-                            >
-                                <button
-                                    class='action added'
-                                    onclick={() => setState({ action: 'add' })}
-                                    type='button'
-                                >
-                                    اضافه
-                                </button>
-                                <button
-                                    class='action sold'
-                                    onclick={() => setState({ action: 'sold' })}
-                                    type='button'
-                                >
-                                    فروش
-                                </button>
-                            </div>
+                        </Show>
+                    </div>
+                    <div
+                        class='count'
+                        classList={{
+                            error: return_newCount() < 0,
+                        }}
+                    >
+                        <span>{return_newCount()}</span>
+                    </div>
+                </div>
+
+                <div class='inps-wrapper'>
+                    <div class='inp-wrapper'>
+                        <div class='holder'>
+                            <ChairIcon />
+                            اسم آیتم
                         </div>
 
-                        <button class='popup-cta' type='submit'>
-                            تایید
-                        </button>
+                        <input
+                            type='text'
+                            class='name-inp'
+                            placeholder='اسم آیتم...'
+                            value={state.name}
+                            oninput={e => setState({ name: e.target.value })}
+                        />
                     </div>
 
-                    {/* 
+                    <div class='counter-update'>
+                        <div class='main-inp'>
+                            <button
+                                type='button'
+                                class='icon plus'
+                                onclick={() =>
+                                    setState(
+                                        produce(s => {
+                                            s.newCount += 1
+                                        })
+                                    )
+                                }
+                            >
+                                <PlusIcon />
+                            </button>
+                            <input
+                                type='number'
+                                inputMode='numeric'
+                                min={0}
+                                maxLength={20}
+                                value={state.newCount}
+                                placeholder={'تعداد...'}
+                                oninput={e => {
+                                    if (e.target.value.length >= 10)
+                                        return e.preventDefault()
+
+                                    let value = Math.ceil(
+                                        e.target.valueAsNumber
+                                    )
+
+                                    setState({ newCount: value || 0 })
+                                }}
+                            />
+                            <button
+                                type='button'
+                                class='icon minus'
+                                onclick={() =>
+                                    setState(
+                                        produce(s => {
+                                            if (s.newCount >= 1) s.newCount -= 1
+                                        })
+                                    )
+                                }
+                            >
+                                <MinusIcon />
+                            </button>
+                        </div>
+                        <div
+                            class='counter-action'
+                            classList={{ sold: state.action === 'sold' }}
+                        >
+                            <button
+                                class='action added'
+                                onclick={() => setState({ action: 'add' })}
+                                type='button'
+                            >
+                                اضافه
+                            </button>
+                            <button
+                                class='action sold'
+                                onclick={() => setState({ action: 'sold' })}
+                                type='button'
+                            >
+                                فروش
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class='popup-cta' type='submit'>
+                        تایید
+                    </button>
+                </div>
+
+                {/* 
                     <input
                         type='nunmber'
                         inputMode='numeric'
@@ -329,8 +506,7 @@ const Storage: Component<{}> = props => {
                     <div class='count-action'></div>
 
                     <button class='poopup-cta'></button> */}
-                </form>
-            </div>
+            </form>
         </div>
     )
 }
@@ -413,12 +589,15 @@ const LoadingItems: Component = P => {
 
 interface ItemProps extends MaterialModel {
     onClick: () => void
+    onDel: () => void
 }
 const Item: Component<ItemProps> = P => {
     return (
         <div class='item' onclick={P.onClick}>
             <div class='img-container  '>
-                <img src={P.photo} alt='' />
+                <Show when={P.photo} fallback={<ImageIcon />}>
+                    <img src={`/record/mp-${P.id}-${P.photo}`} alt='' />
+                </Show>
             </div>
 
             <div class='data-wrapper'>
@@ -428,6 +607,26 @@ const Item: Component<ItemProps> = P => {
 
                 <div class='item-name'>{P.name}</div>
             </div>
+
+            <button
+                class='delete-cta'
+                onclick={e => {
+                    e.stopImmediatePropagation()
+                    e.stopPropagation()
+
+                    setPopup({
+                        show: true,
+                        title: 'حذف آیتم',
+                        type: 'error',
+                        Icon: () => <DeleteIcon />,
+                        content: 'از حذف آیتم در انبار مطمعنید؟',
+                        onSubmit: () => P.onDel(),
+                    })
+                }}
+            >
+                حذف از انبار
+                <DeleteIcon />
+            </button>
         </div>
     )
 }
