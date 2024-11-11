@@ -9,6 +9,7 @@ import './style/index.scss'
 
 import Login from 'layout/login'
 import Navbar from './layout/navbar'
+import { Popup } from 'comps/popup'
 const Products = lazy(() => import('./layout/products'))
 const Storage = lazy(() => import('./layout/storage'))
 const ProductTags = lazy(() => import('./layout/product-tags'))
@@ -18,6 +19,7 @@ const App: Component<RouteSectionProps> = P => {
         <Show when={self.loged_in && self.perms.any()} fallback={<Login />}>
             <Navbar />
             <main>{P.children}</main>
+            <Popup />
         </Show>
     )
 }
