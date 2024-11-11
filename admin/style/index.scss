@@ -1,3 +1,5 @@
+@use 'config' as g;
+
 @import './fonts';
 @import './button';
 @import './input';
@@ -121,4 +123,34 @@ span.copiable {
 ::selection {
     background-color: var(--selection-bg);
     color: var(--selection-fg);
+}
+
+.title_hero {
+    font-size: g.$TITLE_FONTSIZE_HERO;
+    // font-family: 'iranBold';
+}
+.section_title {
+    font-size: clamp(1.6rem, 2.9vw + 1.3rem, 2.8rem);
+    // font-family: 'iranBold';
+}
+.title {
+    font-size: g.$TITLE_FONTSIZE;
+    // font-family: 'yekanBold';
+}
+.title_small {
+    font-size: g.$TITLE_FONTSIZE_SMALL;
+    // font-family: 'yekanBold';
+}
+.title_smaller {
+    font-size: g.$TITLE_FONTSIZE_SMALLER;
+    // font-family: 'yekan';
+}
+
+.description {
+    font-size: g.$DESCRIPTION_FONT_SIZE;
+    // font-family: 'yekan';
+}
+.description_small {
+    font-size: g.$DESCRIPTION_FONT_SIZE_SMALL;
+    // font-family: 'yekan';
 }
