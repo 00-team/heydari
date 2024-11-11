@@ -177,7 +177,6 @@ const Popup: Component<PopupProps> = P => {
         action: 'add',
     })
 
-    // Watch for changes in P.state.activeItem and update local state accordingly
     createEffect(() => {
         setState({
             name: P.state.activeItem.name || '',
@@ -272,7 +271,7 @@ const Popup: Component<PopupProps> = P => {
         } else {
             let id = P.state.activeItem.id
 
-            if (!state.imgUrl)
+            if (!state.imgUrl && !state.imgFile)
                 return addAlert({
                     type: 'error',
                     timeout: 5,
@@ -319,9 +318,13 @@ const Popup: Component<PopupProps> = P => {
                     onLoad(x) {
                         if (x.status != 200) return
 
+                        console.log(x.response)
+
                         P.setState(
                             produce(s => {
-                                let index = s.items.findIndex(i => i.id === id)
+                                let index = s.items.findIndex(
+                                    i => i.id === x.response.id
+                                )
 
                                 s.items[index] = x.response
                             })
@@ -596,7 +599,10 @@ const Item: Component<ItemProps> = P => {
         <div class='item' onclick={P.onClick}>
             <div class='img-container  '>
                 <Show when={P.photo} fallback={<ImageIcon />}>
-                    <img src={`/record/mp-${P.id}-${P.photo}`} alt='' />
+                    <img
+                        src={`/record/mp-${P.id}-${P.photo}?q=${performance.now()}`}
+                        alt=''
+                    />
                 </Show>
             </div>
 
