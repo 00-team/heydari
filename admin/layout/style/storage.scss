@@ -158,7 +158,7 @@
 
                 padding: 8px;
 
-                width: clamp(0px, 100%, 350px);
+                width: clamp(0px, 100%, 400px);
                 aspect-ratio: 1 /1.4;
 
                 background-color: var(--cd);
@@ -167,6 +167,37 @@
                 cursor: pointer;
 
                 overflow: hidden;
+
+                .item-infos {
+                    width: 100%;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    direction: rtl;
+
+                    .item-info {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 1rem;
+
+                        font: inherit;
+
+                        .holder {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5rem;
+
+                            svg {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
+                    }
+                }
 
                 .img-container {
                     width: 100%;
@@ -209,10 +240,8 @@
 
                     .item-count {
                         font-weight: bold;
-                        font-size: 1.5em;
                     }
                     .item-name {
-                        font-size: 1.2em;
                     }
                 }
 
