@@ -403,7 +403,7 @@ const Popup: Component<PopupProps> = P => {
                             error: return_newCount() < 0,
                         }}
                     >
-                        <span>{return_newCount()}</span>
+                        <span>{return_newCount().toLocaleString()}</span>
                     </div>
                 </div>
 
