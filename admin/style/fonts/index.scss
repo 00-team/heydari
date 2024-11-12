@@ -19,3 +19,23 @@
     font-family: 'Titillium';
     src: url('./fonts/TitilliumWeb-Regular.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'iranLight';
+    src: url('/static/fonts/iran-sans/light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'iranBold';
+    src: url('/static/fonts/iran-sans/bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'yekanBold';
+    src: url('/static/fonts/iran-yekan/bold.woff') format('woff2');
+}
+
+@font-face {
+    font-family: 'yekan';
+    src: url('/static/fonts/iran-yekan/regular.woff') format('woff2');
+}
