@@ -139,7 +139,7 @@ export default () => {
                                 }
                             />
                             <p class='msg title_smaller'>
-                                کد پیامکی به شماره {state.phone} پیامک شد!
+                                کد پیامکی به شماره {state.phone} ارسال شد!
                             </p>
                         </div>
                     </div>
@@ -157,8 +157,8 @@ export default () => {
                         user_login()
                     }}
                 >
-                    <span class='code'>ارسال کد</span>
-                    <span class='enter'>ورود</span>
+                    <span class=''>ارسال کد</span>
+                    <span class='code'>ورود</span>
                 </button>
 
                 {/* <div class='grid'>
