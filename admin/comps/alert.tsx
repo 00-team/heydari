@@ -98,7 +98,7 @@ const Alert: Component<{ a: AlertModel; i: number }> = P => {
                 </button>
             </div>
             <Show when={P.a.content}>
-                <div class='body title_small'>
+                <div class='body title_smaller'>
                     <p>
                         {P.a.content.split('\n').map(line => (
                             <>
