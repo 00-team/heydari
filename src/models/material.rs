@@ -8,6 +8,8 @@ pub struct Material {
     pub detail: String,
     pub created_at: i64,
     pub updated_at: i64,
+    pub created_by: Option<i64>,
+    pub updated_by: Option<i64>,
     pub photo: Option<String>,
     pub count: i64,
 }

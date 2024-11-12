@@ -1,7 +1,10 @@
+use std::collections::HashSet;
+
 use crate::docs::UpdatePaths;
 use crate::models::material::Material;
 use crate::models::user::perms;
 use crate::models::user::Admin;
+use crate::models::user::User;
 use crate::models::ListInput;
 use crate::models::{AppErr, Response};
 use crate::utils::{self, CutOff};
@@ -10,7 +13,9 @@ use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
+use itertools::Itertools;
 use serde::Deserialize;
+use serde::Serialize;
 use shah::perms::Perms;
 use utoipa::{OpenApi, ToSchema};
 
@@ -19,23 +24,30 @@ use utoipa::{OpenApi, ToSchema};
     tags((name = "admin::material")),
     paths(list, add, update, delete, photo_set, photo_del),
     components(schemas(
-        Material, MaterialAddBody, MaterialUpdateBody, MaterialPhoto
+        Material, MaterialAddBody, MaterialUpdateBody, MaterialPhoto,
+        MaterialList
     )),
     servers((url = "/materials")),
     modifiers(&UpdatePaths)
 )]
 pub struct ApiDoc;
 
+#[derive(Serialize, ToSchema)]
+struct MaterialList {
+    materials: Vec<Material>,
+    users: Vec<User>,
+}
+
 #[utoipa::path(
     get,
     params(ListInput),
-    responses((status = 200, body = Vec<Material>))
+    responses((status = 200, body = MaterialList))
 )]
 /// List
 #[get("/")]
 async fn list(
     admin: Admin, q: Query<ListInput>, state: Data<AppState>,
-) -> Response<Vec<Material>> {
+) -> Response<MaterialList> {
     admin.perm_check(perms::V_MATERIAL)?;
 
     let offset = q.page as i64 * 32;
@@ -47,7 +59,31 @@ async fn list(
     .fetch_all(&state.sql)
     .await?;
 
-    Ok(Json(materials))
+    let mut user_ids = HashSet::<i64>::new();
+    for m in materials.iter() {
+        if let Some(uid) = m.updated_by {
+            user_ids.insert(uid);
+        }
+        if let Some(uid) = m.created_by {
+            user_ids.insert(uid);
+        }
+    }
+
+    let users = if user_ids.len() != 0 {
+        let user_ids = user_ids.iter().join(",");
+        let mut users = sqlx::query_as! {
+            User, "select * from users where id in (?)", user_ids
+        }
+        .fetch_all(&state.sql)
+        .await?;
+
+        users.iter_mut().for_each(|user| user.token = None);
+        users
+    } else {
+        vec![]
+    };
+
+    Ok(Json(MaterialList { materials, users }))
 }
 
 #[derive(Deserialize, ToSchema)]
@@ -75,9 +111,9 @@ async fn add(
     body.detail.cut_off(2047);
 
     let result = sqlx::query! {
-        "insert into materials(name, detail, count, created_at)
-        values(?,?,?,?)",
-        body.name, body.detail, body.count, now
+        "insert into materials(name, detail, count, created_at, created_by)
+        values(?,?,?,?,?)",
+        body.name, body.detail, body.count, now, admin.user.id,
     }
     .execute(&state.sql)
     .await?;
@@ -88,6 +124,7 @@ async fn add(
         detail: body.detail.clone(),
         count: body.count,
         created_at: now,
+        created_by: Some(admin.user.id),
         ..Default::default()
     }))
 }
@@ -117,6 +154,7 @@ async fn update(
     material.detail = body.detail.clone();
     material.count = body.count;
     material.updated_at = utils::now();
+    material.updated_by = Some(admin.user.id);
 
     material.name.cut_off(255);
     material.detail.cut_off(2047);
@@ -126,12 +164,14 @@ async fn update(
         name = ?,
         detail = ?,
         count = ?,
-        updated_at = ?
+        updated_at = ?,
+        updated_by = ?
         where id = ?",
         material.name,
         material.detail,
         material.count,
         material.updated_at,
+        material.updated_by,
         material.id
     }
     .execute(&state.sql)

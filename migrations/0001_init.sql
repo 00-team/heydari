@@ -44,6 +44,8 @@ create table if not exists materials (
     detail text not null default "",
     created_at integer not null,
     updated_at integer not null default 0,
+    updated_by integer references users(id) on delete set null,
+    created_by integer references users(id) on delete set null,
     photo text,
     count integer not null default 0
 );
