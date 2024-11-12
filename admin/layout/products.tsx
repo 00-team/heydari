@@ -418,9 +418,11 @@ const Product: Component<ProductProps> = P => {
                         ).toLocaleDateString()}
                     </span>
                     <span>
-                        {new Date(
-                            P.product.updated_at * 1e3
-                        ).toLocaleDateString()}
+                        {P.product.updated_at <= 0
+                            ? '---'
+                            : new Date(
+                                  P.product.updated_at * 1e3
+                              ).toLocaleDateString()}
                     </span>
                     <span>{P.product.code}</span>
                     <span>{P.product.slug}</span>
