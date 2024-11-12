@@ -1,9 +1,9 @@
-import './style/login.scss'
-import { createStore } from 'solid-js/store'
-import { httpx } from 'shared'
-import { Show } from 'solid-js'
-import { setSelf } from 'store'
 import { addAlert } from 'comps/alert'
+import { BackIcon, MobileIcon, SmsIcon } from 'icons'
+import { httpx } from 'shared'
+import { createStore } from 'solid-js/store'
+import { setSelf } from 'store'
+import './style/login.scss'
 
 export default () => {
     type State = {
@@ -20,15 +20,13 @@ export default () => {
     })
 
     function verification() {
-        if (state.phone.length != 11 || !state.phone.startsWith('09')) {
-            addAlert({
+        if (state.phone.length != 11 || !state.phone.startsWith('09'))
+            return addAlert({
                 type: 'error',
-                subject: 'invalid phone number',
-                content: '',
-                timeout: 6,
+                timeout: 5,
+                content: ' تلقن همراه خود را به درستی وارد کنید!',
+                subject: 'خطا!',
             })
-            return
-        }
 
         setState({ loading: true })
 
@@ -49,7 +47,13 @@ export default () => {
     }
 
     function user_login() {
-        if (state.code.length != 5) return
+        if (state.code.length != 5)
+            return addAlert({
+                type: 'error',
+                timeout: 5,
+                content: ' کد را به درستی وارد کنید!',
+                subject: 'خطا!',
+            })
 
         setState({ loading: true })
 
@@ -76,8 +80,88 @@ export default () => {
     return (
         <div class='login-fnd'>
             <div class='login-form' classList={{ loading: state.loading }}>
-                <h1>Login</h1>
-                <div class='grid'>
+                <button
+                    class='go-back'
+                    onclick={() => {
+                        setState({ stage: 'phone' })
+                    }}
+                >
+                    <BackIcon />
+                </button>
+
+                <header>
+                    <h1 class='title_hero'>خوش آمدید</h1>
+                    <h2 class='title_small'>ورود مدیریت</h2>
+                </header>
+
+                <div
+                    class='inps-container'
+                    classList={{ code: state.stage === 'code' }}
+                >
+                    <div class='inp-container'>
+                        <label for='login-phone' class='holder'>
+                            <MobileIcon />
+                            تلفن همراه
+                        </label>
+                        <div class='input'>
+                            <input
+                                id='login-phone'
+                                class='title_small'
+                                type='number'
+                                inputMode='numeric'
+                                min={0}
+                                maxLength={11}
+                                placeholder='09123456789'
+                                value={state.phone}
+                                onInput={e =>
+                                    setState({ phone: e.currentTarget.value })
+                                }
+                            />
+                        </div>
+                    </div>
+                    <div class='inp-container code'>
+                        <label for='login-code' class='holder'>
+                            <SmsIcon />
+                            کد پیامکی
+                        </label>
+                        <div class='input'>
+                            <input
+                                id='login-code'
+                                class='title_small'
+                                type='number'
+                                maxLength={5}
+                                pattern='\d{5,5}'
+                                inputMode='numeric'
+                                placeholder='123456'
+                                value={state.code}
+                                onInput={e =>
+                                    setState({ code: e.currentTarget.value })
+                                }
+                            />
+                            <p class='msg title_smaller'>
+                                کد پیامکی به شماره {state.phone} پیامک شد!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    class='cta title_smaller'
+                    classList={{
+                        code: state.stage === 'code',
+                        disable: state.phone.length !== 11,
+                    }}
+                    onclick={() => {
+                        if (state.stage === 'phone') return verification()
+
+                        user_login()
+                    }}
+                >
+                    <span class='code'>ارسال کد</span>
+                    <span class='enter'>ورود</span>
+                </button>
+
+                {/* <div class='grid'>
                     <label
                         for='login-phone'
                         classList={{ disabled: state.stage != 'phone' }}
@@ -124,7 +208,7 @@ export default () => {
                     <button class='styled' onclick={verification}>
                         دریافت کد
                     </button>
-                </Show>
+                </Show> */}
             </div>
         </div>
     )
