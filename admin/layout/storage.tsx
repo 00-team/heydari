@@ -605,7 +605,14 @@ const Item: Component<ItemProps> = P => {
     }
 
     return (
-        <div class='item' onclick={P.onClick}>
+        <div
+            class='item'
+            classList={{
+                warn: P.count <= 50 && P.count > 20,
+                red: P.count <= 20 && P.count >= 0,
+            }}
+            onclick={P.onClick}
+        >
             <div class='img-container  '>
                 <Show when={P.photo} fallback={<ImageIcon />}>
                     <img
@@ -652,7 +659,9 @@ const Item: Component<ItemProps> = P => {
                     </div>
                 </div>
 
-                <div class='item-count title'>{P.count}</div>
+                <div class='item-count title'>
+                    <span>{P.count}</span>
+                </div>
 
                 <div class='item-name title'>{P.name}</div>
             </div>
