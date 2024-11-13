@@ -139,4 +139,4 @@ createRoot(() => {
     })
 })
 
-export { self, setSelf }
+export { self, setSelf, Perms }
