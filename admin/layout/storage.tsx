@@ -629,7 +629,6 @@ const UploadImage: Component<UploadImageProps> = P => {
 const LoadingItems: Component = P => {
     return (
         <div class='loading'>
-            <button class='main-cta'>Add Item</button>
             <div class='loading-wrapper'>
                 <div class='loading-dots'>
                     <div></div>
