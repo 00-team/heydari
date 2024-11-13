@@ -90,10 +90,10 @@ const Storage: Component<{}> = props => {
             <Show when={!state.loading} fallback={<LoadingItems />}>
                 <div class='storage-wrapper'>
                     <button
-                        class='main-cta'
+                        class='main-cta title_smaller'
                         onclick={() => setState({ show: true })}
                     >
-                        Add Item
+                        اضافه به انبار
                     </button>
                     <div class='storage-items'>
                         <Show
@@ -402,13 +402,18 @@ const Popup: Component<PopupProps> = P => {
                             </div>
                         </Show>
                     </div>
-                    <div
-                        class='count'
-                        classList={{
-                            error: return_newCount() < 0,
-                        }}
-                    >
-                        <span>{return_newCount().toLocaleString()}</span>
+                    <div class='count-container'>
+                        <div
+                            class='count'
+                            classList={{
+                                error: return_newCount() < 0,
+                            }}
+                        >
+                            <span>
+                                {P.state.activeItem.count.toLocaleString()}
+                            </span>
+                        </div>
+                        <div class='hold title_smaller'>موجودی فعلی</div>
                     </div>
                 </div>
 
@@ -659,11 +664,14 @@ const Item: Component<ItemProps> = P => {
                     </div>
                 </div>
 
-                <div class='item-count title'>
-                    <span>{P.count}</span>
+                <div class='item-count-container'>
+                    <div class='holder title_smaller'>موجودی فعلی</div>
+                    <div class='item-count title'>
+                        <span>{P.count.toLocaleString()}</span>
+                    </div>
                 </div>
 
-                <div class='item-name title'>{P.name}</div>
+                <div class='item-name title_small'>{P.name}</div>
             </div>
 
             <button
