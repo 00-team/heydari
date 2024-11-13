@@ -10,6 +10,7 @@ import {
     MinusIcon,
     PersonIcon,
     PlusIcon,
+    TrashIcon,
     UpdatePersonIcon,
     UploadIcon,
 } from 'icons'
@@ -105,7 +106,6 @@ const Storage: Component<{}> = props => {
 
         return user.name ?? user.phone
     }
-    // const who_updated = ():string =>{}
 
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
@@ -412,17 +412,7 @@ const Popup: Component<PopupProps> = P => {
                 </button>
 
                 <div class='data-wrapper'>
-                    <div
-                        class='img-container'
-                        onclick={() => {
-                            setState(
-                                produce(s => {
-                                    s.imgFile = null
-                                    s.imgUrl = ''
-                                })
-                            )
-                        }}
-                    >
+                    <div class='img-container'>
                         <Show
                             when={state.imgUrl || state.imgFile}
                             fallback={
@@ -438,6 +428,28 @@ const Popup: Component<PopupProps> = P => {
                             }
                         >
                             <div class='img-wrapper'>
+                                <button
+                                    class='delete-img'
+                                    type='button'
+                                    onclick={() =>
+                                        setPopup({
+                                            show: true,
+                                            type: 'error',
+                                            title: 'حذف عکس',
+                                            content: 'از حذف عکس مطمعنید؟؟',
+                                            Icon: () => <DeleteIcon />,
+                                            onSubmit: () =>
+                                                setState(
+                                                    produce(s => {
+                                                        s.imgFile = null
+                                                        s.imgUrl = ''
+                                                    })
+                                                ),
+                                        })
+                                    }
+                                >
+                                    <DeleteIcon />
+                                </button>
                                 <img
                                     src={
                                         state.imgUrl
@@ -707,7 +719,7 @@ const Item: Component<ItemProps> = P => {
                             <div class='data'>
                                 <span>
                                     {P.updated_at <= 0
-                                        ? '---'
+                                        ? 'N / A'
                                         : new Date(
                                               P.updated_at * 1000
                                           ).toLocaleDateString('fa-IR', {
