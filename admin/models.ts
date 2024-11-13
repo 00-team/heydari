@@ -39,11 +39,13 @@ export type ProductModel = {
 export type MaterialModel = {
     count: number
     created_at: number
+    created_by: number
     detail: string
     id: number
     name: string
     photo: string
     updated_at: number
+    updated_by: number
 }
 
 export type MaterialsResponseModel = {
