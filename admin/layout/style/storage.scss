@@ -852,6 +852,14 @@
 
                     cursor: pointer;
 
+                    transition: 0.3s ease;
+
+                    &.disable {
+                        opacity: 0.7;
+                        cursor: help;
+                        filter: blur(0.5px);
+                    }
+
                     @media screen and (max-width: 768px) {
                         margin-top: 2.5rem;
                         padding: 1em;
