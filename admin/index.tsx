@@ -7,9 +7,9 @@ import Alert from 'comps/alert'
 
 import './style/index.scss'
 
+import { Popup } from 'comps/popup'
 import Login from 'layout/login'
 import Navbar from './layout/navbar'
-import { Popup } from 'comps/popup'
 const Products = lazy(() => import('./layout/products'))
 const Storage = lazy(() => import('./layout/storage'))
 const ProductTags = lazy(() => import('./layout/product-tags'))

@@ -7,6 +7,14 @@
 
     direction: rtl;
 
+    button {
+        color: unset;
+    }
+
+    @media screen and (max-width: 768px) {
+        height: 100dvh;
+    }
+
     .login-form {
         width: clamp(0px, 100%, 470px);
         aspect-ratio: 1 / 1.2;
@@ -26,6 +34,10 @@
         position: relative;
         isolation: isolate;
         overflow: hidden;
+
+        @media screen and (max-width: 768px) {
+            aspect-ratio: 1 / 1.5;
+        }
 
         .go-back {
             position: absolute;
@@ -93,8 +105,11 @@
                     input {
                         width: 100%;
                         border: none;
+
                         background: transparent;
                         border-bottom: 1px solid white;
+                        border-radius: 0;
+
                         outline: none;
                         padding: 0.5em 0;
 

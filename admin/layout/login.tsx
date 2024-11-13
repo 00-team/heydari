@@ -1,8 +1,9 @@
+import { useNavigate } from '@solidjs/router'
 import { addAlert } from 'comps/alert'
 import { BackIcon, MobileIcon, SmsIcon } from 'icons'
 import { httpx } from 'shared'
 import { createStore } from 'solid-js/store'
-import { setSelf } from 'store'
+import { self, setSelf } from 'store'
 import './style/login.scss'
 
 export default () => {
@@ -18,6 +19,8 @@ export default () => {
         code: '',
         loading: false,
     })
+
+    const navigate = useNavigate()
 
     function verification() {
         if (state.phone.length != 11 || !state.phone.startsWith('09'))
@@ -72,6 +75,10 @@ export default () => {
                         fetch: false,
                         user: x.response,
                     })
+
+                    navigate('/products/?page=0')
+
+                    location.reload()
                 }
             },
         })
