@@ -452,6 +452,38 @@ export const CalendarIcon = () => (
         <path d='M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z'></path>
     </svg>
 )
+
+export const UpdatePersonIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 24 24'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path fill='none' d='M0 0h24v24H0z'></path>
+        <circle cx='10' cy='8' r='4'></circle>
+        <path d='M10.35 14.01C7.62 13.91 2 15.27 2 18v2h9.54c-2.47-2.76-1.23-5.89-1.19-5.99zM19.43 18.02c.36-.59.57-1.28.57-2.02 0-2.21-1.79-4-4-4s-4 1.79-4 4 1.79 4 4 4c.74 0 1.43-.22 2.02-.57L20.59 22 22 20.59l-2.57-2.57zM16 18c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z'></path>
+    </svg>
+)
+
+export const PersonIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 24 24'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path fill='none' d='M0 0h24v24H0z'></path>
+        <path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'></path>
+    </svg>
+)
+
 export const Calendar2Icon = () => (
     <svg
         stroke='currentColor'
