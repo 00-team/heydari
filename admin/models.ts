@@ -45,3 +45,8 @@ export type MaterialModel = {
     photo: string
     updated_at: number
 }
+
+export type MaterialsResponseModel = {
+    materials: MaterialModel[]
+    users: UserModel[]
+}
