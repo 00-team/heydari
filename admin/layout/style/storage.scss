@@ -159,7 +159,6 @@
                 padding: 8px;
 
                 width: clamp(0px, 100%, 350px);
-                aspect-ratio: 1 /1.5;
 
                 background-color: var(--cd);
                 background-image: linear-gradient(45deg, black, transparent);
@@ -208,28 +207,61 @@
 
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
+                    flex-direction: column;
+                    gap: 1rem;
+
+                    margin-block: 1rem;
 
                     direction: rtl;
 
-                    .item-info {
+                    .item-row {
+                        width: 100%;
+
                         display: flex;
                         align-items: center;
-                        justify-content: center;
-                        flex-direction: column;
-                        gap: 0.5rem;
+                        justify-content: space-between;
 
-                        font: inherit;
-
-                        .holder {
+                        .item-info {
                             display: flex;
                             align-items: center;
                             justify-content: center;
+                            flex-direction: column;
                             gap: 0.5rem;
 
-                            svg {
-                                width: 20px;
-                                height: 20px;
+                            &:hover {
+                                .holder {
+                                    transform: translateY(-25%);
+                                }
+                            }
+
+                            .holder {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 0.5rem;
+
+                                transition: 0.3s ease;
+
+                                svg {
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
+
+                            .data {
+                                display: flex;
+                                align-items: center;
+                                flex-direction: column;
+
+                                .row {
+                                    width: 100%;
+                                }
+
+                                span {
+                                    &.time {
+                                        letter-spacing: 1px;
+                                    }
+                                }
                             }
                         }
                     }
@@ -273,6 +305,7 @@
                     align-items: center;
 
                     padding: 0.5rem;
+                    padding-bottom: 1rem;
 
                     .item-count-container {
                         width: 100%;
@@ -310,21 +343,26 @@
                             }
                         }
                     }
+
+                    .item-name {
+                        height: 2em;
+                        text-align: center;
+                        margin-block: 1em;
+
+                        text-wrap: pretty;
+                    }
                 }
 
                 .delete-cta {
-                    width: 100%;
-                    padding: 0.7em;
-                    border-radius: 8px;
-
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     gap: 0.5em;
 
-                    margin-top: 1rem;
+                    width: 100%;
+                    border-radius: 8px;
 
-                    font: inherit;
+                    padding: 0.7em;
 
                     background-color: var(--red);
                     border: none;
