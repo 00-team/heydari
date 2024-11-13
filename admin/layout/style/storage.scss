@@ -4,6 +4,95 @@
     position: relative;
     isolation: isolate;
 
+    .loading {
+        position: absolute;
+        z-index: 1;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4rem;
+
+        width: 100%;
+        height: 100%;
+
+        direction: rtl;
+
+        .loading-wrapper {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+
+            margin-top: 8rem;
+
+            .loading-dots {
+                width: 100px;
+                aspect-ratio: 1;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                position: relative;
+
+                > div {
+                    position: absolute;
+                    inset: 0;
+
+                    width: 16px;
+                    height: 16px;
+                    margin: auto;
+                    border-radius: 50%;
+                    background-color: #fff;
+                    transform: rotate(0deg) translateY(-30px);
+                    animation: dot4 2s infinite;
+
+                    &:nth-child(2) {
+                        width: 13px;
+                        height: 13px;
+                        animation: dot4 2s 0.1s infinite;
+                    }
+                    &:nth-child(3) {
+                        width: 11px;
+                        height: 11px;
+                        animation: dot4 2s 0.2s infinite;
+                    }
+                    &:nth-child(4) {
+                        width: 9px;
+                        height: 9px;
+                        animation: dot4 2s 0.3s infinite;
+                    }
+                    &:nth-child(5) {
+                        width: 7px;
+                        height: 7px;
+                        animation: dot4 2s 0.4s infinite;
+                    }
+                    &:nth-child(6) {
+                        width: 5px;
+                        height: 5px;
+                        animation: dot4 2s 0.5s infinite;
+                    }
+
+                    @keyframes dot4 {
+                        0% {
+                            transform: rotate(0deg) translateY(-30px);
+                        }
+                        100% {
+                            transform: rotate(360deg) translateY(-30px);
+                        }
+                    }
+                }
+            }
+
+            p {
+                font-size: 2em;
+            }
+        }
+    }
+
     .storage-wrapper {
         width: 100%;
         height: 100%;
@@ -38,95 +127,6 @@
 
             &:hover {
                 transform: translateY(2px) scale(0.98);
-            }
-        }
-
-        .loading {
-            position: absolute;
-            z-index: 1;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4rem;
-
-            width: 100%;
-            height: 100%;
-
-            direction: rtl;
-
-            .loading-wrapper {
-                width: 100%;
-
-                display: flex;
-                align-items: center;
-                flex-direction: column;
-                gap: 1rem;
-
-                margin-top: 8rem;
-
-                .loading-dots {
-                    width: 100px;
-                    aspect-ratio: 1;
-
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    position: relative;
-
-                    > div {
-                        position: absolute;
-                        inset: 0;
-
-                        width: 16px;
-                        height: 16px;
-                        margin: auto;
-                        border-radius: 50%;
-                        background-color: #fff;
-                        transform: rotate(0deg) translateY(-30px);
-                        animation: dot4 2s infinite;
-
-                        &:nth-child(2) {
-                            width: 13px;
-                            height: 13px;
-                            animation: dot4 2s 0.1s infinite;
-                        }
-                        &:nth-child(3) {
-                            width: 11px;
-                            height: 11px;
-                            animation: dot4 2s 0.2s infinite;
-                        }
-                        &:nth-child(4) {
-                            width: 9px;
-                            height: 9px;
-                            animation: dot4 2s 0.3s infinite;
-                        }
-                        &:nth-child(5) {
-                            width: 7px;
-                            height: 7px;
-                            animation: dot4 2s 0.4s infinite;
-                        }
-                        &:nth-child(6) {
-                            width: 5px;
-                            height: 5px;
-                            animation: dot4 2s 0.5s infinite;
-                        }
-
-                        @keyframes dot4 {
-                            0% {
-                                transform: rotate(0deg) translateY(-30px);
-                            }
-                            100% {
-                                transform: rotate(360deg) translateY(-30px);
-                            }
-                        }
-                    }
-                }
-
-                p {
-                    font-size: 2em;
-                }
             }
         }
 
