@@ -510,7 +510,7 @@ const Popup: Component<PopupProps> = P => {
                         </div>
                     </div>
 
-                    <button class='popup-cta' type='submit'>
+                    <button class='popup-cta title_small' type='submit'>
                         تایید
                     </button>
                 </div>
@@ -580,9 +580,11 @@ const UploadImage: Component<UploadImageProps> = P => {
 
             <UploadIcon />
 
-            <p>آپلود عکس</p>
+            <p class='title'>آپلود عکس</p>
 
-            <span>فایل خود را اینجا بندازید یا کلیک کنید!</span>
+            <span class='title_smaller'>
+                فایل خود را اینجا بندازید یا کلیک کنید!
+            </span>
         </label>
     )
 }
