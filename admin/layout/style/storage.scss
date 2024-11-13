@@ -507,32 +507,27 @@
                             }
                         }
 
-                        .clear-img {
+                        .delete-img {
                             position: absolute;
-                            inset: 0;
+                            bottom: 0;
+                            right: 0;
 
                             display: flex;
                             align-items: center;
                             justify-content: center;
 
-                            width: 100%;
-                            height: 100%;
+                            background: #040404a8;
+                            backdrop-filter: blur(5px);
 
-                            z-index: 2;
+                            border-top-left-radius: 8px;
 
-                            backdrop-filter: blur(3px);
-                            background: #e2033885;
+                            color: var(--red);
 
-                            opacity: 0;
-                            visibility: hidden;
-
-                            cursor: pointer;
-
-                            transition: 0.5s ease;
+                            padding: 10px;
 
                             svg {
-                                width: 70px;
-                                height: 70px;
+                                width: 30px;
+                                height: 30px;
                             }
                         }
 
@@ -708,14 +703,6 @@
 
                     margin-top: 2rem;
 
-                    button {
-                        outline: none;
-                        border: none;
-                        cursor: pointer;
-
-                        font: inherit;
-                    }
-
                     .main-inp {
                         width: 100%;
                         height: 50px;
@@ -872,5 +859,15 @@
                 }
             }
         }
+    }
+
+    button {
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        background-color: transparent;
+
+        font: inherit;
     }
 }
