@@ -3,7 +3,7 @@
     "version": "0.5.20",
     "type": "module",
     "scripts": {
-        "admin:start": "vite",
+        "admin:start": "vite --host",
         "admin:build": "vite build",
         "web": "concurrently \"npm:web:style\" \"npm:web:script\" ",
         "web:watch": "concurrently \"npm:web:style:watch\" \"npm:web:script:watch\" ",
