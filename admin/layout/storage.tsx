@@ -10,7 +10,6 @@ import {
     MinusIcon,
     PersonIcon,
     PlusIcon,
-    TrashIcon,
     UpdatePersonIcon,
     UploadIcon,
 } from 'icons'
@@ -21,6 +20,7 @@ import {
     createEffect,
     createMemo,
     For,
+    on,
     onCleanup,
     onMount,
     Show,
@@ -196,7 +196,7 @@ const Popup: Component<PopupProps> = P => {
         action: 'add' | 'sold'
     }
 
-    const [state, setState] = createStore<Pstate>({
+    const default_popup: Pstate = {
         name: '',
         newCount: 0,
 
@@ -204,7 +204,9 @@ const Popup: Component<PopupProps> = P => {
         imgUrl: '',
 
         action: 'add',
-    })
+    }
+
+    const [state, setState] = createStore<Pstate>({ ...default_popup })
 
     createEffect(() => {
         setState({
@@ -237,9 +239,12 @@ const Popup: Component<PopupProps> = P => {
     )
 
     const close_popup = () => {
+        setState({ ...default_popup })
+
         P.setState(
             produce(s => {
                 s.show = false
+                s.type = 'add'
                 s.activeItem = { ...default_item }
             })
         )
@@ -289,32 +294,36 @@ const Popup: Component<PopupProps> = P => {
 
                     id = x.response.id
 
-                    console.log(x.response)
-                    console.log(id)
-
                     P.setState(
                         produce(s => {
                             s.response.materials.unshift(x.response)
                         })
                     )
 
-                    // httpx({
-                    //     url: `/api/admin/materials/${id}/photo/`,
-                    //     method: 'PUT',
-                    //     data,
-                    //     onLoad(x) {
-                    //         if (x.status != 200) return
+                    httpx({
+                        url: `/api/admin/materials/${id}/photo/`,
+                        method: 'PUT',
+                        data,
+                        onLoad(x) {
+                            if (x.status != 200) return
 
-                    //         P.setState(
-                    //             produce(s => {
-                    //                 s.items[0] = x.response
-                    //             })
-                    //         )
-                    //     },
-                    // })
+                            P.setState(
+                                produce(s => {
+                                    let itemIndex =
+                                        s.response.materials.findIndex(
+                                            i => i.id === id
+                                        )
+
+                                    s.response.materials[itemIndex] = x.response
+                                })
+                            )
+                        },
+                    })
                 },
             })
-        } else {
+        }
+
+        if (P.state.type === 'edit') {
             let id = P.state.activeItem.id
 
             if (!state.imgUrl && !state.imgFile)
@@ -543,14 +552,14 @@ const Popup: Component<PopupProps> = P => {
                             classList={{ sold: state.action === 'sold' }}
                         >
                             <button
-                                class='action added'
+                                class='action added title_smaller'
                                 onclick={() => setState({ action: 'add' })}
                                 type='button'
                             >
                                 اضافه
                             </button>
                             <button
-                                class='action sold'
+                                class='action sold title_smaller'
                                 onclick={() => setState({ action: 'sold' })}
                                 type='button'
                             >
