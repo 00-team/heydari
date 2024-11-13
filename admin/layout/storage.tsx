@@ -11,10 +11,11 @@ import {
     PlusIcon,
     UploadIcon,
 } from 'icons'
-import { MaterialModel } from 'models'
+import { MaterialModel, MaterialsResponseModel } from 'models'
 import { httpx } from 'shared'
 import { Component, createEffect, createMemo, For, Show } from 'solid-js'
 import { createStore, produce, SetStoreFunction } from 'solid-js/store'
+import { Perms, self } from 'store'
 import { setPopup } from 'store/popup'
 
 import './style/storage.scss'
@@ -34,7 +35,7 @@ type stateType = {
 
     loading: boolean
 
-    items: MaterialModel[]
+    response: MaterialsResponseModel
 
     page: number
 }
@@ -55,7 +56,7 @@ const Storage: Component<{}> = props => {
         type: 'add',
         activeItem: { ...default_item },
 
-        items: [],
+        response: null,
         loading: true,
 
         page: 0,
@@ -77,7 +78,7 @@ const Storage: Component<{}> = props => {
 
                 setState(
                     produce(s => {
-                        s.items = x.response
+                        s.response = x.response
                         s.loading = false
                     })
                 )
@@ -89,20 +90,23 @@ const Storage: Component<{}> = props => {
         <div class='storage-container' classList={{ loading: state.loading }}>
             <Show when={!state.loading} fallback={<LoadingItems />}>
                 <div class='storage-wrapper'>
-                    <button
-                        class='main-cta title_smaller'
-                        onclick={() => setState({ show: true })}
-                    >
-                        اضافه به انبار
-                    </button>
+                    <Show when={self.perms.check(Perms.A_MATERIAL)}>
+                        <button
+                            class='main-cta title_smaller'
+                            onclick={() => setState({ show: true })}
+                        >
+                            اضافه به انبار
+                        </button>
+                    </Show>
+
                     <div class='storage-items'>
                         <Show
-                            when={state.items.length >= 1}
+                            when={state.response.materials.length >= 1}
                             fallback={
                                 <div class='empty-storage'>انبار خالی است!</div>
                             }
                         >
-                            <For each={state.items}>
+                            <For each={state.response.materials}>
                                 {(item, index) => (
                                     <Item
                                         {...item}
@@ -125,14 +129,14 @@ const Storage: Component<{}> = props => {
                                                     setState(
                                                         produce(s => {
                                                             const index =
-                                                                s.items.findIndex(
+                                                                s.response.materials.findIndex(
                                                                     i =>
                                                                         i.id ===
                                                                         item.id
                                                                 )
 
                                                             if (index !== -1) {
-                                                                s.items.splice(
+                                                                s.response.materials.splice(
                                                                     index,
                                                                     1
                                                                 )
@@ -248,26 +252,29 @@ const Popup: Component<PopupProps> = P => {
 
                     id = x.response.id
 
+                    console.log(x.response)
+                    console.log(id)
+
                     P.setState(
                         produce(s => {
-                            s.items.unshift(x.response)
+                            s.response.materials.unshift(x.response)
                         })
                     )
 
-                    httpx({
-                        url: `/api/admin/materials/${id}/photo/`,
-                        method: 'PUT',
-                        data,
-                        onLoad(x) {
-                            if (x.status != 200) return
+                    // httpx({
+                    //     url: `/api/admin/materials/${id}/photo/`,
+                    //     method: 'PUT',
+                    //     data,
+                    //     onLoad(x) {
+                    //         if (x.status != 200) return
 
-                            P.setState(
-                                produce(s => {
-                                    s.items[0] = x.response
-                                })
-                            )
-                        },
-                    })
+                    //         P.setState(
+                    //             produce(s => {
+                    //                 s.items[0] = x.response
+                    //             })
+                    //         )
+                    //     },
+                    // })
                 },
             })
         } else {
@@ -301,9 +308,11 @@ const Popup: Component<PopupProps> = P => {
 
                     P.setState(
                         produce(s => {
-                            let index = s.items.findIndex(i => i.id === id)
+                            let index = s.response.materials.findIndex(
+                                i => i.id === id
+                            )
 
-                            s.items[index] = x.response
+                            s.response.materials[index] = x.response
                         })
                     )
                 },
@@ -324,11 +333,11 @@ const Popup: Component<PopupProps> = P => {
 
                         P.setState(
                             produce(s => {
-                                let index = s.items.findIndex(
+                                let index = s.response.materials.findIndex(
                                     i => i.id === x.response.id
                                 )
 
-                                s.items[index] = x.response
+                                s.response.materials[index] = x.response
                             })
                         )
                     },
