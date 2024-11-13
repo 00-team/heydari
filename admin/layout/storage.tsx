@@ -20,7 +20,6 @@ import {
     createEffect,
     createMemo,
     For,
-    on,
     onCleanup,
     onMount,
     Show,
@@ -226,6 +225,17 @@ const Popup: Component<PopupProps> = P => {
         })
     })
 
+    const changed = createMemo(() => {
+        if (P.state.type !== 'edit') return true
+
+        state.imgFile
+
+        return (
+            P.state.activeItem.name !== state.name ||
+            P.state.activeItem.count !== state.newCount
+        )
+    })
+
     const handle_esc = (event: KeyboardEvent) => {
         if (event.key === 'Escape' || event.key === 'Esc') {
             return close_popup()
@@ -409,6 +419,14 @@ const Popup: Component<PopupProps> = P => {
                 onsubmit={e => {
                     e.preventDefault()
 
+                    if (!changed())
+                        return addAlert({
+                            type: 'info',
+                            content: 'مطلبی رو عوض نکردید!',
+                            subject: 'احتیاط!',
+                            timeout: 5,
+                        })
+
                     on_submit()
                 }}
             >
@@ -568,7 +586,11 @@ const Popup: Component<PopupProps> = P => {
                         </div>
                     </div>
 
-                    <button class='popup-cta title_small' type='submit'>
+                    <button
+                        class='popup-cta title_small'
+                        type='submit'
+                        classList={{ disable: !changed() }}
+                    >
                         تایید
                     </button>
                 </div>
