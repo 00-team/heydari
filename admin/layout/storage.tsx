@@ -228,11 +228,10 @@ const Popup: Component<PopupProps> = P => {
     const changed = createMemo(() => {
         if (P.state.type !== 'edit') return true
 
-        state.imgFile
-
         return (
             P.state.activeItem.name !== state.name ||
-            P.state.activeItem.count !== state.newCount
+            P.state.activeItem.count !== state.newCount ||
+            !state.imgUrl
         )
     })
 
