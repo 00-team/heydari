@@ -8,12 +8,22 @@ import {
     DeleteIcon,
     ImageIcon,
     MinusIcon,
+    PersonIcon,
     PlusIcon,
+    UpdatePersonIcon,
     UploadIcon,
 } from 'icons'
 import { MaterialModel, MaterialsResponseModel } from 'models'
 import { httpx } from 'shared'
-import { Component, createEffect, createMemo, For, Show } from 'solid-js'
+import {
+    Component,
+    createEffect,
+    createMemo,
+    For,
+    onCleanup,
+    onMount,
+    Show,
+} from 'solid-js'
 import { createStore, produce, SetStoreFunction } from 'solid-js/store'
 import { Perms, self } from 'store'
 import { setPopup } from 'store/popup'
@@ -48,6 +58,8 @@ const default_item: MaterialModel = {
     id: 0,
     photo: null,
     updated_at: 0,
+    created_by: 0,
+    updated_by: 0,
 }
 
 const Storage: Component<{}> = props => {
@@ -85,6 +97,15 @@ const Storage: Component<{}> = props => {
             },
         })
     }
+
+    const who = (id: number): string => {
+        let user = state.response.users.find(u => u.id === id)
+
+        if (!user) return 'N / A'
+
+        return user.name ?? user.phone
+    }
+    // const who_updated = ():string =>{}
 
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
@@ -146,6 +167,8 @@ const Storage: Component<{}> = props => {
                                                 },
                                             })
                                         }}
+                                        whoCreated={who(item.created_by)}
+                                        whoUpdated={who(item.updated_by)}
                                     />
                                 )}
                             </For>
@@ -192,6 +215,20 @@ const Popup: Component<PopupProps> = P => {
             action: 'add',
         })
     })
+
+    onMount(() => {
+        document.addEventListener('keydown', handle_esc)
+
+        onCleanup(() => {
+            document.removeEventListener('keydown', handle_esc)
+        })
+    })
+
+    const handle_esc = (event: KeyboardEvent) => {
+        if (event.key === 'Escape' || event.key === 'Esc') {
+            return close_popup()
+        }
+    }
 
     const return_newCount = createMemo((): number =>
         state.action === 'add'
@@ -611,15 +648,11 @@ const LoadingItems: Component = P => {
 interface ItemProps extends MaterialModel {
     onClick: () => void
     onDel: () => void
+
+    whoCreated: string
+    whoUpdated: string
 }
 const Item: Component<ItemProps> = P => {
-    function utc_to_date(utc_timestamp: number) {
-        utc_timestamp *= 1000
-        let offset = new Date().getTimezoneOffset() * -60000
-
-        return new Date(utc_timestamp + offset)
-    }
-
     return (
         <div
             class='item'
@@ -640,37 +673,80 @@ const Item: Component<ItemProps> = P => {
 
             <div class='data-wrapper'>
                 <div class='item-infos'>
-                    <div class='item-info created description'>
-                        <div class='holder'>
-                            <CalendarIcon />
-                            ثبت
+                    <div class='item-row'>
+                        <div class='item-info created description'>
+                            <div class='holder'>
+                                <CalendarIcon />
+                                ثبت
+                            </div>
+                            <div class='data'>
+                                <span>
+                                    {new Date(
+                                        P.created_at * 1000
+                                    ).toLocaleDateString('fa-IR', {
+                                        year: 'numeric',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                    })}
+                                </span>
+                                <span class='time'>
+                                    {new Date(
+                                        P.created_at * 1000
+                                    ).toLocaleTimeString('fa-IR', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                    })}
+                                </span>
+                            </div>
                         </div>
-                        <div class='data'>
-                            {new Date(P.created_at * 1000).toLocaleDateString(
-                                'en-GB',
-                                {
-                                    year: 'numeric',
-                                    month: '2-digit',
-                                    day: '2-digit',
-                                }
-                            )}
+                        <div class='item-info updated description'>
+                            <div class='holder'>
+                                <Calendar2Icon />
+                                بروزرسانی
+                            </div>
+                            <div class='data'>
+                                <span>
+                                    {P.updated_at <= 0
+                                        ? '---'
+                                        : new Date(
+                                              P.updated_at * 1000
+                                          ).toLocaleDateString('fa-IR', {
+                                              year: 'numeric',
+                                              month: '2-digit',
+                                              day: '2-digit',
+                                          })}
+                                </span>
+                                <span class='time'>
+                                    {P.updated_at <= 0 ? (
+                                        <></>
+                                    ) : (
+                                        new Date(
+                                            P.updated_at * 1000
+                                        ).toLocaleTimeString('fa-IR', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                        })
+                                    )}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class='item-info updated description'>
-                        <div class='holder'>
-                            <Calendar2Icon />
-                            بروزرسانی
+                    <div class='item-row'>
+                        <div class='item-info created description'>
+                            <div class='holder'>
+                                <PersonIcon />
+                                ثبت توسط
+                            </div>
+                            <div class='data'>{P.whoCreated}</div>
                         </div>
-                        <div class='data'>
-                            {P.updated_at <= 0
-                                ? '---'
-                                : new Date(
-                                      P.updated_at * 1000
-                                  ).toLocaleDateString('en-GB', {
-                                      year: 'numeric',
-                                      month: '2-digit',
-                                      day: '2-digit',
-                                  })}
+                        <div class='item-info updated description'>
+                            <div class='holder'>
+                                <UpdatePersonIcon />
+                                بروز توسط
+                            </div>
+                            <div class='data'>{P.whoUpdated}</div>
                         </div>
                     </div>
                 </div>
@@ -685,25 +761,27 @@ const Item: Component<ItemProps> = P => {
                 <div class='item-name title_small'>{P.name}</div>
             </div>
 
-            <button
-                class='delete-cta'
-                onclick={e => {
-                    e.stopImmediatePropagation()
-                    e.stopPropagation()
+            <Show when={self.perms.check(Perms.D_MATERIAL)}>
+                <button
+                    class='delete-cta title_smaller'
+                    onclick={e => {
+                        e.stopImmediatePropagation()
+                        e.stopPropagation()
 
-                    setPopup({
-                        show: true,
-                        title: 'حذف آیتم',
-                        type: 'error',
-                        Icon: () => <DeleteIcon />,
-                        content: 'از حذف آیتم در انبار مطمعنید؟',
-                        onSubmit: () => P.onDel(),
-                    })
-                }}
-            >
-                حذف از انبار
-                <DeleteIcon />
-            </button>
+                        setPopup({
+                            show: true,
+                            title: 'حذف آیتم',
+                            type: 'error',
+                            Icon: () => <DeleteIcon />,
+                            content: 'از حذف آیتم در انبار مطمعنید؟',
+                            onSubmit: () => P.onDel(),
+                        })
+                    }}
+                >
+                    حذف از انبار
+                    <DeleteIcon />
+                </button>
+            </Show>
         </div>
     )
 }
