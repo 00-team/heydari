@@ -1,7 +1,7 @@
 import { Navigate, Route, Router, RouteSectionProps } from '@solidjs/router'
 import { Component, lazy, Show } from 'solid-js'
 import { render } from 'solid-js/web'
-import { self } from 'store/self'
+import { Perms, self } from 'store/self'
 
 import Alert from 'comps/alert'
 
@@ -29,13 +29,25 @@ const Root = () => {
         <>
             <Router base='/admin'>
                 <Route path='/' component={App}>
-                    <Route
-                        path='/'
-                        component={() => <Navigate href='/products/' />}
-                    />
-                    <Route path='/products/' component={Products} />
-                    <Route path='/product-tags/' component={ProductTags} />
-                    <Route path='/storage/' component={Storage} />
+                    <Show when={self.perms.check(Perms.V_PRODUCT)}>
+                        <Route
+                            path='/'
+                            component={() => <Navigate href='/products/' />}
+                        />
+                        <Route path='/products/' component={Products} />
+                    </Show>
+                    <Show when={self.perms.check(Perms.V_PRODUCT_TAG)}>
+                        <Route path='/product-tags/' component={ProductTags} />
+                    </Show>
+                    <Show when={self.perms.check(Perms.V_USER)}>
+                        <Route
+                            path='/users/'
+                            component={lazy(() => import('./layout/users'))}
+                        />
+                    </Show>
+                    <Show when={self.perms.check(Perms.V_MATERIAL)}>
+                        <Route path='/storage/' component={Storage} />
+                    </Show>
                     <Route path='*' component={() => <span>Not Found</span>} />
                 </Route>
             </Router>

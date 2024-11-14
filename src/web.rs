@@ -24,9 +24,10 @@ async fn home(state: Data<AppState>) -> Response {
     .fetch_all(&state.sql)
     .await?;
 
-    let result = state.env.get_template("home/index.html")?.render(context! {
-        best_products => best_products
-    })?;
+    let result =
+        state.env.get_template("home/index.html")?.render(context! {
+            best_products => best_products
+        })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
@@ -47,9 +48,7 @@ struct ProductsQuery {
 }
 
 #[get("/products")]
-async fn products(
-    rq: HttpRequest, state: Data<AppState>,
-) -> Response {
+async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
     let q = Query::<ProductsQuery>::extract(&rq).await;
     let mut sort = "desc";
     let mut offset = 0;
@@ -113,19 +112,18 @@ async fn products(
         .map(|v| (v.id, v.clone()))
         .collect::<HashMap<i64, ProductTag>>();
 
-    let result = state.env.get_template("products/index.html")?.render(context! {
-        products => products,
-        tags => tags,
-        pages => pages,
-    })?;
+    let result =
+        state.env.get_template("products/index.html")?.render(context! {
+            products => products,
+            tags => tags,
+            pages => pages,
+        })?;
 
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/products/{slug}")]
-async fn product(
-    rq: HttpRequest, state: Data<AppState>,
-) -> Response {
+async fn product(rq: HttpRequest, state: Data<AppState>) -> Response {
     let path = Path::<(String,)>::extract(&rq).await;
     if path.is_err() {
         return Ok(HttpResponse::NotFound()
@@ -160,11 +158,12 @@ async fn product(
         .map(|value| (value.id, value.clone()))
         .collect::<HashMap<_, _>>();
 
-    let result = state.env.get_template("product/index.html")?.render(context! {
-        product => product,
-        related => related,
-        tags => tags,
-    })?;
+    let result =
+        state.env.get_template("product/index.html")?.render(context! {
+            product => product,
+            related => related,
+            tags => tags,
+        })?;
 
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
@@ -192,9 +191,10 @@ async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
     let result = simurgh_request(&format!("/blogs-ssr/?page={page}")).await;
     let result = String::from_utf8(result?.body().await?.to_vec())?;
 
-    let result = state.env.get_template("blogs/index.html")?.render(context! {
-        blogs_body => result
-    })?;
+    let result =
+        state.env.get_template("blogs/index.html")?.render(context! {
+            blogs_body => result
+        })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
@@ -230,16 +230,15 @@ struct BlogSSRR {
 }
 
 #[get("/blogs/{slug}")]
-async fn blog(
-    path: Path<(String,)>, state: Data<AppState>,
-) -> Response {
+async fn blog(path: Path<(String,)>, state: Data<AppState>) -> Response {
     let result = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await;
     let result = result?.json::<BlogSSRR>().await?;
 
-    let result = state.env.get_template("blog/index.html")?.render(context! {
-        blog_body => result.html,
-        blog => result.blog,
-    })?;
+    let result =
+        state.env.get_template("blog/index.html")?.render(context! {
+            blog_body => result.html,
+            blog => result.blog,
+        })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
@@ -247,6 +246,7 @@ async fn blog(
 #[get("/admin")]
 #[get("/admin/products")]
 #[get("/admin/product-tags")]
+#[get("/admin/storage")]
 async fn admin_index() -> HttpResponse {
     let result = std::fs::read_to_string("admin/dist/index.html")
         .unwrap_or("err reading admin index.html".to_string());
