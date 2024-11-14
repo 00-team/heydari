@@ -247,6 +247,7 @@ async fn blog(path: Path<(String,)>, state: Data<AppState>) -> Response {
 #[get("/admin/products")]
 #[get("/admin/product-tags")]
 #[get("/admin/storage")]
+#[get("/admin/users")]
 async fn admin_index() -> HttpResponse {
     let result = std::fs::read_to_string("admin/dist/index.html")
         .unwrap_or("err reading admin index.html".to_string());
