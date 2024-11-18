@@ -1,4 +1,3 @@
-import { useSearchParams } from '@solidjs/router'
 import { addAlert } from 'comps/alert'
 import {
     Calendar2Icon,
@@ -13,13 +12,12 @@ import {
     UpdatePersonIcon,
     UploadIcon,
 } from 'icons'
-import { MaterialModel, MaterialsResponseModel } from 'models'
+import { MaterialModel, UserModel } from 'models'
 import { httpx } from 'shared'
 import {
     Component,
     createEffect,
     createMemo,
-    For,
     onCleanup,
     onMount,
     Show,
@@ -35,19 +33,18 @@ export const IMAGE_MIMETYPE = [
     'image/jpeg',
     'image/jpg',
     'image/gif',
-    'image/webm',
+    'image/webp',
 ]
 
-type stateType = {
+type State = {
     show: boolean
     type: 'edit' | 'add'
     activeItem: MaterialModel
-
     loading: boolean
-
-    response: MaterialsResponseModel
-
     page: number
+    users: { [id: number]: UserModel }
+    materials: MaterialModel[]
+    search: string
 }
 
 const default_item: MaterialModel = {
@@ -62,54 +59,104 @@ const default_item: MaterialModel = {
     updated_by: 0,
 }
 
-const Storage: Component<{}> = props => {
-    const [state, setState] = createStore<stateType>({
+const Storage = () => {
+    const [state, setState] = createStore<State>({
         show: false,
         type: 'add',
         activeItem: { ...default_item },
-
-        response: null,
+        users: {},
+        materials: [],
         loading: true,
-
         page: 0,
+        search: '',
     })
 
-    const [params, setParams] = useSearchParams()
+    onMount(async () => {
+        while (true) {
+            let page = 0
+            let len = await fetch_page(page)
+            if (len < 32) {
+                break
+            }
+        }
+    })
 
-    createEffect(() => fetch_items(parseInt(params.page || '0') || 0))
+    async function fetch_page(page: number): Promise<number> {
+        return new Promise((ok, reject) => {
+            httpx({
+                url: '/api/admin/materials/',
+                params: { page },
+                method: 'GET',
+                reject,
+                onLoad(x) {
+                    if (x.status != 200) return
 
-    function fetch_items(page: number) {
-        setParams({ page })
+                    setState(
+                        produce(s => {
+                            let users = x.response.users as UserModel[]
+                            s.materials = s.materials.concat(
+                                x.response.materials
+                            )
+                            for (let u of users) {
+                                s.users[u.id] = u
+                            }
+                            s.loading = false
+                        })
+                    )
 
+                    ok(x.response.materials.length)
+                },
+            })
+        })
+    }
+
+    const who = (id: number): string => {
+        if (id == self.user.id) {
+            return self.user.name || self.user.phone
+        }
+
+        let user = state.users[id]
+        if (!user) return 'N / A'
+        return user.name || user.phone
+    }
+
+    function material_delete(id: number) {
         httpx({
-            url: '/api/admin/materials/',
-            params: { page },
-            method: 'GET',
+            url: `/api/admin/materials/${id}/`,
+            method: 'DELETE',
             onLoad(x) {
                 if (x.status != 200) return
 
                 setState(
                     produce(s => {
-                        s.response = x.response
-                        s.loading = false
+                        let ii = s.materials.findIndex(m => m.id == id)
+                        if (ii != -1) {
+                            s.materials.splice(ii, 1)
+                        }
                     })
                 )
             },
         })
     }
 
-    const who = (id: number): string => {
-        let user = state.response.users.find(u => u.id === id)
-
-        if (!user) return 'N / A'
-
-        return user.name ?? user.phone
-    }
+    const materials = createMemo(() => {
+        let query = state.search.trim()
+        if (query.length >= 3) {
+            return state.materials.filter(m => m.name.search(query) != -1)
+        }
+        return state.materials
+    })
 
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
             <Show when={!state.loading} fallback={<LoadingItems />}>
                 <div class='storage-wrapper'>
+                    <input
+                        placeholder='search'
+                        oninput={e => {
+                            setState({ search: e.currentTarget.value })
+                        }}
+                    />
                     <Show when={self.perms.check(Perms.A_MATERIAL)}>
                         <button
                             class='main-cta title_smaller'
@@ -120,58 +167,26 @@ const Storage: Component<{}> = props => {
                     </Show>
 
                     <div class='storage-items'>
-                        <Show
-                            when={state.response.materials.length >= 1}
-                            fallback={
-                                <div class='empty-storage'>انبار خالی است!</div>
-                            }
-                        >
-                            <For each={state.response.materials}>
-                                {(item, index) => (
-                                    <Item
-                                        {...item}
-                                        onClick={() => {
-                                            setState(
-                                                produce(s => {
-                                                    s.show = true
-                                                    s.activeItem = { ...item }
-                                                    s.type = 'edit'
-                                                })
-                                            )
-                                        }}
-                                        onDel={() => {
-                                            httpx({
-                                                url: `/api/admin/materials/${item.id}/`,
-                                                method: 'DELETE',
-                                                onLoad(x) {
-                                                    if (x.status != 200) return
-
-                                                    setState(
-                                                        produce(s => {
-                                                            const index =
-                                                                s.response.materials.findIndex(
-                                                                    i =>
-                                                                        i.id ===
-                                                                        item.id
-                                                                )
-
-                                                            if (index !== -1) {
-                                                                s.response.materials.splice(
-                                                                    index,
-                                                                    1
-                                                                )
-                                                            }
-                                                        })
-                                                    )
-                                                },
-                                            })
-                                        }}
-                                        whoCreated={who(item.created_by)}
-                                        whoUpdated={who(item.updated_by)}
-                                    />
-                                )}
-                            </For>
+                        <Show when={state.materials.length == 0}>
+                            <div class='empty-storage'>انبار خالی است!</div>
                         </Show>
+                        {materials().map(m => (
+                            <Item
+                                M={m}
+                                onClick={() => {
+                                    setState(
+                                        produce(s => {
+                                            s.show = true
+                                            s.activeItem = { ...m }
+                                            s.type = 'edit'
+                                        })
+                                    )
+                                }}
+                                onDel={() => material_delete(m.id)}
+                                whoCreated={who(m.created_by)}
+                                whoUpdated={who(m.updated_by)}
+                            />
+                        ))}
                     </div>
                 </div>
             </Show>
@@ -182,8 +197,8 @@ const Storage: Component<{}> = props => {
 }
 
 interface PopupProps {
-    state: stateType
-    setState: SetStoreFunction<stateType>
+    state: State
+    setState: SetStoreFunction<State>
 }
 const Popup: Component<PopupProps> = P => {
     type Pstate = {
@@ -206,6 +221,20 @@ const Popup: Component<PopupProps> = P => {
     }
 
     const [state, setState] = createStore<Pstate>({ ...default_popup })
+
+    function set_material(material: MaterialModel) {
+        P.setState(
+            produce(s => {
+                let ii = s.materials.findIndex(i => i.id === material.id)
+                if (ii == -1) {
+                    console.warn('could not find material with id')
+                    return
+                }
+
+                s.materials[ii] = material
+            })
+        )
+    }
 
     createEffect(() => {
         setState({
@@ -276,8 +305,6 @@ const Popup: Component<PopupProps> = P => {
             })
 
         if (P.state.type === 'add') {
-            let id
-
             if (!state.imgFile) {
                 return addAlert({
                     type: 'error',
@@ -301,31 +328,15 @@ const Popup: Component<PopupProps> = P => {
                 onLoad(x) {
                     if (x.status != 200) return
 
-                    id = x.response.id
-
-                    P.setState(
-                        produce(s => {
-                            s.response.materials.unshift(x.response)
-                        })
-                    )
+                    P.setState(produce(s => s.materials.unshift(x.response)))
 
                     httpx({
-                        url: `/api/admin/materials/${id}/photo/`,
+                        url: `/api/admin/materials/${x.response.id}/photo/`,
                         method: 'PUT',
                         data,
                         onLoad(x) {
                             if (x.status != 200) return
-
-                            P.setState(
-                                produce(s => {
-                                    let itemIndex =
-                                        s.response.materials.findIndex(
-                                            i => i.id === id
-                                        )
-
-                                    s.response.materials[itemIndex] = x.response
-                                })
-                            )
+                            set_material(x.response)
                         },
                     })
                 },
@@ -361,15 +372,7 @@ const Popup: Component<PopupProps> = P => {
                         content: 'آیتم شما با موفقیت به روز شد!',
                     })
 
-                    P.setState(
-                        produce(s => {
-                            let index = s.response.materials.findIndex(
-                                i => i.id === id
-                            )
-
-                            s.response.materials[index] = x.response
-                        })
-                    )
+                    set_material(x.response)
                 },
             })
 
@@ -383,18 +386,7 @@ const Popup: Component<PopupProps> = P => {
                     data,
                     onLoad(x) {
                         if (x.status != 200) return
-
-                        console.log(x.response)
-
-                        P.setState(
-                            produce(s => {
-                                let index = s.response.materials.findIndex(
-                                    i => i.id === x.response.id
-                                )
-
-                                s.response.materials[index] = x.response
-                            })
-                        )
+                        set_material(x.response)
                     },
                 })
             }
@@ -639,7 +631,7 @@ const UploadImage: Component<UploadImageProps> = P => {
             <input
                 type='file'
                 id='image-upload-inp'
-                accept='.jpg, .jpeg, .png, image/jpg, image/jpeg, image/png'
+                accept='.jpg, .jpeg, .png, image/jpg, image/jpeg, image/png, image/webp'
                 onchange={e => {
                     if (!e.target.files || !e.target.files[0]) return
 
@@ -668,7 +660,7 @@ const UploadImage: Component<UploadImageProps> = P => {
     )
 }
 
-const LoadingItems: Component = P => {
+const LoadingItems = () => {
     return (
         <div class='loading'>
             <div class='loading-wrapper'>
@@ -686,10 +678,11 @@ const LoadingItems: Component = P => {
     )
 }
 
-interface ItemProps extends MaterialModel {
+type ItemProps = {
     onClick: () => void
     onDel: () => void
 
+    M: MaterialModel
     whoCreated: string
     whoUpdated: string
 }
@@ -698,15 +691,15 @@ const Item: Component<ItemProps> = P => {
         <div
             class='item'
             classList={{
-                warn: P.count <= 50 && P.count > 20,
-                red: P.count <= 20 && P.count >= 0,
+                warn: P.M.count <= 50 && P.M.count > 20,
+                red: P.M.count <= 20 && P.M.count >= 0,
             }}
             onclick={P.onClick}
         >
             <div class='img-container  '>
-                <Show when={P.photo} fallback={<ImageIcon />}>
+                <Show when={P.M.photo} fallback={<ImageIcon />}>
                     <img
-                        src={`/record/mp-${P.id}-${P.photo}?q=${performance.now()}`}
+                        src={`/record/mp-${P.M.id}-${P.M.photo}?q=${performance.now()}`}
                         alt=''
                     />
                 </Show>
@@ -723,7 +716,7 @@ const Item: Component<ItemProps> = P => {
                             <div class='data'>
                                 <span>
                                     {new Date(
-                                        P.created_at * 1000
+                                        P.M.created_at * 1000
                                     ).toLocaleDateString('fa-IR', {
                                         year: 'numeric',
                                         month: '2-digit',
@@ -732,7 +725,7 @@ const Item: Component<ItemProps> = P => {
                                 </span>
                                 <span class='time'>
                                     {new Date(
-                                        P.created_at * 1000
+                                        P.M.created_at * 1000
                                     ).toLocaleTimeString('fa-IR', {
                                         hour: '2-digit',
                                         minute: '2-digit',
@@ -748,10 +741,10 @@ const Item: Component<ItemProps> = P => {
                             </div>
                             <div class='data'>
                                 <span>
-                                    {P.updated_at <= 0
+                                    {P.M.updated_at <= 0
                                         ? 'N / A'
                                         : new Date(
-                                              P.updated_at * 1000
+                                              P.M.updated_at * 1000
                                           ).toLocaleDateString('fa-IR', {
                                               year: 'numeric',
                                               month: '2-digit',
@@ -759,11 +752,11 @@ const Item: Component<ItemProps> = P => {
                                           })}
                                 </span>
                                 <span class='time'>
-                                    {P.updated_at <= 0 ? (
+                                    {P.M.updated_at <= 0 ? (
                                         <></>
                                     ) : (
                                         new Date(
-                                            P.updated_at * 1000
+                                            P.M.updated_at * 1000
                                         ).toLocaleTimeString('fa-IR', {
                                             hour: '2-digit',
                                             minute: '2-digit',
@@ -795,11 +788,11 @@ const Item: Component<ItemProps> = P => {
                 <div class='item-count-container'>
                     <div class='holder title_smaller'>موجودی فعلی</div>
                     <div class='item-count title'>
-                        <span>{P.count.toLocaleString()}</span>
+                        <span>{P.M.count.toLocaleString()}</span>
                     </div>
                 </div>
 
-                <div class='item-name title_small'>{P.name}</div>
+                <div class='item-name title_small'>{P.M.name}</div>
             </div>
 
             <Show when={self.perms.check(Perms.D_MATERIAL)}>

@@ -47,8 +47,3 @@ export type MaterialModel = {
     updated_at: number
     updated_by: number
 }
-
-export type MaterialsResponseModel = {
-    materials: MaterialModel[]
-    users: UserModel[]
-}
