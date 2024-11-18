@@ -9,6 +9,7 @@ import {
     MinusIcon,
     PersonIcon,
     PlusIcon,
+    SearchIcon,
     UpdatePersonIcon,
     UploadIcon,
 } from 'icons'
@@ -150,13 +151,16 @@ const Storage = () => {
     return (
         <div class='storage-container' classList={{ loading: state.loading }}>
             <Show when={!state.loading} fallback={<LoadingItems />}>
-                <div class='storage-wrapper'>
-                    <input
-                        placeholder='search'
-                        oninput={e => {
-                            setState({ search: e.currentTarget.value })
-                        }}
-                    />
+                <div class='storage-wrapper title_smaller'>
+                    <div class='search-wrapper'>
+                        <input
+                            placeholder='جستجو کنید...'
+                            oninput={e => {
+                                setState({ search: e.currentTarget.value })
+                            }}
+                        />
+                        <SearchIcon />
+                    </div>
                     <Show when={self.perms.check(Perms.A_MATERIAL)}>
                         <button
                             class='main-cta title_smaller'
