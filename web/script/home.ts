@@ -1,11 +1,5 @@
 export {}
 
-const welcomerContainer = document.querySelector<HTMLElement>('.welcomer')
-
-welcomerContainer.addEventListener('click', () => {
-    welcomerContainer.style.display = 'none'
-})
-
 const stickyButton = document.querySelector<HTMLElement>('a.main.hero-button')
 
 stickyButton.addEventListener('mousemove', e => {
