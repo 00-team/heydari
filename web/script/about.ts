@@ -29,10 +29,16 @@ document.addEventListener(
     'DOMContentLoaded',
     () => {
         setClass(current)
-        setInterval(() => {
-            current = current % aboutContents.length
-            setClass(current)
-        }, 7500)
+
+        setTimeout(() => {
+            setInterval(() => {
+                current += 1
+
+                if (current >= aboutSliders.length) current = 0
+
+                setClass(current)
+            }, 3000)
+        }, 3000)
     },
     false
 )
