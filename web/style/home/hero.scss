@@ -1,16 +1,20 @@
-section.hero-container {
+main.home section.hero-container {
     width: 100%;
     min-height: 90vh;
 
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     // flex-wrap: wrap;
 
     padding: 3rem 4rem;
 
     background-color: var(--sixty-percent);
     background-image: linear-gradient(0deg, white, transparent 10%);
+
+    position: relative;
+    isolation: isolate;
 
     @media screen and (max-width: 1250px) {
         padding-top: 15vh;
@@ -184,6 +188,122 @@ section.hero-container {
                         border: 1px solid black;
                         color: black;
                     }
+                }
+            }
+        }
+    }
+
+    .marquees-container {
+        position: absolute;
+        bottom: 0;
+
+        transform: translateY(50%);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
+
+        z-index: 2;
+
+        .marquee {
+            width: 110%;
+            margin-left: -5%;
+
+            mix-blend-mode: screen;
+            transform: rotate(-5deg);
+
+            background: #f3bb0b;
+            color: #000;
+
+            overflow: hidden;
+
+            &:nth-child(odd) {
+                .marquee--inner {
+                    animation:
+                        marquee-odd 4s infinite linear,
+                        reduce-marquee 8s infinite linear paused;
+                    animation-composition: add;
+
+                    @keyframes marquee-odd {
+                        from {
+                            transform: translateX(6.85%);
+                        }
+                        to {
+                            transform: translateX(20%);
+                        }
+                    }
+                }
+            }
+
+            &:nth-child(even) {
+                background: #000;
+                color: #f3bb0b;
+
+                transform: rotate(5deg);
+
+                .marquee--inner {
+                    animation:
+                        marquee-even 4s infinite linear,
+                        reduce-marquee 8s infinite linear paused;
+                    animation-composition: add;
+
+                    animation-direction: reverse;
+
+                    @keyframes marquee-even {
+                        from {
+                            transform: translateX(7.45%);
+                        }
+                        to {
+                            transform: translateX(20%);
+                        }
+                    }
+                }
+            }
+
+            .marquee--inner {
+                width: max-content;
+                display: flex;
+                text-transform: uppercase;
+
+                &:hover {
+                    animation-play-state: running;
+                }
+
+                p {
+                    display: flex;
+                    gap: 0.5em;
+
+                    padding-block: 1em;
+
+                    white-space: nowrap;
+
+                    font-family: 'yekan';
+
+                    &::after {
+                        content: '*';
+                    }
+
+                    &::before {
+                        content: '';
+                    }
+                }
+            }
+
+            @keyframes reduce-marquee {
+                from {
+                    transform: translateX(
+                        calc(
+                            var(--marquee--repeat-size) *
+                                var(--marquee--direction)
+                        )
+                    );
+                }
+                to {
+                    transfrom: translateX(
+                        calc(var(--marquee--double-size) * -1)
+                    );
                 }
             }
         }
