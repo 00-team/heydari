@@ -28,9 +28,9 @@ const setClass = index => {
 document.addEventListener(
     'DOMContentLoaded',
     () => {
-        setClass(current) // Initialize with the first content as active
+        setClass(current)
         setInterval(() => {
-            current = (current + 1) % aboutContents.length // Circular increment
+            current = current % aboutContents.length
             setClass(current)
         }, 7500)
     },
