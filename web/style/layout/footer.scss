@@ -68,9 +68,6 @@ footer.footer-container {
                     flex-direction: column;
                     row-gap: calc(1.5vh + 3px);
 
-                    .holder {
-                        font-weight: bold;
-                    }
                     .data {
                         display: -webkit-box;
                         -webkit-line-clamp: 3;
@@ -352,7 +349,7 @@ footer.footer-container {
                         }
 
                         a {
-                            transition: color 0.3s ease-in-out;
+                            transition: color 0.3s ease;
 
                             &:hover {
                                 color: var(--sixty-percent);
