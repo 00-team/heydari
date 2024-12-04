@@ -49,11 +49,29 @@
             align-items: center;
             justify-content: center;
 
+            @keyframes nav-unactive {
+                from {
+                    left: 50%;
+                    top: 100%;
+                    transform: translate(-50%);
+                }
+                to {
+                    top: 5px;
+                    left: 10px;
+                    transform: translate(5%, 5%);
+                }
+            }
+
             @media screen and (max-width: 768px) {
                 position: absolute;
                 top: 5px;
                 left: 10px;
                 transform: translate(5%, 5%);
+
+                &.clicked {
+                    animation: 0.8s nav-unactive
+                        cubic-bezier(0.45, 0.02, 0.09, 0.98) forwards;
+                }
             }
 
             svg {
@@ -109,8 +127,6 @@
             inset: 0;
             height: 100vh;
             transform: translateX(100%);
-
-            transition: transform 0.5s ease-in-out;
         }
 
         .small-open {
@@ -140,7 +156,7 @@
             }
 
             .nav-logo-container {
-                animation: 1s nav-active cubic-bezier(0.45, 0.02, 0.09, 0.98)
+                animation: 0.8s nav-active cubic-bezier(0.45, 0.02, 0.09, 0.98)
                     forwards;
 
                 @keyframes nav-active {
