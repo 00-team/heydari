@@ -1,8 +1,11 @@
 export {}
 
-const navContainer = document.querySelector('nav.nav-container')
-const openSmallNav = document.querySelector('.small-open')
-const closeSmallNav = document.querySelector('.small-close')
+const navContainer = document.querySelector<HTMLElement>('nav.nav-container')
+const navWrapper = navContainer.querySelector<HTMLElement>('.nav-wrapper')
+const smallScreen = navWrapper.querySelector<HTMLElement>('.just-for-small')
+const openSmallNav = document.querySelector<HTMLElement>('.small-open')
+const closeSmallNav = document.querySelector<HTMLElement>('.small-close')
+const logoContainer = document.querySelector<HTMLElement>('.nav-logo-container')
 
 let scrolled = false
 let isSmall = false
@@ -31,10 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 openSmallNav.addEventListener('click', () => {
     openSmall = true
+    smallScreen.style.transition = ' transform 0.5s ease-in-out'
+
+    if (!logoContainer.classList.contains('clicked')) {
+        logoContainer.className += ' clicked'
+    }
+
     render()
 })
 closeSmallNav.addEventListener('click', () => {
     openSmall = false
+    smallScreen.style.transition = ' transform 0.5s ease-in-out'
+
+    if (!logoContainer.classList.contains('clicked')) {
+        logoContainer.className += ' clicked'
+    }
+
     render()
 })
 
