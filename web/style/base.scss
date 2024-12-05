@@ -26,35 +26,19 @@
     background-color: #555;
 }
 
-.root {
-    background-color: #f2f2f2;
-
-    body {
-        color-scheme: light;
-
-        --primary-color: #121212;
-        --accent-color: #f2f2f2;
-
-        // alerts
-        --alert-shadow: #fff3;
-        --alert-error: #e20338;
-        --alert-info: #5199ff;
-        --alert-success: #00dc7d;
-
-        // 60/30/10 theme
-        --sixty-percent: #f4a000;
-        --ten-percent: #6a287e;
-    }
-}
-
 body {
-    overflow-x: hidden;
-
-    direction: rtl;
+    color-scheme: light;
 
     padding-top: 100px;
 
+    overflow-x: hidden;
+
     scroll-behavior: smooth;
+    direction: rtl;
+
+    .root {
+        background-color: #f2f2f2;
+    }
 }
 
 .title_hero {
