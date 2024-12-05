@@ -205,7 +205,11 @@ a {
     font: inherit;
 }
 button {
-    border: none;
-    margin: 0;
     cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+
+    text-decoration: none;
+    color: inherit;
 }
