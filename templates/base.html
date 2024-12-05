@@ -53,14 +53,57 @@
 
     <link rel="icon" href="/static/icon/favicon.ico" type="image/x-icon" />
 
-    <link href="/static/fonts/fonts.css" rel="stylesheet" />
+    <style>
+        @font-face {
+            font-family: 'iranLight';
+            src: url('/static/fonts/iran-sans/light.woff2') format('woff2');
+            font-display: swap
+        }
 
-    <link href="/static/style/config/index.css" rel="stylesheet" />
+        @font-face {
+            font-family: 'iranBold';
+            src: url('/static/fonts/iran-sans/bold.woff2') format('woff2');
+            font-display: swap
+        }
 
-    <link href="/static/style/base.css" rel="stylesheet" />
+        @font-face {
+            font-family: 'yekanBold';
+            src: url('/static/fonts/iran-yekan/bold.woff') format('woff2');
+            font-display: swap
+        }
 
-    <link href="/static/style/layout/nav.css" rel="stylesheet" />
-    <link href="/static/style/layout/footer.css" rel="stylesheet" />
+        @font-face {
+            font-family: 'yekan';
+            src: url('/static/fonts/iran-yekan/regular.woff') format('woff2');
+            font-display: swap
+        }
+
+        @font-face {
+            font-family: 'number';
+            src:
+                url('/static/fonts/vazir/vazir.eot'),
+                url('/static/fonts/vazir/vazir.woff2') format('woff2'),
+                url('/static/fonts/vazir/vazir.ttf') format('truetype'),
+                url('/static/fonts/vazir/vazir.woff') format('woff');
+            /* unicode-range: U+0030-0039, U+0660-0669; */
+        }
+    </style>
+
+    <link href="/static/style/config/index.css" rel="preload" as="style" />
+
+    <link href="/static/style/base.css" rel="preload" as="style" />
+
+    <link rel="preload" href="/static/image/chair.webp" as="image" type="image/webp" />
+
+    <link href="/static/style/layout/nav.css" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link href="/static/style/layout/nav.css" rel="stylesheet" />
+    </noscript>
+
+    <link href="/static/style/layout/footer.css" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link href="/static/style/layout/footer.css" rel="stylesheet" />
+    </noscript>
 
     <script src="/static/script/base.js" defer></script>
 
