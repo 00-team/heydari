@@ -37,7 +37,7 @@ document.addEventListener(
                 if (current >= aboutSliders.length) current = 0
 
                 setClass(current)
-            }, 3000)
+            }, 7500)
         }, 3000)
     },
     false
