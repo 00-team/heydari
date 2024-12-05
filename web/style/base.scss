@@ -1,5 +1,4 @@
 @use 'config' as g;
-@use 'theme';
 
 * {
     margin: 0;
@@ -28,18 +27,23 @@
 }
 
 .root {
-    background-color: #121212;
-    @media (prefers-color-scheme: dark) {
-        body {
-            @include theme.dark;
-        }
-        background-color: var(--accent-color);
-    }
-    @media (prefers-color-scheme: light) {
-        body {
-            @include theme.dark;
-        }
-        background-color: var(--accent-color);
+    background-color: #f2f2f2;
+
+    body {
+        color-scheme: light;
+
+        --primary-color: #121212;
+        --accent-color: #f2f2f2;
+
+        // alerts
+        --alert-shadow: #fff3;
+        --alert-error: #e20338;
+        --alert-info: #5199ff;
+        --alert-success: #00dc7d;
+
+        // 60/30/10 theme
+        --sixty-percent: #f4a000;
+        --ten-percent: #6a287e;
     }
 }
 
@@ -49,34 +53,8 @@ body {
     direction: rtl;
 
     padding-top: 100px;
-}
 
-html,
-body {
     scroll-behavior: smooth;
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        @include theme.dark;
-    }
-    main.home {
-        background-color: var(--sixty-percent);
-        color: var(--accent-color);
-    }
-}
-@media (prefers-color-scheme: light) {
-    body {
-        @include theme.light;
-    }
-    main.home {
-        background-color: var(--sixty-percent);
-        color: var(--accent-color);
-    }
-}
-
-span.logo-text {
-    color: var(--sixty-percent);
 }
 
 .title_hero {
