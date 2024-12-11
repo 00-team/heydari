@@ -12,6 +12,8 @@
         gtag('config', 'G-QSYXB03JXX');
     </script>
 
+
+
     {% block title %} {% endblock title %}
 
     <meta charset="UTF-8">
@@ -40,17 +42,83 @@
         content="صنایع تولیدی حیدری با 40 سال تجربه در تولید صندلی‌های آموزشی و اداری با کیفیت برتر.">
     <meta name="twitter:image" content="https://heydari-mi.com/static/image/logo.png">
 
+    <!-- pre load fonts -->
+    <link rel="preload" href="/static/fonts/iran-yekan/regular.woff" as="font" type="font/woff" crossorigin="anonymous">
+    <link rel="preload" href="/static/fonts/iran-sans/bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="/static/fonts/iran-yekan/bold.woff" as="font" type="font/woff" crossorigin="anonymous">
+    <link rel="preload" href="/static/fonts/iran-sans/light.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <!-- pre load fonts -->
+
+
 
     <link rel="icon" href="/static/icon/favicon.ico" type="image/x-icon" />
 
-    <link href="/static/fonts/fonts.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #121212;
+            --accent-color: #f2f2f2;
 
-    <link href="/static/style/config/index.css" rel="stylesheet" />
+            --alert-shadow: #fff3;
+            --alert-error: #e20338;
+            --alert-info: #5199ff;
+            --alert-success: #00dc7d;
 
-    <link href="/static/style/base.css" rel="stylesheet" />
+            --sixty-percent: #f4a000;
+            --ten-percent: #6a287e;
+        }
 
-    <link href="/static/style/layout/nav.css" rel="stylesheet" />
-    <link href="/static/style/layout/footer.css" rel="stylesheet" />
+        @font-face {
+            font-family: 'iranLight';
+            src: url('/static/fonts/iran-sans/light.woff2') format('woff2');
+            font-display: swap
+        }
+
+        @font-face {
+            font-family: 'iranBold';
+            src: url('/static/fonts/iran-sans/bold.woff2') format('woff2');
+            font-display: swap
+        }
+
+        @font-face {
+            font-family: 'yekanBold';
+            src: url('/static/fonts/iran-yekan/bold.woff') format('woff2');
+            font-display: swap
+        }
+
+        @font-face {
+            font-family: 'yekan';
+            src: url('/static/fonts/iran-yekan/regular.woff') format('woff2');
+            font-display: swap
+        }
+
+        @font-face {
+            font-family: 'number';
+            src:
+                url('/static/fonts/vazir/vazir.eot'),
+                url('/static/fonts/vazir/vazir.woff2') format('woff2'),
+                url('/static/fonts/vazir/vazir.ttf') format('truetype'),
+                url('/static/fonts/vazir/vazir.woff') format('woff');
+            /* unicode-range: U+0030-0039, U+0660-0669; */
+        }
+    </style>
+
+    <link href="/static/style/config/index.css" rel="preload" as="style" />
+    <link rel="stylesheet" href="/static/style/config/index.css" />
+
+    <link href="/static/style/base.css" rel="preload" as="style" />
+    <link rel="stylesheet" href="/static/style/base.css" />
+
+    <link rel="preload" href="/static/image/chair.webp" as="image" type="image/webp" />
+
+    <link href="/static/style/layout/nav.css" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link href="/static/style/layout/nav.css" rel="stylesheet" />
+    </noscript>
+
+    <link href="/static/style/layout/footer.css" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link href="/static/style/layout/footer.css" rel="stylesheet" />
+    </noscript>
 
     <script src="/static/script/base.js" defer></script>
 

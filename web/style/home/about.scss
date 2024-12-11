@@ -1,5 +1,5 @@
 section.about-container {
-    min-height: 80vh;
+    min-height: 100vh;
     width: 100%;
 
     background-color: white;
@@ -12,6 +12,7 @@ section.about-container {
     gap: 12vh;
 
     padding: 3vh 5vw;
+    padding-top: 200px;
 
     @media screen and (max-width: 768px) {
         gap: 6vh;
@@ -44,9 +45,9 @@ section.about-container {
     .about-wrapper {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
 
-        width: clamp(0px, 1300px, 100%);
+        width: clamp(0px, 1500px, 100%);
 
         position: relative;
 
@@ -60,9 +61,7 @@ section.about-container {
             gap: 4vh;
 
             .content-descrption {
-                @media screen and (min-width: 768px) {
-                    width: 70%;
-                }
+                font-family: 'yekan';
             }
         }
 
@@ -237,6 +236,7 @@ section.about-container {
 
                 img {
                     width: 100%;
+                    height: 100%;
                     object-fit: cover;
 
                     border-radius: 10px;

@@ -21,6 +21,10 @@ footer.footer-container {
         padding: 2rem 3rem;
         padding-left: 0;
 
+        @media screen and (max-width: 768px) {
+            padding: 2rem 0;
+        }
+
         .footer-header {
             width: 100%;
 
@@ -28,10 +32,9 @@ footer.footer-container {
             align-items: center;
             justify-content: space-evenly;
             flex-wrap: wrap;
-            row-gap: calc(2.5vh + 5px);
+            row-gap: 2rem;
 
-            padding-bottom: calc(3vh + 5px);
-            padding-top: calc(3vh + 5px);
+            padding: calc(3vh + 5px) 1rem;
 
             border-block-end: 1px solid;
             border-image-source: linear-gradient(
@@ -68,9 +71,6 @@ footer.footer-container {
                     flex-direction: column;
                     row-gap: calc(1.5vh + 3px);
 
-                    .holder {
-                        font-weight: bold;
-                    }
                     .data {
                         display: -webkit-box;
                         -webkit-line-clamp: 3;
@@ -352,7 +352,7 @@ footer.footer-container {
                         }
 
                         a {
-                            transition: color 0.3s ease-in-out;
+                            transition: color 0.3s ease;
 
                             &:hover {
                                 color: var(--sixty-percent);

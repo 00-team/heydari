@@ -360,21 +360,21 @@
     h1 {
         margin-bottom: 1em;
         font-family: 'iranBold';
+        font-size: 2em;
     }
 
     * {
+        text-underline-offset: 6px;
+
         h2,
         h3,
         h4,
         h5,
         h6 {
             font-family: 'iranLight';
-            margin-bottom: 0.5em;
-        }
 
-        h5,
-        h6 {
-            font-size: 1em;
+            font-size: 1.7rem;
+            margin-top: 1.5em;
         }
 
         p {

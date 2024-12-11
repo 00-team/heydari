@@ -1,5 +1,4 @@
 @use 'config' as g;
-@use 'theme';
 
 * {
     margin: 0;
@@ -27,56 +26,19 @@
     background-color: #555;
 }
 
-.root {
-    background-color: #121212;
-    @media (prefers-color-scheme: dark) {
-        body {
-            @include theme.dark;
-        }
-        background-color: var(--accent-color);
-    }
-    @media (prefers-color-scheme: light) {
-        body {
-            @include theme.dark;
-        }
-        background-color: var(--accent-color);
-    }
-}
-
 body {
-    overflow-x: hidden;
-
-    direction: rtl;
+    color-scheme: light;
 
     padding-top: 100px;
-}
 
-html,
-body {
+    overflow-x: hidden;
+
     scroll-behavior: smooth;
-}
+    direction: rtl;
 
-@media (prefers-color-scheme: dark) {
-    body {
-        @include theme.dark;
+    .root {
+        background-color: #f2f2f2;
     }
-    main.home {
-        background-color: var(--sixty-percent);
-        color: var(--accent-color);
-    }
-}
-@media (prefers-color-scheme: light) {
-    body {
-        @include theme.light;
-    }
-    main.home {
-        background-color: var(--sixty-percent);
-        color: var(--accent-color);
-    }
-}
-
-span.logo-text {
-    color: var(--sixty-percent);
 }
 
 .title_hero {
@@ -205,7 +167,11 @@ a {
     font: inherit;
 }
 button {
-    border: none;
-    margin: 0;
     cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+
+    text-decoration: none;
+    color: inherit;
 }

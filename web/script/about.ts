@@ -28,11 +28,17 @@ const setClass = index => {
 document.addEventListener(
     'DOMContentLoaded',
     () => {
-        setClass(current) // Initialize with the first content as active
-        setInterval(() => {
-            current = (current + 1) % aboutContents.length // Circular increment
-            setClass(current)
-        }, 7500)
+        setClass(current)
+
+        setTimeout(() => {
+            setInterval(() => {
+                current += 1
+
+                if (current >= aboutSliders.length) current = 0
+
+                setClass(current)
+            }, 7500)
+        }, 3000)
     },
     false
 )
