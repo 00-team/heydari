@@ -45,18 +45,22 @@ body {
     font-size: g.$TITLE_FONTSIZE_HERO;
     font-family: 'iranBold';
 }
+
 .section_title {
     font-size: clamp(1.6rem, 2.9vw + 1.3rem, 2.8rem);
     font-family: 'iranBold';
 }
+
 .title {
     font-size: g.$TITLE_FONTSIZE;
     font-family: 'yekanBold';
 }
+
 .title_small {
     font-size: g.$TITLE_FONTSIZE_SMALL;
     font-family: 'yekanBold';
 }
+
 .title_smaller {
     font-size: g.$TITLE_FONTSIZE_SMALLER;
     font-family: 'yekan';
@@ -66,6 +70,7 @@ body {
     font-size: g.$DESCRIPTION_FONT_SIZE;
     font-family: 'yekan';
 }
+
 .description_small {
     font-size: g.$DESCRIPTION_FONT_SIZE_SMALL;
     font-family: 'yekan';
@@ -148,67 +153,15 @@ body {
                         justify-content: center;
                         gap: calc(1vw + 5px);
                     }
+
                     .data {
                         direction: ltr;
                     }
                 }
             }
+
             .contact-body {
                 width: 100%;
-            }
-        }
-    }
-}
-
-.pagination {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-
-    > button {
-        border-radius: 100vmax;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--sixty-percent);
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
-        color: white;
-
-        svg {
-            margin: 10px;
-        }
-    }
-
-    .pagination-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.3rem;
-
-        a {
-            width: 50px;
-            aspect-ratio: 1;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            padding: 0.9em;
-            border-radius: 100vmax;
-
-            background: white;
-            color: black;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
-            overflow: hidden;
-
-            &.active {
-                background: var(--sixty-percent);
-                color: white;
             }
         }
     }
@@ -220,6 +173,7 @@ a {
     text-decoration: none;
     font: inherit;
 }
+
 button {
     cursor: pointer;
     outline: none;
