@@ -160,6 +160,60 @@ body {
     }
 }
 
+.pagination {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+
+    > button {
+        border-radius: 100vmax;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--sixty-percent);
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+        color: white;
+
+        svg {
+            margin: 10px;
+        }
+    }
+
+    .pagination-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+
+        a {
+            width: 50px;
+            aspect-ratio: 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0.9em;
+            border-radius: 100vmax;
+
+            background: white;
+            color: black;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+            overflow: hidden;
+
+            &.active {
+                background: var(--sixty-percent);
+                color: white;
+            }
+        }
+    }
+}
+
 // reset
 a {
     color: unset;
