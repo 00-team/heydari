@@ -1,0 +1,32 @@
+.loading-dots-cmp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5vmin;
+
+    .dot {
+        width: 10px;
+        aspect-ratio: 1;
+
+        border-radius: 100vmax;
+
+        background-color: white;
+
+        animation: dots-bounce 0.5s ease infinite alternate;
+
+        @for $i from 0 to 5 {
+            &:nth-child(#{$i}) {
+                animation-delay: calc(0.1s * #{$i});
+            }
+        }
+    }
+
+    @keyframes dots-bounce {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-20px);
+        }
+    }
+}
