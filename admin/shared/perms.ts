@@ -82,22 +82,22 @@ export const PERMS_DISPLAY: PermDisplay[] = [
     { perm: Perms.MASTER, name: 'استاد' },
 
     { perm: Perms.V_USER, name: 'نمایش کاربران' },
-    { perm: Perms.A_USER, name: 'افرایش کاربران' },
+    { perm: Perms.A_USER, name: 'افزایش کاربران' },
     { perm: Perms.C_USER, name: 'تغییر کاربران' },
     { perm: Perms.D_USER, name: 'حذف کاربران' },
 
     { perm: Perms.V_PRODUCT, name: 'نمایش محصولات' },
-    { perm: Perms.A_PRODUCT, name: 'افرایش محصولات' },
+    { perm: Perms.A_PRODUCT, name: 'افزایش محصولات' },
     { perm: Perms.C_PRODUCT, name: 'تغییر محصولات' },
     { perm: Perms.D_PRODUCT, name: 'حذف محصولات' },
 
     { perm: Perms.V_PRODUCT_TAG, name: 'نمایش تگ محصولات' },
-    { perm: Perms.A_PRODUCT_TAG, name: 'افرایش تگ محصولات' },
+    { perm: Perms.A_PRODUCT_TAG, name: 'افزایش تگ محصولات' },
     { perm: Perms.C_PRODUCT_TAG, name: 'تغییر تگ محصولات' },
     { perm: Perms.D_PRODUCT_TAG, name: 'حذف تگ محصولات' },
 
     { perm: Perms.V_MATERIAL, name: 'نمایش انبار' },
-    { perm: Perms.A_MATERIAL, name: 'افرایش به انبار' },
+    { perm: Perms.A_MATERIAL, name: 'اضافه به انبار' },
     { perm: Perms.C_MATERIAL, name: 'تغییر کالای انبار' },
     { perm: Perms.D_MATERIAL, name: 'حذف از انبار' },
 ]
