@@ -1,9 +1,11 @@
 import { useNavigate } from '@solidjs/router'
 import { addAlert } from 'comps/alert'
+import LoadingDots from 'comps/loadingDots'
 import { BackIcon, MobileIcon, SmsIcon } from 'icons'
 import { httpx } from 'shared'
+import { Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { self, setSelf } from 'store'
+import { setSelf } from 'store'
 import './style/login.scss'
 
 export default () => {
@@ -63,6 +65,7 @@ export default () => {
         httpx({
             url: '/api/user/login/',
             method: 'POST',
+            show_messages: false,
             json: {
                 phone: state.phone,
                 code: state.code,
@@ -79,15 +82,41 @@ export default () => {
                     navigate('/products/?page=0')
 
                     location.reload()
+
+                    return
                 }
+
+                addAlert({
+                    type: 'error',
+                    timeout: 3,
+                    subject: 'کد نادرست!',
+                    content: 'کد وارد شده نادرست است.',
+                })
             },
         })
     }
 
     return (
         <div class='login-fnd'>
-            <div class='login-form' classList={{ loading: state.loading }}>
+            <form
+                onsubmit={e => {
+                    e.preventDefault()
+
+                    if (state.stage === 'phone') return verification()
+
+                    user_login()
+                }}
+                class='login-form'
+                classList={{ loading: state.loading }}
+            >
+                <Show when={state.loading}>
+                    <div class='loading-form'>
+                        <LoadingDots />
+                        <h2 class='title'>صبر کنید...</h2>
+                    </div>
+                </Show>
                 <button
+                    type='button'
                     class='go-back'
                     onclick={() => {
                         setState({ stage: 'phone' })
@@ -153,15 +182,11 @@ export default () => {
                 </div>
 
                 <button
+                    type='submit'
                     class='cta title_smaller'
                     classList={{
                         code: state.stage === 'code',
                         disable: state.phone.length !== 11,
-                    }}
-                    onclick={() => {
-                        if (state.stage === 'phone') return verification()
-
-                        user_login()
                     }}
                 >
                     <span class=''>ارسال کد</span>
@@ -216,7 +241,7 @@ export default () => {
                         دریافت کد
                     </button>
                 </Show> */}
-            </div>
+            </form>
         </div>
     )
 }
