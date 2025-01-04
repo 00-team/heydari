@@ -24,8 +24,7 @@
         justify-content: space-between;
         align-items: center;
 
-        background: #393e462b;
-        background-image: linear-gradient(45deg, black, transparent);
+        background-color: var(--primary-color);
 
         border-radius: 1rem;
         border: 1px solid var(--ca);
@@ -73,6 +72,15 @@
 
             padding: 1rem;
 
+            transform: translateX(-200%);
+
+            will-change: transform;
+            transition: 0.3s ease;
+
+            &.active {
+                transform: translateX(0);
+            }
+
             svg {
                 width: 25px;
                 height: 25px;
@@ -87,11 +95,11 @@
             flex-direction: column;
 
             > h1 {
+                margin-bottom: 0.5em;
             }
 
             > h2 {
                 opacity: 0.8;
-                font-weight: lighter;
             }
         }
 
@@ -130,7 +138,7 @@
                         border: none;
 
                         background: transparent;
-                        border-bottom: 1px solid white;
+                        border-bottom: 1px solid var(--accent-color);
                         border-radius: 0;
 
                         outline: none;
@@ -187,8 +195,7 @@
 
             border-radius: 0.5rem;
             box-shadow: rgb(255 255 255 / 15%) 0px 0px 15px;
-            background-color: var(--cd);
-            background-image: linear-gradient(45deg, #000000b0, transparent);
+            background-color: var(--thirty-percent);
 
             position: relative;
             isolation: isolate;
