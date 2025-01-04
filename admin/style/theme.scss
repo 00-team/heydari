@@ -1,0 +1,45 @@
+//  maybe later :)
+// @mixin dark {
+//     color-scheme: dark;
+//     --primary-color: #000;
+//     --accent-color: #ffffff;
+
+//     // alerts
+//     --alert-shadow: #fff3;
+//     --alert-error: #e20338;
+//     --alert-info: #5199ff;
+//     --alert-success: #00d14a;
+
+//     --addhome-color: #ff0000;
+//     --login-link: #4e8dff;
+
+//     // 60/30/10 theme
+//     --sixty-percent: rgb(35, 35, 35);
+//     --thirty-percent: rgb(43, 43, 48);
+//     --ten-percent: rgb(236, 15, 15);
+
+//     --com-percent: black;
+
+//     --addon-percent: #f03f3f;
+//     //
+// }
+
+@mixin light {
+    color-scheme: light;
+
+    --primary-color: #fff;
+    --accent-color: #000;
+    // alerts
+    --alert-shadow: #fff3;
+    --alert-error: #e20338;
+    --alert-info: #51efff;
+    --alert-success: #19ac00;
+
+    --addhome-color: blue;
+    --login-link: blue;
+
+    // 60/30/10 theme
+    --sixty-percent: rgb(235, 235, 235);
+    --thirty-percent: #f4a000;
+    --ten-percent: #6a287e;
+}
