@@ -99,8 +99,18 @@ export default () => {
     return (
         <nav class='navbar-fnd'>
             <div class='admin-info title_small'>
+                <div class='info-wrapper'>
+                    <img
+                        src={
+                            self.user.photo || '/static/image/about/avatar.png'
+                        }
+                        alt=''
+                    />
+                    {self.user.name || self.user.phone}
+                </div>
+
                 <button
-                    class='icon'
+                    class='logout icon'
                     onclick={() => {
                         setPopup({
                             show: true,
@@ -113,8 +123,8 @@ export default () => {
                     }}
                 >
                     <ExitIcon />
+                    خروج
                 </button>
-                {self.user.name || self.user.phone}
             </div>
             <div class='links'>
                 <For each={links}>
