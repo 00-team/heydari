@@ -1,4 +1,5 @@
 import { addAlert } from 'comps/alert'
+import LoadingDots from 'comps/loadingDots'
 import {
     Calendar2Icon,
     CalendarIcon,
@@ -668,14 +669,7 @@ const LoadingItems = () => {
     return (
         <div class='loading'>
             <div class='loading-wrapper'>
-                <div class='loading-dots'>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
+                <LoadingDots />
                 <p>لطفا صبر کنید...</p>
             </div>
         </div>
