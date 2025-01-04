@@ -36,14 +36,13 @@ export default () => {
                 if (stage === 'phone') return
 
                 set_expire()
+
+                onCleanup(() => {
+                    clearInterval(timer)
+                })
             }
         )
     )
-
-    onCleanup(() => {
-        if (!timer) return
-        clearInterval(timer)
-    })
 
     function verification() {
         if (state.phone.length != 11 || !state.phone.startsWith('09'))
@@ -267,9 +266,9 @@ export default () => {
                                 })
                             }}
                         >
-                            {state.expires > 0 && (
+                            <Show when={state.expires > 0}>
                                 <Timer seconds={state.expires} />
-                            )}
+                            </Show>
                             ارسال دوباره
                         </button>
                     </div>
