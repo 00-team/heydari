@@ -13,9 +13,18 @@
 
     padding: 2rem;
 
+    @media screen and (max-width: 1024px) {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
     .nav-logo-container {
         width: 70px;
         border-radius: 1rem;
+
+        @media screen and (max-width: 1024px) {
+            width: 100px;
+        }
     }
 
     .admin-info {
@@ -46,31 +55,74 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
         padding: 8px;
+
         background-color: var(--thirty-percent);
-        margin: 2em 0 0 0;
+
         border-radius: 3rem;
-        gap: 1em;
 
         @media screen and (min-width: 1024px) {
             position: absolute;
             top: 0;
             left: 50%;
+
             transform: translateX(-50%);
+
+            margin: 2rem 0 0 0;
+        }
+
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+            width: 100%;
+            border-radius: 1rem;
+
+            gap: 0.3rem;
         }
 
         a {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
 
             background-color: transparent;
 
+            width: 100%;
+
             color: black;
+
+            white-space: nowrap;
 
             padding: 15px 25px;
             border-radius: inherit;
+
+            transition: background-color 0.5s ease;
+
+            &.active {
+                background-color: white;
+            }
+
+            span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                gap: 0.5rem;
+
+                &::after {
+                    content: '';
+                    width: 1px;
+                    height: 1px;
+                }
+
+                @media screen and (max-width: 768px) {
+                    width: 200px;
+                    justify-content: space-between;
+                }
+                @media screen and (max-width: 320px) {
+                    width: 180px;
+                }
+            }
         }
     }
 }
