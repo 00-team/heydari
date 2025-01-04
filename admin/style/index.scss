@@ -17,13 +17,14 @@ body {
 
     color: var(--accent-color);
 
-    background: #1dd5f24a;
+    background: rgba(29, 213, 242, 0.29);
 
     font-family: var(--fa), var(--en), sans-serif;
 
     width: 100%;
     height: 100vh;
-    // overflow: hidden;
+
+    overflow-x: hidden;
 
     @media screen and (max-width: 768px) {
         height: auto;
@@ -31,20 +32,16 @@ body {
 
     .root {
         width: 100%;
-        height: 100%;
+        height: auto;
 
         display: flex;
         flex-direction: column;
 
         main {
             width: 100%;
-            height: 100%;
+            height: auto;
 
             display: flex;
-            border: 2px solid var(--ca);
-            background-color: var(--cg);
-
-            overflow: hidden;
         }
     }
 
@@ -89,7 +86,7 @@ span.copiable {
 
 ::-webkit-scrollbar {
     width: 9px;
-    background-color: var(--scroll-bg);
+    background-color: var(--sixty-percent);
 }
 
 ::-webkit-scrollbar-thumb {
