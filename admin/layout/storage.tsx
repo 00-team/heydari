@@ -1,6 +1,7 @@
 import { addAlert } from 'comps/alert'
 import LoadingDots from 'comps/loadingDots'
 import {
+    ArrowdownIcon,
     Calendar2Icon,
     CalendarIcon,
     ChairIcon,
@@ -20,6 +21,8 @@ import {
     Component,
     createEffect,
     createMemo,
+    createSignal,
+    on,
     onCleanup,
     onMount,
     Show,
@@ -685,6 +688,44 @@ type ItemProps = {
     whoUpdated: string
 }
 const Item: Component<ItemProps> = P => {
+    let ref: HTMLElement
+
+    const [show, setShow] = createSignal(false)
+
+    createEffect(
+        on(
+            () => show(),
+            show => {
+                if (!ref) return
+
+                if (!show) {
+                    ref.style.height = '3rem'
+                } else {
+                    ref.style.height = `${ref.scrollHeight}px`
+                }
+            }
+        )
+    )
+
+    const closeOnOutsideClick = (e: MouseEvent) => {
+        if (ref && !ref.contains(e.target as Node)) {
+            setShow(false)
+        }
+    }
+
+    onMount(() => {
+        ref.addEventListener('blur', close)
+        onCleanup(() => {
+            ref.removeEventListener('blur', close)
+        })
+
+        document.addEventListener('click', closeOnOutsideClick)
+
+        onCleanup(() => {
+            document.removeEventListener('click', closeOnOutsideClick)
+        })
+    })
+
     return (
         <div
             class='item'
@@ -705,97 +746,115 @@ const Item: Component<ItemProps> = P => {
 
             <div class='data-wrapper'>
                 <div class='item-infos'>
-                    <div class='item-row'>
-                        <div class='item-info created description'>
-                            <div class='holder'>
-                                <CalendarIcon />
-                                ثبت
-                            </div>
-                            <div class='data'>
-                                <span>
-                                    {new Date(
-                                        P.M.created_at * 1000
-                                    ).toLocaleDateString('fa-IR', {
-                                        year: 'numeric',
-                                        month: '2-digit',
-                                        day: '2-digit',
-                                    })}
-                                </span>
-                                <span class='time'>
-                                    {new Date(
-                                        P.M.created_at * 1000
-                                    ).toLocaleTimeString('fa-IR', {
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit',
-                                    })}
-                                </span>
-                            </div>
+                    <div class='item-name title_small'>{P.M.name}</div>
+
+                    <div class='item-count-container'>
+                        <div class='holder title_smaller'>موجودی فعلی</div>
+                        <div class='item-count title'>
+                            <span>{P.M.count.toLocaleString()}</span>
                         </div>
-                        <div class='item-info updated description'>
-                            <div class='holder'>
-                                <Calendar2Icon />
-                                بروزرسانی
-                            </div>
-                            <div class='data'>
-                                <span>
-                                    {P.M.updated_at <= 0
-                                        ? 'N / A'
-                                        : new Date(
-                                              P.M.updated_at * 1000
-                                          ).toLocaleDateString('fa-IR', {
-                                              year: 'numeric',
-                                              month: '2-digit',
-                                              day: '2-digit',
-                                          })}
-                                </span>
-                                <span class='time'>
-                                    {P.M.updated_at <= 0 ? (
-                                        <></>
-                                    ) : (
-                                        new Date(
-                                            P.M.updated_at * 1000
+                    </div>
+                </div>
+
+                <div
+                    class='item-advanced'
+                    classList={{ active: show() }}
+                    onclick={e => {
+                        e.stopImmediatePropagation()
+                        e.stopPropagation()
+
+                        setShow(s => !s)
+                    }}
+                    ref={e => (ref = e)}
+                >
+                    <div class='items-dropdown title_smaller'>
+                        <div class='holder'>اطلاعات بیشتر</div>
+                        <ArrowdownIcon />
+                    </div>
+                    <div class='item-rows-wrapper'>
+                        <div class='item-row'>
+                            <div class='item-info created description'>
+                                <div class='holder'>
+                                    <CalendarIcon />
+                                    ثبت
+                                </div>
+                                <div class='data'>
+                                    <span>
+                                        {new Date(
+                                            P.M.created_at * 1000
+                                        ).toLocaleDateString('fa-IR', {
+                                            year: 'numeric',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                        })}
+                                    </span>
+                                    <span class='time'>
+                                        {new Date(
+                                            P.M.created_at * 1000
                                         ).toLocaleTimeString('fa-IR', {
                                             hour: '2-digit',
                                             minute: '2-digit',
                                             second: '2-digit',
-                                        })
-                                    )}
-                                </span>
+                                        })}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class='item-info updated description'>
+                                <div class='holder'>
+                                    <Calendar2Icon />
+                                    بروزرسانی
+                                </div>
+                                <div class='data'>
+                                    <span>
+                                        {P.M.updated_at <= 0
+                                            ? 'N / A'
+                                            : new Date(
+                                                  P.M.updated_at * 1000
+                                              ).toLocaleDateString('fa-IR', {
+                                                  year: 'numeric',
+                                                  month: '2-digit',
+                                                  day: '2-digit',
+                                              })}
+                                    </span>
+                                    <span class='time'>
+                                        {P.M.updated_at <= 0 ? (
+                                            <></>
+                                        ) : (
+                                            new Date(
+                                                P.M.updated_at * 1000
+                                            ).toLocaleTimeString('fa-IR', {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit',
+                                            })
+                                        )}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class='item-row'>
-                        <div class='item-info created description'>
-                            <div class='holder'>
-                                <PersonIcon />
-                                ثبت توسط
+                        <div class='item-row'>
+                            <div class='item-info created description'>
+                                <div class='holder'>
+                                    <PersonIcon />
+                                    ثبت توسط
+                                </div>
+                                <div class='data'>{P.whoCreated}</div>
                             </div>
-                            <div class='data'>{P.whoCreated}</div>
-                        </div>
-                        <div class='item-info updated description'>
-                            <div class='holder'>
-                                <UpdatePersonIcon />
-                                بروز توسط
+                            <div class='item-info updated description'>
+                                <div class='holder'>
+                                    <UpdatePersonIcon />
+                                    بروز توسط
+                                </div>
+                                <div class='data'>{P.whoUpdated}</div>
                             </div>
-                            <div class='data'>{P.whoUpdated}</div>
                         </div>
                     </div>
                 </div>
-
-                <div class='item-count-container'>
-                    <div class='holder title_smaller'>موجودی فعلی</div>
-                    <div class='item-count title'>
-                        <span>{P.M.count.toLocaleString()}</span>
-                    </div>
-                </div>
-
-                <div class='item-name title_small'>{P.M.name}</div>
             </div>
 
             <Show when={self.perms.check(Perms.D_MATERIAL)}>
                 <button
-                    class='delete-cta title_smaller'
+                    class='delete-cta description'
                     onclick={e => {
                         e.stopImmediatePropagation()
                         e.stopPropagation()
