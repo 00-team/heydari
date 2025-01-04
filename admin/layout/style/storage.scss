@@ -119,6 +119,10 @@
             position: relative;
             isolation: isolate;
 
+            @media screen and (max-width: 768px) {
+                border-radius: 1rem;
+            }
+
             svg {
                 position: absolute;
                 left: 20px;
