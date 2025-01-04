@@ -628,3 +628,17 @@ export const ExitIcon = () => (
         <path d='M12 10v-2h-5v-2h5v-2l3 3zM11 9v4h-5v3l-6-3v-13h11v5h-1v-4h-8l4 2v9h4v-3z'></path>
     </svg>
 )
+
+export const ArrowdownIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 512 512'
+        height='1em'
+        width='1em'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path d='M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z'></path>
+    </svg>
+)
