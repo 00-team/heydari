@@ -118,6 +118,7 @@ export default () => {
                 <button
                     type='button'
                     class='go-back'
+                    classList={{ active: state.stage === 'code' }}
                     onclick={() => {
                         setState({ stage: 'phone' })
                     }}
