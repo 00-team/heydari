@@ -1,10 +1,11 @@
 import { useNavigate } from '@solidjs/router'
+import { Timer } from 'comps'
 import { addAlert } from 'comps/alert'
 import LoadingDots from 'comps/loadingDots'
 import { BackIcon, MobileIcon, SmsIcon } from 'icons'
 import { httpx } from 'shared'
-import { Show } from 'solid-js'
-import { createStore } from 'solid-js/store'
+import { createEffect, on, onCleanup, Show } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
 import { setSelf } from 'store'
 import './style/login.scss'
 
@@ -12,17 +13,37 @@ export default () => {
     type State = {
         stage: 'phone' | 'code'
         phone: string
+        expires: number
         code: string
         loading: boolean
     }
     const [state, setState] = createStore<State>({
         stage: 'phone',
         phone: '',
+        expires: 0,
         code: '',
         loading: false,
     })
 
+    let timer: ReturnType<typeof setInterval>
+
     const navigate = useNavigate()
+
+    createEffect(
+        on(
+            () => state.stage,
+            stage => {
+                if (stage === 'phone') return
+
+                set_expire()
+            }
+        )
+    )
+
+    onCleanup(() => {
+        if (!timer) return
+        clearInterval(timer)
+    })
 
     function verification() {
         if (state.phone.length != 11 || !state.phone.startsWith('09'))
@@ -44,9 +65,20 @@ export default () => {
             },
             onLoad(x) {
                 setState({ loading: false })
-                if (x.status == 200 && x.response.expires > 0) {
-                    setState({ stage: 'code' })
-                }
+
+                if (x.status == 200 && x.response.expires > 0)
+                    return setState({
+                        stage: 'code',
+                        expires: x.response.expires,
+                    })
+
+                addAlert({
+                    type: 'error',
+                    content:
+                        'به تلفن شما پیامک ارسال شده است، برای ارسال دوباره چند لحظه صبر کنید.',
+                    subject: 'صبر کنید',
+                    timeout: 10,
+                })
             },
         })
     }
@@ -94,6 +126,20 @@ export default () => {
                 })
             },
         })
+    }
+
+    function set_expire() {
+        timer = setInterval(() => {
+            setState(
+                produce(s => {
+                    if (s.expires < 2) {
+                        clearInterval(timer)
+                        s.expires = 0
+                    }
+                    s.expires = s.expires - 1
+                })
+            )
+        }, 1e3)
     }
 
     return (
@@ -179,6 +225,53 @@ export default () => {
                                 کد پیامکی به شماره {state.phone} ارسال شد!
                             </p>
                         </div>
+                        <button
+                            class='resend title_smaller'
+                            type={'button'}
+                            classList={{ disable: state.expires >= 1 }}
+                            disabled={state.expires >= 1}
+                            onclick={() => {
+                                if (state.expires >= 1) return
+
+                                setState({ loading: true })
+
+                                httpx({
+                                    url: '/api/verification/',
+                                    method: 'POST',
+                                    show_messages: true,
+                                    json: {
+                                        phone: state.phone,
+                                        action: 'login',
+                                    },
+
+                                    onLoad(x) {
+                                        setState({ loading: false })
+
+                                        if (x.status != 200) return
+
+                                        setState({
+                                            stage: 'code',
+                                            expires: x.response.expires,
+                                        })
+
+                                        set_expire()
+
+                                        addAlert({
+                                            type: 'success',
+                                            content:
+                                                'کد با موفقیت دوباره برای شما ارسال شد!',
+                                            subject: 'ارسال شد!',
+                                            timeout: 3,
+                                        })
+                                    },
+                                })
+                            }}
+                        >
+                            {state.expires > 0 && (
+                                <Timer seconds={state.expires} />
+                            )}
+                            ارسال دوباره
+                        </button>
                     </div>
                 </div>
 
@@ -193,55 +286,6 @@ export default () => {
                     <span class=''>ارسال کد</span>
                     <span class='code'>ورود</span>
                 </button>
-
-                {/* <div class='grid'>
-                    <label
-                        for='login-phone'
-                        classList={{ disabled: state.stage != 'phone' }}
-                    >
-                        موبایل:
-                    </label>
-                    <input
-                        disabled={state.stage != 'phone'}
-                        id='login-phone'
-                        type='phone'
-                        class='styled'
-                        placeholder='09223334444'
-                        maxLength={11}
-                        value={state.phone}
-                        onInput={e =>
-                            setState({ phone: e.currentTarget.value })
-                        }
-                    />
-                    <label
-                        classList={{ disabled: state.stage != 'code' }}
-                        for='login-code'
-                    >
-                        کد:
-                    </label>
-                    <input
-                        disabled={state.stage != 'code'}
-                        id='login-code'
-                        maxLength={5}
-                        pattern='\d{5,5}'
-                        class='styled'
-                        placeholder='12345'
-                        value={state.code}
-                        onInput={e => setState({ code: e.currentTarget.value })}
-                    />
-                </div>
-                <Show
-                    when={state.stage == 'phone'}
-                    fallback={
-                        <button class='styled' onclick={user_login}>
-                            تایید کد
-                        </button>
-                    }
-                >
-                    <button class='styled' onclick={verification}>
-                        دریافت کد
-                    </button>
-                </Show> */}
             </form>
         </div>
     )
