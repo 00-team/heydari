@@ -1,4 +1,5 @@
 @use 'config' as g;
+@use './theme';
 
 @import './fonts';
 @import './button';
@@ -12,9 +13,11 @@
 }
 
 body {
-    color-scheme: dark;
-    background-color: var(--cd);
-    color: var(--white);
+    @include theme.light;
+
+    color: var(--accent-color);
+
+    background: #1dd5f24a;
 
     font-family: var(--fa), var(--en), sans-serif;
 
@@ -29,18 +32,21 @@ body {
     .root {
         width: 100%;
         height: 100%;
+
         display: flex;
         flex-direction: column;
+
         padding: 1rem;
         padding-top: 0;
-        background-color: var(--cd);
 
         main {
             width: 100%;
             height: 100%;
+
             display: flex;
             border: 2px solid var(--ca);
             background-color: var(--cg);
+
             overflow: hidden;
         }
     }
@@ -83,27 +89,6 @@ span.copiable {
         color: var(--cl);
     }
 }
-
-// :root {
-//     --radius: 0.25rem;
-//
-//     --white: #f2f2f2;
-//     --black: #040404;
-//     --red: #e20338;
-//     --blue: #51eaff;
-//     --green: #00dc7d;
-//     --yellow: #ffd600;
-//     --cd: #524781;
-//     --cl: #f9c586;
-//
-//     --scroll-bg: var(--cd);
-//     --scorll-fg: var(--cl);
-//     --scorll-hover: var(--cl);
-//     --scorll-active: var(--cl);
-//
-//     --selection-fg: var(--black);
-//     --selection-bg: var(--white);
-// }
 
 ::-webkit-scrollbar {
     width: 9px;
