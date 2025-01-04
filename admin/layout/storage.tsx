@@ -216,6 +216,8 @@ const Popup: Component<PopupProps> = P => {
         imgFile: File | null
 
         action: 'add' | 'sold'
+
+        loading: boolean
     }
 
     const default_popup: Pstate = {
@@ -226,6 +228,8 @@ const Popup: Component<PopupProps> = P => {
         imgUrl: '',
 
         action: 'add',
+
+        loading: false,
     }
 
     const [state, setState] = createStore<Pstate>({ ...default_popup })
@@ -267,7 +271,7 @@ const Popup: Component<PopupProps> = P => {
 
         return (
             P.state.activeItem.name !== state.name ||
-            P.state.activeItem.count !== state.newCount ||
+            state.newCount > 0 ||
             !state.imgUrl
         )
     })
@@ -353,6 +357,7 @@ const Popup: Component<PopupProps> = P => {
 
         if (P.state.type === 'edit') {
             let id = P.state.activeItem.id
+            let action = state.action === 'add' ? 'اضافه' : 'فروش'
 
             if (!state.imgUrl && !state.imgFile)
                 return addAlert({
@@ -376,7 +381,7 @@ const Popup: Component<PopupProps> = P => {
                     addAlert({
                         timeout: 5,
                         type: 'success',
-                        subject: 'موفق!',
+                        subject: ` ${action} موفق! `,
                         content: 'آیتم شما با موفقیت به روز شد!',
                     })
 
