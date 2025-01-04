@@ -91,16 +91,8 @@ span.copiable {
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    border: 2px solid var(--scroll-bg);
-    background-color: var(--scorll-fg);
-
-    &:hover {
-        background-color: var(--scorll-hover);
-    }
-
-    &:active {
-        background-color: var(--scorll-active);
-    }
+    border: 2px solid var(--sixty-percent);
+    background-color: var(--thirty-percent);
 }
 
 ::selection {
