@@ -91,6 +91,14 @@ export default () => {
                 subject: 'خطا!',
             })
 
+        if (state.expires <= 0)
+            return addAlert({
+                type: 'error',
+                timeout: 5,
+                subject: 'خطا!',
+                content: 'محلت تایید کد به اتمام رسید، کد جدید دریافت کنید',
+            })
+
         setState({ loading: true })
 
         httpx({
