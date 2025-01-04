@@ -699,7 +699,7 @@ const Item: Component<ItemProps> = P => {
                 if (!ref) return
 
                 if (!show) {
-                    ref.style.height = '3rem'
+                    ref.style.height = '3.5rem'
                 } else {
                     ref.style.height = `${ref.scrollHeight}px`
                 }
@@ -767,13 +767,13 @@ const Item: Component<ItemProps> = P => {
                     }}
                     ref={e => (ref = e)}
                 >
-                    <div class='items-dropdown title_smaller'>
+                    <div class='items-dropdown description'>
                         <div class='holder'>اطلاعات بیشتر</div>
                         <ArrowdownIcon />
                     </div>
                     <div class='item-rows-wrapper'>
                         <div class='item-row'>
-                            <div class='item-info created description'>
+                            <div class='item-info  description'>
                                 <div class='holder'>
                                     <CalendarIcon />
                                     ثبت
@@ -799,7 +799,16 @@ const Item: Component<ItemProps> = P => {
                                     </span>
                                 </div>
                             </div>
-                            <div class='item-info updated description'>
+                            <div class='item-info  description'>
+                                <div class='holder'>
+                                    <PersonIcon />
+                                    ثبت توسط
+                                </div>
+                                <div class='data'>{P.whoCreated}</div>
+                            </div>
+                        </div>
+                        <div class='item-row'>
+                            <div class='item-info  description'>
                                 <div class='holder'>
                                     <Calendar2Icon />
                                     بروزرسانی
@@ -831,16 +840,7 @@ const Item: Component<ItemProps> = P => {
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class='item-row'>
-                            <div class='item-info created description'>
-                                <div class='holder'>
-                                    <PersonIcon />
-                                    ثبت توسط
-                                </div>
-                                <div class='data'>{P.whoCreated}</div>
-                            </div>
-                            <div class='item-info updated description'>
+                            <div class='item-info  description'>
                                 <div class='holder'>
                                     <UpdatePersonIcon />
                                     بروز توسط
