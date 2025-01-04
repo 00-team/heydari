@@ -586,7 +586,7 @@ const Popup: Component<PopupProps> = P => {
                     </div>
 
                     <button
-                        class='popup-cta title_small'
+                        class='popup-cta title_smaller'
                         type='submit'
                         classList={{ disable: !changed() }}
                     >
