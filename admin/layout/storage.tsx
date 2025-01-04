@@ -22,6 +22,7 @@ import {
     createEffect,
     createMemo,
     createSignal,
+    For,
     on,
     onCleanup,
     onMount,
@@ -65,6 +66,8 @@ const default_item: MaterialModel = {
 }
 
 const Storage = () => {
+    let wrapperRef: HTMLElement
+
     const [state, setState] = createStore<State>({
         show: false,
         type: 'add',
@@ -153,7 +156,11 @@ const Storage = () => {
     })
 
     return (
-        <div class='storage-container' classList={{ loading: state.loading }}>
+        <div
+            class='storage-container'
+            classList={{ loading: state.loading }}
+            ref={e => (wrapperRef = e)}
+        >
             <Show when={!state.loading} fallback={<LoadingItems />}>
                 <div class='storage-wrapper title_smaller'>
                     <div class='search-wrapper'>
@@ -178,23 +185,31 @@ const Storage = () => {
                         <Show when={state.materials.length == 0}>
                             <div class='empty-storage'>انبار خالی است!</div>
                         </Show>
-                        {materials().map(m => (
-                            <Item
-                                M={m}
-                                onClick={() => {
-                                    setState(
-                                        produce(s => {
-                                            s.show = true
-                                            s.activeItem = { ...m }
-                                            s.type = 'edit'
+                        <For each={materials()}>
+                            {m => (
+                                <Item
+                                    M={m}
+                                    onClick={() => {
+                                        setState(
+                                            produce(s => {
+                                                s.show = true
+                                                s.activeItem = { ...m }
+                                                s.type = 'edit'
+                                            })
+                                        )
+
+                                        // console.log(wrapperRef)
+                                        scrollTo({
+                                            top: wrapperRef.offsetTop,
+                                            behavior: 'smooth',
                                         })
-                                    )
-                                }}
-                                onDel={() => material_delete(m.id)}
-                                whoCreated={who(m.created_by)}
-                                whoUpdated={who(m.updated_by)}
-                            />
-                        ))}
+                                    }}
+                                    onDel={() => material_delete(m.id)}
+                                    whoCreated={who(m.created_by)}
+                                    whoUpdated={who(m.updated_by)}
+                                />
+                            )}
+                        </For>
                     </div>
                 </div>
             </Show>
