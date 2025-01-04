@@ -64,7 +64,7 @@ export default () => {
         let activeIndex = pathname[adminIndex + 1]
 
         let activeLink = links.findIndex(
-            link => link.link.split('/').pop() === activeIndex
+            link => link.link.split('/').filter(str => str)[0] === activeIndex
         )
 
         activeLink >= 0 && setState({ active: activeLink })
