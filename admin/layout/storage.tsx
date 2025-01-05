@@ -13,7 +13,7 @@ import {
     PlusIcon,
     SearchIcon,
     UpdatePersonIcon,
-    UploadIcon
+    UploadIcon,
 } from 'icons'
 import { MaterialModel, UserModel } from 'models'
 import { httpx } from 'shared'
@@ -26,7 +26,7 @@ import {
     on,
     onCleanup,
     onMount,
-    Show
+    Show,
 } from 'solid-js'
 import { createStore, produce, SetStoreFunction } from 'solid-js/store'
 import { Perms, self } from 'store'
@@ -372,7 +372,7 @@ const Popup: Component<PopupProps> = P => {
 
         if (P.state.type === 'edit') {
             let id = P.state.activeItem.id
-            let action = state.action === 'add' ? 'اضافه' : 'فروش'
+            let action = state.action === 'add' ? 'تولید' : 'فروش'
 
             if (!state.imgUrl && !state.imgFile)
                 return addAlert({
@@ -382,27 +382,50 @@ const Popup: Component<PopupProps> = P => {
                     subject: 'خطا!',
                 })
 
-            httpx({
-                url: `/api/admin/materials/${id}/`,
-                method: 'PATCH',
-                json: {
-                    count: return_newCount(),
-                    name: state.name,
-                    detail: '',
-                },
-                onLoad(x) {
-                    if (x.status != 200) return
+            if (state.newCount > 0) {
+                httpx({
+                    url: `/api/admin/materials/${id}/count/`,
+                    method: 'PATCH',
+                    json: {
+                        count: return_newCount(),
+                    },
+                    onLoad(x) {
+                        if (x.status != 200) return
 
-                    addAlert({
-                        timeout: 5,
-                        type: 'success',
-                        subject: ` ${action} موفق! `,
-                        content: 'آیتم شما با موفقیت به روز شد!',
-                    })
+                        addAlert({
+                            timeout: 5,
+                            type: 'success',
+                            subject: ` ${action} موفق! `,
+                            content: 'آیتم شما با موفقیت به روز شد!',
+                        })
 
-                    set_material(x.response)
-                },
-            })
+                        set_material(x.response)
+                    },
+                })
+            }
+
+            if (P.state.activeItem.name !== state.name) {
+                httpx({
+                    url: `/api/admin/materials/${id}/info/`,
+                    method: 'PATCH',
+                    json: {
+                        name: state.name,
+                        detail: '',
+                    },
+                    onLoad(x) {
+                        if (x.status != 200) return
+
+                        addAlert({
+                            timeout: 5,
+                            type: 'success',
+                            subject: ` بروزرسانی موفق! `,
+                            content: 'اطلاعات آیتم شما با موفقیت به روز شد!',
+                        })
+
+                        set_material(x.response)
+                    },
+                })
+            }
 
             if (state.imgFile) {
                 let data = new FormData()
@@ -458,7 +481,12 @@ const Popup: Component<PopupProps> = P => {
                 </button>
 
                 <div class='data-wrapper'>
-                    <div class='img-container'>
+                    <div
+                        class='img-container'
+                        classList={{
+                            disable: !self.perms.check(Perms.C_MATERIAL_INFO),
+                        }}
+                    >
                         <Show
                             when={state.imgUrl || state.imgFile}
                             fallback={
@@ -532,12 +560,18 @@ const Popup: Component<PopupProps> = P => {
                             type='text'
                             class='name-inp'
                             placeholder='اسم آیتم...'
+                            disabled={!self.perms.check(Perms.C_MATERIAL_INFO)}
                             value={state.name}
                             oninput={e => setState({ name: e.target.value })}
                         />
                     </div>
 
-                    <div class='counter-update'>
+                    <div
+                        class='counter-update'
+                        classList={{
+                            disable: self.perms.check(Perms.C_MATERIAL_COUNT),
+                        }}
+                    >
                         <div class='main-inp'>
                             <button
                                 type='button'
@@ -552,15 +586,21 @@ const Popup: Component<PopupProps> = P => {
                             >
                                 <PlusIcon />
                             </button>
+                            <div
+                                class='input-holder description'
+                                classList={{ show: state.newCount <= 0 }}
+                            >
+                                تعداد را وارد کنید...
+                            </div>
                             <input
                                 type='number'
                                 inputMode='numeric'
-                                min={0}
+                                min={1}
                                 maxLength={20}
                                 value={
-                                    state.newCount > 0 ? null : state.newCount
+                                    state.newCount > 0 ? state.newCount : null
                                 }
-                                placeholder={'تعداد...'}
+                                dir={'ltr'}
                                 oninput={e => {
                                     if (e.target.value.length >= 10)
                                         return e.preventDefault()
@@ -569,7 +609,14 @@ const Popup: Component<PopupProps> = P => {
                                         e.target.valueAsNumber
                                     )
 
-                                    setState({ newCount: value || 0 })
+                                    if (value === 0)
+                                        return (e.target.value = null)
+
+                                    if (isNaN(value)) {
+                                        setState({ newCount: 0 })
+                                    } else {
+                                        setState({ newCount: value })
+                                    }
                                 }}
                             />
                             <button
