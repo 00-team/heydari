@@ -17,6 +17,9 @@
         flex-direction: column;
         gap: 3rem;
     }
+    @media screen and (max-width: 375px) {
+        padding: 2rem 1rem;
+    }
 
     .nav-logo-container {
         width: 70px;
