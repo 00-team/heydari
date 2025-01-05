@@ -1,26 +1,38 @@
 export type Perm = [number, number]
+
+var _perm_count_a = 0
+var _perm_count_b = 0
+const auto = () => {
+    let perm: Perm = [_perm_count_a++, _perm_count_b]
+    if (_perm_count_a > 7) {
+        _perm_count_a = 0
+        _perm_count_b++
+    }
+    return perm
+}
 export class Perms {
-    static MASTER: Perm = [0, 0]
+    static MASTER: Perm = auto()
 
-    static V_USER: Perm = [0, 1]
-    static A_USER: Perm = [0, 2]
-    static C_USER: Perm = [0, 3]
-    static D_USER: Perm = [0, 4]
+    static V_USER: Perm = auto()
+    static A_USER: Perm = auto()
+    static C_USER: Perm = auto()
+    static D_USER: Perm = auto()
 
-    static V_PRODUCT: Perm = [0, 5]
-    static A_PRODUCT: Perm = [0, 6]
-    static C_PRODUCT: Perm = [0, 7]
-    static D_PRODUCT: Perm = [1, 0]
+    static V_PRODUCT: Perm = auto()
+    static A_PRODUCT: Perm = auto()
+    static C_PRODUCT: Perm = auto()
+    static D_PRODUCT: Perm = auto()
 
-    static V_PRODUCT_TAG: Perm = [1, 1]
-    static A_PRODUCT_TAG: Perm = [1, 2]
-    static C_PRODUCT_TAG: Perm = [1, 3]
-    static D_PRODUCT_TAG: Perm = [1, 4]
+    static V_PRODUCT_TAG: Perm = auto()
+    static A_PRODUCT_TAG: Perm = auto()
+    static C_PRODUCT_TAG: Perm = auto()
+    static D_PRODUCT_TAG: Perm = auto()
 
-    static V_MATERIAL: Perm = [1, 5]
-    static A_MATERIAL: Perm = [1, 6]
-    static C_MATERIAL: Perm = [1, 7]
-    static D_MATERIAL: Perm = [2, 0]
+    static V_MATERIAL: Perm = auto()
+    static A_MATERIAL: Perm = auto()
+    static C_MATERIAL_INFO: Perm = auto()
+    static C_MATERIAL_COUNT: Perm = auto()
+    static D_MATERIAL: Perm = auto()
 
     #perms: number[]
     constructor(perms: number[]) {
@@ -76,6 +88,9 @@ export class Perms {
         return this.#perms
     }
 }
+delete globalThis._perm_count_a
+delete globalThis._perm_count_b
+delete globalThis.auto
 
 export type PermDisplay = { perm: Perm; name: string }
 export const PERMS_DISPLAY: PermDisplay[] = [
@@ -98,6 +113,7 @@ export const PERMS_DISPLAY: PermDisplay[] = [
 
     { perm: Perms.V_MATERIAL, name: 'نمایش انبار' },
     { perm: Perms.A_MATERIAL, name: 'اضافه به انبار' },
-    { perm: Perms.C_MATERIAL, name: 'تغییر کالای انبار' },
+    { perm: Perms.C_MATERIAL_INFO, name: 'تغییر اطلاعات کالای انبار' },
+    { perm: Perms.C_MATERIAL_COUNT, name: 'تغییر تعداد کالای انبار' },
     { perm: Perms.D_MATERIAL, name: 'حذف از انبار' },
 ]
