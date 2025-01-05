@@ -22,10 +22,10 @@ use utoipa::{OpenApi, ToSchema};
 #[derive(OpenApi)]
 #[openapi(
     tags((name = "admin::material")),
-    paths(list, add, update, delete, photo_set, photo_del),
+    paths(list, add, update_info, update_count, delete, photo_set, photo_del),
     components(schemas(
-        Material, MaterialAddBody, MaterialUpdateBody, MaterialPhoto,
-        MaterialList
+        Material, MaterialAddBody, MaterialUpdateInfoBody, MaterialPhoto,
+        MaterialList, MaterialUpdateCountBody
     )),
     servers((url = "/materials")),
     modifiers(&UpdatePaths)
@@ -130,29 +130,28 @@ async fn add(
 }
 
 #[derive(Deserialize, ToSchema)]
-struct MaterialUpdateBody {
+struct MaterialUpdateInfoBody {
     name: String,
     detail: String,
-    count: i64,
 }
 
 #[utoipa::path(
     patch,
     params(("mid" = i64, Path,)),
-    request_body = MaterialUpdateBody,
+    request_body = MaterialUpdateInfoBody,
     responses((status = 200, body = Material))
 )]
-/// Update
-#[patch("/{mid}/")]
-async fn update(
-    admin: Admin, mut material: Material, body: Json<MaterialUpdateBody>,
+/// Update Info
+#[patch("/{mid}/info/")]
+async fn update_info(
+    admin: Admin, mut material: Material, body: Json<MaterialUpdateInfoBody>,
     state: Data<AppState>,
 ) -> Response<Material> {
-    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL])?;
+    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL_INFO])?;
 
     material.name = body.name.clone();
     material.detail = body.detail.clone();
-    material.count = body.count;
+    // material.count = body.count;
     material.updated_at = utils::now();
     material.updated_by = Some(admin.user.id);
 
@@ -163,12 +162,50 @@ async fn update(
         "update materials set
         name = ?,
         detail = ?,
-        count = ?,
         updated_at = ?,
         updated_by = ?
         where id = ?",
         material.name,
         material.detail,
+        material.updated_at,
+        material.updated_by,
+        material.id
+    }
+    .execute(&state.sql)
+    .await?;
+
+    Ok(Json(material))
+}
+
+#[derive(Deserialize, ToSchema)]
+struct MaterialUpdateCountBody {
+    count: i64,
+}
+
+#[utoipa::path(
+    patch,
+    params(("mid" = i64, Path,)),
+    request_body = MaterialUpdateCountBody,
+    responses((status = 200, body = Material))
+)]
+/// Update Count
+#[patch("/{mid}/count/")]
+async fn update_count(
+    admin: Admin, mut material: Material, body: Json<MaterialUpdateCountBody>,
+    state: Data<AppState>,
+) -> Response<Material> {
+    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL_COUNT])?;
+
+    material.count = body.count;
+    material.updated_at = utils::now();
+    material.updated_by = Some(admin.user.id);
+
+    sqlx::query! {
+        "update materials set
+        count = ?,
+        updated_at = ?,
+        updated_by = ?
+        where id = ?",
         material.count,
         material.updated_at,
         material.updated_by,
@@ -225,7 +262,7 @@ async fn photo_set(
     admin: Admin, mut material: Material, form: MultipartForm<MaterialPhoto>,
     state: Data<AppState>,
 ) -> Response<Material> {
-    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL])?;
+    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL_INFO])?;
 
     let salt = if let Some(s) = &material.photo {
         s.clone()
@@ -259,7 +296,7 @@ async fn photo_set(
 async fn photo_del(
     admin: Admin, mut material: Material, state: Data<AppState>,
 ) -> Response<Material> {
-    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL])?;
+    admin.perm_check_many(&[perms::V_MATERIAL, perms::C_MATERIAL_INFO])?;
 
     if let Some(p) = material.photo {
         utils::remove_record(&format!("mp-{}-{p}", material.id));
@@ -281,7 +318,8 @@ pub fn router() -> Scope {
     Scope::new("/materials")
         .service(list)
         .service(add)
-        .service(update)
+        .service(update_info)
+        .service(update_count)
         .service(delete)
         .service(photo_set)
         .service(photo_del)
