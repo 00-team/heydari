@@ -589,18 +589,18 @@ const Popup: Component<PopupProps> = P => {
                             classList={{ sold: state.action === 'sold' }}
                         >
                             <button
-                                class='action added title_smaller'
+                                class='action added description'
                                 onclick={() => setState({ action: 'add' })}
                                 type='button'
                             >
-                                اضافه
+                                تولید (+)
                             </button>
                             <button
-                                class='action sold title_smaller'
+                                class='action sold description'
                                 onclick={() => setState({ action: 'sold' })}
                                 type='button'
                             >
-                                فروش
+                                فروش (-)
                             </button>
                         </div>
                     </div>
