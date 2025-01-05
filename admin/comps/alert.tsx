@@ -91,9 +91,9 @@ const Alert: Component<{ a: AlertModel; i: number }> = P => {
             onclick={() => delAlert(P.i)}
         >
             <div class='head title'>
-                {ALERT_ICON[P.a.type]()}
-                <span>{P.a.subject}</span>
                 <div></div>
+                <span>{P.a.subject}</span>
+                {ALERT_ICON[P.a.type]()}
             </div>
             <Show when={P.a.content}>
                 <div class='body title_smaller'>
