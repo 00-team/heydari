@@ -13,7 +13,7 @@ import {
     PlusIcon,
     SearchIcon,
     UpdatePersonIcon,
-    UploadIcon,
+    UploadIcon
 } from 'icons'
 import { MaterialModel, UserModel } from 'models'
 import { httpx } from 'shared'
@@ -26,7 +26,7 @@ import {
     on,
     onCleanup,
     onMount,
-    Show,
+    Show
 } from 'solid-js'
 import { createStore, produce, SetStoreFunction } from 'solid-js/store'
 import { Perms, self } from 'store'
@@ -557,7 +557,9 @@ const Popup: Component<PopupProps> = P => {
                                 inputMode='numeric'
                                 min={0}
                                 maxLength={20}
-                                value={state.newCount}
+                                value={
+                                    state.newCount > 0 ? null : state.newCount
+                                }
                                 placeholder={'تعداد...'}
                                 oninput={e => {
                                     if (e.target.value.length >= 10)
@@ -589,18 +591,18 @@ const Popup: Component<PopupProps> = P => {
                             classList={{ sold: state.action === 'sold' }}
                         >
                             <button
-                                class='action added title_smaller'
+                                class='action added description'
                                 onclick={() => setState({ action: 'add' })}
                                 type='button'
                             >
-                                اضافه
+                                تولید (+)
                             </button>
                             <button
-                                class='action sold title_smaller'
+                                class='action sold description'
                                 onclick={() => setState({ action: 'sold' })}
                                 type='button'
                             >
-                                فروش
+                                فروش (-)
                             </button>
                         </div>
                     </div>
