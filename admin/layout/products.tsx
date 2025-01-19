@@ -463,7 +463,7 @@ const Product: Component<ProductProps> = P => {
                     </Show>
                     <button
                         class='styled icon'
-                        classList={{ active: state.edit }}
+                        classList={{ rotate: state.edit }}
                         onClick={() => setState(s => ({ edit: !s.edit }))}
                     >
                         <Show when={state.edit} fallback={<ChevronUpIcon />}>
