@@ -63,7 +63,8 @@
 
         .product {
             border: 2px solid var(--ca);
-            background-color: var(--cd);
+            background-color: var(--sixty-percent);
+
             padding: 0.6rem 1rem;
             display: flex;
             flex-direction: column;
@@ -134,6 +135,12 @@
                 gap: 0.5rem;
                 row-gap: 1rem;
 
+                input.styled,
+                textarea {
+                    background-color: white;
+                    color: black;
+                }
+
                 .thumbnail {
                     aspect-ratio: 16/9;
                     max-height: 250px;
@@ -199,7 +206,7 @@
                             border-collapse: collapse;
 
                             thead {
-                                background-color: var(--cg);
+                                background-color: white;
 
                                 tr {
                                     th {
