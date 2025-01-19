@@ -573,7 +573,7 @@ const Popup: Component<PopupProps> = P => {
                         }}
                     >
                         <div class='main-inp'>
-                            <button
+                            {/* <button
                                 type='button'
                                 class='icon plus'
                                 onclick={() =>
@@ -585,7 +585,7 @@ const Popup: Component<PopupProps> = P => {
                                 }
                             >
                                 <PlusIcon />
-                            </button>
+                            </button> */}
                             <div
                                 class='input-holder description'
                                 classList={{ show: state.newCount <= 0 }}
@@ -619,7 +619,7 @@ const Popup: Component<PopupProps> = P => {
                                     }
                                 }}
                             />
-                            <button
+                            {/* <button
                                 type='button'
                                 class='icon minus'
                                 onclick={() =>
@@ -631,7 +631,7 @@ const Popup: Component<PopupProps> = P => {
                                 }
                             >
                                 <MinusIcon />
-                            </button>
+                            </button> */}
                         </div>
                         <div
                             class='counter-action'
