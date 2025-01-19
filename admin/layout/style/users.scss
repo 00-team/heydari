@@ -63,8 +63,9 @@
 
         .user {
             border: 2px solid var(--ca);
-            background-color: var(--cd);
-            color: white;
+
+            background-color: var(--sixty-percent);
+
             padding: 0.6rem 1rem;
             display: flex;
             flex-direction: column;
@@ -139,6 +140,18 @@
                     &.disabled {
                         opacity: 0.7;
                     }
+
+                    .perm {
+                        display: flex;
+                        flex-direction: row-reverse;
+
+                        gap: 1rem;
+                    }
+                }
+
+                input.styled {
+                    background-color: white;
+                    color: black;
                 }
 
                 .image {
