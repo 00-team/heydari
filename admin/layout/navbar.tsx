@@ -116,7 +116,7 @@ export default () => {
                             show: true,
                             type: 'error',
                             title: 'خروج از حساب',
-                            content: 'آیا از خروج حساب مطمعنید؟',
+                            content: "آیا از خروج از حساب مطمئن هستید؟",
                             Icon: TrashIcon,
                             onSubmit: logout,
                         })
