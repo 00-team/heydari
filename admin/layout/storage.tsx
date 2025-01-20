@@ -510,7 +510,8 @@ const Popup: Component<PopupProps> = P => {
                                             show: true,
                                             type: 'error',
                                             title: 'حذف عکس',
-                                            content: 'از حذف عکس مطمعنید؟؟',
+                                            content:
+                                                'آیا از حذف عکس مطمئن هستید؟؟',
                                             Icon: () => <DeleteIcon />,
                                             onSubmit: () =>
                                                 setState(
@@ -933,7 +934,7 @@ const Item: Component<ItemProps> = P => {
                             title: 'حذف آیتم',
                             type: 'error',
                             Icon: () => <DeleteIcon />,
-                            content: 'از حذف آیتم در انبار مطمعنید؟',
+                            content: 'آیا از حذف آیتم در انبار مطمئن هستید؟',
                             onSubmit: () => P.onDel(),
                         })
                     }}
