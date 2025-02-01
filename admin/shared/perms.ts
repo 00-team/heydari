@@ -1,12 +1,13 @@
+/* bit, byte */
 export type Perm = [number, number]
 
-var _perm_count_a = 0
-var _perm_count_b = 0
+var _perm_count_bit = 0
+var _perm_count_byte = 0
 const auto = () => {
-    let perm: Perm = [_perm_count_a++, _perm_count_b]
-    if (_perm_count_a > 7) {
-        _perm_count_a = 0
-        _perm_count_b++
+    let perm: Perm = [_perm_count_bit++, _perm_count_byte]
+    if (_perm_count_bit > 7) {
+        _perm_count_bit = 0
+        _perm_count_byte++
     }
     return perm
 }
@@ -63,7 +64,7 @@ export class Perms {
         return true
     }
 
-    get([byte, bit]: Perm): boolean {
+    get([bit, byte]: Perm): boolean {
         if (this.#perms.length <= byte) {
             throw new Error('invalid byte')
         }
@@ -72,7 +73,7 @@ export class Perms {
         return (n & f) == f
     }
 
-    set([byte, bit]: Perm, value: boolean) {
+    set([bit, byte]: Perm, value: boolean) {
         if (this.#perms.length <= byte) {
             throw new Error('invalid byte')
         }
@@ -88,8 +89,8 @@ export class Perms {
         return this.#perms
     }
 }
-delete globalThis._perm_count_a
-delete globalThis._perm_count_b
+delete globalThis._perm_count_bit
+delete globalThis._perm_count_byte
 delete globalThis.auto
 
 export type PermDisplay = { perm: Perm; name: string }
