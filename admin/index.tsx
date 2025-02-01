@@ -48,7 +48,14 @@ const Root = () => {
                     <Show when={self.perms.check(Perms.V_MATERIAL)}>
                         <Route path='/storage/' component={Storage} />
                     </Show>
-                    <Route path='*' component={() => <span>Not Found</span>} />
+                    <Route
+                        path='*'
+                        component={() => (
+                            <span id='select-tab'>
+                                بخش مورد نظر خود را انتخاب کنید
+                            </span>
+                        )}
+                    />
                 </Route>
             </Router>
             <Alert />
