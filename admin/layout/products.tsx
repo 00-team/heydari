@@ -16,7 +16,6 @@ import {
     StarIcon,
     TableIcon,
     TrashIcon,
-    WrenchIcon,
 } from 'icons'
 import { ProductModel, ProductTagModel } from 'models'
 import { httpx } from 'shared'
@@ -30,6 +29,7 @@ import {
     Switch,
 } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
+import { setPopup } from 'store/popup'
 import './style/products.scss'
 
 type TagState = {
@@ -470,12 +470,32 @@ const Product: Component<ProductProps> = P => {
                             <ChevronUpIcon />
                         </Show>
                     </button>
-                    <Confact
+                    {/* <Confact
                         icon={TrashIcon}
                         color='var(--red)'
                         onAct={product_delete}
                         timer_ms={1300}
-                    />
+                    /> */}
+                    <button
+                        class='cmp-confact icon delete'
+                        style={{ color: 'vat(--red)' }}
+                        onclick={() => {
+                            setPopup({
+                                show: true,
+                                title: 'حذف محصول؟',
+                                content:
+                                    'آیا از حدف محصول از سایت مطمعن هستید؟',
+                                Icon: () => <TrashIcon />,
+
+                                type: 'error',
+                                onSubmit: () => {
+                                    product_delete()
+                                },
+                            })
+                        }}
+                    >
+                        <TrashIcon />
+                    </button>
                 </div>
             </div>
             <Show when={state.edit}>
