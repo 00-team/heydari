@@ -117,7 +117,8 @@
                     }
 
                     .delete-btn,
-                    .save-btn {
+                    .save-btn,
+                    .reverse {
                         --color: var(--red);
 
                         display: flex;
@@ -135,6 +136,11 @@
                         font-family: Zan, sans-serif;
                         cursor: pointer;
                         padding: 0.25rem;
+
+                        svg {
+                            width: 20px;
+                            height: 20px;
+                        }
                     }
 
                     .delete-btn {
