@@ -437,14 +437,7 @@ const Product: Component<ProductProps> = P => {
                             color='var(--yellow)'
                         />
                     </Show>
-                    <Show when={state.edit && changed()}>
-                        <Confact
-                            icon={SaveIcon}
-                            timer_ms={1200}
-                            onAct={product_update}
-                            color='var(--green)'
-                        />
-                    </Show>
+
                     <button
                         class='styled icon'
                         onClick={() => open('/products/' + P.product.slug)}
@@ -470,6 +463,33 @@ const Product: Component<ProductProps> = P => {
                             <ChevronUpIcon />
                         </Show>
                     </button>
+                    <Show when={state.edit && changed()}>
+                        {/* <Confact
+                            icon={SaveIcon}
+                            timer_ms={1200}
+                            onAct={product_update}
+                            color='var(--green)'
+                        /> */}
+                        <button
+                            class='save-btn'
+                            onclick={() => {
+                                setPopup({
+                                    show: true,
+                                    title: 'حذف محصول؟',
+                                    content:
+                                        'آیا از حدف محصول از سایت مطمعن هستید؟',
+                                    Icon: () => <SaveIcon />,
+
+                                    type: 'error',
+                                    onSubmit: () => {
+                                        product_update()
+                                    },
+                                })
+                            }}
+                        >
+                            <SaveIcon />
+                        </button>
+                    </Show>
                     {/* <Confact
                         icon={TrashIcon}
                         color='var(--red)'
@@ -477,8 +497,7 @@ const Product: Component<ProductProps> = P => {
                         timer_ms={1300}
                     /> */}
                     <button
-                        class='cmp-confact icon delete'
-                        style={{ color: 'vat(--red)' }}
+                        class='delete-btn'
                         onclick={() => {
                             setPopup({
                                 show: true,

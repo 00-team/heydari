@@ -115,6 +115,36 @@
                     svg {
                         transition: transform 0.3s ease;
                     }
+
+                    .delete-btn,
+                    .save-btn {
+                        --color: var(--red);
+
+                        background-color: var(--cd);
+                        color: var(--color);
+                        border: 2px;
+                        border-color: var(--color);
+                        border-style: solid;
+                        border-radius: var(--radius);
+                        font-size: 18px;
+                        font-family: Zan, sans-serif;
+                        cursor: pointer;
+                        padding: 0.25rem 2rem;
+                        transition: 0.22s ease-in-out;
+                        transition-property: border-color, background-color,
+                            color;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .delete-btn {
+                        --color: var(--red);
+                    }
+                    .save-btn {
+                        --color: var(--green);
+                        color: black;
+                    }
                 }
 
                 .info {
