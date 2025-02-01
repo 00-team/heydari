@@ -429,15 +429,6 @@ const Product: Component<ProductProps> = P => {
                     <span>{P.product.name}</span>
                 </div>
                 <div class='product-actions'>
-                    <Show when={state.edit && changed()}>
-                        <Confact
-                            icon={RotateCcwIcon}
-                            timer_ms={700}
-                            onAct={reset}
-                            color='var(--yellow)'
-                        />
-                    </Show>
-
                     <button
                         class='styled icon'
                         onClick={() => open('/products/' + P.product.slug)}
@@ -464,23 +455,38 @@ const Product: Component<ProductProps> = P => {
                         </Show>
                     </button>
                     <Show when={state.edit && changed()}>
-                        {/* <Confact
-                            icon={SaveIcon}
-                            timer_ms={1200}
-                            onAct={product_update}
-                            color='var(--green)'
-                        /> */}
+                        <button
+                            class='reverse'
+                            onclick={() => {
+                                setPopup({
+                                    show: true,
+                                    title: 'برگرداندن محصول؟',
+                                    content:
+                                        'تغییرات شما ذخیره نخواهند شد، ادامه میدهید؟',
+                                    Icon: () => <RotateCcwIcon />,
+
+                                    type: 'warning',
+                                    onSubmit: () => {
+                                        reset()
+                                    },
+                                })
+                            }}
+                        >
+                            <RotateCcwIcon />
+                        </button>
+                    </Show>
+                    <Show when={state.edit && changed()}>
                         <button
                             class='save-btn'
                             onclick={() => {
                                 setPopup({
                                     show: true,
-                                    title: 'حذف محصول؟',
+                                    title: 'ذخیره محصول؟',
                                     content:
-                                        'آیا از حدف محصول از سایت مطمعن هستید؟',
+                                        'آیا از حذخیرهدف محصول از سایت مطمعن هستید؟',
                                     Icon: () => <SaveIcon />,
 
-                                    type: 'error',
+                                    type: 'success',
                                     onSubmit: () => {
                                         product_update()
                                     },
