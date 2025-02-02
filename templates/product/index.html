@@ -7,7 +7,21 @@
     content="مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها." />
 
 
+<meta property="og:title" content="{{ product.name }} | محصولات صنایع تولیدی حیدری">
+<meta property="og:description"
+    content="مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها.">
 <meta property="og:image" content="https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}">
+<meta property="og:url" content="https://heydari-mi.com/products/{{ product.slug }}">
+<meta property="og:type" content="product">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:site_name" content="صنایع تولیدی حیدری">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ product.name }} | محصولات صنایع تولیدی حیدری">
+<meta name="twitter:description"
+    content="مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها.">
+<meta name="twitter:image" content="https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}">
+
 
 {% endblock title %}
 

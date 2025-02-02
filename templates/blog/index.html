@@ -3,9 +3,23 @@
 {% block title %}
 
 <title>
-    {{ blog.title }} - تولید انواع صندلی‌های آموزشی و اداری
+    {{ blog.title }}
 </title>
-<meta name="description" content="{{ blog.detail }} صنایع تولیدی حیدری" />
+<meta name="description" content="{{ blog.detail }}" />
+
+<meta property="og:title" content="{{ blog.title }} - تولید انواع صندلی‌های آموزشی و اداری | صنایع تولیدی حیدری">
+<meta property="og:description" content="{{ blog.detail }} | صنایع تولیدی حیدری">
+<meta property="og:image" content="https://heydari-mi.com/static/image/logo.png">
+<meta property="og:url" content="https://heydari-mi.com/blogs/{{ blog.slug }}/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:site_name" content="صنایع تولیدی حیدری">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ blog.title }} - تولید انواع صندلی‌های آموزشی و اداری | صنایع تولیدی حیدری">
+<meta name="twitter:description" content="{{ blog.detail }} | صنایع تولیدی حیدری">
+<meta name="twitter:image" content="https://heydari-mi.com/static/image/logo.png">
+
 
 {% endblock title %}
 
