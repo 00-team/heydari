@@ -35,26 +35,42 @@
 
 
 <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": "صندلی‌های آموزشی و اداری",
-      "description": "محصولات شامل انواع صندلی‌های آموزشی و اداری با کیفیت برتر و طراحی ارگونومیک برای استفاده در محیط‌های آموزشی و اداری.",
-      "brand": {
-        "@type": "Brand",
-        "name": "صنایع تولیدی حیدری"
-      },
-      "sameAs": [
-        "https://www.instagram.com/heydari.chair/",
-        "https://t.me/heydaricoir",
-        "https://wa.me/+989129429430"
-      ],
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://heydari-mi.com/products"
-      }
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "محصولات صنایع تولیدی حیدری",
+  "description": "لیست محصولات شامل انواع صندلی‌های آموزشی و اداری با کیفیت برتر و طراحی ارگونومیک برای استفاده در محیط‌های آموزشی و اداری.",
+  "url": "https://heydari-mi.com/products",
+  "image": "https://heydari-mi.com/static/image/logo.png",
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "لیست محصولات صنایع تولیدی حیدری",
+    "itemListElement": [
+      {% for product in products %}
+      {
+        "@type": "Product",
+        "name": "{{ product.name }}",
+        "url": "https://heydari-mi.com/products/{{ product.slug }}",
+        "image": "https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}",
+        "description": "{{ product.short_description }}",
+        "brand": {
+          "@type": "Brand",
+          "name": "صنایع تولیدی حیدری"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "{{ product.price }}",
+          "priceCurrency": "IRR",
+          "availability": "https://schema.org/InStock",
+          "url": "https://heydari-mi.com/products/{{ product.slug }}"
+        }
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]
+  }
+}
 </script>
+
 {% endblock header %}
 
 {% block content %}
