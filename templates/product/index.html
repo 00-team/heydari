@@ -34,6 +34,27 @@
 <link rel="alternate" hreflang="fa" href="https://heydari-mi.com/products/{{ product.slug }}/">
 <link rel="alternate" hreflang="x-default" href="https://heydari-mi.com/products/{{ product.slug }}/">
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ product.name }}",
+  "description": "مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها.",
+  "image": "https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}",
+  "url": "https://heydari-mi.com/products/{{ product.slug }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "صنایع تولیدی حیدری"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ product.price }}",
+    "priceCurrency": "IRR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://heydari-mi.com/products/{{ product.slug }}"
+  }
+}
+</script>
 {% endblock header %}
 
 {% block content %}
