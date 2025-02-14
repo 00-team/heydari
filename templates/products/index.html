@@ -36,39 +36,62 @@
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "محصولات صنایع تولیدی حیدری",
-  "description": "لیست محصولات شامل انواع صندلی‌های آموزشی و اداری با کیفیت برتر و طراحی ارگونومیک برای استفاده در محیط‌های آموزشی و اداری.",
-  "url": "https://heydari-mi.com/products",
-  "image": "https://heydari-mi.com/static/image/logo.png",
-  "mainEntity": {
-    "@type": "ItemList",
-    "name": "لیست محصولات صنایع تولیدی حیدری",
-    "itemListElement": [
-      {% for product in products %}
-      {
-        "@type": "Product",
-        "name": "{{ product.name }}",
-        "url": "https://heydari-mi.com/products/{{ product.slug }}",
-        "image": "https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}",
-        "description": " مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها. ",
-        "brand": {
-          "@type": "Brand",
-          "name": "صنایع تولیدی حیدری"
-        },
-        "offers": {
-          "@type": "Offer",
-          "price": "{{ product.price }}",
-          "priceCurrency": "IRR",
-          "availability": "https://schema.org/InStock",
-          "url": "https://heydari-mi.com/products/{{ product.slug }}"
-        }
-      }{% if not loop.last %},{% endif %}
-      {% endfor %}
-    ]
-  }
-}
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "محصولات صنایع تولیدی حیدری",
+    "description": "لیست محصولات شامل انواع صندلی‌های آموزشی و اداری با کیفیت برتر و طراحی ارگونومیک برای استفاده در محیط‌های آموزشی و اداری.",
+    "url": "https://heydari-mi.com/products",
+    "image": "https://heydari-mi.com/static/image/logo.png",
+    "mainEntity": {
+        "@type": "ItemList",
+        "name": "لیست محصولات صنایع تولیدی حیدری",
+        "itemListElement": [
+        {% for product in products %}
+        {
+            "@type": "Product",
+            "name": "{{ product.name }}",
+            "url": "https://heydari-mi.com/products/{{ product.slug }}",
+            "image": "https://heydari-mi.com/record/pp-{{ product.id }}-{{ product.photos[0] }}",
+            "description": " مشخصات و جزئیات محصول {{ product.name }} از صنایع تولیدی حیدری. محصولی با کیفیت و طراحی مدرن، مناسب برای انواع فضاها. ",,
+            "brand": {
+            "@type": "Brand",
+            "name": "صنایع تولیدی حیدری"
+            },
+            "offers": {
+            "@type": "Offer",
+            "price": "{{ product.price }}",
+            "priceCurrency": "IRR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://heydari-mi.com/products/{{ product.slug }}",
+            "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "name": "بازگشت محصول",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": "30",
+                "returnShippingFeesAmount": {
+                "@type": "MonetaryAmount",
+                "value": "0",
+                "currency": "IRR"
+                }
+            },
+            "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                "@type": "MonetaryAmount",
+                "value": "0",
+                "currency": "IRR"
+                },
+                "shippingDestination": {
+                "@type": "DefinedRegion",
+                "addressCountry": "IR"
+                }
+            }
+            }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+        ]
+    }
+    }
 </script>
 
 {% endblock header %}
