@@ -132,6 +132,19 @@ export default () => {
         })
     }
 
+    function add_product() {
+        setState(
+            produce(s => {
+                s.popup = {
+                    type: 'add',
+                    product: null,
+                    show: true,
+                    advanced: false,
+                }
+            })
+        )
+    }
+
     return (
         // <div class='products-fnd' classList={{ loading: state.loading }}>
         //     <Show when={state.loading}>
@@ -198,6 +211,9 @@ export default () => {
                 <button
                     class='add-product title_small'
                     disabled={state.loading}
+                    onclick={() => {
+                        add_product()
+                    }}
                 >
                     اضافه محصول
                 </button>
@@ -456,6 +472,44 @@ const ProductPopup: Component = () => {
         })
     }
 
+    const changed = createMemo(() => {
+        let s = state.popup.product
+
+        if (!s) return
+
+        let index = state.products.findIndex(i => i.slug === s.slug)
+
+        if (index < 0) return
+
+        let p = state.products[index]
+
+        let change =
+            s.slug != p.slug ||
+            s.name != p.name ||
+            s.code != p.code ||
+            s.detail != p.detail ||
+            s.tag_leg != p.tag_leg ||
+            s.tag_bed != p.tag_bed ||
+            s.description != p.description ||
+            s.price != p.price ||
+            s.count != p.count
+
+        if (!change) {
+            if (
+                Object.keys(s.specification).length !=
+                Object.keys(p.specification).length
+            )
+                return true
+
+            for (let [k, v] of Object.entries(s.specification)) {
+                let ov = p.specification[k]
+                if (ov == undefined || ov != v) return true
+            }
+        }
+
+        return change
+    })
+
     // function toggle_star() {
     //     httpx({
     //         url: `/api/admin/products/${P.product.id}/`,
@@ -681,39 +735,61 @@ const ProductPopup: Component = () => {
 
                 <div class='popup-actions'>
                     <div class='ctas'>
-                        <button
-                            class='cta save description'
-                            onclick={() => {
-                                product_update()
-                            }}
-                        >
-                            <SaveIcon />
-                            ذخیره
-                        </button>
                         <Show
-                            when={
-                                state.popup.type === 'edit' &&
-                                self.perms.check(Perms.D_PRODUCT)
+                            when={state.popup.type === 'edit'}
+                            fallback={
+                                <button
+                                    class='cta add description'
+                                    onclick={() => {
+                                        product_update()
+                                    }}
+                                >
+                                    <PlusIcon />
+                                    اضافه
+                                </button>
                             }
                         >
                             <button
-                                class='cta delete description'
+                                class='cta save description'
+                                classList={{ disable: !changed() }}
                                 onclick={() => {
-                                    setPopup({
-                                        show: true,
-                                        Icon: () => <TrashIcon />,
-                                        content: 'این عمل قابل بازگشت نیست!',
-                                        title: 'حذف محصول؟',
-                                        type: 'error',
-                                        onSubmit() {
-                                            product_delete()
-                                        },
-                                    })
+                                    if (!changed()) {
+                                        return addAlert({
+                                            type: 'error',
+                                            timeout: 3,
+                                            subject: 'مطلبی را عوض نکردید!',
+                                            content: '',
+                                        })
+                                    }
+
+                                    product_update()
                                 }}
                             >
-                                <TrashIcon />
-                                حذف
+                                <SaveIcon />
+                                ذخیره
                             </button>
+
+                            <Show when={self.perms.check(Perms.D_PRODUCT)}>
+                                <button
+                                    class='cta delete description'
+                                    onclick={() => {
+                                        setPopup({
+                                            show: true,
+                                            Icon: () => <TrashIcon />,
+                                            content:
+                                                'این عمل قابل بازگشت نیست!',
+                                            title: 'حذف محصول؟',
+                                            type: 'error',
+                                            onSubmit() {
+                                                product_delete()
+                                            },
+                                        })
+                                    }}
+                                >
+                                    <TrashIcon />
+                                    حذف
+                                </button>
+                            </Show>
                         </Show>
                     </div>
                     <div
