@@ -642,3 +642,52 @@ export const ArrowdownIcon = () => (
         <path d='M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z'></path>
     </svg>
 )
+
+export const Chair2Icon = () => (
+    <svg
+        stroke='currentColor'
+        fill='none'
+        stroke-width='2'
+        viewBox='0 0 24 24'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+        height='25'
+        width='25'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <polyline points='3.5 2 6.5 12.5 18 12.5'></polyline>
+        <line x1='9.5' x2='5.5' y1='12.5' y2='20'></line>
+        <line x1='15' x2='18.5' y1='12.5' y2='20'></line>
+        <path d='M2.75 18a13 13 0 0 0 18.5 0'></path>
+    </svg>
+)
+
+export const Table2Icon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 24 24'
+        height='25'
+        width='25'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path fill='none' d='M0 0h24v24H0z'></path>
+        <path d='M22 7.5C22 5.57 17.52 4 12 4S2 5.57 2 7.5c0 1.81 3.95 3.31 9 3.48V15H9.35c-.82 0-1.55.5-1.86 1.26L6 20h2l1.2-3h5.6l1.2 3h2l-1.5-3.74c-.3-.76-1.04-1.26-1.85-1.26H13v-4.02c5.05-.17 9-1.67 9-3.48z'></path>
+    </svg>
+)
+
+export const NoPhotoIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 24 24'
+        height='25'
+        width='25'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path fill='none' d='M0 0h24v24H0z'></path>
+        <path d='M10.94 8.12 7.48 4.66 9 3h6l1.83 2H20c1.1 0 2 .9 2 2v12c0 .05-.01.1-.02.16l-5.1-5.1c.08-.35.12-.7.12-1.06 0-2.76-2.24-5-5-5-.36 0-.71.04-1.06.12zm9.55 15.19L18.17 21H4c-1.1 0-2-.9-2-2V7c0-.59.27-1.12.68-1.49l-2-2L2.1 2.1l19.8 19.8-1.41 1.41zm-6-5.99-1.5-1.5c-.32.1-.64.18-.99.18-1.66 0-3-1.34-3-3 0-.35.08-.67.19-.98l-1.5-1.5A4.74 4.74 0 0 0 7 13c0 2.76 2.24 5 5 5 .91 0 1.76-.25 2.49-.68z'></path>
+    </svg>
+)
