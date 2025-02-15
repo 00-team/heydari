@@ -8,6 +8,7 @@ import {
     ChevronUpIcon,
     CloseIcon,
     ExternalLinkIcon,
+    EyeIcon,
     NoPhotoIcon,
     PlusIcon,
     RotateCcwIcon,
@@ -23,9 +24,11 @@ import {
     Component,
     createEffect,
     createMemo,
+    createSignal,
     For,
     JSX,
     Match,
+    on,
     onCleanup,
     onMount,
     Show,
@@ -341,11 +344,20 @@ const ProductPopup: Component = () => {
                             </div>
                         </aside>
 
-                        <aside class='data-container'></aside>
+                        <aside class='data-container'>
+                            <FloatInput
+                                Icon={<EyeIcon />}
+                                holder='اسم محصول'
+                                value=''
+                                onChange={e => console.log(e)}
+                                class='description'
+                                inpClass='title_smaller'
+                            />
+                        </aside>
                     </div>
                     <div
                         class='advanced'
-                        classList={{ hide: state.popup.advanced }}
+                        classList={{ hide: !state.popup.advanced }}
                     ></div>
                 </div>
 
@@ -408,15 +420,33 @@ interface FloatInputProps {
     onChange(value: string): void
 }
 const FloatInput: Component<FloatInputProps> = P => {
+    const [active, setActive] = createSignal(false)
+
+    createEffect(
+        on(
+            () => P.value,
+            v => {
+                if (v) setActive(true)
+            }
+        )
+    )
+
     return (
-        <div class={`finput-container ${P.class || ''}`}>
+        <div
+            class={`finput-container ${P.class || ''}`}
+            classList={{ active: active() }}
+        >
             <div class='holder'>
-                {P.holder}
                 {P.Icon}
+                {P.holder}
             </div>
             <input
+                onfocus={() => setActive(true)}
+                onblur={() => {
+                    if (!P.value) setActive(false)
+                }}
                 type='text'
-                class='finput'
+                class={`finput ${P.inpClass || ''}`}
                 oninput={e => P.onChange(e.target.value)}
             />
         </div>
