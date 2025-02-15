@@ -732,12 +732,54 @@
                         flex: 1 0 0;
                         display: flex;
                         flex-direction: column;
+
+                        padding-top: 1rem;
                     }
                 }
 
                 .advanced {
                     position: absolute;
                     inset: 0;
+                }
+
+                .finput-container {
+                    display: flex;
+                    flex-direction: column;
+
+                    position: relative;
+                    z-index: 1;
+
+                    &.active {
+                        .holder {
+                            top: 0;
+                            transform: translateY(-100%) scale(0.9);
+                        }
+                    }
+
+                    .holder {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+
+                        transform-origin: right;
+
+                        pointer-events: none;
+
+                        opacity: 0.8;
+
+                        transition: 0.3s ease;
+                    }
+
+                    input {
+                        border: none;
+                        outline: none;
+                        border-bottom: 1px solid;
+                        padding: 0.5em;
+                    }
                 }
             }
 
