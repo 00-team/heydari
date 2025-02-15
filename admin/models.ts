@@ -34,6 +34,8 @@ export type ProductModel = {
     specification: { [key: string]: string }
     price: number
     count: number
+
+    loading: boolean
 }
 
 export type MaterialModel = {
