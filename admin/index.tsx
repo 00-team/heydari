@@ -51,7 +51,7 @@ const Root = () => {
                     <Route
                         path='*'
                         component={() => (
-                            <span id='select-tab'>
+                            <span id='select-tab title_small'>
                                 بخش مورد نظر خود را انتخاب کنید
                             </span>
                         )}
