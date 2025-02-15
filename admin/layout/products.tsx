@@ -275,6 +275,10 @@ export const Loading: Component = () => {
 }
 
 const ProductPopup: Component = () => {
+    const [local, setLocal] = createStore({
+        active: 0,
+    })
+
     let ac = new AbortController()
 
     onMount(() => {
@@ -304,6 +308,10 @@ const ProductPopup: Component = () => {
             })
         )
     }
+
+    createEffect(() => {
+        console.log(state.popup.product?.price)
+    })
 
     return (
         <div
@@ -337,7 +345,27 @@ const ProductPopup: Component = () => {
                     >
                         <aside class='imgs-container'>
                             <div class='imgs-wrapper'>
-                                <div class='active-img'></div>
+                                <div class='active-img'>
+                                    <Show
+                                        when={
+                                            state.popup.product?.photos[
+                                                local.active
+                                            ]
+                                        }
+                                        fallback={<NoPhotoIcon />}
+                                    >
+                                        <img
+                                            src={`/record/pp-${state.popup.product?.id}-${
+                                                state.popup.product.photos[
+                                                    local.active
+                                                ]
+                                            }`}
+                                            loading='lazy'
+                                            decoding='async'
+                                            alt=''
+                                        />
+                                    </Show>
+                                </div>
                                 <div class='other-imgs'>
                                     <label class='add-img' for='popup-add-img'>
                                         <input
@@ -347,10 +375,27 @@ const ProductPopup: Component = () => {
                                         />
                                         <PlusIcon />
                                     </label>
-                                    <div class='other-img'></div>
-                                    <div class='other-img'></div>
-                                    <div class='other-img'></div>
-                                    <div class='other-img'></div>
+                                    <For
+                                        each={state.popup.product?.photos || []}
+                                    >
+                                        {(img, index) => (
+                                            <div
+                                                class='other-img'
+                                                onclick={() => {
+                                                    setLocal({
+                                                        active: index(),
+                                                    })
+                                                }}
+                                            >
+                                                <img
+                                                    src={`/record/pp-${state.popup.product?.id}-${img}`}
+                                                    loading='lazy'
+                                                    decoding='async'
+                                                    alt=''
+                                                />
+                                            </div>
+                                        )}
+                                    </For>
                                 </div>
                             </div>
                         </aside>
@@ -359,8 +404,14 @@ const ProductPopup: Component = () => {
                             <FloatInput
                                 Icon={<EyeIcon />}
                                 holder='اسم محصول'
-                                value=''
-                                onChange={e => console.log(e)}
+                                value={state.popup.product?.name || null}
+                                onChange={e =>
+                                    setState(
+                                        produce(s => {
+                                            s.popup.product.name = e
+                                        })
+                                    )
+                                }
                                 class='description'
                                 inpClass='title_smaller'
                                 inpMode='str'
@@ -369,8 +420,18 @@ const ProductPopup: Component = () => {
                                 <FloatInput
                                     Icon={<PriceIcon />}
                                     holder='قیمت (ریال)'
-                                    value=''
-                                    onChange={e => console.log(e)}
+                                    value={
+                                        state.popup.product?.price.toString() ||
+                                        null
+                                    }
+                                    onChange={e => {
+                                        setState(
+                                            produce(s => {
+                                                s.popup.product.price =
+                                                    parseInt(e) || 0
+                                            })
+                                        )
+                                    }}
                                     class='price description'
                                     inpClass='title_smaller'
                                     inpMode='num'
@@ -378,8 +439,14 @@ const ProductPopup: Component = () => {
                                 <FloatInput
                                     Icon={<CodeIcon />}
                                     holder='کد محصول'
-                                    value=''
-                                    onChange={e => console.log(e)}
+                                    value={state.popup.product?.code || null}
+                                    onChange={e =>
+                                        setState(
+                                            produce(s => {
+                                                s.popup.product.code = e
+                                            })
+                                        )
+                                    }
                                     class='code description'
                                     inpClass='title_smaller'
                                     inpMode='str'
@@ -392,6 +459,15 @@ const ProductPopup: Component = () => {
                                 cols='30'
                                 class='description'
                                 rows='10'
+                                value={state.popup.product?.description || null}
+                                oninput={e =>
+                                    setState(
+                                        produce(s => {
+                                            s.popup.product.description =
+                                                e.target.value
+                                        })
+                                    )
+                                }
                                 placeholder='توضیحات محصول...'
                             ></textarea>
                         </aside>
@@ -469,7 +545,9 @@ const FloatInput: Component<FloatInputProps> = P => {
         on(
             () => P.value,
             v => {
-                if (v) setActive(true)
+                if (v) {
+                    setActive(true)
+                }
             }
         )
     )
@@ -484,6 +562,7 @@ const FloatInput: Component<FloatInputProps> = P => {
                 {P.holder}
             </div>
             <input
+                value={P.value}
                 onfocus={() => setActive(true)}
                 onblur={() => {
                     if (!P.value) setActive(false)
