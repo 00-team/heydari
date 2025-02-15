@@ -905,8 +905,16 @@
                         isolation: isolate;
                         transition: opacity 0.3sease;
 
+                        &.add {
+                            --bg-color: var(--alert-success);
+                        }
                         &.delete {
                             --bg-color: var(--alert-error);
+                        }
+
+                        &.disable {
+                            cursor: not-allowed;
+                            opacity: 0.5;
                         }
                     }
                 }
