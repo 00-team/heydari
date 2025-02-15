@@ -1,34 +1,36 @@
 import { useSearchParams } from '@solidjs/router'
-import { Confact, Select } from 'comps'
+import { LoadingElem, Select } from 'comps'
 import { addAlert } from 'comps/alert'
 import {
     ArmchairIcon,
+    Chair2Icon,
     ChevronDownIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
     ChevronUpIcon,
     ExternalLinkIcon,
+    NoPhotoIcon,
     PlusIcon,
     RotateCcwIcon,
     SaveIcon,
-    SquareCheckBigIcon,
-    SquareIcon,
     StarIcon,
+    Table2Icon,
     TableIcon,
     TrashIcon,
 } from 'icons'
 import { ProductModel, ProductTagModel } from 'models'
-import { httpx } from 'shared'
+import { httpx, Perms } from 'shared'
 import {
     Component,
     createEffect,
     createMemo,
+    For,
     Match,
+    onCleanup,
     onMount,
     Show,
     Switch,
 } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
+import { self } from 'store'
 import { setPopup } from 'store/popup'
 import './style/products.scss'
 
@@ -42,19 +44,33 @@ const [tags, setTags] = createStore<TagState>({
     table: { leg: [], bed: [] },
 })
 
+type popupType = {
+    show: boolean
+    type: 'edit' | 'add'
+    product: ProductModel
+}
+type stateType = {
+    popup: popupType
+
+    products: ProductModel[]
+    page: number
+    loading: boolean
+    best?: true
+}
+const [state, setState] = createStore<stateType>({
+    popup: {
+        show: false,
+        type: 'add',
+        product: null,
+    },
+
+    products: [],
+    page: 0,
+    loading: true,
+})
+
 export default () => {
     const [params, setParams] = useSearchParams()
-    type State = {
-        products: ProductModel[]
-        page: number
-        loading: boolean
-        best?: true
-    }
-    const [state, setState] = createStore<State>({
-        products: [],
-        page: 0,
-        loading: true,
-    })
 
     onMount(() => load_tags(0))
 
@@ -64,9 +80,9 @@ export default () => {
             method: 'GET',
             params: { page },
             onLoad(x) {
-                if (x.status != 200) return setState({ loading: false })
+                if (x.status != 200) return
                 let tags: ProductTagModel[] = x.response
-                if (tags.length == 0) return setState({ loading: false })
+                if (tags.length == 0) return
                 setTags(
                     produce(s => {
                         tags.forEach(t => {
@@ -77,7 +93,6 @@ export default () => {
                 if (tags.length >= 64) {
                     return load_tags(page + 1)
                 }
-                setState({ loading: false })
             },
         })
     }
@@ -92,6 +107,7 @@ export default () => {
             params: { page, best: state.best },
             method: 'GET',
             onLoad(x) {
+                setState({ loading: false })
                 if (x.status != 200) return
                 setState({ products: x.response, page })
             },
@@ -99,65 +115,195 @@ export default () => {
     }
 
     return (
-        <div class='products-fnd' classList={{ loading: state.loading }}>
-            <Show when={state.loading}>
-                <span class='message'>Loading ...</span>
+        // <div class='products-fnd' classList={{ loading: state.loading }}>
+        //     <Show when={state.loading}>
+        //         <span class='message'>Loading ...</span>
+        //     </Show>
+
+        //     <div class='actions'>
+        //         <div class='left'>
+        //             <div class='row'>
+        //                 Best:
+        //                 <button
+        //                     class='styled icon'
+        //                     onClick={() => {
+        //                         setState(s => ({
+        //                             best: s.best ? undefined : true,
+        //                         }))
+        //                         fetch_products(state.page)
+        //                     }}
+        //                 >
+        //                     <Show when={state.best} fallback={<SquareIcon />}>
+        //                         <SquareCheckBigIcon />
+        //                     </Show>
+        //                 </button>
+        //             </div>
+        //         </div>
+        //         <div class='right'>
+        //             <button
+        //                 class='styled icon'
+        //                 disabled={state.page <= 0}
+        //                 onClick={() => fetch_products(state.page - 1)}
+        //             >
+        //                 <ChevronLeftIcon />
+        //             </button>
+        //             <button
+        //                 class='styled icon'
+        //                 disabled={state.products.length < 32}
+        //                 onClick={() => fetch_products(state.page + 1)}
+        //             >
+        //                 <ChevronRightIcon />
+        //             </button>
+        //         </div>
+        //     </div>
+
+        //     <div class='product-list'>
+        //         <AddProduct update={() => fetch_products(0)} />
+        //         {state.products.map((p, i) => (
+        //             <Product
+        //                 product={p}
+        //                 update={p => {
+        //                     if (!p) return fetch_products(state.page)
+
+        //                     setState(
+        //                         produce(s => {
+        //                             s.products[i] = p
+        //                         })
+        //                     )
+        //                 }}
+        //             />
+        //         ))}
+        //     </div>
+        // </div>
+        <div class='products-container'>
+            <Show when={self.perms.check(Perms.A_PRODUCT)}>
+                <button
+                    class='add-product title_small'
+                    disabled={state.loading}
+                >
+                    اضافه محصول
+                </button>
             </Show>
-
-            <div class='actions'>
-                <div class='left'>
-                    <div class='row'>
-                        Best:
-                        <button
-                            class='styled icon'
-                            onClick={() => {
-                                setState(s => ({
-                                    best: s.best ? undefined : true,
-                                }))
-                                fetch_products(state.page)
-                            }}
-                        >
-                            <Show when={state.best} fallback={<SquareIcon />}>
-                                <SquareCheckBigIcon />
-                            </Show>
-                        </button>
-                    </div>
-                </div>
-                <div class='right'>
-                    <button
-                        class='styled icon'
-                        disabled={state.page <= 0}
-                        onClick={() => fetch_products(state.page - 1)}
+            <div class='search-product'></div>
+            <div class='products-wrapper'>
+                <Show when={!state.loading} fallback={<Loading />}>
+                    <Show
+                        when={state.products.length > 0}
+                        fallback={
+                            <div class='empty title'>
+                                محصولی برای نمایش پیدا نشد!
+                            </div>
+                        }
                     >
-                        <ChevronLeftIcon />
-                    </button>
-                    <button
-                        class='styled icon'
-                        disabled={state.products.length < 32}
-                        onClick={() => fetch_products(state.page + 1)}
-                    >
-                        <ChevronRightIcon />
-                    </button>
-                </div>
+                        <For each={state.products}>
+                            {product => <ProductCmp {...product} />}
+                        </For>
+                    </Show>
+                </Show>
             </div>
 
-            <div class='product-list'>
-                <AddProduct update={() => fetch_products(0)} />
-                {state.products.map((p, i) => (
-                    <Product
-                        product={p}
-                        update={p => {
-                            if (!p) return fetch_products(state.page)
+            <ProductPopup />
+        </div>
+    )
+}
 
-                            setState(
-                                produce(s => {
-                                    s.products[i] = p
-                                })
-                            )
-                        }}
+const ProductCmp: Component<ProductModel> = P => {
+    return (
+        <button
+            class='product-container'
+            onclick={() =>
+                setState(
+                    produce(s => {
+                        s.popup = {
+                            show: true,
+                            type: 'edit',
+                            product: JSON.parse(JSON.stringify(P)),
+                        }
+                    })
+                )
+            }
+        >
+            <div class='product-tag description'>S100033</div>
+            <div class='img-container'>
+                <Show
+                    when={P.photos[0]}
+                    fallback={
+                        <div class='no-photo title_small'>
+                            <NoPhotoIcon />
+                            <span>بدون عکس</span>
+                        </div>
+                    }
+                >
+                    <img
+                        src={`/record/pp-${P.id}-${P.photos[0]}`}
+                        loading='lazy'
+                        decoding='async'
                     />
-                ))}
+                </Show>
             </div>
+            <div class='info-container'>
+                <div class='product-name title_smaller'>{P.name}</div>
+                <div class='product-type'>
+                    <Show when={P.kind === 'chair'} fallback={<Table2Icon />}>
+                        <Chair2Icon />
+                    </Show>
+                </div>
+            </div>
+        </button>
+    )
+}
+
+export const Loading: Component = () => {
+    return (
+        <>
+            <LoadingElem class='product-container' />
+            <LoadingElem class='product-container' />
+            <LoadingElem class='product-container' />
+            <LoadingElem class='product-container' />
+        </>
+    )
+}
+
+const ProductPopup: Component = () => {
+    let ac = new AbortController()
+
+    onMount(() => {
+        escHandle()
+
+        onCleanup(() => {
+            ac.abort()
+        })
+    })
+
+    function escHandle() {
+        document.addEventListener(
+            'keydown',
+            e => {
+                if (e.key === 'Escape' && state.popup.show) {
+                    closePopup()
+                }
+            },
+            { signal: ac.signal }
+        )
+    }
+
+    const closePopup = () => {
+        setState(
+            produce(s => {
+                s.popup.show = false
+            })
+        )
+    }
+
+    return (
+        <div
+            class='product-popup'
+            classList={{ show: state.popup.show }}
+            onclick={() => {
+                closePopup()
+            }}
+        >
+            <div class='popup-wrapper' onclick={e => e.stopPropagation()}></div>
         </div>
     )
 }
