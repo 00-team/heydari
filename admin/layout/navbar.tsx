@@ -1,5 +1,6 @@
 import { A, reload } from '@solidjs/router'
 import {
+    Chair2Icon,
     ChairIcon,
     ExitIcon,
     PersonIcon,
@@ -24,7 +25,7 @@ type linkType = {
 
 const links: linkType[] = [
     {
-        icon: <ChairIcon />,
+        icon: <Chair2Icon />,
         link: '/',
         title: 'محصولات',
         perm: Perms.V_PRODUCT,
@@ -116,7 +117,7 @@ export default () => {
                             show: true,
                             type: 'error',
                             title: 'خروج از حساب',
-                            content: "آیا از خروج از حساب مطمئن هستید؟",
+                            content: 'آیا از خروج از حساب مطمئن هستید؟',
                             Icon: TrashIcon,
                             onSubmit: logout,
                         })
