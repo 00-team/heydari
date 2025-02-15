@@ -7,10 +7,12 @@ import {
     ChevronDownIcon,
     ChevronUpIcon,
     CloseIcon,
+    CodeIcon,
     ExternalLinkIcon,
     EyeIcon,
     NoPhotoIcon,
     PlusIcon,
+    PriceIcon,
     RotateCcwIcon,
     SaveIcon,
     StarIcon,
@@ -311,7 +313,16 @@ const ProductPopup: Component = () => {
                 closePopup()
             }}
         >
-            <div class='popup-wrapper' onclick={e => e.stopPropagation()}>
+            <form
+                onsubmit={e => {
+                    e.preventDefault()
+                }}
+                onreset={e => {
+                    e.preventDefault()
+                }}
+                class='popup-wrapper'
+                onclick={e => e.stopPropagation()}
+            >
                 <button
                     class='close icon'
                     type='reset'
@@ -352,7 +363,37 @@ const ProductPopup: Component = () => {
                                 onChange={e => console.log(e)}
                                 class='description'
                                 inpClass='title_smaller'
+                                inpMode='str'
                             />
+                            <div class='inputs'>
+                                <FloatInput
+                                    Icon={<PriceIcon />}
+                                    holder='قیمت (ریال)'
+                                    value=''
+                                    onChange={e => console.log(e)}
+                                    class='price description'
+                                    inpClass='title_smaller'
+                                    inpMode='num'
+                                />
+                                <FloatInput
+                                    Icon={<CodeIcon />}
+                                    holder='کد محصول'
+                                    value=''
+                                    onChange={e => console.log(e)}
+                                    class='code description'
+                                    inpClass='title_smaller'
+                                    inpMode='str'
+                                />
+                            </div>
+
+                            <textarea
+                                name=''
+                                id=''
+                                cols='30'
+                                class='description'
+                                rows='10'
+                                placeholder='توضیحات محصول...'
+                            ></textarea>
                         </aside>
                     </div>
                     <div
@@ -367,12 +408,12 @@ const ProductPopup: Component = () => {
                             <SaveIcon />
                             ذخیره
                         </button>
-                        {/* <Show when={state.popup.type === 'add'}> */}
-                        <button class='cta delete description'>
-                            <TrashIcon />
-                            حذف
-                        </button>
-                        {/* </Show> */}
+                        <Show when={state.popup.type === 'add'}>
+                            <button class='cta delete description'>
+                                <TrashIcon />
+                                حذف
+                            </button>
+                        </Show>
                     </div>
                     <div
                         class='tabs'
@@ -404,7 +445,7 @@ const ProductPopup: Component = () => {
                         </button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }
@@ -418,6 +459,8 @@ interface FloatInputProps {
 
     value: string
     onChange(value: string): void
+
+    inpMode: 'str' | 'num'
 }
 const FloatInput: Component<FloatInputProps> = P => {
     const [active, setActive] = createSignal(false)
@@ -445,7 +488,8 @@ const FloatInput: Component<FloatInputProps> = P => {
                 onblur={() => {
                     if (!P.value) setActive(false)
                 }}
-                type='text'
+                type={P.inpMode === 'num' ? 'number' : 'text'}
+                inputmode={P.inpMode === 'num' ? 'numeric' : 'text'}
                 class={`finput ${P.inpClass || ''}`}
                 oninput={e => P.onChange(e.target.value)}
             />
