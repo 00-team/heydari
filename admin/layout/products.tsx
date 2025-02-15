@@ -24,6 +24,7 @@ import {
     createEffect,
     createMemo,
     For,
+    JSX,
     Match,
     onCleanup,
     onMount,
@@ -221,6 +222,7 @@ const ProductCmp: Component<ProductModel> = P => {
                             show: true,
                             type: 'edit',
                             product: JSON.parse(JSON.stringify(P)),
+                            advanced: false,
                         }
                     })
                 )
@@ -314,8 +316,38 @@ const ProductPopup: Component = () => {
                 >
                     <CloseIcon />
                 </button>
+                <div class='popup-section'>
+                    <div
+                        class='overview'
+                        classList={{ hide: state.popup.advanced }}
+                    >
+                        <aside class='imgs-container'>
+                            <div class='imgs-wrapper'>
+                                <div class='active-img'></div>
+                                <div class='other-imgs'>
+                                    <label class='add-img' for='popup-add-img'>
+                                        <input
+                                            type='file'
+                                            multiple
+                                            id='popup-add-img'
+                                        />
+                                        <PlusIcon />
+                                    </label>
+                                    <div class='other-img'></div>
+                                    <div class='other-img'></div>
+                                    <div class='other-img'></div>
+                                    <div class='other-img'></div>
+                                </div>
+                            </div>
+                        </aside>
 
-                <div class='popup-section'></div>
+                        <aside class='data-container'></aside>
+                    </div>
+                    <div
+                        class='advanced'
+                        classList={{ hide: state.popup.advanced }}
+                    ></div>
+                </div>
 
                 <div class='popup-actions'>
                     <div class='ctas'>
@@ -361,6 +393,32 @@ const ProductPopup: Component = () => {
                     </div>
                 </div>
             </div>
+        </div>
+    )
+}
+
+interface FloatInputProps {
+    inpClass?: string
+    class?: string
+
+    holder: string
+    Icon: JSX.Element
+
+    value: string
+    onChange(value: string): void
+}
+const FloatInput: Component<FloatInputProps> = P => {
+    return (
+        <div class={`finput-container ${P.class || ''}`}>
+            <div class='holder'>
+                {P.holder}
+                {P.Icon}
+            </div>
+            <input
+                type='text'
+                class='finput'
+                oninput={e => P.onChange(e.target.value)}
+            />
         </div>
     )
 }
