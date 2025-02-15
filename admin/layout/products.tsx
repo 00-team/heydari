@@ -9,7 +9,7 @@ import {
     CloseIcon,
     CodeIcon,
     ExternalLinkIcon,
-    EyeIcon,
+    NameIcon,
     NoPhotoIcon,
     PlusIcon,
     PriceIcon,
@@ -117,8 +117,17 @@ export default () => {
             method: 'GET',
             onLoad(x) {
                 setState({ loading: false })
+
                 if (x.status != 200) return
-                setState({ products: x.response, page })
+
+                const productsWithLoading = x.response.map(
+                    (product: ProductModel) => ({
+                        ...product,
+                        loading: false,
+                    })
+                )
+
+                setState({ products: productsWithLoading, page })
             },
         })
     }
@@ -218,48 +227,60 @@ export default () => {
 
 const ProductCmp: Component<ProductModel> = P => {
     return (
-        <button
-            class='product-container'
-            onclick={() =>
-                setState(
-                    produce(s => {
-                        s.popup = {
-                            show: true,
-                            type: 'edit',
-                            product: JSON.parse(JSON.stringify(P)),
-                            advanced: false,
-                        }
-                    })
-                )
-            }
-        >
-            <div class='product-tag description'>S100033</div>
-            <div class='img-container'>
-                <Show
-                    when={P.photos[0]}
-                    fallback={
-                        <div class='no-photo title_small'>
-                            <NoPhotoIcon />
-                            <span>بدون عکس</span>
-                        </div>
+        <>
+            <Show
+                when={!P.loading}
+                fallback={<LoadingElem class='loading-product' />}
+            >
+                <button
+                    class='product-container'
+                    onclick={() =>
+                        setState(
+                            produce(s => {
+                                s.popup = {
+                                    show: true,
+                                    type: 'edit',
+                                    product: JSON.parse(JSON.stringify(P)),
+                                    advanced: false,
+                                }
+                            })
+                        )
                     }
                 >
-                    <img
-                        src={`/record/pp-${P.id}-${P.photos[0]}`}
-                        loading='lazy'
-                        decoding='async'
-                    />
-                </Show>
-            </div>
-            <div class='info-container'>
-                <div class='product-name title_smaller'>{P.name}</div>
-                <div class='product-type'>
-                    <Show when={P.kind === 'chair'} fallback={<Table2Icon />}>
-                        <Chair2Icon />
+                    <Show when={P.code}>
+                        <div class='product-tag description'>{P.code}</div>
                     </Show>
-                </div>
-            </div>
-        </button>
+                    <div class='img-container'>
+                        <Show
+                            when={P.photos[0]}
+                            fallback={
+                                <div class='no-photo title_small'>
+                                    <NoPhotoIcon />
+                                    <span>بدون عکس</span>
+                                </div>
+                            }
+                        >
+                            <img
+                                src={`/record/pp-${P.id}-${P.photos[0]}`}
+                                loading='lazy'
+                                decoding='async'
+                            />
+                        </Show>
+                    </div>
+                    <div class='info-container'>
+                        <div class='product-name title_smaller'>{P.name}</div>
+                        <div class='product-type'>
+                            <Show
+                                when={P.kind === 'chair'}
+                                fallback={<Table2Icon />}
+                            >
+                                <Chair2Icon />
+                            </Show>
+                        </div>
+                    </div>
+                </button>
+            </Show>
+        </>
     )
 }
 
@@ -309,9 +330,170 @@ const ProductPopup: Component = () => {
         )
     }
 
-    createEffect(() => {
-        console.log(state.popup.product?.price)
-    })
+    function product_delete() {
+        let index = state.products.findIndex(
+            p => p.slug === state.popup.product.slug
+        )
+
+        if (index < 0) return
+
+        setState(
+            produce(s => {
+                s.popup.show = false
+                s.products[index].loading = true
+            })
+        )
+
+        httpx({
+            url: `/api/admin/products/${state.popup.product.id}/`,
+            method: 'DELETE',
+            onLoad(x) {
+                if (x.status != 200)
+                    return addAlert({
+                        type: 'error',
+                        subject: 'حذف ناموفق!',
+                        content: 'حذف محصول با خطا مواجح شد!',
+                        timeout: 3,
+                    })
+
+                addAlert({
+                    type: 'success',
+                    subject: 'حذف موفق!',
+                    content: 'محصول با موفقیت حذف شد',
+                    timeout: 3,
+                })
+                setState(
+                    produce(s => {
+                        s.products.splice(index, 1)
+                    })
+                )
+            },
+        })
+    }
+
+    function product_update() {
+        let p = state.popup.product
+
+        if (!p) return
+
+        let index = state.products.findIndex(s => s.slug === p.slug)
+
+        if (index < 0) return
+
+        setState(
+            produce(s => {
+                s.popup.show = false
+                s.products[index].loading = true
+            })
+        )
+
+        httpx({
+            url: `/api/admin/products/${p.id}/`,
+            method: 'PATCH',
+            json: {
+                slug: p.slug,
+                name: p.name,
+                code: p.code,
+                detail: p.detail,
+                tag_leg: p.tag_leg,
+                tag_bed: p.tag_bed,
+                best: p.best,
+                price: p.price,
+                count: p.count,
+                description: p.description,
+                specification: p.specification,
+            },
+            onLoad(x) {
+                if (x.status != 200)
+                    return addAlert({
+                        type: 'error',
+                        subject: 'ذخیره ناموفق!',
+                        content: 'ذخیره محصول با خطا مواجح شد!',
+                        timeout: 3,
+                    })
+
+                addAlert({
+                    type: 'success',
+                    subject: 'ذخیره موفق!',
+                    content: 'محصول با موفقیت ذخیره شد',
+                    timeout: 3,
+                })
+
+                setState(
+                    produce(s => {
+                        let index = s.products.findIndex(
+                            p => p.slug === s.popup.product.slug
+                        )
+
+                        if (index < 0) return
+
+                        s.products[index] = x.response
+                    })
+                )
+            },
+        })
+    }
+
+    function photo_del(idx: number) {
+        let p = state.popup.product
+        if (!p) return
+
+        setState(
+            produce(s => {
+                let index = s.products.findIndex(i => i.slug === p.slug)
+                if (index < 0) return
+
+                s.products[index].photos.splice(idx, 1).filter(s => s)
+            })
+        )
+
+        httpx({
+            url: `/api/admin/products/${p.id}/photos/${idx}/`,
+            method: 'DELETE',
+            onLoad(x) {
+                if (x.status != 200) return
+            },
+        })
+    }
+
+    // function toggle_star() {
+    //     httpx({
+    //         url: `/api/admin/products/${P.product.id}/`,
+    //         method: 'PATCH',
+    //         json: {
+    //             slug: P.product.slug,
+    //             name: P.product.name,
+    //             code: P.product.code,
+    //             detail: P.product.detail,
+    //             tag_leg: P.product.tag_leg,
+    //             tag_bed: P.product.tag_bed,
+    //             best: !P.product.best,
+    //             price: P.product.price,
+    //             count: P.product.count,
+    //             description: P.product.description,
+    //             specification: P.product.specification,
+    //         },
+    //         onLoad(x) {
+    //             if (x.status != 200) return
+    //             P.update(x.response)
+    //         },
+    //     })
+    // }
+
+    // function reset() {
+    //     setState({
+    //         slug: P.product.slug,
+    //         name: P.product.name,
+    //         code: P.product.code,
+    //         detail: P.product.detail,
+    //         tag_leg: P.product.tag_leg,
+    //         tag_bed: P.product.tag_bed,
+    //         description: P.product.description,
+    //         specification: { ...P.product.specification },
+    //         price: P.product.price,
+    //         count: P.product.count,
+    //     })
+    // }
 
     return (
         <div
@@ -364,6 +546,25 @@ const ProductPopup: Component = () => {
                                             decoding='async'
                                             alt=''
                                         />
+
+                                        <button
+                                            class='delete-image'
+                                            onclick={() => {
+                                                setPopup({
+                                                    show: true,
+                                                    Icon: () => <TrashIcon />,
+                                                    content:
+                                                        'این عمل قابل بازگشت نیست!',
+                                                    title: 'حذف عکس؟',
+                                                    type: 'error',
+                                                    onSubmit() {
+                                                        photo_del(local.active)
+                                                    },
+                                                })
+                                            }}
+                                        >
+                                            <TrashIcon />
+                                        </button>
                                     </Show>
                                 </div>
                                 <div class='other-imgs'>
@@ -402,7 +603,7 @@ const ProductPopup: Component = () => {
 
                         <aside class='data-container'>
                             <FloatInput
-                                Icon={<EyeIcon />}
+                                Icon={<NameIcon />}
                                 holder='اسم محصول'
                                 value={state.popup.product?.name || null}
                                 onChange={e =>
@@ -480,12 +681,36 @@ const ProductPopup: Component = () => {
 
                 <div class='popup-actions'>
                     <div class='ctas'>
-                        <button class='cta save description'>
+                        <button
+                            class='cta save description'
+                            onclick={() => {
+                                product_update()
+                            }}
+                        >
                             <SaveIcon />
                             ذخیره
                         </button>
-                        <Show when={state.popup.type === 'add'}>
-                            <button class='cta delete description'>
+                        <Show
+                            when={
+                                state.popup.type === 'edit' &&
+                                self.perms.check(Perms.D_PRODUCT)
+                            }
+                        >
+                            <button
+                                class='cta delete description'
+                                onclick={() => {
+                                    setPopup({
+                                        show: true,
+                                        Icon: () => <TrashIcon />,
+                                        content: 'این عمل قابل بازگشت نیست!',
+                                        title: 'حذف محصول؟',
+                                        type: 'error',
+                                        onSubmit() {
+                                            product_delete()
+                                        },
+                                    })
+                                }}
+                            >
                                 <TrashIcon />
                                 حذف
                             </button>
