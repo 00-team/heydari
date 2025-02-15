@@ -6,6 +6,7 @@ import {
     Chair2Icon,
     ChevronDownIcon,
     ChevronUpIcon,
+    CloseIcon,
     ExternalLinkIcon,
     NoPhotoIcon,
     PlusIcon,
@@ -48,6 +49,7 @@ type popupType = {
     show: boolean
     type: 'edit' | 'add'
     product: ProductModel
+    advanced: boolean
 }
 type stateType = {
     popup: popupType
@@ -62,6 +64,7 @@ const [state, setState] = createStore<stateType>({
         show: false,
         type: 'add',
         product: null,
+        advanced: false,
     },
 
     products: [],
@@ -303,7 +306,61 @@ const ProductPopup: Component = () => {
                 closePopup()
             }}
         >
-            <div class='popup-wrapper' onclick={e => e.stopPropagation()}></div>
+            <div class='popup-wrapper' onclick={e => e.stopPropagation()}>
+                <button
+                    class='close icon'
+                    type='reset'
+                    onclick={() => closePopup()}
+                >
+                    <CloseIcon />
+                </button>
+
+                <div class='popup-section'></div>
+
+                <div class='popup-actions'>
+                    <div class='ctas'>
+                        <button class='cta save description'>
+                            <SaveIcon />
+                            ذخیره
+                        </button>
+                        {/* <Show when={state.popup.type === 'add'}> */}
+                        <button class='cta delete description'>
+                            <TrashIcon />
+                            حذف
+                        </button>
+                        {/* </Show> */}
+                    </div>
+                    <div
+                        class='tabs'
+                        classList={{ advanced: state.popup.advanced }}
+                    >
+                        <button
+                            class='tab description'
+                            onclick={() =>
+                                setState(
+                                    produce(s => {
+                                        s.popup.advanced = false
+                                    })
+                                )
+                            }
+                        >
+                            نگاه کلی
+                        </button>
+                        <button
+                            class='tab description'
+                            onclick={() =>
+                                setState(
+                                    produce(s => {
+                                        s.popup.advanced = true
+                                    })
+                                )
+                            }
+                        >
+                            پیشرفته
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
