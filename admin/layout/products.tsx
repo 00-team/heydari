@@ -363,7 +363,7 @@ const ProductPopup: Component = () => {
         let addChange = false
 
         if (state.popup.type === 'add') {
-            if (state.popup.product.name) {
+            if (state.popup.product.name || state.popup.files.length > 0) {
                 addChange = true
             }
         }
@@ -436,7 +436,7 @@ const ProductPopup: Component = () => {
         })
     }
 
-    function product_add() {
+    async function product_add() {
         let p = state.popup.product
 
         let uniqeId = performance.now()
@@ -451,6 +451,10 @@ const ProductPopup: Component = () => {
             })
         )
 
+        let index = state.products.findIndex(a => a.id === uniqeId)
+
+        if (index < 0) return
+
         httpx({
             url: '/api/admin/products/',
             method: 'POST',
@@ -460,22 +464,42 @@ const ProductPopup: Component = () => {
                 name: p.name,
                 slug: p.slug,
             },
-            onLoad(x) {
-                if (x.status !== 200) return
+            onLoad(firstRes) {
+                if (firstRes.status !== 200) return
 
                 const productsWithLoading = {
-                    ...x.response,
-                    loading: false,
+                    ...firstRes.response,
+                    loading: true,
                 }
 
                 setState(
                     produce(s => {
-                        let index = s.products.findIndex(a => a.id === uniqeId)
-                        if (index < 0) return
-
                         s.products[index] = productsWithLoading
                     })
                 )
+
+                for (let f of state.popup.files) {
+                    let data = new FormData()
+                    data.set('photo', f)
+
+                    httpx({
+                        url: `/api/admin/products/${firstRes.response.id}/photos/`,
+                        method: 'PUT',
+                        data,
+                        onLoad(secRes) {
+                            if (secRes.status != 200) return
+
+                            setState(
+                                produce(s => {
+                                    s.products[index].photos =
+                                        secRes.response.photos
+
+                                    s.products[index].loading = false
+                                })
+                            )
+                        },
+                    })
+                }
             },
         })
     }
@@ -530,13 +554,7 @@ const ProductPopup: Component = () => {
 
                 setState(
                     produce(s => {
-                        let index = s.products.findIndex(
-                            p => p.slug === s.popup.product.slug
-                        )
-
-                        if (index < 0) return
-
-                        s.products[index] = x.response
+                        s.products[index] = { ...x.response, loading: false }
                     })
                 )
             },
@@ -608,45 +626,6 @@ const ProductPopup: Component = () => {
 
         return true
     }
-
-    // function toggle_star() {
-    //     httpx({
-    //         url: `/api/admin/products/${P.product.id}/`,
-    //         method: 'PATCH',
-    //         json: {
-    //             slug: P.product.slug,
-    //             name: P.product.name,
-    //             code: P.product.code,
-    //             detail: P.product.detail,
-    //             tag_leg: P.product.tag_leg,
-    //             tag_bed: P.product.tag_bed,
-    //             best: !P.product.best,
-    //             price: P.product.price,
-    //             count: P.product.count,
-    //             description: P.product.description,
-    //             specification: P.product.specification,
-    //         },
-    //         onLoad(x) {
-    //             if (x.status != 200) return
-    //             P.update(x.response)
-    //         },
-    //     })
-    // }
-
-    // function reset() {
-    //     setState({
-    //         slug: P.product.slug,
-    //         name: P.product.name,
-    //         code: P.product.code,
-    //         detail: P.product.detail,
-    //         tag_leg: P.product.tag_leg,
-    //         tag_bed: P.product.tag_bed,
-    //         description: P.product.description,
-    //         specification: { ...P.product.specification },
-    //         price: P.product.price,
-    //         count: P.product.count,
-    //     })
-    // }
 
     return (
         <div
@@ -783,11 +762,9 @@ const ProductPopup: Component = () => {
 const PopupOverview: Component = () => {
     type localType = {
         active: number
-        files: File[]
     }
     const [local, setLocal] = createStore<localType>({
         active: 0,
-        files: [],
     })
 
     function photo_del(idx: number) {
@@ -827,7 +804,14 @@ const PopupOverview: Component = () => {
         if (!el.files || el.files.length == 0) return
 
         if (state.popup.type === 'add') {
-            setLocal(produce(s => {}))
+            for (let f of el.files) {
+                console.log(f)
+                setState(
+                    produce(s => {
+                        s.popup.files.push(f)
+                    })
+                )
+            }
 
             return
         }
@@ -879,7 +863,7 @@ const PopupOverview: Component = () => {
 
     const images = createMemo((): string[] => {
         if (state.popup.type === 'add') {
-            return local.files.map(img => URL.createObjectURL(img))
+            return state.popup.files.map(img => URL.createObjectURL(img))
         }
 
         return state.popup.product?.photos || []
@@ -966,6 +950,7 @@ const PopupOverview: Component = () => {
                                 type='file'
                                 multiple
                                 id='popup-add-img'
+                                accept='.png, .jpg, .jpeg, .webp'
                                 onchange={upload_files}
                             />
                             <PlusIcon />
@@ -973,24 +958,47 @@ const PopupOverview: Component = () => {
                         <For each={images()}>
                             {(img, index) => (
                                 <Show
-                                    when={!img.startsWith('loading')}
-                                    fallback={<LoadingElem class='other-img' />}
+                                    when={!img.startsWith('blob:')}
+                                    fallback={
+                                        <div
+                                            class='other-img'
+                                            onclick={() => {
+                                                setLocal({
+                                                    active: index(),
+                                                })
+                                            }}
+                                        >
+                                            <img
+                                                src={img}
+                                                loading='lazy'
+                                                decoding='async'
+                                                alt=''
+                                            />
+                                        </div>
+                                    }
                                 >
-                                    <div
-                                        class='other-img'
-                                        onclick={() => {
-                                            setLocal({
-                                                active: index(),
-                                            })
-                                        }}
+                                    <Show
+                                        when={!img.startsWith('loading')}
+                                        fallback={
+                                            <LoadingElem class='other-img' />
+                                        }
                                     >
-                                        <img
-                                            src={`/record/pp-${state.popup.product?.id}-${img}`}
-                                            loading='lazy'
-                                            decoding='async'
-                                            alt=''
-                                        />
-                                    </div>
+                                        <div
+                                            class='other-img'
+                                            onclick={() => {
+                                                setLocal({
+                                                    active: index(),
+                                                })
+                                            }}
+                                        >
+                                            <img
+                                                src={`/record/pp-${state.popup.product?.id}-${img}`}
+                                                loading='lazy'
+                                                decoding='async'
+                                                alt=''
+                                            />
+                                        </div>
+                                    </Show>
                                 </Show>
                             )}
                         </For>
