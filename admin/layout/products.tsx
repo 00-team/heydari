@@ -872,136 +872,139 @@ const PopupOverview: Component = () => {
     return (
         <div class='overview' classList={{ hide: state.popup.advanced }}>
             <aside class='imgs-container'>
-                <button
-                    class='best-product title_small'
-                    type='button'
-                    classList={{ active: state.popup.product?.best }}
-                    onclick={() => {
-                        setState(
-                            produce(s => {
-                                s.popup.product.best = !s.popup.product.best
-                            })
-                        )
-                    }}
-                >
-                    <div class='is-best isnt'>
-                        <StarIcon />
-                        <span>جزو بهترین ها</span>
-                    </div>
-                    <div class='is-best is'>
-                        <StarFillIcon />
-                        <span>جزو بهترین ها</span>
-                    </div>
-                </button>
-                <div class='imgs-wrapper'>
-                    <div class='active-img'>
-                        <Show
-                            when={images()[local.active]}
-                            fallback={<NoPhotoIcon />}
-                        >
+                <div class='divs-wrapper'>
+                    <button
+                        class='best-product title_small'
+                        type='button'
+                        classList={{ active: state.popup.product?.best }}
+                        onclick={() => {
+                            setState(
+                                produce(s => {
+                                    s.popup.product.best = !s.popup.product.best
+                                })
+                            )
+                        }}
+                    >
+                        <div class='is-best isnt'>
+                            <StarIcon />
+                            <span>جزو بهترین ها</span>
+                        </div>
+                        <div class='is-best is'>
+                            <StarFillIcon />
+                            <span>جزو بهترین ها</span>
+                        </div>
+                    </button>
+                    <div class='imgs-wrapper'>
+                        <div class='active-img'>
                             <Show
-                                when={images()[local.active].startsWith(
-                                    'blob:'
-                                )}
-                                fallback={
+                                when={images()[local.active]}
+                                fallback={<NoPhotoIcon />}
+                            >
+                                <Show
+                                    when={images()[local.active].startsWith(
+                                        'blob:'
+                                    )}
+                                    fallback={
+                                        <img
+                                            src={`/record/pp-${state.popup.product?.id}-${
+                                                state.popup.product.photos[
+                                                    local.active
+                                                ]
+                                            }`}
+                                            loading='lazy'
+                                            decoding='async'
+                                            alt=''
+                                        />
+                                    }
+                                >
                                     <img
-                                        src={`/record/pp-${state.popup.product?.id}-${
-                                            state.popup.product.photos[
-                                                local.active
-                                            ]
-                                        }`}
+                                        src={images()[local.active]}
                                         loading='lazy'
                                         decoding='async'
                                         alt=''
                                     />
-                                }
-                            >
-                                <img
-                                    src={images()[local.active]}
-                                    loading='lazy'
-                                    decoding='async'
-                                    alt=''
-                                />
-                            </Show>
+                                </Show>
 
-                            <button
-                                class='delete-image'
-                                onclick={() => {
-                                    setPopup({
-                                        show: true,
-                                        Icon: () => <TrashIcon />,
-                                        content: 'این عمل قابل بازگشت نیست!',
-                                        title: 'حذف عکس؟',
-                                        type: 'error',
-                                        onSubmit() {
-                                            photo_del(local.active)
-                                            setLocal({ active: 0 })
-                                        },
-                                    })
-                                }}
-                            >
-                                <TrashIcon />
-                            </button>
-                        </Show>
-                    </div>
-                    <div class='other-imgs'>
-                        <label class='add-img' for='popup-add-img'>
-                            <input
-                                type='file'
-                                multiple
-                                id='popup-add-img'
-                                accept='.png, .jpg, .jpeg, .webp'
-                                onchange={upload_files}
-                            />
-                            <PlusIcon />
-                        </label>
-                        <For each={images()}>
-                            {(img, index) => (
-                                <Show
-                                    when={!img.startsWith('blob:')}
-                                    fallback={
-                                        <div
-                                            class='other-img'
-                                            onclick={() => {
-                                                setLocal({
-                                                    active: index(),
-                                                })
-                                            }}
-                                        >
-                                            <img
-                                                src={img}
-                                                loading='lazy'
-                                                decoding='async'
-                                                alt=''
-                                            />
-                                        </div>
-                                    }
+                                <button
+                                    class='delete-image'
+                                    onclick={() => {
+                                        setPopup({
+                                            show: true,
+                                            Icon: () => <TrashIcon />,
+                                            content:
+                                                'این عمل قابل بازگشت نیست!',
+                                            title: 'حذف عکس؟',
+                                            type: 'error',
+                                            onSubmit() {
+                                                photo_del(local.active)
+                                                setLocal({ active: 0 })
+                                            },
+                                        })
+                                    }}
                                 >
+                                    <TrashIcon />
+                                </button>
+                            </Show>
+                        </div>
+                        <div class='other-imgs'>
+                            <label class='add-img' for='popup-add-img'>
+                                <input
+                                    type='file'
+                                    multiple
+                                    id='popup-add-img'
+                                    accept='.png, .jpg, .jpeg, .webp'
+                                    onchange={upload_files}
+                                />
+                                <PlusIcon />
+                            </label>
+                            <For each={images()}>
+                                {(img, index) => (
                                     <Show
-                                        when={!img.startsWith('loading')}
+                                        when={!img.startsWith('blob:')}
                                         fallback={
-                                            <LoadingElem class='other-img' />
+                                            <div
+                                                class='other-img'
+                                                onclick={() => {
+                                                    setLocal({
+                                                        active: index(),
+                                                    })
+                                                }}
+                                            >
+                                                <img
+                                                    src={img}
+                                                    loading='lazy'
+                                                    decoding='async'
+                                                    alt=''
+                                                />
+                                            </div>
                                         }
                                     >
-                                        <div
-                                            class='other-img'
-                                            onclick={() => {
-                                                setLocal({
-                                                    active: index(),
-                                                })
-                                            }}
+                                        <Show
+                                            when={!img.startsWith('loading')}
+                                            fallback={
+                                                <LoadingElem class='other-img' />
+                                            }
                                         >
-                                            <img
-                                                src={`/record/pp-${state.popup.product?.id}-${img}`}
-                                                loading='lazy'
-                                                decoding='async'
-                                                alt=''
-                                            />
-                                        </div>
+                                            <div
+                                                class='other-img'
+                                                onclick={() => {
+                                                    setLocal({
+                                                        active: index(),
+                                                    })
+                                                }}
+                                            >
+                                                <img
+                                                    src={`/record/pp-${state.popup.product?.id}-${img}`}
+                                                    loading='lazy'
+                                                    decoding='async'
+                                                    alt=''
+                                                />
+                                            </div>
+                                        </Show>
                                     </Show>
-                                </Show>
-                            )}
-                        </For>
+                                )}
+                            </For>
+                        </div>
                     </div>
                 </div>
                 <div
