@@ -20,7 +20,7 @@ import {
     TableIcon,
     TrashIcon,
 } from 'icons'
-import { ProductModel, ProductTagModel } from 'models'
+import { EMPTY_PRODUCT, ProductModel, ProductTagModel } from 'models'
 import { httpx, Perms } from 'shared'
 import {
     Component,
@@ -30,7 +30,6 @@ import {
     For,
     JSX,
     Match,
-    on,
     onCleanup,
     onMount,
     Show,
@@ -132,12 +131,14 @@ export default () => {
         })
     }
 
-    function add_product() {
+    function popup_add() {
         setState(
             produce(s => {
                 s.popup = {
                     type: 'add',
-                    product: null,
+                    product: {
+                        ...EMPTY_PRODUCT,
+                    },
                     show: true,
                     advanced: false,
                 }
@@ -212,7 +213,7 @@ export default () => {
                     class='add-product title_small'
                     disabled={state.loading}
                     onclick={() => {
-                        add_product()
+                        popup_add()
                     }}
                 >
                     اضافه محصول
@@ -387,6 +388,45 @@ const ProductPopup: Component = () => {
         })
     }
 
+    function product_add() {
+        let p = state.popup.product
+
+        setState(
+            produce(s => {
+                s.popup.show = false
+
+                s.products.push({ ...EMPTY_PRODUCT })
+            })
+        )
+
+        httpx({
+            url: '/api/admin/products/',
+            method: 'POST',
+            json: {
+                code: p.code,
+                kind: p.kind,
+                name: p.name,
+                slug: p.slug,
+            },
+            onLoad(x) {
+                if (x.status !== 200) return
+
+                const productsWithLoading = x.response.map(
+                    (product: ProductModel) => ({
+                        ...product,
+                        loading: false,
+                    })
+                )
+
+                setState(
+                    produce(s => {
+                        s.products[s.products.length - 1] = productsWithLoading
+                    })
+                )
+            },
+        })
+    }
+
     function product_update() {
         let p = state.popup.product
 
@@ -460,6 +500,8 @@ const ProductPopup: Component = () => {
                 if (index < 0) return
 
                 s.products[index].photos.splice(idx, 1).filter(s => s)
+
+                s.popup.product.photos.splice(idx, 1).filter(s => s)
             })
         )
 
@@ -470,6 +512,65 @@ const ProductPopup: Component = () => {
                 if (x.status != 200) return
             },
         })
+    }
+
+    async function upload_files(
+        e: Event & {
+            currentTarget: HTMLInputElement
+            target: HTMLInputElement
+        }
+    ) {
+        const el = e.target
+
+        const id = state.popup.product.id
+
+        if (!el.files || el.files.length == 0) return
+
+        for (let f of el.files) {
+            await new Promise((resolve, reject) => {
+                let data = new FormData()
+                data.set('photo', f)
+
+                let loadingId = performance.now()
+
+                setState(
+                    produce(s => {
+                        s.popup.product.photos.push(`loading ${loadingId}`)
+                    })
+                )
+
+                httpx({
+                    url: `/api/admin/products/${id}/photos/`,
+                    method: 'PUT',
+                    data,
+                    reject,
+                    onLoad(x) {
+                        if (x.status != 200) return
+
+                        setState(
+                            produce(s => {
+                                let index = s.products.findIndex(
+                                    i => i.id === id
+                                )
+
+                                if (index < 0) return
+
+                                s.products[index].photos = x.response.photos
+
+                                if (s.popup.product.id === x.response.id) {
+                                    s.popup.product.photos.filter(s =>
+                                        s.includes('loading')
+                                    )
+                                    s.popup.product.photos = x.response.photos
+                                }
+                            })
+                        )
+                    },
+                })
+            })
+        }
+
+        setState({ loading: false })
     }
 
     const changed = createMemo(() => {
@@ -613,6 +714,7 @@ const ProductPopup: Component = () => {
                                                     type: 'error',
                                                     onSubmit() {
                                                         photo_del(local.active)
+                                                        setLocal({ active: 0 })
                                                     },
                                                 })
                                             }}
@@ -627,6 +729,7 @@ const ProductPopup: Component = () => {
                                             type='file'
                                             multiple
                                             id='popup-add-img'
+                                            onchange={upload_files}
                                         />
                                         <PlusIcon />
                                     </label>
@@ -634,21 +737,30 @@ const ProductPopup: Component = () => {
                                         each={state.popup.product?.photos || []}
                                     >
                                         {(img, index) => (
-                                            <div
-                                                class='other-img'
-                                                onclick={() => {
-                                                    setLocal({
-                                                        active: index(),
-                                                    })
-                                                }}
+                                            <Show
+                                                when={
+                                                    !img.startsWith('loading')
+                                                }
+                                                fallback={
+                                                    <LoadingElem class='other-img' />
+                                                }
                                             >
-                                                <img
-                                                    src={`/record/pp-${state.popup.product?.id}-${img}`}
-                                                    loading='lazy'
-                                                    decoding='async'
-                                                    alt=''
-                                                />
-                                            </div>
+                                                <div
+                                                    class='other-img'
+                                                    onclick={() => {
+                                                        setLocal({
+                                                            active: index(),
+                                                        })
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={`/record/pp-${state.popup.product?.id}-${img}`}
+                                                        loading='lazy'
+                                                        decoding='async'
+                                                        alt=''
+                                                    />
+                                                </div>
+                                            </Show>
                                         )}
                                     </For>
                                 </div>
@@ -741,7 +853,7 @@ const ProductPopup: Component = () => {
                                 <button
                                     class='cta add description'
                                     onclick={() => {
-                                        product_update()
+                                        product_add()
                                     }}
                                 >
                                     <PlusIcon />
@@ -842,16 +954,13 @@ interface FloatInputProps {
 const FloatInput: Component<FloatInputProps> = P => {
     const [active, setActive] = createSignal(false)
 
-    createEffect(
-        on(
-            () => P.value,
-            v => {
-                if (v) {
-                    setActive(true)
-                }
-            }
-        )
-    )
+    createEffect(() => {
+        if (P.value && state.popup.show) {
+            setActive(true)
+        } else {
+            setActive(false)
+        }
+    })
 
     return (
         <div
