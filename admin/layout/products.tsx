@@ -9,12 +9,14 @@ import {
     CloseIcon,
     CodeIcon,
     ExternalLinkIcon,
+    InternetIcon,
     NameIcon,
     NoPhotoIcon,
     PlusIcon,
     PriceIcon,
     RotateCcwIcon,
     SaveIcon,
+    StarFillIcon,
     StarIcon,
     Table2Icon,
     TableIcon,
@@ -55,6 +57,9 @@ type popupType = {
     type: 'edit' | 'add'
     product: ProductModel
     advanced: boolean
+
+    errorSec: 'name' | 'slug' | 'code' | 'id' | 'img' | 'description'
+    errorText: string
 }
 type stateType = {
     popup: popupType
@@ -70,6 +75,9 @@ const [state, setState] = createStore<stateType>({
         type: 'add',
         product: null,
         advanced: false,
+
+        errorSec: 'name',
+        errorText: '',
     },
 
     products: [],
@@ -141,6 +149,8 @@ export default () => {
                     },
                     show: true,
                     advanced: false,
+                    errorSec: null,
+                    errorText: '',
                 }
             })
         )
@@ -259,6 +269,8 @@ const ProductCmp: Component<ProductModel> = P => {
                                     type: 'edit',
                                     product: JSON.parse(JSON.stringify(P)),
                                     advanced: false,
+                                    errorSec: null,
+                                    errorText: '',
                                 }
                             })
                         )
@@ -266,6 +278,11 @@ const ProductCmp: Component<ProductModel> = P => {
                 >
                     <Show when={P.code}>
                         <div class='product-tag description'>{P.code}</div>
+                    </Show>
+                    <Show when={P.best}>
+                        <div class='best'>
+                            <StarFillIcon />
+                        </div>
                     </Show>
                     <div class='img-container'>
                         <Show
@@ -313,10 +330,6 @@ export const Loading: Component = () => {
 }
 
 const ProductPopup: Component = () => {
-    const [local, setLocal] = createStore({
-        active: 0,
-    })
-
     let ac = new AbortController()
 
     onMount(() => {
@@ -395,7 +408,7 @@ const ProductPopup: Component = () => {
             produce(s => {
                 s.popup.show = false
 
-                s.products.push({ ...EMPTY_PRODUCT })
+                s.products.unshift({ ...EMPTY_PRODUCT })
             })
         )
 
@@ -411,16 +424,15 @@ const ProductPopup: Component = () => {
             onLoad(x) {
                 if (x.status !== 200) return
 
-                const productsWithLoading = x.response.map(
-                    (product: ProductModel) => ({
-                        ...product,
-                        loading: false,
-                    })
-                )
+                const productsWithLoading = {
+                    ...x.response,
+                    loading: false,
+                }
 
                 setState(
                     produce(s => {
-                        s.products[s.products.length - 1] = productsWithLoading
+                        console.log(productsWithLoading)
+                        s.products[0] = productsWithLoading
                     })
                 )
             },
@@ -489,6 +501,248 @@ const ProductPopup: Component = () => {
             },
         })
     }
+
+    const changed = createMemo(() => {
+        let s = state.popup.product
+
+        if (!s) return
+
+        let index = state.products.findIndex(i => i.slug === s.slug)
+
+        if (index < 0) return
+
+        let p = state.products[index]
+
+        let change =
+            s.slug != p.slug ||
+            s.name != p.name ||
+            s.code != p.code ||
+            s.detail != p.detail ||
+            s.tag_leg != p.tag_leg ||
+            s.tag_bed != p.tag_bed ||
+            s.description != p.description ||
+            s.price != p.price ||
+            s.count != p.count ||
+            s.best != p.best ||
+            s.kind != p.kind
+
+        if (!change) {
+            if (
+                Object.keys(s.specification).length !=
+                Object.keys(p.specification).length
+            )
+                return true
+
+            for (let [k, v] of Object.entries(s.specification)) {
+                let ov = p.specification[k]
+                if (ov == undefined || ov != v) return true
+            }
+        }
+
+        return change
+    })
+
+    const formIsValid = (): boolean => {
+        let p = state.popup.product
+
+        if (!p.name || !p.slug || !p.code) {
+            addAlert({
+                type: 'error',
+                subject: 'فرم را کامل پر کنید!',
+                content: 'فرم به درستی کامل نشده است!',
+                timeout: 3,
+            })
+            return false
+        }
+
+        if (!p.kind) {
+            addAlert({
+                type: 'error',
+                subject: 'نوع محصول را مشخص کنید.',
+                content: 'میز یا صندلی بودن محصول را انتخاب کنید.',
+                timeout: 3,
+            })
+            return false
+        }
+
+        return true
+    }
+
+    // function toggle_star() {
+    //     httpx({
+    //         url: `/api/admin/products/${P.product.id}/`,
+    //         method: 'PATCH',
+    //         json: {
+    //             slug: P.product.slug,
+    //             name: P.product.name,
+    //             code: P.product.code,
+    //             detail: P.product.detail,
+    //             tag_leg: P.product.tag_leg,
+    //             tag_bed: P.product.tag_bed,
+    //             best: !P.product.best,
+    //             price: P.product.price,
+    //             count: P.product.count,
+    //             description: P.product.description,
+    //             specification: P.product.specification,
+    //         },
+    //         onLoad(x) {
+    //             if (x.status != 200) return
+    //             P.update(x.response)
+    //         },
+    //     })
+    // }
+
+    // function reset() {
+    //     setState({
+    //         slug: P.product.slug,
+    //         name: P.product.name,
+    //         code: P.product.code,
+    //         detail: P.product.detail,
+    //         tag_leg: P.product.tag_leg,
+    //         tag_bed: P.product.tag_bed,
+    //         description: P.product.description,
+    //         specification: { ...P.product.specification },
+    //         price: P.product.price,
+    //         count: P.product.count,
+    //     })
+    // }
+
+    return (
+        <div
+            class='product-popup'
+            classList={{ show: state.popup.show }}
+            onclick={() => {
+                closePopup()
+            }}
+        >
+            <form
+                onsubmit={e => {
+                    e.preventDefault()
+
+                    if (!formIsValid()) return
+
+                    if (state.popup.type === 'edit') {
+                        if (!changed()) {
+                            return addAlert({
+                                type: 'error',
+                                timeout: 3,
+                                subject: 'مطلبی را عوض نکردید!',
+                                content: '',
+                            })
+                        }
+
+                        product_update()
+                    } else {
+                        product_add()
+                    }
+                }}
+                onreset={e => {
+                    e.preventDefault()
+
+                    closePopup()
+                }}
+                class='popup-wrapper'
+                onclick={e => e.stopPropagation()}
+            >
+                <button class='close icon' type='reset'>
+                    <CloseIcon />
+                </button>
+                <div class='popup-section'>
+                    <PopupOverview />
+                    <div
+                        class='advanced'
+                        classList={{ hide: !state.popup.advanced }}
+                    ></div>
+                </div>
+
+                <div class='popup-actions'>
+                    <div class='ctas'>
+                        <Show
+                            when={state.popup.type === 'edit'}
+                            fallback={
+                                <button
+                                    class='cta add description'
+                                    type='submit'
+                                >
+                                    <PlusIcon />
+                                    اضافه
+                                </button>
+                            }
+                        >
+                            <button
+                                class='cta save description'
+                                classList={{ disable: !changed() }}
+                                type='submit'
+                            >
+                                <SaveIcon />
+                                ذخیره
+                            </button>
+
+                            <Show when={self.perms.check(Perms.D_PRODUCT)}>
+                                <button
+                                    class='cta delete description'
+                                    type='button'
+                                    onclick={() => {
+                                        setPopup({
+                                            show: true,
+                                            Icon: () => <TrashIcon />,
+                                            content:
+                                                'این عمل قابل بازگشت نیست!',
+                                            title: 'حذف محصول؟',
+                                            type: 'error',
+                                            onSubmit() {
+                                                product_delete()
+                                            },
+                                        })
+                                    }}
+                                >
+                                    <TrashIcon />
+                                    حذف
+                                </button>
+                            </Show>
+                        </Show>
+                    </div>
+                    <div
+                        class='tabs'
+                        classList={{ advanced: state.popup.advanced }}
+                    >
+                        <button
+                            class='tab description'
+                            type='button'
+                            onclick={() =>
+                                setState(
+                                    produce(s => {
+                                        s.popup.advanced = false
+                                    })
+                                )
+                            }
+                        >
+                            نگاه کلی
+                        </button>
+                        <button
+                            class='tab description'
+                            type='button'
+                            onclick={() =>
+                                setState(
+                                    produce(s => {
+                                        s.popup.advanced = true
+                                    })
+                                )
+                            }
+                        >
+                            پیشرفته
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    )
+}
+
+const PopupOverview: Component = () => {
+    const [local, setLocal] = createStore({
+        active: 0,
+    })
 
     function photo_del(idx: number) {
         let p = state.popup.product
@@ -569,372 +823,220 @@ const ProductPopup: Component = () => {
                 })
             })
         }
-
-        setState({ loading: false })
     }
 
-    const changed = createMemo(() => {
-        let s = state.popup.product
-
-        if (!s) return
-
-        let index = state.products.findIndex(i => i.slug === s.slug)
-
-        if (index < 0) return
-
-        let p = state.products[index]
-
-        let change =
-            s.slug != p.slug ||
-            s.name != p.name ||
-            s.code != p.code ||
-            s.detail != p.detail ||
-            s.tag_leg != p.tag_leg ||
-            s.tag_bed != p.tag_bed ||
-            s.description != p.description ||
-            s.price != p.price ||
-            s.count != p.count
-
-        if (!change) {
-            if (
-                Object.keys(s.specification).length !=
-                Object.keys(p.specification).length
-            )
-                return true
-
-            for (let [k, v] of Object.entries(s.specification)) {
-                let ov = p.specification[k]
-                if (ov == undefined || ov != v) return true
-            }
-        }
-
-        return change
-    })
-
-    // function toggle_star() {
-    //     httpx({
-    //         url: `/api/admin/products/${P.product.id}/`,
-    //         method: 'PATCH',
-    //         json: {
-    //             slug: P.product.slug,
-    //             name: P.product.name,
-    //             code: P.product.code,
-    //             detail: P.product.detail,
-    //             tag_leg: P.product.tag_leg,
-    //             tag_bed: P.product.tag_bed,
-    //             best: !P.product.best,
-    //             price: P.product.price,
-    //             count: P.product.count,
-    //             description: P.product.description,
-    //             specification: P.product.specification,
-    //         },
-    //         onLoad(x) {
-    //             if (x.status != 200) return
-    //             P.update(x.response)
-    //         },
-    //     })
-    // }
-
-    // function reset() {
-    //     setState({
-    //         slug: P.product.slug,
-    //         name: P.product.name,
-    //         code: P.product.code,
-    //         detail: P.product.detail,
-    //         tag_leg: P.product.tag_leg,
-    //         tag_bed: P.product.tag_bed,
-    //         description: P.product.description,
-    //         specification: { ...P.product.specification },
-    //         price: P.product.price,
-    //         count: P.product.count,
-    //     })
-    // }
-
     return (
-        <div
-            class='product-popup'
-            classList={{ show: state.popup.show }}
-            onclick={() => {
-                closePopup()
-            }}
-        >
-            <form
-                onsubmit={e => {
-                    e.preventDefault()
-                }}
-                onreset={e => {
-                    e.preventDefault()
-                }}
-                class='popup-wrapper'
-                onclick={e => e.stopPropagation()}
-            >
+        <div class='overview' classList={{ hide: state.popup.advanced }}>
+            <aside class='imgs-container'>
                 <button
-                    class='close icon'
-                    type='reset'
-                    onclick={() => closePopup()}
+                    class='best-product title_small'
+                    type='button'
+                    classList={{ active: state.popup.product?.best }}
+                    onclick={() => {
+                        setState(
+                            produce(s => {
+                                s.popup.product.best = !s.popup.product.best
+                            })
+                        )
+                    }}
                 >
-                    <CloseIcon />
+                    <div class='is-best isnt'>
+                        <StarIcon />
+                        <span>جزو بهترین ها</span>
+                    </div>
+                    <div class='is-best is'>
+                        <StarFillIcon />
+                        <span>جزو بهترین ها</span>
+                    </div>
                 </button>
-                <div class='popup-section'>
-                    <div
-                        class='overview'
-                        classList={{ hide: state.popup.advanced }}
-                    >
-                        <aside class='imgs-container'>
-                            <div class='imgs-wrapper'>
-                                <div class='active-img'>
-                                    <Show
-                                        when={
-                                            state.popup.product?.photos[
-                                                local.active
-                                            ]
-                                        }
-                                        fallback={<NoPhotoIcon />}
+                <div class='imgs-wrapper'>
+                    <div class='active-img'>
+                        <Show
+                            when={state.popup.product?.photos[local.active]}
+                            fallback={<NoPhotoIcon />}
+                        >
+                            <img
+                                src={`/record/pp-${state.popup.product?.id}-${
+                                    state.popup.product.photos[local.active]
+                                }`}
+                                loading='lazy'
+                                decoding='async'
+                                alt=''
+                            />
+
+                            <button
+                                class='delete-image'
+                                onclick={() => {
+                                    setPopup({
+                                        show: true,
+                                        Icon: () => <TrashIcon />,
+                                        content: 'این عمل قابل بازگشت نیست!',
+                                        title: 'حذف عکس؟',
+                                        type: 'error',
+                                        onSubmit() {
+                                            photo_del(local.active)
+                                            setLocal({ active: 0 })
+                                        },
+                                    })
+                                }}
+                            >
+                                <TrashIcon />
+                            </button>
+                        </Show>
+                    </div>
+                    <div class='other-imgs'>
+                        <label class='add-img' for='popup-add-img'>
+                            <input
+                                type='file'
+                                multiple
+                                id='popup-add-img'
+                                onchange={upload_files}
+                            />
+                            <PlusIcon />
+                        </label>
+                        <For each={state.popup.product?.photos || []}>
+                            {(img, index) => (
+                                <Show
+                                    when={!img.startsWith('loading')}
+                                    fallback={<LoadingElem class='other-img' />}
+                                >
+                                    <div
+                                        class='other-img'
+                                        onclick={() => {
+                                            setLocal({
+                                                active: index(),
+                                            })
+                                        }}
                                     >
                                         <img
-                                            src={`/record/pp-${state.popup.product?.id}-${
-                                                state.popup.product.photos[
-                                                    local.active
-                                                ]
-                                            }`}
+                                            src={`/record/pp-${state.popup.product?.id}-${img}`}
                                             loading='lazy'
                                             decoding='async'
                                             alt=''
                                         />
-
-                                        <button
-                                            class='delete-image'
-                                            onclick={() => {
-                                                setPopup({
-                                                    show: true,
-                                                    Icon: () => <TrashIcon />,
-                                                    content:
-                                                        'این عمل قابل بازگشت نیست!',
-                                                    title: 'حذف عکس؟',
-                                                    type: 'error',
-                                                    onSubmit() {
-                                                        photo_del(local.active)
-                                                        setLocal({ active: 0 })
-                                                    },
-                                                })
-                                            }}
-                                        >
-                                            <TrashIcon />
-                                        </button>
-                                    </Show>
-                                </div>
-                                <div class='other-imgs'>
-                                    <label class='add-img' for='popup-add-img'>
-                                        <input
-                                            type='file'
-                                            multiple
-                                            id='popup-add-img'
-                                            onchange={upload_files}
-                                        />
-                                        <PlusIcon />
-                                    </label>
-                                    <For
-                                        each={state.popup.product?.photos || []}
-                                    >
-                                        {(img, index) => (
-                                            <Show
-                                                when={
-                                                    !img.startsWith('loading')
-                                                }
-                                                fallback={
-                                                    <LoadingElem class='other-img' />
-                                                }
-                                            >
-                                                <div
-                                                    class='other-img'
-                                                    onclick={() => {
-                                                        setLocal({
-                                                            active: index(),
-                                                        })
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={`/record/pp-${state.popup.product?.id}-${img}`}
-                                                        loading='lazy'
-                                                        decoding='async'
-                                                        alt=''
-                                                    />
-                                                </div>
-                                            </Show>
-                                        )}
-                                    </For>
-                                </div>
-                            </div>
-                        </aside>
-
-                        <aside class='data-container'>
-                            <FloatInput
-                                Icon={<NameIcon />}
-                                holder='اسم محصول'
-                                value={state.popup.product?.name || null}
-                                onChange={e =>
-                                    setState(
-                                        produce(s => {
-                                            s.popup.product.name = e
-                                        })
-                                    )
-                                }
-                                class='description'
-                                inpClass='title_smaller'
-                                inpMode='str'
-                            />
-                            <div class='inputs'>
-                                <FloatInput
-                                    Icon={<PriceIcon />}
-                                    holder='قیمت (ریال)'
-                                    value={
-                                        state.popup.product?.price.toString() ||
-                                        null
-                                    }
-                                    onChange={e => {
-                                        setState(
-                                            produce(s => {
-                                                s.popup.product.price =
-                                                    parseInt(e) || 0
-                                            })
-                                        )
-                                    }}
-                                    class='price description'
-                                    inpClass='title_smaller'
-                                    inpMode='num'
-                                />
-                                <FloatInput
-                                    Icon={<CodeIcon />}
-                                    holder='کد محصول'
-                                    value={state.popup.product?.code || null}
-                                    onChange={e =>
-                                        setState(
-                                            produce(s => {
-                                                s.popup.product.code = e
-                                            })
-                                        )
-                                    }
-                                    class='code description'
-                                    inpClass='title_smaller'
-                                    inpMode='str'
-                                />
-                            </div>
-
-                            <textarea
-                                name=''
-                                id=''
-                                cols='30'
-                                class='description'
-                                rows='10'
-                                value={state.popup.product?.description || null}
-                                oninput={e =>
-                                    setState(
-                                        produce(s => {
-                                            s.popup.product.description =
-                                                e.target.value
-                                        })
-                                    )
-                                }
-                                placeholder='توضیحات محصول...'
-                            ></textarea>
-                        </aside>
+                                    </div>
+                                </Show>
+                            )}
+                        </For>
                     </div>
-                    <div
-                        class='advanced'
-                        classList={{ hide: !state.popup.advanced }}
-                    ></div>
                 </div>
-
-                <div class='popup-actions'>
-                    <div class='ctas'>
-                        <Show
-                            when={state.popup.type === 'edit'}
-                            fallback={
-                                <button
-                                    class='cta add description'
-                                    onclick={() => {
-                                        product_add()
-                                    }}
-                                >
-                                    <PlusIcon />
-                                    اضافه
-                                </button>
-                            }
-                        >
-                            <button
-                                class='cta save description'
-                                classList={{ disable: !changed() }}
-                                onclick={() => {
-                                    if (!changed()) {
-                                        return addAlert({
-                                            type: 'error',
-                                            timeout: 3,
-                                            subject: 'مطلبی را عوض نکردید!',
-                                            content: '',
-                                        })
-                                    }
-
-                                    product_update()
-                                }}
-                            >
-                                <SaveIcon />
-                                ذخیره
-                            </button>
-
-                            <Show when={self.perms.check(Perms.D_PRODUCT)}>
-                                <button
-                                    class='cta delete description'
-                                    onclick={() => {
-                                        setPopup({
-                                            show: true,
-                                            Icon: () => <TrashIcon />,
-                                            content:
-                                                'این عمل قابل بازگشت نیست!',
-                                            title: 'حذف محصول؟',
-                                            type: 'error',
-                                            onSubmit() {
-                                                product_delete()
-                                            },
-                                        })
-                                    }}
-                                >
-                                    <TrashIcon />
-                                    حذف
-                                </button>
-                            </Show>
-                        </Show>
-                    </div>
-                    <div
-                        class='tabs'
-                        classList={{ advanced: state.popup.advanced }}
+                <div
+                    class='product-kind'
+                    classList={{
+                        active: state.popup.product?.kind === 'table',
+                        hide: !state.popup.product?.kind,
+                    }}
+                >
+                    <button
+                        class='kind'
+                        type='button'
+                        onclick={() =>
+                            setState(
+                                produce(s => {
+                                    s.popup.product.kind = 'chair'
+                                })
+                            )
+                        }
                     >
-                        <button
-                            class='tab description'
-                            onclick={() =>
-                                setState(
-                                    produce(s => {
-                                        s.popup.advanced = false
-                                    })
-                                )
-                            }
-                        >
-                            نگاه کلی
-                        </button>
-                        <button
-                            class='tab description'
-                            onclick={() =>
-                                setState(
-                                    produce(s => {
-                                        s.popup.advanced = true
-                                    })
-                                )
-                            }
-                        >
-                            پیشرفته
-                        </button>
-                    </div>
+                        <Chair2Icon />
+                    </button>
+                    <button
+                        class='kind'
+                        type='button'
+                        onclick={() =>
+                            setState(
+                                produce(s => {
+                                    s.popup.product.kind = 'table'
+                                })
+                            )
+                        }
+                    >
+                        <Table2Icon />
+                    </button>
                 </div>
-            </form>
+            </aside>
+
+            <aside class='data-container'>
+                <FloatInput
+                    Icon={<NameIcon />}
+                    holder='اسم محصول'
+                    value={state.popup.product?.name || null}
+                    onChange={e =>
+                        setState(
+                            produce(s => {
+                                s.popup.product.name = e
+                            })
+                        )
+                    }
+                    class='description'
+                    inpClass='title_smaller'
+                    inpMode='str'
+                />
+                <FloatInput
+                    Icon={<InternetIcon />}
+                    holder='URL'
+                    value={state.popup.product?.slug || null}
+                    onChange={e =>
+                        setState(
+                            produce(s => {
+                                s.popup.product.slug = e
+                            })
+                        )
+                    }
+                    class='description'
+                    inpClass='title_smaller'
+                    inpMode='str'
+                />
+                <div class='inputs'>
+                    <FloatInput
+                        Icon={<PriceIcon />}
+                        holder='قیمت (ریال)'
+                        value={state.popup.product?.price.toString() || null}
+                        onChange={e => {
+                            setState(
+                                produce(s => {
+                                    s.popup.product.price = parseInt(e) || 0
+                                })
+                            )
+                        }}
+                        class='price description'
+                        inpClass='title_smaller'
+                        inpMode='num'
+                    />
+                    <FloatInput
+                        Icon={<CodeIcon />}
+                        holder='کد محصول'
+                        value={state.popup.product?.code || null}
+                        onChange={e =>
+                            setState(
+                                produce(s => {
+                                    s.popup.product.code = e
+                                })
+                            )
+                        }
+                        class='code description'
+                        inpClass='title_smaller'
+                        inpMode='str'
+                    />
+                </div>
+
+                <textarea
+                    name=''
+                    id=''
+                    cols='30'
+                    class='description'
+                    rows='10'
+                    value={state.popup.product?.description || null}
+                    oninput={e =>
+                        setState(
+                            produce(s => {
+                                s.popup.product.description = e.target.value
+                            })
+                        )
+                    }
+                    placeholder='توضیحات محصول...'
+                ></textarea>
+            </aside>
         </div>
     )
 }
@@ -1105,6 +1207,7 @@ const Product: Component<ProductProps> = P => {
             state.description != P.product.description ||
             state.price != P.product.price ||
             state.count != P.product.count
+        state.count = P.product.count
 
         if (!change) {
             if (
