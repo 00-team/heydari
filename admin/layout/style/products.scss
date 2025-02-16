@@ -770,6 +770,10 @@
                                         height: 100%;
                                         object-fit: contain;
                                     }
+
+                                    &.loading-elem {
+                                        background-color: var(--loading-bg);
+                                    }
                                 }
                             }
                         }
