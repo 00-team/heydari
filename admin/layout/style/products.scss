@@ -408,7 +408,125 @@
 
     direction: rtl;
 
-    .add-cta {
+    button {
+        border: none;
+        outline: none;
+
+        background-color: transparent;
+
+        cursor: pointer;
+
+        &:focus-within {
+            outline: none;
+        }
+    }
+
+    .search-container {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 1rem;
+
+        @media screen and (max-width: 320px) {
+            padding: 0.5;
+        }
+
+        .search-wrapper {
+            width: clamp(0px, 100%, 700px);
+
+            display: flex;
+            align-items: center;
+
+            background-color: white;
+            border-radius: 100vmax;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+            position: relative;
+            z-index: 1;
+
+            .icon {
+                position: absolute;
+                left: 3px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 100vmax;
+                background-color: var(--thirty-percent);
+                color: black;
+
+                height: 90%;
+                aspect-ratio: 1;
+
+                cursor: pointer;
+            }
+
+            input {
+                width: 100%;
+
+                padding: 1rem;
+                background-color: transparent;
+                border: none;
+
+                &:focus-within {
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    .add-product {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+
+        color: white;
+
+        margin-top: 1rem;
+
+        padding: 0.6em 1.1em;
+        border: none;
+        border-radius: 0.7rem;
+        background-color: var(--ten-percent);
+
+        cursor: pointer;
+
+        overflow: hidden;
+
+        &:hover {
+            svg {
+                transform: translateX(0) rotate(0deg);
+
+                &:nth-child(1) {
+                    transform: translateX(0) rotate(0deg);
+                }
+            }
+        }
+
+        svg {
+            transform: translateX(-200%) rotate(-180deg);
+
+            transition: 0.7s cubic-bezier(0.45, 0.02, 0.09, 0.98);
+
+            &:nth-child(1) {
+                transform: translateX(200%) rotate(180deg);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            svg {
+                transform: translateX(0) rotate(0deg);
+
+                &:nth-child(1) {
+                    transform: translateX(0) rotate(0deg);
+                }
+            }
+        }
     }
 
     .products-wrapper {
@@ -618,13 +736,6 @@
             z-index: 1;
 
             button {
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-
-                &:focus-within {
-                    outline: none;
-                }
             }
 
             .close {
