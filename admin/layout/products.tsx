@@ -540,7 +540,14 @@ const ProductPopup: Component = () => {
                 slug: p.slug,
             },
             onLoad(firstRes) {
-                if (firstRes.status !== 200) return
+                if (firstRes.status !== 200) {
+                    setState(
+                        produce(s => {
+                            s.products.splice(index, 1).filter(s => s)
+                        })
+                    )
+                    return
+                }
 
                 const productsWithLoading = {
                     ...firstRes.response,
@@ -747,7 +754,9 @@ const ProductPopup: Component = () => {
                     <div
                         class='advanced'
                         classList={{ hide: !state.popup.advanced }}
-                    ></div>
+                    >
+                        به زودی...
+                    </div>
                 </div>
 
                 <div class='popup-actions'>
