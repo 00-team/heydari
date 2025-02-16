@@ -38,6 +38,27 @@ export type ProductModel = {
     loading: boolean
 }
 
+export const EMPTY_PRODUCT: ProductModel = {
+    loading: true,
+    best: false,
+    code: null,
+    count: null,
+    created_at: null,
+    description: '',
+    detail: '',
+    id: null,
+    kind: null,
+    name: '',
+    photos: [],
+    price: 0,
+    slug: '',
+    specification: {},
+    tag_bed: null,
+    tag_leg: null,
+    thumbnail: '',
+    updated_at: null,
+}
+
 export type MaterialModel = {
     count: number
     created_at: number
