@@ -31,6 +31,7 @@ import {
     createEffect,
     createMemo,
     createSignal,
+    createUniqueId,
     For,
     JSX,
     Match,
@@ -65,18 +66,31 @@ type popupType = {
 
     files: File[]
 }
+
+type filtersType = {
+    best: boolean
+    onlyChair: boolean
+    onlyTable: boolean
+}
+
 type stateType = {
     search: string
+
+    filters: filtersType
 
     popup: popupType
 
     products: ProductModel[]
     page: number
     loading: boolean
-    best?: true
 }
 const [state, setState] = createStore<stateType>({
     search: '',
+    filters: {
+        best: false,
+        onlyChair: false,
+        onlyTable: false,
+    },
     popup: {
         show: false,
         type: 'add',
@@ -122,14 +136,18 @@ export default () => {
         })
     }
 
-    createEffect(() => fetch_products(parseInt(params.page || '0') || 0))
+    createEffect(() => {
+        state.filters.best
+        fetch_products(parseInt(params.page || '0') || 0)
+    })
 
     function fetch_products(page: number) {
+        setState({ loading: true })
         setParams({ page })
 
         httpx({
             url: '/api/admin/products/',
-            params: { page, best: state.best },
+            params: { page, best: state.filters.best },
             method: 'GET',
             onLoad(x) {
                 setState({ loading: false })
@@ -166,6 +184,29 @@ export default () => {
         )
     }
 
+    const products = createMemo(() => {
+        let query = state.search.trim().toLocaleLowerCase()
+        let result: ProductModel[] = [...state.products]
+
+        if (query.length >= 3) {
+            result = result.filter(
+                m =>
+                    m.name.toLocaleLowerCase().includes(query) ||
+                    m.code.toLocaleLowerCase().includes(query)
+            )
+        }
+
+        if (state.filters.onlyChair) {
+            result = result.filter(s => s.kind === 'chair')
+        }
+
+        if (state.filters.onlyTable) {
+            result = result.filter(s => s.kind === 'table')
+        }
+
+        if (state.filters) return result
+    })
+
     return (
         <div class='products-container'>
             <div class='search-container'>
@@ -181,8 +222,53 @@ export default () => {
                         <SearchIcon />
                     </button>
                 </div>
-                <div class='filters-wrapper'></div>
+                <div class='filters-wrapper'>
+                    <FilterCheckbox
+                        holder='بهترین محصولات'
+                        checked={state.filters.best}
+                        onCheck={c =>
+                            setState(
+                                produce(s => {
+                                    s.filters.best = c
+                                })
+                            )
+                        }
+                        class='title_smaller'
+                    />
+                    <FilterCheckbox
+                        holder=' فقط صندلی'
+                        checked={state.filters.onlyChair}
+                        onCheck={c => {
+                            setState(
+                                produce(s => {
+                                    s.filters.onlyChair = c
+                                    if (s.filters.onlyChair) {
+                                        s.filters.onlyTable = false
+                                    }
+                                })
+                            )
+                        }}
+                        class='title_smaller'
+                    />
+                    <FilterCheckbox
+                        holder='فقط میز'
+                        checked={state.filters.onlyTable}
+                        onCheck={c =>
+                            setState(
+                                produce(s => {
+                                    s.filters.onlyTable = c
+
+                                    if (s.filters.onlyTable) {
+                                        s.filters.onlyChair = false
+                                    }
+                                })
+                            )
+                        }
+                        class='title_smaller'
+                    />
+                </div>
             </div>
+
             <Show when={self.perms.check(Perms.A_PRODUCT)}>
                 <button
                     class='add-product title_small'
@@ -196,7 +282,7 @@ export default () => {
                     <PlusIcon />
                 </button>
             </Show>
-            <div class='search-product'></div>
+
             <div class='products-wrapper'>
                 <Show when={!state.loading} fallback={<Loading />}>
                     <Show
@@ -207,7 +293,7 @@ export default () => {
                             </div>
                         }
                     >
-                        <For each={state.products}>
+                        <For each={products()}>
                             {product => <ProductCmp {...product} />}
                         </For>
                     </Show>
@@ -216,6 +302,34 @@ export default () => {
 
             <ProductPopup />
         </div>
+    )
+}
+
+interface FilterCheckboxProps {
+    checked: boolean
+    onCheck(check: boolean): void
+    class?: string
+
+    holder: string
+}
+const FilterCheckbox: Component<FilterCheckboxProps> = P => {
+    const uniqeId = createUniqueId()
+
+    return (
+        <label
+            class={`search-filter ${P.class || ''}`}
+            classList={{ active: P.checked }}
+            for={uniqeId}
+        >
+            <input
+                type='checkbox'
+                id={uniqeId}
+                checked={P.checked}
+                onchange={e => P.onCheck(e.target.checked)}
+            />
+            <div class='checkbox-wrapper'></div>
+            <div class='holder'>{P.holder}</div>
+        </label>
     )
 }
 
