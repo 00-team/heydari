@@ -21,6 +21,7 @@ import {
     Table2Icon,
     TableIcon,
     TrashIcon,
+    WarningIcon,
 } from 'icons'
 import { EMPTY_PRODUCT, ProductModel, ProductTagModel } from 'models'
 import { httpx, Perms } from 'shared'
@@ -60,6 +61,8 @@ type popupType = {
 
     errorSec: 'name' | 'slug' | 'code' | 'id' | 'img' | 'description'
     errorText: string
+
+    files: File[]
 }
 type stateType = {
     popup: popupType
@@ -78,6 +81,8 @@ const [state, setState] = createStore<stateType>({
 
         errorSec: 'name',
         errorText: '',
+
+        files: [],
     },
 
     products: [],
@@ -151,6 +156,7 @@ export default () => {
                     advanced: false,
                     errorSec: null,
                     errorText: '',
+                    files: [],
                 }
             })
         )
@@ -271,6 +277,7 @@ const ProductCmp: Component<ProductModel> = P => {
                                     advanced: false,
                                     errorSec: null,
                                     errorText: '',
+                                    files: [],
                                 }
                             })
                         )
@@ -353,6 +360,34 @@ const ProductPopup: Component = () => {
     }
 
     const closePopup = () => {
+        let addChange = false
+
+        if (state.popup.type === 'add') {
+            if (state.popup.product.name) {
+                addChange = true
+            }
+        }
+
+        if (changed() || addChange) {
+            setPopup({
+                type: 'warning',
+                content:
+                    'بعد از خروج مطالبی که عوض کردید بدون ذخیر پاک میشوند!',
+                Icon: () => <WarningIcon />,
+                show: true,
+                title: 'خروج بدون ذخیره؟',
+                onSubmit() {
+                    setState(
+                        produce(s => {
+                            s.popup.show = false
+                        })
+                    )
+                },
+            })
+
+            return
+        }
+
         setState(
             produce(s => {
                 s.popup.show = false
@@ -746,8 +781,13 @@ const ProductPopup: Component = () => {
 }
 
 const PopupOverview: Component = () => {
-    const [local, setLocal] = createStore({
+    type localType = {
+        active: number
+        files: File[]
+    }
+    const [local, setLocal] = createStore<localType>({
         active: 0,
+        files: [],
     })
 
     function photo_del(idx: number) {
@@ -785,6 +825,12 @@ const PopupOverview: Component = () => {
         const id = state.popup.product.id
 
         if (!el.files || el.files.length == 0) return
+
+        if (state.popup.type === 'add') {
+            setLocal(produce(s => {}))
+
+            return
+        }
 
         for (let f of el.files) {
             await new Promise((resolve, reject) => {
@@ -831,6 +877,14 @@ const PopupOverview: Component = () => {
         }
     }
 
+    const images = createMemo((): string[] => {
+        if (state.popup.type === 'add') {
+            return local.files.map(img => URL.createObjectURL(img))
+        }
+
+        return state.popup.product?.photos || []
+    })
+
     return (
         <div class='overview' classList={{ hide: state.popup.advanced }}>
             <aside class='imgs-container'>
@@ -858,17 +912,33 @@ const PopupOverview: Component = () => {
                 <div class='imgs-wrapper'>
                     <div class='active-img'>
                         <Show
-                            when={state.popup.product?.photos[local.active]}
+                            when={images()[local.active]}
                             fallback={<NoPhotoIcon />}
                         >
-                            <img
-                                src={`/record/pp-${state.popup.product?.id}-${
-                                    state.popup.product.photos[local.active]
-                                }`}
-                                loading='lazy'
-                                decoding='async'
-                                alt=''
-                            />
+                            <Show
+                                when={images()[local.active].startsWith(
+                                    'blob:'
+                                )}
+                                fallback={
+                                    <img
+                                        src={`/record/pp-${state.popup.product?.id}-${
+                                            state.popup.product.photos[
+                                                local.active
+                                            ]
+                                        }`}
+                                        loading='lazy'
+                                        decoding='async'
+                                        alt=''
+                                    />
+                                }
+                            >
+                                <img
+                                    src={images()[local.active]}
+                                    loading='lazy'
+                                    decoding='async'
+                                    alt=''
+                                />
+                            </Show>
 
                             <button
                                 class='delete-image'
@@ -900,7 +970,7 @@ const PopupOverview: Component = () => {
                             />
                             <PlusIcon />
                         </label>
-                        <For each={state.popup.product?.photos || []}>
+                        <For each={images()}>
                             {(img, index) => (
                                 <Show
                                     when={!img.startsWith('loading')}
