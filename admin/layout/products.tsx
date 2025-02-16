@@ -16,6 +16,7 @@ import {
     PriceIcon,
     RotateCcwIcon,
     SaveIcon,
+    SearchIcon,
     StarFillIcon,
     StarIcon,
     Table2Icon,
@@ -65,6 +66,8 @@ type popupType = {
     files: File[]
 }
 type stateType = {
+    search: string
+
     popup: popupType
 
     products: ProductModel[]
@@ -73,6 +76,7 @@ type stateType = {
     best?: true
 }
 const [state, setState] = createStore<stateType>({
+    search: '',
     popup: {
         show: false,
         type: 'add',
@@ -163,67 +167,22 @@ export default () => {
     }
 
     return (
-        // <div class='products-fnd' classList={{ loading: state.loading }}>
-        //     <Show when={state.loading}>
-        //         <span class='message'>Loading ...</span>
-        //     </Show>
-
-        //     <div class='actions'>
-        //         <div class='left'>
-        //             <div class='row'>
-        //                 Best:
-        //                 <button
-        //                     class='styled icon'
-        //                     onClick={() => {
-        //                         setState(s => ({
-        //                             best: s.best ? undefined : true,
-        //                         }))
-        //                         fetch_products(state.page)
-        //                     }}
-        //                 >
-        //                     <Show when={state.best} fallback={<SquareIcon />}>
-        //                         <SquareCheckBigIcon />
-        //                     </Show>
-        //                 </button>
-        //             </div>
-        //         </div>
-        //         <div class='right'>
-        //             <button
-        //                 class='styled icon'
-        //                 disabled={state.page <= 0}
-        //                 onClick={() => fetch_products(state.page - 1)}
-        //             >
-        //                 <ChevronLeftIcon />
-        //             </button>
-        //             <button
-        //                 class='styled icon'
-        //                 disabled={state.products.length < 32}
-        //                 onClick={() => fetch_products(state.page + 1)}
-        //             >
-        //                 <ChevronRightIcon />
-        //             </button>
-        //         </div>
-        //     </div>
-
-        //     <div class='product-list'>
-        //         <AddProduct update={() => fetch_products(0)} />
-        //         {state.products.map((p, i) => (
-        //             <Product
-        //                 product={p}
-        //                 update={p => {
-        //                     if (!p) return fetch_products(state.page)
-
-        //                     setState(
-        //                         produce(s => {
-        //                             s.products[i] = p
-        //                         })
-        //                     )
-        //                 }}
-        //             />
-        //         ))}
-        //     </div>
-        // </div>
         <div class='products-container'>
+            <div class='search-container'>
+                <div class='search-wrapper'>
+                    <input
+                        type='text'
+                        class='title_small'
+                        placeholder='جستجو کنید...'
+                        value={state.search}
+                        oninput={e => setState({ search: e.target.value })}
+                    />
+                    <button class='icon'>
+                        <SearchIcon />
+                    </button>
+                </div>
+                <div class='filters-wrapper'></div>
+            </div>
             <Show when={self.perms.check(Perms.A_PRODUCT)}>
                 <button
                     class='add-product title_small'
@@ -232,7 +191,9 @@ export default () => {
                         popup_add()
                     }}
                 >
-                    اضافه محصول
+                    <PlusIcon />
+                    <span>اضافه محصول</span>
+                    <PlusIcon />
                 </button>
             </Show>
             <div class='search-product'></div>
@@ -287,7 +248,7 @@ const ProductCmp: Component<ProductModel> = P => {
                         <div class='product-tag description'>{P.code}</div>
                     </Show>
                     <Show when={P.best}>
-                        <div class='best'>
+                        <div class='best' title='جزو بهترین محصولات'>
                             <StarFillIcon />
                         </div>
                     </Show>
