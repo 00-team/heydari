@@ -404,11 +404,15 @@ const ProductPopup: Component = () => {
     function product_add() {
         let p = state.popup.product
 
+        let uniqeId = performance.now()
+
+        let empty = { ...EMPTY_PRODUCT, id: uniqeId }
+
         setState(
             produce(s => {
                 s.popup.show = false
 
-                s.products.unshift({ ...EMPTY_PRODUCT })
+                s.products.unshift({ ...empty })
             })
         )
 
@@ -431,8 +435,10 @@ const ProductPopup: Component = () => {
 
                 setState(
                     produce(s => {
-                        console.log(productsWithLoading)
-                        s.products[0] = productsWithLoading
+                        let index = s.products.findIndex(a => a.id === uniqeId)
+                        if (index < 0) return
+
+                        s.products[index] = productsWithLoading
                     })
                 )
             },
@@ -925,31 +931,32 @@ const PopupOverview: Component = () => {
                     classList={{
                         active: state.popup.product?.kind === 'table',
                         hide: !state.popup.product?.kind,
+                        disable: state.popup?.type === 'edit',
                     }}
                 >
                     <button
                         class='kind'
                         type='button'
-                        onclick={() =>
+                        onclick={() => {
                             setState(
                                 produce(s => {
                                     s.popup.product.kind = 'chair'
                                 })
                             )
-                        }
+                        }}
                     >
                         <Chair2Icon />
                     </button>
                     <button
                         class='kind'
                         type='button'
-                        onclick={() =>
+                        onclick={() => {
                             setState(
                                 produce(s => {
                                     s.popup.product.kind = 'table'
                                 })
                             )
-                        }
+                        }}
                     >
                         <Table2Icon />
                     </button>
