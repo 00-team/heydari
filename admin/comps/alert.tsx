@@ -1,4 +1,12 @@
-import { CircleAlertIcon, CircleCheckIcon, CircleXIcon, XIcon } from 'icons'
+import {
+    CheckIcon,
+    CircleAlertIcon,
+    CircleCheckIcon,
+    CircleXIcon,
+    CloseIcon,
+    WarningIcon,
+    XIcon,
+} from 'icons'
 import { Component, JSX, Show, onCleanup, onMount } from 'solid-js'
 import './style/alert.scss'
 
@@ -41,9 +49,9 @@ function delAlert(index: number) {
 const ALERT_ICON: {
     [x in AlertModel['type']]: () => JSX.Element
 } = {
-    info: () => <CircleAlertIcon />,
-    error: () => <CircleXIcon />,
-    success: () => <CircleCheckIcon />,
+    info: () => <WarningIcon />,
+    error: () => <CloseIcon />,
+    success: () => <CheckIcon />,
 }
 
 const Alert: Component<{ a: AlertModel; i: number }> = P => {
