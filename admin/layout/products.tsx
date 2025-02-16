@@ -846,6 +846,18 @@ const PopupOverview: Component = () => {
         let p = state.popup.product
         if (!p) return
 
+        if (state.popup.type === 'add') {
+            setState(
+                produce(s => {
+                    s.popup.files = s.popup.files.filter(
+                        (_, idx1) => idx !== idx1
+                    )
+                })
+            )
+
+            return
+        }
+
         setState(
             produce(s => {
                 let index = s.products.findIndex(i => i.slug === p.slug)
@@ -1001,6 +1013,7 @@ const PopupOverview: Component = () => {
                                 </Show>
 
                                 <button
+                                    type='button'
                                     class='delete-image'
                                     onclick={() => {
                                         setPopup({
