@@ -10,16 +10,20 @@ import './style/index.scss'
 import { Popup } from 'comps/popup'
 import Login from 'layout/login'
 import Navbar from './layout/navbar'
+import LoadingDots from 'comps/loadingDots'
+
 const Products = lazy(() => import('./layout/products'))
 const Storage = lazy(() => import('./layout/storage'))
 const ProductTags = lazy(() => import('./layout/product-tags'))
 
 const App: Component<RouteSectionProps> = P => {
     return (
-        <Show when={self.loged_in && self.perms.any()} fallback={<Login />}>
-            <Navbar />
-            <main>{P.children}</main>
-            <Popup />
+        <Show when={!self.loading} fallback={<LoadingPanel />}>
+            <Show when={self.loged_in && self.perms.any()} fallback={<Login />}>
+                <Navbar />
+                <main>{P.children}</main>
+                <Popup />
+            </Show>
         </Show>
     )
 }
@@ -60,6 +64,15 @@ const Root = () => {
             </Router>
             <Alert />
         </>
+    )
+}
+
+const LoadingPanel: Component = () => {
+    return (
+        <div class='loading-panel title'>
+            <LoadingDots />
+            در حال گرفتن اطلاعات شما...
+        </div>
     )
 }
 
