@@ -8,6 +8,7 @@ type SelfModel = {
     loged_in: boolean
     fetch: boolean
     perms: Perms
+    loading: boolean
 }
 
 async function get_default(): Promise<SelfModel> {
@@ -31,6 +32,7 @@ async function get_default(): Promise<SelfModel> {
             loged_in: true,
             fetch: false,
             perms: p,
+            loading: false,
         }
     } catch {}
 
@@ -47,6 +49,7 @@ async function get_default(): Promise<SelfModel> {
             admin: [],
             banned: false,
         },
+        loading: false,
     }
 }
 
@@ -56,7 +59,11 @@ createRoot(() => {
     createEffect(() => {
         if (!self.fetch && self.loged_in) return
 
-        get_default().then(result => setSelf(result))
+        setSelf({ loading: true })
+
+        get_default()
+            .then(result => setSelf(result))
+            .finally(() => setSelf({ loading: false }))
     })
 })
 
