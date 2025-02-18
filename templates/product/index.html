@@ -51,7 +51,18 @@
     "price": "{{ product.price }}",
     "priceCurrency": "IRR",
     "availability": "https://schema.org/InStock",
-    "url": "https://heydari-mi.com/products/{{ product.slug }}"
+    "url": "https://heydari-mi.com/products/{{ product.slug }}",
+    "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "name": "بازگشت محصول",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": "30",
+        "returnShippingFeesAmount": {
+        "@type": "MonetaryAmount",
+        "value": "0",
+        "currency": "IRR"
+        }
+    }
   }
 }
 </script>

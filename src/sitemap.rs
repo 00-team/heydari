@@ -37,7 +37,7 @@ async fn web(conn: ConnectionInfo) -> HttpResponse {
 
 #[get("/sitemap-blogs.xml")]
 async fn blogs(conn: ConnectionInfo) -> HttpResponse {
-    let base_url = format!("{}://{}/blogs", conn.scheme(), conn.host());
+    let base_url = format!("{}://{}/blogs/", conn.scheme(), conn.host());
 
     let url = format!("/blogs-sitemap/?base_url={base_url}");
 
