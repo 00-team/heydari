@@ -3,7 +3,7 @@ import { LoadingElem, Select } from 'comps'
 import { addAlert } from 'comps/alert'
 import {
     ArmchairIcon,
-    Chair2Icon,
+    ChairIcon,
     ChevronDownIcon,
     ChevronUpIcon,
     CloseIcon,
@@ -390,7 +390,7 @@ const ProductCmp: Component<ProductModel> = P => {
                                 when={P.kind === 'chair'}
                                 fallback={<Table2Icon />}
                             >
-                                <Chair2Icon />
+                                <ChairIcon />
                             </Show>
                         </div>
                     </div>
@@ -1123,7 +1123,7 @@ const PopupOverview: Component = () => {
                             )
                         }}
                     >
-                        <Chair2Icon />
+                        <ChairIcon />
                     </button>
                     <button
                         class='kind'
