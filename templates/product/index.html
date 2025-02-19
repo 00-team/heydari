@@ -57,10 +57,23 @@
         "name": "بازگشت محصول",
         "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
         "merchantReturnDays": "30",
-        "returnShippingFeesAmount": {
-        "@type": "MonetaryAmount",
-        "value": "0",
-        "currency": "IRR"
+        "applicableCountry": "IR",
+        "returnFees": {
+           "@type": "MonetaryAmount",
+           "value": "0",
+           "currency": "IRR"
+        }
+    },
+    "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0",
+          "currency": "IRR"
+        },
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "IR"
         }
     }
   },
@@ -72,7 +85,7 @@
   "review": [
     {
       "@type": "Review",
-      "author": "مشتری صنایع تولیدی حیدری",
+      "author": "http://schema.org/Person",
       "datePublished": "2025-01-03",
       "reviewBody": "این محصول هم مانند بقیه ست های میز و صندلی تولیدی حیدری بسیار عالی بود.",
       "reviewRating": {
