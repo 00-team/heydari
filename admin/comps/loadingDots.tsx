@@ -1,8 +1,6 @@
-import { Component } from 'solid-js'
-
 import './style/loadingdots.scss'
 
-const LoadingDots: Component<{}> = P => {
+const LoadingDots = () => {
     return (
         <div class='loading-dots-cmp'>
             <span class='dot'></span>

@@ -59,7 +59,7 @@ export async function product_add() {
             if (!hasFiles && !hasDetail) {
                 setState(
                     produce(s => {
-                        s.products[index].loading = false
+                        s.products[index]!.loading = false
                     })
                 )
                 return
@@ -79,10 +79,10 @@ export async function product_add() {
 
                             setState(
                                 produce(s => {
-                                    s.products[index].photos =
+                                    s.products[index]!.photos =
                                         secRes.response.photos
 
-                                    s.products[index].loading = false
+                                    s.products[index]!.loading = false
                                 })
                             )
                         },

@@ -28,7 +28,11 @@ import { ProductPopup } from './prodcut-popup'
 export default () => {
     const [params, setParams] = useSearchParams()
 
-    onMount(() => load_tags(0))
+    onMount(() => {
+        if (self.perms.check(Perms.V_PRODUCT_TAG) && false) {
+            load_tags(0)
+        }
+    })
 
     function load_tags(page: number) {
         httpx({
@@ -122,6 +126,8 @@ export default () => {
         }
 
         if (state.filters) return result
+
+        return []
     })
 
     return (

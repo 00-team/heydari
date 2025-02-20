@@ -20,7 +20,7 @@ export const Select = <T extends BaseItem>(P: Props<T>) => {
     }
     const [state, setState] = createStore<State>({
         open: false,
-        selected: P.default || P.items[0],
+        selected: P.default || (P.items[0] as T),
         // changed: 0,
     })
 
@@ -32,7 +32,7 @@ export const Select = <T extends BaseItem>(P: Props<T>) => {
         )
     )
 
-    createEffect(() => setState({ selected: P.default }))
+    createEffect(() => setState({ selected: P.default || P.items[0] }))
 
     createEffect(() => {
         if (P.disabled) setState({ open: false })

@@ -1,12 +1,4 @@
-import {
-    CheckIcon,
-    CircleAlertIcon,
-    CircleCheckIcon,
-    CircleXIcon,
-    CloseIcon,
-    WarningIcon,
-    XIcon,
-} from 'icons'
+import { CheckIcon, CloseIcon, WarningIcon } from 'icons'
 import { Component, JSX, Show, onCleanup, onMount } from 'solid-js'
 import './style/alert.scss'
 
@@ -116,7 +108,7 @@ const Alert: Component<{ a: AlertModel; i: number }> = P => {
                 </div>
             </Show>
             <div
-                ref={timer}
+                ref={ref => (timer = ref)}
                 class='timer-line'
                 style={{
                     'animation-duration': P.a.timeout + 's',
