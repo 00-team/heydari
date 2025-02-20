@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from 'icons'
-import './style/select.scss'
-import { createStore, produce } from 'solid-js/store'
 import { Show, createEffect, on } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
+import './style/select.scss'
 
 type BaseItem = { display: string; idx: number }
 
