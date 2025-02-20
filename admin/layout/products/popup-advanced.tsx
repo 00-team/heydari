@@ -3,6 +3,7 @@ import { setState, state, tags } from './shared'
 import { addAlert } from 'comps/alert'
 import { ArrowdownIcon, TrashIcon, WarningIcon } from 'icons'
 import {
+    Accessor,
     Component,
     createEffect,
     createMemo,
@@ -11,13 +12,26 @@ import {
     Show,
     Switch,
 } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
+import { produce } from 'solid-js/store'
 import { setPopup } from 'store/popup'
 import { Perms, self } from 'store'
 import { ProductTagModel } from 'models'
 
 export const PopupAdvanced = () => {
     const [showSpec, setShowSpec] = createSignal(false)
+
+    const ptags = createMemo(() => {
+        return tags[state.popup.product.kind]
+    })
+
+    const any_tags = createMemo(() => {
+        let pt = ptags()
+        return pt.bed.length != 0 || pt.leg.length != 0
+    })
+
+    createEffect(() => {
+        console.log('perm', self.perms.check(Perms.C_PRODUCT))
+    })
 
     return (
         <div class='advanced' classList={{ hide: !state.popup.advanced }}>
@@ -107,8 +121,8 @@ export const PopupAdvanced = () => {
                 placeholder='توضیحات کامل...'
             ></textarea>
 
-            <Show when={self.perms.check(Perms.V_PRODUCT_TAG)}>
-                <ProductTags />
+            <Show when={self.perms.check(Perms.V_PRODUCT_TAG) && any_tags()}>
+                <ProductTags tags={ptags} />
             </Show>
         </div>
     )
@@ -168,19 +182,20 @@ const SpecificationTable: Component<SPP> = P => {
     )
 }
 
-const ProductTags = () => {
-    const [local, setLocal] = createStore({
-        bed: [] as ProductTagModel[],
-        leg: [] as ProductTagModel[],
-    })
-
+type PTP = {
+    tags: Accessor<{
+        bed: ProductTagModel[]
+        leg: ProductTagModel[]
+    }>
+}
+const ProductTags: Component<PTP> = P => {
     const NO_TAG = { display: '---', idx: -1 }
 
     const leg_tags = createMemo(() =>
-        [NO_TAG].concat(local.leg.map(t => ({ display: t.name, idx: t.id })))
+        [NO_TAG].concat(P.tags().leg.map(t => ({ display: t.name, idx: t.id })))
     )
     const bed_tags = createMemo(() =>
-        [NO_TAG].concat(local.bed.map(t => ({ display: t.name, idx: t.id })))
+        [NO_TAG].concat(P.tags().bed.map(t => ({ display: t.name, idx: t.id })))
     )
 
     const default_leg = createMemo(() => {
@@ -194,23 +209,6 @@ const ProductTags = () => {
             bed_tags().find(i => i.idx === state.popup.product.tag_bed) ||
             NO_TAG
         )
-    })
-
-    createEffect(() => {
-        tags
-
-        let kind = state.popup.product.kind || null
-
-        if (!kind)
-            return setLocal({
-                bed: [],
-                leg: [],
-            })
-
-        setLocal({
-            bed: tags[kind].bed || [],
-            leg: tags[kind].leg || [],
-        })
     })
 
     return (
@@ -244,6 +242,7 @@ const ProductTags = () => {
                     </p>
 
                     <Select
+                        disabled={!self.perms.check(Perms.C_PRODUCT)}
                         items={leg_tags()}
                         onChange={v =>
                             setState(
@@ -276,6 +275,7 @@ const ProductTags = () => {
                     </p>
 
                     <Select
+                        disabled={!self.perms.check(Perms.C_PRODUCT)}
                         items={bed_tags()}
                         onChange={v =>
                             setState(

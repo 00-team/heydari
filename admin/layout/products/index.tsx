@@ -29,7 +29,7 @@ export default () => {
     const [params, setParams] = useSearchParams()
 
     onMount(() => {
-        if (self.perms.check(Perms.V_PRODUCT_TAG) && false) {
+        if (self.perms.check(Perms.V_PRODUCT_TAG)) {
             load_tags(0)
         }
     })
