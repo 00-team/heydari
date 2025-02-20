@@ -189,7 +189,7 @@ type PTP = {
     }>
 }
 const ProductTags: Component<PTP> = P => {
-    const NO_TAG = { display: '---', idx: -1 }
+    const NO_TAG = { display: '---', idx: null as number | null }
 
     const leg_tags = createMemo(() =>
         [NO_TAG].concat(P.tags().leg.map(t => ({ display: t.name, idx: t.id })))

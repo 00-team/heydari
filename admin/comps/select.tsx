@@ -3,7 +3,7 @@ import { Show, createEffect, on } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import './style/select.scss'
 
-type BaseItem = { display: string; idx: number }
+type BaseItem = { display: string; idx: number | null }
 
 type Props<T extends BaseItem> = {
     items: T[]
