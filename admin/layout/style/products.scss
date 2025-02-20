@@ -1182,6 +1182,165 @@
                 .advanced {
                     position: absolute;
                     inset: 0;
+
+                    flex-direction: column;
+                    gap: 2rem;
+                    flex-wrap: nowrap;
+
+                    padding-top: 0.2rem;
+                    padding-right: 1rem;
+
+                    overflow-y: auto;
+
+                    direction: ltr;
+
+                    @media screen and (max-width: 768px) {
+                        padding-right: 0;
+                    }
+
+                    &::-webkit-scrollbar {
+                        width: 3px;
+                        background-color: transparent;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        // border-radius: 10px;
+                        border: 0px solid white;
+                        background-color: var(--thirty-percent);
+                    }
+
+                    * {
+                        flex-shrink: 0;
+                        direction: rtl;
+                    }
+
+                    .specs-container {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 1rem;
+
+                        max-height: 100vh;
+
+                        padding-bottom: 1rem;
+
+                        will-change: max-height, height;
+                        transition: 1s ease;
+
+                        overflow: hidden;
+
+                        .specs-head {
+                            width: 100%;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+
+                            padding-left: 50px;
+                            padding-right: 5px;
+
+                            cursor: pointer;
+
+                            svg {
+                                will-change: transform;
+                                transition: 0.3s transform ease;
+                            }
+                        }
+
+                        .specs-wrapper {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 2rem;
+
+                            .spec-row {
+                                width: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-around;
+                                gap: 1rem;
+
+                                padding-right: 50px;
+
+                                position: relative;
+                                z-index: 1;
+
+                                input {
+                                    width: clamp(0px, 100%, 200px);
+                                    text-align: center;
+
+                                    padding: 0.5rem;
+
+                                    border: none;
+                                    border-bottom: 1px solid black;
+
+                                    &:focus-within {
+                                        outline: none;
+                                    }
+                                }
+
+                                .delete-row {
+                                    position: absolute;
+                                    right: 0;
+                                    border-radius: 8px;
+
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+
+                                    background-color: #fd2054;
+
+                                    padding: 0.5rem;
+                                }
+                            }
+
+                            .spec-add {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                padding: 0.6em 3em;
+                                border: none;
+                                border-radius: 0.6rem;
+                                background-color: var(--ten-percent);
+                            }
+                        }
+
+                        &.active {
+                            max-height: 2em;
+
+                            transition: 0.5s ease;
+
+                            .specs-head {
+                                svg {
+                                    transform: scaleY(-1);
+                                }
+                            }
+                        }
+                    }
+
+                    textarea {
+                        resize: none;
+                        padding: 1em;
+
+                        height: -webkit-fill-available;
+                        max-height: 200px;
+
+                        line-height: 1.8em;
+
+                        background-color: #e7e7e7;
+                        border-radius: 0.5rem;
+                        border: 1px solid #d5d5d5;
+
+                        &:focus {
+                            outline: none;
+                        }
+                        &:focus-within {
+                            outline: none;
+                        }
+                    }
                 }
 
                 .finput-container {
