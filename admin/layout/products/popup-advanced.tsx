@@ -29,10 +29,6 @@ export const PopupAdvanced = () => {
         return pt.bed.length != 0 || pt.leg.length != 0
     })
 
-    createEffect(() => {
-        console.log('perm', self.perms.check(Perms.C_PRODUCT))
-    })
-
     return (
         <div class='advanced' classList={{ hide: !state.popup.advanced }}>
             <div class='specs-container' classList={{ active: showSpec() }}>
