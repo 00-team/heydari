@@ -1267,6 +1267,10 @@
                                 position: relative;
                                 z-index: 1;
 
+                                @media screen and (max-width: 768px) {
+                                    flex-direction: column;
+                                }
+
                                 input {
                                     width: clamp(0px, 100%, 200px);
                                     text-align: center;
@@ -1275,6 +1279,10 @@
 
                                     border: none;
                                     border-bottom: 1px solid black;
+
+                                    @media screen and (max-width: 768px) {
+                                        width: 100%;
+                                    }
 
                                     &:focus-within {
                                         outline: none;
@@ -1293,6 +1301,10 @@
                                     background-color: #fd2054;
 
                                     padding: 0.5rem;
+
+                                    @media screen and (max-width: 768px) {
+                                        transform: translateY(1rem);
+                                    }
                                 }
                             }
 
