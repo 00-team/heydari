@@ -1,33 +1,32 @@
 import { ChevronDownIcon, ChevronUpIcon } from 'icons'
 import { Show, createEffect, on } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
+import { createStore } from 'solid-js/store'
 import './style/select.scss'
 
 type BaseItem = { display: string; idx: number }
 
-type Props<T extends BaseItem[]> = {
-    items: T
+type Props<T extends BaseItem> = {
+    items: T[]
     onChange(props: T): void
-    defaults?: T
-    multiple?: true | number
+    default?: T
     disabled?: boolean
 }
 
-export const Select = <T extends BaseItem[]>(P: Props<T>) => {
+export const Select = <T extends BaseItem>(P: Props<T>) => {
     type State = {
         open: boolean
-        selected: typeof P.items
-        changed: number
+        selected: T
+        // changed: number
     }
     const [state, setState] = createStore<State>({
         open: false,
-        selected: P.defaults || ([] as T),
-        changed: 0,
+        selected: P.default || P.items[0],
+        // changed: 0,
     })
 
     createEffect(
         on(
-            () => state.changed,
+            () => state.selected,
             () => P.onChange(state.selected),
             { defer: true }
         )
@@ -45,62 +44,19 @@ export const Select = <T extends BaseItem[]>(P: Props<T>) => {
                     !P.disabled && setState(s => ({ open: !s.open }))
                 }
             >
-                <Show
-                    when={P.multiple}
-                    fallback={<>{state.selected[0]?.display || '---'}</>}
-                >
-                    <div class='selected'>
-                        {state.selected.map(item => (
-                            <div class='item'>{item.display}</div>
-                        ))}
-                        {!state.selected.length && '---'}
-                    </div>
-                </Show>
+                {state.selected.display}
                 <Show when={!P.disabled}>
                     {state.open ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </Show>
             </div>
-            <div
-                class='cmp-select-body'
-                classList={{ active: state.open, multiple: !!P.multiple }}
-            >
+            <div class='cmp-select-body' classList={{ active: state.open }}>
                 {P.items.map(item => (
                     <div
                         class='item'
                         classList={{
-                            active: !!state.selected.find(
-                                i => i.idx == item.idx
-                            ),
+                            active: state.selected.idx == item.idx,
                         }}
-                        onclick={() =>
-                            setState(
-                                produce(s => {
-                                    if (!P.multiple) {
-                                        s.selected = [item] as T
-                                        s.changed = performance.now()
-                                        return
-                                    }
-
-                                    let x = s.selected.findIndex(
-                                        i => i.idx == item.idx
-                                    )
-
-                                    if (x != -1) {
-                                        s.selected.splice(x, 1)
-                                    } else {
-                                        if (
-                                            typeof P.multiple == 'number' &&
-                                            s.selected.length >= P.multiple
-                                        )
-                                            return
-
-                                        s.selected.push(item)
-                                    }
-
-                                    s.changed = performance.now()
-                                })
-                            )
-                        }
+                        onclick={() => setState({ selected: item })}
                     >
                         {item.display}
                     </div>
