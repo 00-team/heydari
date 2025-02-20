@@ -1361,6 +1361,15 @@
                         flex-direction: column;
                         gap: 2rem;
 
+                        .tag-error {
+                            display: flex;
+                            align-items: center;
+                            color: var(--alert-error);
+                            gap: 0.5rem;
+                            margin-top: 0.5rem;
+                            padding-right: 1rem;
+                        }
+
                         .tag-wrapper {
                             width: 100%;
 
