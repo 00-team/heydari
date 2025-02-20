@@ -1,5 +1,5 @@
 import { useSearchParams } from '@solidjs/router'
-import { LoadingElem } from 'comps'
+import { LoadingElem, Select } from 'comps'
 import { addAlert } from 'comps/alert'
 import {
     ArrowdownIcon,
@@ -1284,6 +1284,60 @@ const PopupOverview: Component = () => {
 const PopupAdvanced: Component = () => {
     const [showSpec, setShowSpec] = createSignal(false)
 
+    const [local, setLocal] = createStore({
+        bed: [],
+        leg: [],
+    })
+
+    const leg_tags = createMemo(() =>
+        [{ display: '---', idx: null }].concat(
+            local.leg.map(t => ({
+                display: t.name,
+                idx: t.id,
+            }))
+        )
+    )
+    const bed_tags = createMemo(() =>
+        [{ display: '---', idx: null }].concat(
+            local.bed.map(t => ({
+                display: t.name,
+                idx: t.id,
+            }))
+        )
+    )
+
+    const default_leg = createMemo(() => {
+        if (!state.popup.product?.tag_leg)
+            return [{ display: '---', idx: null }]
+
+        return [leg_tags().find(i => i.idx === state.popup.product.tag_leg)]
+    })
+    const default_bed = createMemo(() => {
+        if (!state.popup.product?.tag_bed)
+            return [{ display: '---', idx: null }]
+
+        return [bed_tags().find(i => i.idx === state.popup.product.tag_bed)]
+    })
+
+    createEffect(() => {
+        tags
+
+        let kind = state.popup.product?.kind || null
+
+        if (!kind)
+            return setLocal({
+                bed: [],
+                leg: [],
+            })
+
+        console.log(tags)
+
+        setLocal({
+            bed: tags[kind].bed || [],
+            leg: tags[kind].leg || [],
+        })
+    })
+
     return (
         <div class='advanced' classList={{ hide: !state.popup.advanced }}>
             <div class='specs-container' classList={{ active: showSpec() }}>
@@ -1371,45 +1425,93 @@ const PopupAdvanced: Component = () => {
                 placeholder='توضیحات کامل...'
             ></textarea>
             <div class='product-tags'>
-                <div class='tag-wrapper title_smaller'>
-                    <p>
-                        پایه{' '}
-                        <Show when={state.popup.product?.kind} fallback='محصول'>
-                            <Switch>
-                                <Match
-                                    when={state.popup.product.kind === 'chair'}
-                                >
-                                    صندلی
-                                </Match>
-                                <Match
-                                    when={state.popup.product.kind === 'table'}
-                                >
-                                    میز
-                                </Match>
-                            </Switch>
-                        </Show>
-                    </p>
-                </div>
+                <Show
+                    when={state.popup.product?.kind}
+                    fallback={
+                        <div class='tag-error title_small'>
+                            <WarningIcon />
+                            دسته بندی محصول را نتخاب نکردید
+                        </div>
+                    }
+                >
+                    <div class='tag-wrapper title_smaller'>
+                        <p>
+                            پایه{' '}
+                            <Show
+                                when={state.popup.product.kind}
+                                fallback='محصول'
+                            >
+                                <Switch>
+                                    <Match
+                                        when={
+                                            state.popup.product.kind === 'chair'
+                                        }
+                                    >
+                                        صندلی
+                                    </Match>
+                                    <Match
+                                        when={
+                                            state.popup.product.kind === 'table'
+                                        }
+                                    >
+                                        میز
+                                    </Match>
+                                </Switch>
+                            </Show>
+                        </p>
 
-                <div class='tag-wrapper title_smaller'>
-                    <p>
-                        دسته{' '}
-                        <Show when={state.popup.product?.kind} fallback='محصول'>
-                            <Switch>
-                                <Match
-                                    when={state.popup.product.kind === 'chair'}
-                                >
-                                    صندلی
-                                </Match>
-                                <Match
-                                    when={state.popup.product.kind === 'table'}
-                                >
-                                    میز
-                                </Match>
-                            </Switch>
-                        </Show>
-                    </p>
-                </div>
+                        <Select
+                            items={leg_tags()}
+                            onChange={v =>
+                                setState(
+                                    produce(s => {
+                                        s.popup.product.tag_leg = v[0].idx
+                                    })
+                                )
+                            }
+                            defaults={default_leg()}
+                        />
+                    </div>
+
+                    <div class='tag-wrapper title_smaller'>
+                        <p>
+                            دسته{' '}
+                            <Show
+                                when={state.popup.product.kind}
+                                fallback='محصول'
+                            >
+                                <Switch>
+                                    <Match
+                                        when={
+                                            state.popup.product.kind === 'chair'
+                                        }
+                                    >
+                                        صندلی
+                                    </Match>
+                                    <Match
+                                        when={
+                                            state.popup.product.kind === 'table'
+                                        }
+                                    >
+                                        میز
+                                    </Match>
+                                </Switch>
+                            </Show>
+                        </p>
+
+                        <Select
+                            items={bed_tags()}
+                            onChange={v =>
+                                setState(
+                                    produce(s => {
+                                        s.popup.product.tag_bed = v[0].idx
+                                    })
+                                )
+                            }
+                            defaults={default_bed()}
+                        />
+                    </div>
+                </Show>
             </div>
         </div>
     )
