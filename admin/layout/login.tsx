@@ -165,7 +165,14 @@ export default () => {
                 <Show when={state.loading}>
                     <div class='loading-form'>
                         <LoadingDots />
-                        <h2 class='title'>صبر کنید...</h2>
+                        <h2 class='title'>
+                            <Show
+                                when={state.stage === 'phone'}
+                                fallback={<>درحال تایید پیامک...</>}
+                            >
+                                درحال فرستادن پیامک...
+                            </Show>
+                        </h2>
                     </div>
                 </Show>
                 <button
