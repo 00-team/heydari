@@ -24,7 +24,6 @@ import {
 } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import { setPopup } from 'store/popup'
-import './style/products.scss'
 import { state, setState } from './shared'
 
 export const PopupOverview: Component = () => {
@@ -85,7 +84,6 @@ export const PopupOverview: Component = () => {
 
         if (state.popup.type === 'add') {
             for (let f of el.files) {
-                console.log(f)
                 setState(
                     produce(s => {
                         s.popup.files.push(f)

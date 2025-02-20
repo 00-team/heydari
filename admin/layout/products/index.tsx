@@ -21,7 +21,7 @@ import {
 } from 'solid-js'
 import { produce } from 'solid-js/store'
 import { self } from 'store'
-import './style/products.scss'
+import './products.scss'
 import { setTags, state, setState } from './shared'
 import { ProductPopup } from './prodcut-popup'
 

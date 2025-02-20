@@ -22,23 +22,21 @@ export const PopupAdvanced: Component = () => {
         leg: [],
     })
 
+    const NO_TAG = { display: '---', idx: null }
+
     const leg_tags = createMemo(() =>
-        [{ display: '---', idx: null }].concat(
-            local.leg.map(t => ({ display: t.name, idx: t.id }))
-        )
+        [NO_TAG].concat(local.leg.map(t => ({ display: t.name, idx: t.id })))
     )
     const bed_tags = createMemo(() =>
-        [{ display: '---', idx: null }].concat(
-            local.bed.map(t => ({ display: t.name, idx: t.id }))
-        )
+        [NO_TAG].concat(local.bed.map(t => ({ display: t.name, idx: t.id })))
     )
 
     const default_leg = createMemo(() => {
-        if (!state.popup.product?.tag_leg) return { display: '---', idx: null }
+        if (!state.popup.product?.tag_leg) return NO_TAG
         return leg_tags().find(i => i.idx === state.popup.product.tag_leg)
     })
     const default_bed = createMemo(() => {
-        if (!state.popup.product?.tag_bed) return { display: '---', idx: null }
+        if (!state.popup.product?.tag_bed) return NO_TAG
         return bed_tags().find(i => i.idx === state.popup.product.tag_bed)
     })
 
@@ -52,8 +50,6 @@ export const PopupAdvanced: Component = () => {
                 bed: [],
                 leg: [],
             })
-
-        console.log(tags)
 
         setLocal({
             bed: tags[kind].bed || [],

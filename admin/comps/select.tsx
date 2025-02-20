@@ -32,6 +32,8 @@ export const Select = <T extends BaseItem>(P: Props<T>) => {
         )
     )
 
+    createEffect(() => setState({ selected: P.default }))
+
     createEffect(() => {
         if (P.disabled) setState({ open: false })
     })

@@ -50,8 +50,6 @@ export async function product_add() {
             setState(
                 produce(s => {
                     s.products[index] = productsWithLoading
-
-                    console.log(s.products[index], index)
                 })
             )
 
