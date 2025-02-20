@@ -29,9 +29,11 @@ import {
     createUniqueId,
     For,
     JSX,
+    Match,
     onCleanup,
     onMount,
     Show,
+    Switch,
 } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import { self } from 'store'
@@ -1368,7 +1370,47 @@ const PopupAdvanced: Component = () => {
                 }
                 placeholder='توضیحات کامل...'
             ></textarea>
-            <div class='product-tags'></div>
+            <div class='product-tags'>
+                <div class='tag-wrapper title_smaller'>
+                    <p>
+                        پایه{' '}
+                        <Show when={state.popup.product?.kind} fallback='محصول'>
+                            <Switch>
+                                <Match
+                                    when={state.popup.product.kind === 'chair'}
+                                >
+                                    صندلی
+                                </Match>
+                                <Match
+                                    when={state.popup.product.kind === 'table'}
+                                >
+                                    میز
+                                </Match>
+                            </Switch>
+                        </Show>
+                    </p>
+                </div>
+
+                <div class='tag-wrapper title_smaller'>
+                    <p>
+                        دسته{' '}
+                        <Show when={state.popup.product?.kind} fallback='محصول'>
+                            <Switch>
+                                <Match
+                                    when={state.popup.product.kind === 'chair'}
+                                >
+                                    صندلی
+                                </Match>
+                                <Match
+                                    when={state.popup.product.kind === 'table'}
+                                >
+                                    میز
+                                </Match>
+                            </Switch>
+                        </Show>
+                    </p>
+                </div>
+            </div>
         </div>
     )
 }
