@@ -555,7 +555,11 @@ const ProductPopup: Component = () => {
                     })
                 )
 
-                if (state.popup.files.length <= 0) {
+                let hasFiles = state.popup.files.length > 0
+                let hasDetail =
+                    p.detail || Object.keys(p.specification).length > 0
+
+                if (!hasFiles && !hasDetail) {
                     setState(
                         produce(s => {
                             s.products[index].loading = false
@@ -564,23 +568,72 @@ const ProductPopup: Component = () => {
                     return
                 }
 
-                for (let f of state.popup.files) {
-                    let data = new FormData()
-                    data.set('photo', f)
+                if (hasFiles) {
+                    for (let f of state.popup.files) {
+                        let data = new FormData()
+                        data.set('photo', f)
 
+                        httpx({
+                            url: `/api/admin/products/${firstRes.response.id}/photos/`,
+                            method: 'PUT',
+                            data,
+                            onLoad(secRes) {
+                                if (secRes.status != 200) return
+
+                                setState(
+                                    produce(s => {
+                                        s.products[index].photos =
+                                            secRes.response.photos
+
+                                        s.products[index].loading = false
+                                    })
+                                )
+                            },
+                        })
+                    }
+                }
+
+                if (hasDetail) {
                     httpx({
-                        url: `/api/admin/products/${firstRes.response.id}/photos/`,
-                        method: 'PUT',
-                        data,
-                        onLoad(secRes) {
-                            if (secRes.status != 200) return
+                        url: `/api/admin/products/${firstRes.response.id}/`,
+                        method: 'PATCH',
+                        json: {
+                            slug: firstRes.response.slug,
+                            name: firstRes.response.name,
+                            code: firstRes.response.code,
+                            detail: firstRes.response.detail,
+                            tag_leg: p.tag_leg || firstRes.response.tag_leg,
+                            tag_bed: p.tag_bed || firstRes.response.tag_bed,
+                            best: firstRes.response.best,
+                            price: firstRes.response.price,
+                            count: firstRes.response.count,
+                            description: firstRes.response.description,
+                            specification:
+                                p.specification ||
+                                firstRes.response.specification,
+                        },
+                        onLoad(x) {
+                            if (x.status != 200)
+                                return addAlert({
+                                    type: 'error',
+                                    subject: 'ذخیره ناموفق!',
+                                    content: 'ذخیره محصول با خطا مواجح شد!',
+                                    timeout: 3,
+                                })
+
+                            addAlert({
+                                type: 'success',
+                                subject: 'ذخیره موفق!',
+                                content: 'محصول با موفقیت ذخیره شد',
+                                timeout: 3,
+                            })
 
                             setState(
                                 produce(s => {
-                                    s.products[index].photos =
-                                        secRes.response.photos
-
-                                    s.products[index].loading = false
+                                    s.products[index] = {
+                                        ...x.response,
+                                        loading: false,
+                                    }
                                 })
                             )
                         },
