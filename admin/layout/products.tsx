@@ -3,8 +3,8 @@ import { LoadingElem, Select } from 'comps'
 import { addAlert } from 'comps/alert'
 import {
     ArmchairIcon,
+    ArrowdownIcon,
     ChairIcon,
-    ChevronDownIcon,
     ChevronUpIcon,
     CloseIcon,
     CodeIcon,
@@ -557,8 +557,19 @@ const ProductPopup: Component = () => {
                 setState(
                     produce(s => {
                         s.products[index] = productsWithLoading
+
+                        console.log(s.products[index], index)
                     })
                 )
+
+                if (state.popup.files.length <= 0) {
+                    setState(
+                        produce(s => {
+                            s.products[index].loading = false
+                        })
+                    )
+                    return
+                }
 
                 for (let f of state.popup.files) {
                     let data = new FormData()
@@ -751,12 +762,8 @@ const ProductPopup: Component = () => {
                 </button>
                 <div class='popup-section'>
                     <PopupOverview />
-                    <div
-                        class='advanced'
-                        classList={{ hide: !state.popup.advanced }}
-                    >
-                        به زودی...
-                    </div>
+
+                    <PopupAdvanced />
                 </div>
 
                 <div class='popup-actions'>
@@ -1219,9 +1226,96 @@ const PopupOverview: Component = () => {
                             })
                         )
                     }
-                    placeholder='توضیحات محصول...'
+                    placeholder='توضیحات خلاصه...'
                 ></textarea>
             </aside>
+        </div>
+    )
+}
+
+const PopupAdvanced: Component = () => {
+    const [showSpec, setShowSpec] = createSignal(false)
+
+    return (
+        <div class='advanced' classList={{ hide: !state.popup.advanced }}>
+            <div class='specs-container' classList={{ active: showSpec() }}>
+                <div class='specs-head' onclick={() => setShowSpec(s => !s)}>
+                    <span class='title_small'>مشخصات فنی</span>
+                    <ArrowdownIcon />
+                </div>
+                <div class='specs-wrapper'>
+                    <button
+                        role='button'
+                        class='spec-add title_smaller'
+                        onClick={e => {
+                            e.preventDefault()
+                            let val = 'توضیح'
+                            let key = `عنوان جدید ${Object.keys(state.popup.product.specification).length + 1}`
+
+                            if (key in state.popup.product.specification)
+                                return addAlert({
+                                    type: 'error',
+                                    timeout: 3,
+                                    subject: 'عنوان تکراری!',
+                                    content:
+                                        'عنوان جدید رو به چیزه دیگری تغییر بدید.',
+                                })
+
+                            setState(
+                                produce(s => {
+                                    s.popup.product.specification[key] = val
+                                })
+                            )
+                        }}
+                    >
+                        اضافه کردن
+                    </button>
+                    <SpecificationTable
+                        s={state.popup.product?.specification}
+                        del={key =>
+                            setState(
+                                produce(s => {
+                                    delete s.popup.product.specification[key]
+                                })
+                            )
+                        }
+                        set_key={(old, nky) => {
+                            setState(
+                                produce(s => {
+                                    let val = s.popup.product.specification[old]
+                                    if (val == undefined) return
+                                    s.popup.product.specification[old]
+                                    delete s.popup.product.specification[old]
+                                    s.popup.product.specification[nky] = val
+                                })
+                            )
+                        }}
+                        set_val={(key, val) => {
+                            setState(
+                                produce(s => {
+                                    s.popup.product.specification[key] = val
+                                })
+                            )
+                        }}
+                    />
+                </div>
+            </div>
+
+            <textarea
+                class='extra-detail description'
+                cols='30'
+                rows='10'
+                value={state.popup.product?.detail || null}
+                oninput={e =>
+                    setState(
+                        produce(s => {
+                            s.popup.product.detail = e.target.value
+                        })
+                    )
+                }
+                placeholder='توضیحات کامل...'
+            ></textarea>
+            <div class='product-tags'></div>
         </div>
     )
 }
@@ -1841,168 +1935,70 @@ type SPP = {
 }
 const SpecificationTable: Component<SPP> = P => {
     return (
-        <tbody>
-            <Show
-                when={Object.keys(P.s).length > 0}
-                fallback={
-                    <tr class='empty'>
-                        <td colspan='3'>مشخصاتی ثبت نشده!</td>
-                    </tr>
-                }
-            >
-                {Object.entries(P.s).map(([key, value]) => (
-                    <tr>
-                        <td class='delete-cta'>
-                            <button
-                                class='styled icon'
-                                onClick={() => {
-                                    P.del(key)
-                                }}
-                            >
-                                <TrashIcon />
-                            </button>
-                        </td>
-
-                        <td>
-                            <input
-                                type='text'
-                                value={key}
-                                onBlur={e =>
-                                    P.set_key(key, e.currentTarget.value)
-                                }
-                            />
-                        </td>
-
-                        <td>
-                            <input
-                                type='text'
-                                value={value}
-                                onBlur={e =>
-                                    P.set_val(key, e.currentTarget.value)
-                                }
-                            />
-                        </td>
-                    </tr>
-                ))}
-            </Show>
-        </tbody>
-    )
-}
-
-type AddProductProps = {
-    update(): void
-}
-const AddProduct: Component<AddProductProps> = P => {
-    type State = Pick<ProductModel, 'kind' | 'name' | 'slug' | 'code'> & {
-        show: boolean
-    }
-    const [state, setState] = createStore<State>({
-        show: false,
-        kind: 'chair',
-        slug: '',
-        name: '',
-        code: '',
-    })
-
-    function add() {
-        httpx({
-            url: '/api/admin/products/',
-            method: 'POST',
-            json: {
-                kind: state.kind,
-                slug: state.slug,
-                name: state.name,
-                code: state.code,
-            },
-            onLoad(x) {
-                if (x.status != 200) return
-                P.update()
-            },
-        })
-    }
-
-    return (
-        <div class='product'>
-            <div class='top'>
-                <div class='info'>Add a Product</div>
-                <div class='product-actions'>
-                    <Show
-                        when={
-                            state.show &&
-                            state.name &&
-                            state.code &&
-                            state.slug.length >= 3
-                        }
-                    >
-                        <button class='add-btn styled icon' onClick={add}>
-                            <PlusIcon />
-                        </button>
-                    </Show>
+        <Show
+            when={Object.keys(P.s || {}).length > 0}
+            fallback={
+                <div class='empty-specs title_small'>مشخصاتی ثبت نشده!</div>
+            }
+        >
+            {Object.entries(P.s).map(([key, value]) => (
+                <div class='spec-row'>
+                    <input
+                        class='row-holder description'
+                        type='text'
+                        value={key}
+                        oninput={e => P.set_key(key, e.currentTarget.value)}
+                    />
+                    <input
+                        class='row-data description'
+                        type='text'
+                        value={value}
+                        oninput={e => P.set_val(key, e.currentTarget.value)}
+                    />
                     <button
-                        class='styled icon'
-                        onClick={() => setState(s => ({ show: !s.show }))}
+                        role='button'
+                        class='delete-row'
+                        onClick={e => {
+                            e.stopPropagation()
+                            P.del(key)
+                        }}
                     >
-                        <Show when={state.show} fallback={<ChevronDownIcon />}>
-                            <ChevronUpIcon />
-                        </Show>
+                        <TrashIcon />
                     </button>
                 </div>
-            </div>
-            <Show when={state.show}>
-                <div class='bottom'>
-                    <span>Slug:</span>
-                    <input
-                        class='styled'
-                        placeholder='product slug'
-                        dir='auto'
-                        maxLength={255}
-                        value={state.slug}
-                        onInput={e => {
-                            let slug = e.currentTarget.value.slice(0, 255)
-                            setState({ slug })
-                        }}
-                    />
-                    <span>Name:</span>
-                    <input
-                        class='styled'
-                        placeholder='product name'
-                        dir='auto'
-                        maxLength={255}
-                        value={state.name}
-                        onInput={e => {
-                            let name = e.currentTarget.value.slice(0, 255)
-                            setState({ name })
-                        }}
-                    />
-                    <span>Code:</span>
-                    <input
-                        class='styled'
-                        placeholder='product code must be unique'
-                        maxLength={255}
-                        value={state.code}
-                        onInput={e => {
-                            let code = e.currentTarget.value.slice(0, 255)
-                            setState({ code })
-                        }}
-                    />
-                    <span>Kind:</span>
-                    <button
-                        class='styled icon'
-                        onClick={() =>
-                            setState(s => ({
-                                kind: s.kind == 'chair' ? 'table' : 'chair',
-                            }))
-                        }
-                    >
-                        <Show
-                            when={state.kind == 'chair'}
-                            fallback={<TableIcon />}
-                        >
-                            <ArmchairIcon />
-                        </Show>
-                    </button>
-                </div>
-            </Show>
-        </div>
+                // <tr>
+                //     <td class='delete-cta'>
+                //         <button
+                //             class='styled icon'
+                //             onClick={() => {
+                //                 P.del(key)
+                //             }}
+                //         >
+                //             <TrashIcon />
+                //         </button>
+                //     </td>
+
+                //     <td>
+                //         <input
+                //             type='text'
+                //             value={key}
+                //             onBlur={e =>
+                //                 P.set_key(key, e.currentTarget.value)
+                //             }
+                //         />
+                //     </td>
+
+                //     <td>
+                //         <input
+                //             type='text'
+                //             value={value}
+                //             onBlur={e =>
+                //                 P.set_val(key, e.currentTarget.value)
+                //             }
+                //         />
+                //     </td>
+                // </tr>
+            ))}
+        </Show>
     )
 }
