@@ -1,4 +1,4 @@
-import { ProductModel, ProductTagModel } from 'models'
+import { EMPTY_PRODUCT, ProductModel, ProductTagModel } from 'models'
 import { createStore } from 'solid-js/store'
 
 type TagState = {
@@ -14,10 +14,10 @@ export const [tags, setTags] = createStore<TagState>({
 type popupType = {
     show: boolean
     type: 'edit' | 'add'
-    product: ProductModel | null
+    product: ProductModel
     advanced: boolean
 
-    errorSec: 'name' | 'slug' | 'code' | 'id' | 'img' | 'description'
+    errorSec: 'name' | 'slug' | 'code' | 'id' | 'img' | 'description' | null
     errorText: string
 
     files: File[]
@@ -50,7 +50,7 @@ export const [state, setState] = createStore<stateType>({
     popup: {
         show: false,
         type: 'add',
-        product: null,
+        product: EMPTY_PRODUCT,
         advanced: false,
 
         errorSec: 'name',

@@ -79,7 +79,7 @@ export const ProductPopup: Component = () => {
         setState(
             produce(s => {
                 s.popup.show = false
-                s.products[index].loading = true
+                s.products[index]!.loading = true
             })
         )
 
@@ -122,7 +122,7 @@ export const ProductPopup: Component = () => {
         setState(
             produce(s => {
                 s.popup.show = false
-                s.products[index].loading = true
+                s.products[index]!.loading = true
             })
         )
 
@@ -176,7 +176,7 @@ export const ProductPopup: Component = () => {
 
         if (index < 0) return
 
-        let p = state.products[index]
+        let p = state.products[index]!
 
         let change =
             s.slug != p.slug ||

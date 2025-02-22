@@ -41,13 +41,14 @@ export type ProductModel = {
 export const EMPTY_PRODUCT: ProductModel = {
     loading: true,
     best: false,
-    code: null,
-    count: null,
-    created_at: null,
+    code: '',
+    count: 0,
+    created_at: 0,
+    updated_at: 0,
     description: '',
     detail: '',
-    id: null,
-    kind: null,
+    id: 0,
+    kind: 'chair',
     name: '',
     photos: [],
     price: 0,
@@ -56,7 +57,6 @@ export const EMPTY_PRODUCT: ProductModel = {
     tag_bed: null,
     tag_leg: null,
     thumbnail: '',
-    updated_at: null,
 }
 
 export type MaterialModel = {

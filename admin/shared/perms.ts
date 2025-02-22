@@ -69,7 +69,7 @@ export class Perms {
             throw new Error('invalid byte')
         }
         let f = 1 << bit
-        let n = this.#perms[byte]
+        let n = this.#perms[byte]!
         return (n & f) == f
     }
 
@@ -89,8 +89,11 @@ export class Perms {
         return this.#perms
     }
 }
+// @ts-ignore
 delete globalThis._perm_count_bit
+// @ts-ignore
 delete globalThis._perm_count_byte
+// @ts-ignore
 delete globalThis.auto
 
 export type PermDisplay = { perm: Perm; name: string }

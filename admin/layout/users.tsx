@@ -99,7 +99,7 @@ const User: Component<UserProps> = P => {
     type State = {
         loading: boolean
         edit: boolean
-        name: string
+        name: string | null
         perms: Perms
         banned: boolean
         changed: number
@@ -199,7 +199,7 @@ const User: Component<UserProps> = P => {
                         class='styled'
                         placeholder='user name'
                         maxLength={255}
-                        value={state.name}
+                        value={state.name || ''}
                         onInput={e => {
                             let name = e.currentTarget.value.slice(0, 255)
                             setState({ name })

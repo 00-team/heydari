@@ -5,7 +5,7 @@ type Props = {
     class?: string
 }
 export const Timer: Component<Props> = P => {
-    function convertSectoMin(seconds) {
+    function convertSectoMin(seconds: number) {
         const mins = Math.floor(seconds / 60)
         const secs = seconds % 60
         return mins + ':' + (secs < 10 ? '0' : '') + secs

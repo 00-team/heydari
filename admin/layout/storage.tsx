@@ -8,9 +8,7 @@ import {
     CloseIcon,
     DeleteIcon,
     ImageIcon,
-    MinusIcon,
     PersonIcon,
-    PlusIcon,
     SearchIcon,
     UpdatePersonIcon,
     UploadIcon,
@@ -59,7 +57,7 @@ const default_item: MaterialModel = {
     detail: '',
     name: '',
     id: 0,
-    photo: null,
+    photo: '',
     updated_at: 0,
     created_by: 0,
     updated_by: 0,
@@ -529,7 +527,9 @@ const Popup: Component<PopupProps> = P => {
                                     src={
                                         state.imgUrl
                                             ? `/record/mp-${P.state.activeItem.id}-${state.imgUrl}`
-                                            : URL.createObjectURL(state.imgFile)
+                                            : URL.createObjectURL(
+                                                  state.imgFile!
+                                              )
                                     }
                                 />
                             </div>
@@ -598,9 +598,7 @@ const Popup: Component<PopupProps> = P => {
                                 inputMode='numeric'
                                 min={1}
                                 maxLength={20}
-                                value={
-                                    state.newCount > 0 ? state.newCount : null
-                                }
+                                value={state.newCount > 0 ? state.newCount : 0}
                                 dir={'ltr'}
                                 oninput={e => {
                                     if (e.target.value.length >= 10)
@@ -610,8 +608,10 @@ const Popup: Component<PopupProps> = P => {
                                         e.target.valueAsNumber
                                     )
 
-                                    if (value === 0)
-                                        return (e.target.value = null)
+                                    if (value === 0) {
+                                        e.target.value = ''
+                                        return
+                                    }
 
                                     if (isNaN(value)) {
                                         setState({ newCount: 0 })
@@ -692,8 +692,10 @@ const UploadImage: Component<UploadImageProps> = P => {
             ondragover={e => e.preventDefault()}
             ondrop={e => {
                 e.preventDefault()
+                if (!e.dataTransfer) return
 
                 let file = e.dataTransfer.files[0]
+                if (!file) return
 
                 if (!IMAGE_MIMETYPE.includes(file.type))
                     return addAlert({

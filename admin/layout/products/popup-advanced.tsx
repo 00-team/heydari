@@ -3,6 +3,7 @@ import { setState, state, tags } from './shared'
 import { addAlert } from 'comps/alert'
 import { ArrowdownIcon, TrashIcon, WarningIcon } from 'icons'
 import {
+    Accessor,
     Component,
     createEffect,
     createMemo,
@@ -11,50 +12,21 @@ import {
     Show,
     Switch,
 } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
+import { produce } from 'solid-js/store'
 import { setPopup } from 'store/popup'
+import { Perms, self } from 'store'
+import { ProductTagModel } from 'models'
 
-export const PopupAdvanced: Component = () => {
+export const PopupAdvanced = () => {
     const [showSpec, setShowSpec] = createSignal(false)
 
-    const [local, setLocal] = createStore({
-        bed: [],
-        leg: [],
+    const ptags = createMemo(() => {
+        return tags[state.popup.product.kind]
     })
 
-    const NO_TAG = { display: '---', idx: null }
-
-    const leg_tags = createMemo(() =>
-        [NO_TAG].concat(local.leg.map(t => ({ display: t.name, idx: t.id })))
-    )
-    const bed_tags = createMemo(() =>
-        [NO_TAG].concat(local.bed.map(t => ({ display: t.name, idx: t.id })))
-    )
-
-    const default_leg = createMemo(() => {
-        if (!state.popup.product?.tag_leg) return NO_TAG
-        return leg_tags().find(i => i.idx === state.popup.product.tag_leg)
-    })
-    const default_bed = createMemo(() => {
-        if (!state.popup.product?.tag_bed) return NO_TAG
-        return bed_tags().find(i => i.idx === state.popup.product.tag_bed)
-    })
-
-    createEffect(() => {
-        tags
-
-        let kind = state.popup.product?.kind || null
-
-        if (!kind)
-            return setLocal({
-                bed: [],
-                leg: [],
-            })
-
-        setLocal({
-            bed: tags[kind].bed || [],
-            leg: tags[kind].leg || [],
-        })
+    const any_tags = createMemo(() => {
+        let pt = ptags()
+        return pt.bed.length != 0 || pt.leg.length != 0
     })
 
     return (
@@ -84,7 +56,8 @@ export const PopupAdvanced: Component = () => {
 
                             setState(
                                 produce(s => {
-                                    s.popup.product.specification[key] = val
+                                    if (s.popup.product)
+                                        s.popup.product.specification[key] = val
                                 })
                             )
                         }}
@@ -92,7 +65,7 @@ export const PopupAdvanced: Component = () => {
                         اضافه کردن
                     </button>
                     <SpecificationTable
-                        s={state.popup.product?.specification}
+                        s={state.popup.product.specification}
                         del={key =>
                             setState(
                                 produce(s => {
@@ -106,12 +79,12 @@ export const PopupAdvanced: Component = () => {
                                     const spec = s.popup.product.specification
                                     if (!(old in spec)) return
                                     // Create a new object while preserving the key order
-                                    const newSpec = {}
+                                    let newSpec: typeof spec = {}
                                     Object.keys(spec).forEach(key => {
                                         if (key === old) {
-                                            newSpec[nky] = spec[key]
+                                            newSpec[nky] = spec[key]!
                                         } else {
-                                            newSpec[key] = spec[key]
+                                            newSpec[key] = spec[key]!
                                         }
                                     })
                                     s.popup.product.specification = newSpec
@@ -133,7 +106,7 @@ export const PopupAdvanced: Component = () => {
                 class='extra-detail description'
                 cols='30'
                 rows='10'
-                value={state.popup.product?.detail || null}
+                value={state.popup.product.detail}
                 oninput={e =>
                     setState(
                         produce(s => {
@@ -143,95 +116,10 @@ export const PopupAdvanced: Component = () => {
                 }
                 placeholder='توضیحات کامل...'
             ></textarea>
-            <div class='product-tags'>
-                <Show
-                    when={state.popup.product?.kind}
-                    fallback={
-                        <div class='tag-error title_small'>
-                            <WarningIcon />
-                            دسته بندی محصول را نتخاب نکردید
-                        </div>
-                    }
-                >
-                    <div class='tag-wrapper title_smaller'>
-                        <p>
-                            پایه{' '}
-                            <Show
-                                when={state.popup.product.kind}
-                                fallback='محصول'
-                            >
-                                <Switch>
-                                    <Match
-                                        when={
-                                            state.popup.product.kind === 'chair'
-                                        }
-                                    >
-                                        صندلی
-                                    </Match>
-                                    <Match
-                                        when={
-                                            state.popup.product.kind === 'table'
-                                        }
-                                    >
-                                        میز
-                                    </Match>
-                                </Switch>
-                            </Show>
-                        </p>
 
-                        <Select
-                            items={leg_tags()}
-                            onChange={v =>
-                                setState(
-                                    produce(s => {
-                                        s.popup.product.tag_leg = v.idx
-                                    })
-                                )
-                            }
-                            default={default_leg()}
-                        />
-                    </div>
-
-                    <div class='tag-wrapper title_smaller'>
-                        <p>
-                            دسته{' '}
-                            <Show
-                                when={state.popup.product.kind}
-                                fallback='محصول'
-                            >
-                                <Switch>
-                                    <Match
-                                        when={
-                                            state.popup.product.kind === 'chair'
-                                        }
-                                    >
-                                        صندلی
-                                    </Match>
-                                    <Match
-                                        when={
-                                            state.popup.product.kind === 'table'
-                                        }
-                                    >
-                                        میز
-                                    </Match>
-                                </Switch>
-                            </Show>
-                        </p>
-
-                        <Select
-                            items={bed_tags()}
-                            onChange={v =>
-                                setState(
-                                    produce(s => {
-                                        s.popup.product.tag_bed = v.idx
-                                    })
-                                )
-                            }
-                            default={default_bed()}
-                        />
-                    </div>
-                </Show>
-            </div>
+            <Show when={self.perms.check(Perms.V_PRODUCT_TAG) && any_tags()}>
+                <ProductTags tags={ptags} />
+            </Show>
         </div>
     )
 }
@@ -287,5 +175,115 @@ const SpecificationTable: Component<SPP> = P => {
                 </div>
             ))}
         </Show>
+    )
+}
+
+type PTP = {
+    tags: Accessor<{
+        bed: ProductTagModel[]
+        leg: ProductTagModel[]
+    }>
+}
+const ProductTags: Component<PTP> = P => {
+    const NO_TAG = { display: '---', idx: null as number | null }
+
+    const leg_tags = createMemo(() =>
+        [NO_TAG].concat(P.tags().leg.map(t => ({ display: t.name, idx: t.id })))
+    )
+    const bed_tags = createMemo(() =>
+        [NO_TAG].concat(P.tags().bed.map(t => ({ display: t.name, idx: t.id })))
+    )
+
+    const default_leg = createMemo(() => {
+        return (
+            leg_tags().find(i => i.idx === state.popup.product.tag_leg) ||
+            NO_TAG
+        )
+    })
+    const default_bed = createMemo(() => {
+        return (
+            bed_tags().find(i => i.idx === state.popup.product.tag_bed) ||
+            NO_TAG
+        )
+    })
+
+    return (
+        <div class='product-tags'>
+            <Show
+                when={state.popup.product?.kind}
+                fallback={
+                    <div class='tag-error title_small'>
+                        <WarningIcon />
+                        دسته بندی محصول را نتخاب نکردید
+                    </div>
+                }
+            >
+                <div class='tag-wrapper title_smaller'>
+                    <p>
+                        پایه{' '}
+                        <Show when={state.popup.product.kind} fallback='محصول'>
+                            <Switch>
+                                <Match
+                                    when={state.popup.product.kind === 'chair'}
+                                >
+                                    صندلی
+                                </Match>
+                                <Match
+                                    when={state.popup.product.kind === 'table'}
+                                >
+                                    میز
+                                </Match>
+                            </Switch>
+                        </Show>
+                    </p>
+
+                    <Select
+                        disabled={!self.perms.check(Perms.C_PRODUCT)}
+                        items={leg_tags()}
+                        onChange={v =>
+                            setState(
+                                produce(s => {
+                                    s.popup.product.tag_leg = v.idx
+                                })
+                            )
+                        }
+                        default={default_leg()}
+                    />
+                </div>
+
+                <div class='tag-wrapper title_smaller'>
+                    <p>
+                        دسته{' '}
+                        <Show when={state.popup.product.kind} fallback='محصول'>
+                            <Switch>
+                                <Match
+                                    when={state.popup.product.kind === 'chair'}
+                                >
+                                    صندلی
+                                </Match>
+                                <Match
+                                    when={state.popup.product.kind === 'table'}
+                                >
+                                    میز
+                                </Match>
+                            </Switch>
+                        </Show>
+                    </p>
+
+                    <Select
+                        disabled={!self.perms.check(Perms.C_PRODUCT)}
+                        items={bed_tags()}
+                        onChange={v =>
+                            setState(
+                                produce(s => {
+                                    s.popup.product.tag_bed = v.idx
+                                })
+                            )
+                        }
+                        default={default_bed()}
+                    />
+                </div>
+            </Show>
+        </div>
     )
 }

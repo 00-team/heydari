@@ -55,7 +55,7 @@ export const PopupOverview: Component = () => {
                 let index = s.products.findIndex(i => i.slug === p.slug)
                 if (index < 0) return
 
-                s.products[index].photos.splice(idx, 1).filter(s => s)
+                s.products[index]!.photos.splice(idx, 1).filter(s => s)
 
                 s.popup.product.photos.splice(idx, 1).filter(s => s)
             })
@@ -123,7 +123,7 @@ export const PopupOverview: Component = () => {
 
                                 if (index < 0) return
 
-                                s.products[index].photos = x.response.photos
+                                s.products[index]!.photos = x.response.photos
 
                                 if (s.popup.product.id === x.response.id) {
                                     s.popup.product.photos.filter(s =>
@@ -179,7 +179,7 @@ export const PopupOverview: Component = () => {
                                 fallback={<NoPhotoIcon />}
                             >
                                 <Show
-                                    when={images()[local.active].startsWith(
+                                    when={images()[local.active]!.startsWith(
                                         'blob:'
                                     )}
                                     fallback={
@@ -327,7 +327,7 @@ export const PopupOverview: Component = () => {
                 <FloatInput
                     Icon={<NameIcon />}
                     holder='اسم محصول'
-                    value={state.popup.product?.name || null}
+                    value={state.popup.product.name}
                     onChange={e =>
                         setState(
                             produce(s => {
@@ -342,7 +342,7 @@ export const PopupOverview: Component = () => {
                 <FloatInput
                     Icon={<InternetIcon />}
                     holder='URL'
-                    value={state.popup.product?.slug || null}
+                    value={state.popup.product.slug}
                     onChange={e =>
                         setState(
                             produce(s => {
@@ -358,7 +358,7 @@ export const PopupOverview: Component = () => {
                     <FloatInput
                         Icon={<PriceIcon />}
                         holder='قیمت (ریال)'
-                        value={state.popup.product?.price.toString() || null}
+                        value={state.popup.product.price.toString()}
                         onChange={e => {
                             setState(
                                 produce(s => {
@@ -373,7 +373,7 @@ export const PopupOverview: Component = () => {
                     <FloatInput
                         Icon={<CodeIcon />}
                         holder='کد محصول'
-                        value={state.popup.product?.code || null}
+                        value={state.popup.product.code}
                         onChange={e =>
                             setState(
                                 produce(s => {
@@ -393,7 +393,7 @@ export const PopupOverview: Component = () => {
                     cols='30'
                     class='description'
                     rows='10'
-                    value={state.popup.product?.description || null}
+                    value={state.popup.product.description}
                     oninput={e =>
                         setState(
                             produce(s => {
