@@ -64,28 +64,28 @@
                 "availability": "https://schema.org/InStock",
                 "url": "https://heydari-mi.com/products/{{ product.slug }}",
                 "hasMerchantReturnPolicy": {
-                "@type": "MerchantReturnPolicy",
-                "name": "بازگشت محصول",
-                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                "merchantReturnDays": "30",
-                "returnFees": {
-                    "@type": "MonetaryAmount",
-                    "value": "0",
-                    "currency": "IRR"
-                },
-                "returnMethod": "Mail"
+                    "@type": "MerchantReturnPolicy",
+                    "name": "بازگشت محصول",
+                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    "merchantReturnDays": "30",
+                    "returnFees": {
+                        "@type": "MonetaryAmount",
+                        "value": "0",
+                        "currency": "IRR"
+                    },
+                    "returnMethod": "Mail"
                 },
                 "shippingDetails": {
-                "@type": "OfferShippingDetails",
-                "shippingRate": {
-                    "@type": "MonetaryAmount",
-                    "value": "0",
-                    "currency": "IRR"
-                },
-                "shippingDestination": {
-                    "@type": "DefinedRegion",
-                    "addressCountry": "IR"
-                }
+                    "@type": "OfferShippingDetails",
+                    "shippingRate": {
+                        "@type": "MonetaryAmount",
+                        "value": "0",
+                        "currency": "IRR"
+                    },
+                    "shippingDestination": {
+                        "@type": "DefinedRegion",
+                        "addressCountry": "IR"
+                    }
                 }
             }
         }{% if not loop.last %},{% endif %}
