@@ -1,5 +1,5 @@
 import { EMPTY_PRODUCT, ProductModel, ProductTagModel } from 'models'
-import { createStore, produce, unwrap } from 'solid-js/store'
+import { createStore, produce } from 'solid-js/store'
 
 type TagState = {
     [k in ProductTagModel['kind']]: {

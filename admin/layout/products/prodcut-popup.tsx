@@ -80,7 +80,7 @@ export const ProductPopup: Component = () => {
     function product_delete() {
         let popup = unwrap(state.popup)
 
-        let index = state.products.findIndex(p => p.slug === popup.product.slug)
+        let index = state.products.findIndex(p => p.id === popup.product.id)
 
         if (index < 0) return
 
@@ -121,9 +121,9 @@ export const ProductPopup: Component = () => {
     async function product_update() {
         let p = unwrap(state.popup)
 
-        let index = state.products.findIndex(s => s.slug === p.product.slug)
+        let index = state.products.findIndex(s => s.id === p.product.id)
 
-        if (index < 0) return
+        if (index == -1) return
 
         setState(
             produce(s => {
@@ -171,7 +171,7 @@ export const ProductPopup: Component = () => {
                             })
 
                             let index = state.products.findIndex(
-                                s => s.slug === p.product.slug
+                                s => s.id === p.product.id
                             )
 
                             if (index < 0) return
@@ -251,9 +251,9 @@ export const ProductPopup: Component = () => {
 
         if (!s) return
 
-        let index = state.products.findIndex(i => i.slug === s.slug)
+        let index = state.products.findIndex(i => i.id === s.id)
 
-        if (index < 0) return
+        if (index == -1) return
 
         let p = state.products[index]!
 
@@ -310,6 +310,16 @@ export const ProductPopup: Component = () => {
                 type: 'error',
                 subject: 'نوع محصول را مشخص کنید.',
                 content: 'میز یا صندلی بودن محصول را انتخاب کنید.',
+                timeout: 3,
+            })
+            return false
+        }
+
+        if (p.slug.includes(' ') || p.code.includes(' ')) {
+            addAlert({
+                type: 'error',
+                subject: 'کد یا URL محصول نمیتواند دارای فاصله باشد.',
+                content: 'لطفا به جای فاصله ها - بگذارید.',
                 timeout: 3,
             })
             return false

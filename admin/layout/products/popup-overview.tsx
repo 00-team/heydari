@@ -36,6 +36,12 @@ export const PopupOverview: Component = () => {
         active: 0,
     })
 
+    createEffect(() => {
+        if (!state.popup.show) {
+            setLocal({ active: 0 })
+        }
+    })
+
     onMount(() => {
         let ac = new AbortController()
 
@@ -93,6 +99,10 @@ export const PopupOverview: Component = () => {
         setState(
             produce(s => {
                 s.popup.files.splice(index, 1)
+
+                s.popup.product.photos = s.popup.product.photos.filter(
+                    img => img !== url
+                )
 
                 if (!s.products[proIndex]) return
 
@@ -353,13 +363,15 @@ export const PopupOverview: Component = () => {
                     Icon={<InternetIcon />}
                     holder='URL'
                     value={state.popup.product.slug}
-                    onChange={e =>
+                    onChange={e => {
+                        let val = e.replaceAll(' ', '-')
+
                         setState(
                             produce(s => {
-                                s.popup.product.slug = e
+                                s.popup.product.slug = val
                             })
                         )
-                    }
+                    }}
                     class='description'
                     inpClass='title_smaller'
                     inpMode='str'
@@ -384,13 +396,15 @@ export const PopupOverview: Component = () => {
                         Icon={<CodeIcon />}
                         holder='کد محصول'
                         value={state.popup.product.code}
-                        onChange={e =>
+                        onChange={e => {
+                            let val = e.replaceAll(' ', '-')
+
                             setState(
                                 produce(s => {
-                                    s.popup.product.code = e
+                                    s.popup.product.code = val
                                 })
                             )
-                        }
+                        }}
                         class='code description'
                         inpClass='title_smaller'
                         inpMode='str'
