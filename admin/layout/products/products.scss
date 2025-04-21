@@ -407,6 +407,8 @@
 
         overflow-y: auto;
 
+        overscroll-behavior: contain;
+
         &.show {
             visibility: visible;
             opacity: 1;
@@ -768,6 +770,8 @@
                             border: 1px solid #d5d5d5;
 
                             margin-top: -0.5rem;
+
+                            line-height: 1.8em;
 
                             &:focus {
                                 outline: none;

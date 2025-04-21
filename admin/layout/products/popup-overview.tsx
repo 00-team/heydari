@@ -1,4 +1,4 @@
-import { LoadingElem } from 'comps'
+import { addAlert } from 'comps/alert'
 import {
     ChairIcon,
     CodeIcon,
@@ -12,7 +12,7 @@ import {
     Table2Icon,
     TrashIcon,
 } from 'icons'
-import { httpx } from 'shared'
+import { httpx, validate_image_format } from 'shared'
 import {
     Component,
     createEffect,
@@ -20,11 +20,13 @@ import {
     createSignal,
     For,
     JSX,
+    onCleanup,
+    onMount,
     Show,
 } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
+import { createStore, produce, unwrap } from 'solid-js/store'
 import { setPopup } from 'store/popup'
-import { state, setState } from './shared'
+import { setState, state } from './shared'
 
 export const PopupOverview: Component = () => {
     type localType = {
@@ -34,38 +36,74 @@ export const PopupOverview: Component = () => {
         active: 0,
     })
 
-    function photo_del(idx: number) {
-        let p = state.popup.product
-        if (!p) return
+    onMount(() => {
+        let ac = new AbortController()
 
-        if (state.popup.type === 'add') {
+        document.addEventListener('dragover', e => {
+            if (!state.popup.show) return
+
+            e.preventDefault()
+        })
+
+        document.addEventListener('drop', file_draged)
+
+        onCleanup(() => {
+            ac.abort()
+        })
+    })
+
+    function file_draged(e: DragEvent) {
+        if (!state.popup.show) return
+
+        e.preventDefault()
+
+        if (!e.dataTransfer) return
+
+        const list = e.dataTransfer.files
+        if (!list || list.length === 0) return
+
+        for (let file of list) {
+            if (!validate_image_format(file)) continue
+            if (file.size == 0) continue
+            if (is_dup(file)) continue
+
             setState(
                 produce(s => {
-                    s.popup.files = s.popup.files.filter(
-                        (_, idx1) => idx !== idx1
-                    )
+                    s.popup.files.push({
+                        file: file,
+                        url: URL.createObjectURL(file),
+                    })
                 })
             )
-
-            return
         }
+    }
+
+    function photo_del(url: string) {
+        if (!url) return
+
+        let p = unwrap(state.popup)
+
+        let index = state.popup.files.findIndex(file => file.url == url)
+
+        if (index == -1) return
+
+        let file = state.popup.files[index]
 
         setState(
             produce(s => {
-                let index = s.products.findIndex(i => i.slug === p.slug)
-                if (index < 0) return
-
-                s.products[index]!.photos.splice(idx, 1).filter(s => s)
-
-                s.popup.product.photos.splice(idx, 1).filter(s => s)
+                s.popup.files.splice(index, 1)
             })
         )
 
+        if (file!.url!.startsWith('blob:')) return
+
         httpx({
-            url: `/api/admin/products/${p.id}/photos/${idx}/`,
+            url: `/api/admin/products/${p.product.id}/photos/${index}/`,
             method: 'DELETE',
             onLoad(x) {
                 if (x.status != 200) return
+
+                setLocal({ active: 0 })
             },
         })
     }
@@ -76,75 +114,41 @@ export const PopupOverview: Component = () => {
             target: HTMLInputElement
         }
     ) {
-        const el = e.target
-
-        const id = state.popup.product.id
+        const el = e.currentTarget
 
         if (!el.files || el.files.length == 0) return
 
-        if (state.popup.type === 'add') {
-            for (let f of el.files) {
-                setState(
-                    produce(s => {
-                        s.popup.files.push(f)
-                    })
-                )
-            }
-
-            return
-        }
-
         for (let f of el.files) {
-            await new Promise((_, reject) => {
-                let data = new FormData()
-                data.set('photo', f)
-
-                let loadingId = performance.now()
-
-                setState(
-                    produce(s => {
-                        s.popup.product.photos.push(`loading ${loadingId}`)
+            setState(
+                produce(s => {
+                    s.popup.files.push({
+                        file: f,
+                        url: URL.createObjectURL(f),
                     })
-                )
-
-                httpx({
-                    url: `/api/admin/products/${id}/photos/`,
-                    method: 'PUT',
-                    data,
-                    reject,
-                    onLoad(x) {
-                        if (x.status != 200) return
-
-                        setState(
-                            produce(s => {
-                                let index = s.products.findIndex(
-                                    i => i.id === id
-                                )
-
-                                if (index < 0) return
-
-                                s.products[index]!.photos = x.response.photos
-
-                                if (s.popup.product.id === x.response.id) {
-                                    s.popup.product.photos.filter(s =>
-                                        s.includes('loading')
-                                    )
-                                    s.popup.product.photos = x.response.photos
-                                }
-                            })
-                        )
-                    },
                 })
-            })
+            )
         }
     }
 
-    const images = createMemo((): string[] => {
-        if (state.popup.type === 'add') {
-            return state.popup.files.map(img => URL.createObjectURL(img))
+    function is_dup(file: File): boolean {
+        let found = Object.values(state.popup.files).some(
+            f => f.file?.name == file.name && f.file?.size == file.size
+        )
+        if (found) {
+            addAlert({
+                type: 'error',
+                timeout: 5,
+                content: 'از گذاشتن عکس تکراری خودداری کنید',
+                subject: 'خطا!',
+            })
+            return true
         }
 
-        return state.popup.product?.photos || []
+        return false
+    }
+
+    const images = createMemo(() => {
+        return state.popup.files.filter(s => s.url).map(s => s.url)
     })
 
     return (
@@ -184,7 +188,7 @@ export const PopupOverview: Component = () => {
                                     )}
                                     fallback={
                                         <img
-                                            src={`/record/pp-${state.popup.product?.id}-${
+                                            src={`/record/pp-${state.popup.product.id}-${
                                                 state.popup.product.photos[
                                                     local.active
                                                 ]
@@ -192,14 +196,16 @@ export const PopupOverview: Component = () => {
                                             loading='lazy'
                                             decoding='async'
                                             alt=''
+                                            draggable='false'
                                         />
                                     }
                                 >
                                     <img
-                                        src={images()[local.active]}
+                                        src={images()[local.active]!}
                                         loading='lazy'
                                         decoding='async'
                                         alt=''
+                                        draggable='false'
                                     />
                                 </Show>
 
@@ -215,7 +221,9 @@ export const PopupOverview: Component = () => {
                                             title: 'حذف عکس؟',
                                             type: 'error',
                                             onSubmit() {
-                                                photo_del(local.active)
+                                                photo_del(
+                                                    images()[local.active]!
+                                                )
                                                 setLocal({ active: 0 })
                                             },
                                         })
@@ -239,7 +247,7 @@ export const PopupOverview: Component = () => {
                             <For each={images()}>
                                 {(img, index) => (
                                     <Show
-                                        when={!img.startsWith('blob:')}
+                                        when={!img!.startsWith('blob:')}
                                         fallback={
                                             <div
                                                 class='other-img'
@@ -250,36 +258,31 @@ export const PopupOverview: Component = () => {
                                                 }}
                                             >
                                                 <img
-                                                    src={img}
+                                                    src={img!}
                                                     loading='lazy'
                                                     decoding='async'
                                                     alt=''
+                                                    draggable='false'
                                                 />
                                             </div>
                                         }
                                     >
-                                        <Show
-                                            when={!img.startsWith('loading')}
-                                            fallback={
-                                                <LoadingElem class='other-img' />
-                                            }
+                                        <div
+                                            class='other-img'
+                                            onclick={() => {
+                                                setLocal({
+                                                    active: index(),
+                                                })
+                                            }}
                                         >
-                                            <div
-                                                class='other-img'
-                                                onclick={() => {
-                                                    setLocal({
-                                                        active: index(),
-                                                    })
-                                                }}
-                                            >
-                                                <img
-                                                    src={`/record/pp-${state.popup.product?.id}-${img}`}
-                                                    loading='lazy'
-                                                    decoding='async'
-                                                    alt=''
-                                                />
-                                            </div>
-                                        </Show>
+                                            <img
+                                                src={`/record/pp-${state.popup.product.id}-${img}`}
+                                                loading='lazy'
+                                                decoding='async'
+                                                alt=''
+                                                draggable='false'
+                                            />
+                                        </div>
                                     </Show>
                                 )}
                             </For>

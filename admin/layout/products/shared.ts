@@ -1,5 +1,5 @@
 import { EMPTY_PRODUCT, ProductModel, ProductTagModel } from 'models'
-import { createStore } from 'solid-js/store'
+import { createStore, produce, unwrap } from 'solid-js/store'
 
 type TagState = {
     [k in ProductTagModel['kind']]: {
@@ -20,7 +20,10 @@ type popupType = {
     errorSec: 'name' | 'slug' | 'code' | 'id' | 'img' | 'description' | null
     errorText: string
 
-    files: File[]
+    files: {
+        url: string | null
+        file: File | null
+    }[]
 }
 
 type filtersType = {
@@ -63,3 +66,44 @@ export const [state, setState] = createStore<stateType>({
     page: 0,
     loading: true,
 })
+
+export function popup_init(product: ProductModel, type: popupType['type']) {
+    let p: ProductModel = JSON.parse(JSON.stringify(product))
+
+    let files: popupType['files'] = p.photos.map(u => ({
+        url: u,
+        file: null,
+    }))
+
+    setState(
+        produce(s => {
+            s.popup = {
+                show: true,
+                type,
+                product: p,
+                advanced: false,
+                errorSec: null,
+                errorText: '',
+                files,
+            }
+        })
+    )
+}
+
+export function popup_clear() {
+    setState(
+        produce(s => {
+            s.popup = {
+                show: false,
+                type: 'add',
+                product: EMPTY_PRODUCT,
+                advanced: false,
+
+                errorSec: 'name',
+                errorText: '',
+
+                files: [],
+            }
+        })
+    )
+}

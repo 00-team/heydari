@@ -2,13 +2,13 @@ import { addAlert } from 'comps/alert'
 import { CloseIcon, PlusIcon, SaveIcon, TrashIcon, WarningIcon } from 'icons'
 import { httpx, Perms } from 'shared'
 import { Component, createMemo, onCleanup, onMount, Show } from 'solid-js'
-import { produce } from 'solid-js/store'
+import { produce, unwrap } from 'solid-js/store'
 import { self } from 'store'
 import { setPopup } from 'store/popup'
 import { PopupAdvanced } from './popup-advanced'
 import { PopupOverview } from './popup-overview'
 import { product_add } from './product-add'
-import { setState, state } from './shared'
+import { popup_clear, setState, state } from './shared'
 
 export const ProductPopup: Component = () => {
     let ac = new AbortController()
@@ -21,6 +21,10 @@ export const ProductPopup: Component = () => {
         onCleanup(() => {
             ac.abort()
         })
+    })
+
+    onCleanup(() => {
+        popup_clear()
     })
 
     function escHandle() {
@@ -40,7 +44,9 @@ export const ProductPopup: Component = () => {
             e => {
                 if (e.key === 'Enter' && state.popup.show) {
                     if (!formRef) return
-                    formRef.submit()
+
+                    e.preventDefault()
+                    formRef.requestSubmit()
                 }
             },
             { signal: ac.signal }
@@ -48,15 +54,7 @@ export const ProductPopup: Component = () => {
     }
 
     const closePopup = () => {
-        let addChange = false
-
-        if (state.popup.type === 'add') {
-            if (state.popup.product.name || state.popup.files.length > 0) {
-                addChange = true
-            }
-        }
-
-        if (changed() || addChange) {
+        if (changedInfo() || changedPhotos()) {
             setPopup({
                 type: 'warning',
                 content:
@@ -76,29 +74,25 @@ export const ProductPopup: Component = () => {
             return
         }
 
-        setState(
-            produce(s => {
-                s.popup.show = false
-            })
-        )
+        popup_clear()
     }
 
     function product_delete() {
-        let index = state.products.findIndex(
-            p => p.slug === state.popup.product.slug
-        )
+        let popup = unwrap(state.popup)
+
+        let index = state.products.findIndex(p => p.slug === popup.product.slug)
 
         if (index < 0) return
 
         setState(
             produce(s => {
-                s.popup.show = false
                 s.products[index]!.loading = true
             })
         )
+        popup_clear()
 
         httpx({
-            url: `/api/admin/products/${state.popup.product.id}/`,
+            url: `/api/admin/products/${popup.product.id}/`,
             method: 'DELETE',
             onLoad(x) {
                 if (x.status != 200)
@@ -124,64 +118,135 @@ export const ProductPopup: Component = () => {
         })
     }
 
-    function product_update() {
-        let p = state.popup.product
+    async function product_update() {
+        let p = unwrap(state.popup)
 
-        if (!p) return
-
-        let index = state.products.findIndex(s => s.slug === p.slug)
+        let index = state.products.findIndex(s => s.slug === p.product.slug)
 
         if (index < 0) return
 
         setState(
             produce(s => {
-                s.popup.show = false
                 s.products[index]!.loading = true
             })
         )
 
-        httpx({
-            url: `/api/admin/products/${p.id}/`,
-            method: 'PATCH',
-            json: {
-                slug: p.slug,
-                name: p.name,
-                code: p.code,
-                detail: p.detail,
-                tag_leg: p.tag_leg,
-                tag_bed: p.tag_bed,
-                best: p.best,
-                price: p.price,
-                count: p.count,
-                description: p.description,
-                specification: p.specification,
-            },
-            onLoad(x) {
-                if (x.status != 200)
-                    return addAlert({
-                        type: 'error',
-                        subject: 'ذخیره ناموفق!',
-                        content: 'ذخیره محصول با خطا مواجح شد!',
-                        timeout: 3,
+        const uploadPromises: Promise<void>[] = []
+
+        if (changedInfo()) {
+            uploadPromises.push(
+                new Promise<void>(resolve => {
+                    httpx({
+                        url: `/api/admin/products/${p.product.id}/`,
+                        method: 'PATCH',
+                        json: {
+                            slug: p.product.slug,
+                            name: p.product.name,
+                            code: p.product.code,
+                            detail: p.product.detail,
+                            tag_leg: p.product.tag_leg,
+                            tag_bed: p.product.tag_bed,
+                            best: p.product.best,
+                            price: p.product.price,
+                            count: p.product.count,
+                            description: p.product.description,
+                            specification: p.product.specification,
+                        },
+                        onLoad(x) {
+                            resolve()
+
+                            if (x.status != 200)
+                                return addAlert({
+                                    type: 'error',
+                                    subject: 'ذخیره ناموفق!',
+                                    content: 'ذخیره محصول با خطا مواجح شد!',
+                                    timeout: 3,
+                                })
+
+                            addAlert({
+                                type: 'success',
+                                subject: 'ذخیره موفق!',
+                                content: 'محصول با موفقیت ذخیره شد',
+                                timeout: 3,
+                            })
+
+                            let index = state.products.findIndex(
+                                s => s.slug === p.product.slug
+                            )
+
+                            if (index < 0) return
+
+                            setState(
+                                produce(s => {
+                                    s.products[index] = {
+                                        ...x.response,
+                                        loading: true,
+                                    }
+                                })
+                            )
+                        },
                     })
-
-                addAlert({
-                    type: 'success',
-                    subject: 'ذخیره موفق!',
-                    content: 'محصول با موفقیت ذخیره شد',
-                    timeout: 3,
                 })
+            )
+        }
 
-                setState(
-                    produce(s => {
-                        s.products[index] = { ...x.response, loading: false }
+        if (changedPhotos()) {
+            p.files.forEach(f => {
+                if (!f.file) return
+
+                uploadPromises.push(
+                    new Promise<void>((resolve, reject) => {
+                        const data = new FormData()
+                        data.set('photo', f.file!)
+
+                        httpx({
+                            url: `/api/admin/products/${p.product.id}/photos/`,
+                            method: 'PUT',
+                            data,
+                            onLoad(x) {
+                                if (x.status !== 200) return reject()
+
+                                setState(
+                                    produce(s => {
+                                        const idx = s.products.findIndex(
+                                            i => i.id === p.product.id
+                                        )
+                                        if (idx >= 0)
+                                            s.products[idx]!.photos =
+                                                x.response.photos
+                                    })
+                                )
+                                resolve()
+                            },
+                            onError() {
+                                reject()
+                            },
+                        })
                     })
                 )
-            },
+            })
+        }
+
+        popup_clear()
+
+        await Promise.all(uploadPromises).catch(() => {
+            addAlert({
+                type: 'error',
+                subject: 'آپلود ناموفق!',
+                content: 'آپلود عکس با خطا مواجه شد',
+                timeout: 3,
+            })
         })
+        setState(
+            produce(s => {
+                const idx = s.products.findIndex(i => i.id === p.product.id)
+                if (idx >= 0) s.products[idx]!.loading = false
+            })
+        )
     }
 
-    const changed = createMemo(() => {
+    const changedInfo = createMemo(() => {
+        // return false
         let s = state.popup.product
 
         if (!s) return
@@ -221,6 +286,12 @@ export const ProductPopup: Component = () => {
         return change
     })
 
+    const changedPhotos = createMemo(() => {
+        let s = state.popup
+
+        return s.files.some(file => file.file)
+    })
+
     const formIsValid = (): boolean => {
         let p = state.popup.product
 
@@ -257,13 +328,12 @@ export const ProductPopup: Component = () => {
         >
             <form
                 onsubmit={e => {
-                    console.log('object')
                     e.preventDefault()
 
                     if (!formIsValid()) return
 
                     if (state.popup.type === 'edit') {
-                        if (!changed()) {
+                        if (!changedInfo() && !changedPhotos()) {
                             return addAlert({
                                 type: 'error',
                                 timeout: 3,
@@ -311,7 +381,9 @@ export const ProductPopup: Component = () => {
                         >
                             <button
                                 class='cta save description'
-                                classList={{ disable: !changed() }}
+                                classList={{
+                                    disable: !changedInfo() && !changedPhotos(),
+                                }}
                                 type='submit'
                             >
                                 <SaveIcon />

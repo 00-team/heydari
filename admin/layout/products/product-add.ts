@@ -1,11 +1,13 @@
-import { produce } from 'solid-js/store'
-import { state, setState } from './shared'
+import { produce, unwrap } from 'solid-js/store'
+import { state, setState, popup_clear } from './shared'
 import { httpx } from 'shared'
 import { addAlert } from 'comps/alert'
 import { EMPTY_PRODUCT } from 'models'
 
 export async function product_add() {
-    let p = state.popup.product
+    let p = unwrap(state.popup)
+
+    popup_clear()
 
     let uniqeId = performance.now()
 
@@ -13,128 +15,160 @@ export async function product_add() {
 
     setState(
         produce(s => {
-            s.popup.show = false
-
             s.products.unshift({ ...empty })
         })
     )
 
-    let index = state.products.findIndex(a => a.id === uniqeId)
+    await new Promise<void>(resolve => {
+        httpx({
+            url: '/api/admin/products/',
+            method: 'POST',
+            json: {
+                code: p.product.code,
+                kind: p.product.kind,
+                name: p.product.name,
+                slug: p.product.slug,
+            },
+            onLoad(resp) {
+                resolve()
 
+                let index = state.products.findIndex(a => a.id === uniqeId)
+                if (index < 0) return
+
+                if (resp.status !== 200) {
+                    addAlert({
+                        type: 'error',
+                        content: 'لطفا دوباره تلاش کنید.',
+                        subject: 'خطا در اضافه کردن',
+                        timeout: 3,
+                    })
+                    setState(
+                        produce(s => {
+                            s.products.splice(index, 1)
+                        })
+                    )
+                    return
+                }
+
+                uniqeId = resp.response.id
+
+                const productWithLoading = {
+                    ...resp.response,
+                    loading: true,
+                }
+
+                setState(
+                    produce(s => {
+                        s.products[index] = productWithLoading
+                    })
+                )
+            },
+        })
+    })
+
+    let hasFiles = p.files.length > 0
+    let hasDetail =
+        p.product.detail || Object.keys(p.product.specification).length > 0
+
+    console.log(uniqeId)
+
+    let index = state.products.findIndex(a => a.id === uniqeId)
     if (index < 0) return
 
-    httpx({
-        url: '/api/admin/products/',
-        method: 'POST',
-        json: {
-            code: p.code,
-            kind: p.kind,
-            name: p.name,
-            slug: p.slug,
-        },
-        onLoad(firstRes) {
-            if (firstRes.status !== 200) {
-                setState(
-                    produce(s => {
-                        s.products.splice(index, 1).filter(s => s)
+    const product = state.products[index]!
+
+    if (hasDetail) {
+        httpx({
+            url: `/api/admin/products/${product.id}/`,
+            method: 'PATCH',
+            json: {
+                slug: product.slug,
+                name: product.name,
+                code: product.code,
+                detail: product.detail,
+                tag_leg: p.product.tag_leg || product.tag_leg,
+                tag_bed: p.product.tag_bed || product.tag_bed,
+                best: product.best,
+                price: product.price,
+                count: product.count,
+                description: product.description,
+                specification: p.product.specification || product.specification,
+            },
+            onLoad(x) {
+                if (x.status != 200)
+                    return addAlert({
+                        type: 'error',
+                        subject: 'ذخیره ناموفق!',
+                        content: 'ذخیره محصول با خطا مواجح شد!',
+                        timeout: 3,
                     })
-                )
-                return
-            }
 
-            const productsWithLoading = {
-                ...firstRes.response,
-                loading: true,
-            }
-
-            setState(
-                produce(s => {
-                    s.products[index] = productsWithLoading
+                addAlert({
+                    type: 'success',
+                    subject: 'ذخیره موفق!',
+                    content: 'محصول با موفقیت ذخیره شد',
+                    timeout: 3,
                 })
-            )
 
-            let hasFiles = state.popup.files.length > 0
-            let hasDetail = p.detail || Object.keys(p.specification).length > 0
-
-            if (!hasFiles && !hasDetail) {
                 setState(
                     produce(s => {
-                        s.products[index]!.loading = false
+                        s.products[index] = {
+                            ...x.response,
+                            loading: false,
+                        }
                     })
                 )
-                return
-            }
+            },
+        })
+    }
 
-            if (hasFiles) {
-                for (let f of state.popup.files) {
-                    let data = new FormData()
-                    data.set('photo', f)
+    if (hasFiles) {
+        const files = p.files.filter(f => f.file)
+
+        const uploadPromises: Promise<void>[] = []
+
+        files.forEach(f => {
+            uploadPromises.push(
+                new Promise<void>((resolve, reject) => {
+                    const data = new FormData()
+                    data.set('photo', f.file!)
 
                     httpx({
-                        url: `/api/admin/products/${firstRes.response.id}/photos/`,
+                        url: `/api/admin/products/${product.id}/photos/`,
                         method: 'PUT',
                         data,
                         onLoad(secRes) {
-                            if (secRes.status != 200) return
+                            if (secRes.status !== 200) return reject()
+
+                            resolve()
 
                             setState(
                                 produce(s => {
                                     s.products[index]!.photos =
                                         secRes.response.photos
-
-                                    s.products[index]!.loading = false
                                 })
                             )
                         },
                     })
-                }
-            }
-
-            if (hasDetail) {
-                httpx({
-                    url: `/api/admin/products/${firstRes.response.id}/`,
-                    method: 'PATCH',
-                    json: {
-                        slug: firstRes.response.slug,
-                        name: firstRes.response.name,
-                        code: firstRes.response.code,
-                        detail: firstRes.response.detail,
-                        tag_leg: p.tag_leg || firstRes.response.tag_leg,
-                        tag_bed: p.tag_bed || firstRes.response.tag_bed,
-                        best: firstRes.response.best,
-                        price: firstRes.response.price,
-                        count: firstRes.response.count,
-                        description: firstRes.response.description,
-                        specification:
-                            p.specification || firstRes.response.specification,
-                    },
-                    onLoad(x) {
-                        if (x.status != 200)
-                            return addAlert({
-                                type: 'error',
-                                subject: 'ذخیره ناموفق!',
-                                content: 'ذخیره محصول با خطا مواجح شد!',
-                                timeout: 3,
-                            })
-
-                        addAlert({
-                            type: 'success',
-                            subject: 'ذخیره موفق!',
-                            content: 'محصول با موفقیت ذخیره شد',
-                            timeout: 3,
-                        })
-
-                        setState(
-                            produce(s => {
-                                s.products[index] = {
-                                    ...x.response,
-                                    loading: false,
-                                }
-                            })
-                        )
-                    },
                 })
-            }
-        },
-    })
+            )
+        })
+
+        await Promise.all(uploadPromises).catch(() => {
+            addAlert({
+                type: 'error',
+                subject: 'آپلود ناموفق!',
+                content: 'آپلود عکس با خطا مواجه شد',
+                timeout: 3,
+            })
+        })
+    }
+
+    index = state.products.findIndex(a => a.id === uniqeId)
+    if (index !== -1)
+        setState(
+            produce(s => {
+                s.products[index]!.loading = false
+            })
+        )
 }

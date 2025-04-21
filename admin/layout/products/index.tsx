@@ -23,7 +23,7 @@ import { produce } from 'solid-js/store'
 import { self } from 'store'
 import { ProductPopup } from './prodcut-popup'
 import './products.scss'
-import { setState, setTags, state } from './shared'
+import { popup_init, setState, setTags, state } from './shared'
 
 export default () => {
     const [params, setParams] = useSearchParams()
@@ -85,24 +85,6 @@ export default () => {
                 setState({ products: productsWithLoading, page })
             },
         })
-    }
-
-    function popup_add() {
-        setState(
-            produce(s => {
-                s.popup = {
-                    type: 'add',
-                    product: {
-                        ...EMPTY_PRODUCT,
-                    },
-                    show: true,
-                    advanced: false,
-                    errorSec: null,
-                    errorText: '',
-                    files: [],
-                }
-            })
-        )
     }
 
     const products = createMemo(() => {
@@ -196,9 +178,7 @@ export default () => {
                 <button
                     class='add-product title_small'
                     disabled={state.loading}
-                    onclick={() => {
-                        popup_add()
-                    }}
+                    onclick={() => popup_init(EMPTY_PRODUCT, 'add')}
                 >
                     <PlusIcon />
                     <span>اضافه محصول</span>
@@ -264,21 +244,7 @@ const ProductCmp: Component<ProductModel> = P => {
         >
             <button
                 class='product-container'
-                onclick={() =>
-                    setState(
-                        produce(s => {
-                            s.popup = {
-                                show: true,
-                                type: 'edit',
-                                product: JSON.parse(JSON.stringify(P)),
-                                advanced: false,
-                                errorSec: null,
-                                errorText: '',
-                                files: [],
-                            }
-                        })
-                    )
-                }
+                onclick={() => popup_init(P, 'edit')}
             >
                 <Show when={P.code}>
                     <div class='product-tag description'>{P.code}</div>
