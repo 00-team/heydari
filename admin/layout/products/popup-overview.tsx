@@ -84,14 +84,21 @@ export const PopupOverview: Component = () => {
         let p = unwrap(state.popup)
 
         let index = state.popup.files.findIndex(file => file.url == url)
+        let proIndex = state.products.findIndex(pr => pr.id == p.product.id)
 
-        if (index == -1) return
+        if (index == -1 || proIndex == -1) return
 
         let file = state.popup.files[index]
 
         setState(
             produce(s => {
                 s.popup.files.splice(index, 1)
+
+                if (!s.products[proIndex]) return
+
+                s.products[proIndex].photos = s.products[
+                    proIndex
+                ]!.photos.filter(img => img !== url)
             })
         )
 
