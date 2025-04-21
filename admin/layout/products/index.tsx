@@ -21,9 +21,9 @@ import {
 } from 'solid-js'
 import { produce } from 'solid-js/store'
 import { self } from 'store'
-import './products.scss'
-import { setTags, state, setState } from './shared'
 import { ProductPopup } from './prodcut-popup'
+import './products.scss'
+import { setState, setTags, state } from './shared'
 
 export default () => {
     const [params, setParams] = useSearchParams()
@@ -302,6 +302,7 @@ const ProductCmp: Component<ProductModel> = P => {
                             src={`/record/pp-${P.id}-${P.photos[0]}`}
                             loading='lazy'
                             decoding='async'
+                            draggable='false'
                         />
                     </Show>
                 </div>

@@ -5,16 +5,18 @@ import { Component, createMemo, onCleanup, onMount, Show } from 'solid-js'
 import { produce } from 'solid-js/store'
 import { self } from 'store'
 import { setPopup } from 'store/popup'
-import { state, setState } from './shared'
 import { PopupAdvanced } from './popup-advanced'
 import { PopupOverview } from './popup-overview'
 import { product_add } from './product-add'
+import { setState, state } from './shared'
 
 export const ProductPopup: Component = () => {
     let ac = new AbortController()
+    let formRef: HTMLFormElement
 
     onMount(() => {
         escHandle()
+        EnterHandle()
 
         onCleanup(() => {
             ac.abort()
@@ -27,6 +29,18 @@ export const ProductPopup: Component = () => {
             e => {
                 if (e.key === 'Escape' && state.popup.show) {
                     closePopup()
+                }
+            },
+            { signal: ac.signal }
+        )
+    }
+    function EnterHandle() {
+        document.addEventListener(
+            'keydown',
+            e => {
+                if (e.key === 'Enter' && state.popup.show) {
+                    if (!formRef) return
+                    formRef.submit()
                 }
             },
             { signal: ac.signal }
@@ -243,6 +257,7 @@ export const ProductPopup: Component = () => {
         >
             <form
                 onsubmit={e => {
+                    console.log('object')
                     e.preventDefault()
 
                     if (!formIsValid()) return
@@ -262,15 +277,17 @@ export const ProductPopup: Component = () => {
                         product_add()
                     }
                 }}
-                onreset={e => {
-                    e.preventDefault()
-
-                    closePopup()
-                }}
                 class='popup-wrapper'
                 onclick={e => e.stopPropagation()}
+                ref={e => (formRef = e)}
             >
-                <button class='close icon' type='reset'>
+                <button
+                    class='close icon'
+                    type='button'
+                    onclick={() => {
+                        closePopup()
+                    }}
+                >
                     <CloseIcon />
                 </button>
                 <div class='popup-section'>

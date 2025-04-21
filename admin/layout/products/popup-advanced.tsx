@@ -38,7 +38,7 @@ export const PopupAdvanced = () => {
                 </div>
                 <div class='specs-wrapper'>
                     <button
-                        role='button'
+                        type='button'
                         class='spec-add title_smaller'
                         onClick={e => {
                             e.preventDefault()

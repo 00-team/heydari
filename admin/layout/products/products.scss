@@ -141,7 +141,6 @@
                     position: relative;
                     z-index: 1;
 
-                    will-change: background-color;
                     transition: 0.7s ease;
 
                     &::before {
@@ -161,7 +160,6 @@
 
                         background-color: var(--thirty-percent);
 
-                        will-change: transform, background-color, right, left;
                         transition: 0.3s ease;
                     }
                 }
@@ -400,12 +398,12 @@
         background-color: rgba(131, 131, 131, 0.7);
         backdrop-filter: blur(3px);
 
-        z-index: 15;
+        z-index: -1;
 
         visibility: hidden;
         opacity: 0;
 
-        transition: 0.1s ease;
+        transition: 0s;
 
         overflow-y: auto;
 
@@ -414,6 +412,8 @@
             opacity: 1;
 
             transition: 0.3s ease;
+
+            z-index: 15;
         }
 
         @media screen and (max-width: 320px) {
@@ -520,7 +520,6 @@
                                 align-items: center;
                                 gap: 0.5rem;
 
-                                will-change: opacity;
                                 transition: 0.3s opacity ease;
 
                                 &.is {
@@ -698,8 +697,6 @@
                                     width: 50%;
                                     height: 100%;
 
-                                    will-change: right, width, transform;
-
                                     transition: 0.3s ease;
                                 }
 
@@ -824,11 +821,17 @@
                         align-items: center;
                         gap: 1rem;
 
+                        margin-top: 3rem;
+
                         max-height: 100vh;
 
-                        padding-bottom: 1rem;
+                        background-color: #e7e7e7;
+                        border-radius: 0.5rem;
+                        border: 1px solid #d5d5d5;
 
-                        will-change: max-height, height;
+                        padding: 1rem;
+                        padding-bottom: 1.5rem;
+
                         transition: 1s ease;
 
                         overflow: hidden;
@@ -840,13 +843,11 @@
                             align-items: center;
                             justify-content: space-between;
 
-                            padding-left: 50px;
                             padding-right: 5px;
 
                             cursor: pointer;
 
                             svg {
-                                will-change: transform;
                                 transition: 0.3s transform ease;
                             }
                         }
@@ -924,7 +925,7 @@
                         }
 
                         &.active {
-                            max-height: 2em;
+                            max-height: 3.5em;
 
                             transition: 0.5s ease;
 
