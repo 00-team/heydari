@@ -272,9 +272,6 @@ async fn photo_set(
         s
     };
 
-    let filename = format!("mp-{}-{}", material.id, salt);
-    utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
-
     sqlx::query_as! {
         Material,
         "update materials set photo = ? where id = ?",
@@ -282,6 +279,9 @@ async fn photo_set(
     }
     .execute(&state.sql)
     .await?;
+
+    let filename = format!("mp-{}-{}", material.id, salt);
+    utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
 
     Ok(Json(material))
 }
