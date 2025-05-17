@@ -123,28 +123,41 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
 }
 
 #[get("/products/{slug}")]
-async fn product(rq: HttpRequest, state: Data<AppState>) -> Response {
-    let path = Path::<(String,)>::extract(&rq).await;
-    if path.is_err() {
-        return Ok(HttpResponse::NotFound()
-            .content_type(ContentType::html())
-            .body("404"));
-    }
+async fn product(path: Path<(String,)>, state: Data<AppState>) -> Response {
+    // let path = Path::<(String,)>::extract(&rq).await;
+    // if path.is_err() {
+    //     return Ok(HttpResponse::NotFound()
+    //         .content_type(ContentType::html())
+    //         .body("404"));
+    // }
 
-    let slug = &path.unwrap().0;
+    let slug = &path.0;
     let product = sqlx::query_as! {
         Product, "select * from products where slug = ?", slug
     }
     .fetch_one(&state.sql)
     .await?;
 
-    let related = sqlx::query_as! {
+    let mut related = sqlx::query_as! {
         Product,
         "select * from products where id != ? and kind = ? and (tag_leg = ? or tag_bed = ?) limit 4",
         product.id, product.kind, product.tag_leg, product.tag_bed
     }
     .fetch_all(&state.sql)
     .await?;
+
+    if related.len() < 4 {
+        let limit = 4 - related.len() as i64;
+        let other_related = sqlx::query_as! {
+            Product,
+            "select * from products where id != ? and kind = ? limit ?",
+            product.id, product.kind, limit
+        }
+        .fetch_all(&state.sql)
+        .await?;
+
+        related.extend(other_related);
+    }
 
     let tags = sqlx::query_as! {
         ProductTag, "select * from product_tags where id in (?, ?)",

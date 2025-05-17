@@ -339,9 +339,6 @@ async fn product_thumbnail_update(
         s
     };
 
-    let filename = format!("pt-{}-{}", product.id, salt);
-    utils::save_photo(form.photo.file.path(), &filename, (2200, 1000))?;
-
     sqlx::query_as! {
         Product,
         "update products set thumbnail = ? where id = ?",
@@ -349,6 +346,9 @@ async fn product_thumbnail_update(
     }
     .execute(&state.sql)
     .await?;
+
+    let filename = format!("pt-{}-{}", product.id, salt);
+    utils::save_photo(form.photo.file.path(), &filename, (2200, 1000))?;
 
     Ok(Json(product))
 }
@@ -390,7 +390,7 @@ async fn product_thumbnail_delete(
 /// Add Photo
 #[put("/{id}/photos/")]
 async fn product_photo_add(
-    admin: Admin, product: Product, form: MultipartForm<ProductPhoto>,
+    admin: Admin, mut product: Product, form: MultipartForm<ProductPhoto>,
     state: Data<AppState>,
 ) -> Response<Product> {
     admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
@@ -399,7 +399,6 @@ async fn product_photo_add(
         return Err(AppErrBadRequest(Some("too many photos")));
     }
 
-    let mut product = product;
     let salt = loop {
         let s = utils::get_random_bytes(8);
         if !product.photos.iter().any(|p| p == &s) {
@@ -408,9 +407,6 @@ async fn product_photo_add(
     };
     product.photos.push(salt.clone());
 
-    let filename = format!("pp-{}-{}", product.id, salt);
-    utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
-
     sqlx::query_as! {
         Product,
         "update products set photos = ? where id = ?",
@@ -418,6 +414,9 @@ async fn product_photo_add(
     }
     .execute(&state.sql)
     .await?;
+
+    let filename = format!("pp-{}-{}", product.id, salt);
+    utils::save_photo(form.photo.file.path(), &filename, (1024, 1024))?;
 
     Ok(Json(product))
 }
