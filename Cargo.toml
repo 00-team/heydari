@@ -17,6 +17,7 @@ lazy_static = "1.5.0"
 awc = { version = "3.5.1", features = ["openssl"] }
 utoipa = { version = "4.2.3", features = ["actix_extras", "debug"] }
 actix-http = "3.9.0"
+# actix-web = { version = "4.9.0", features = ["rustls-0_23"] }
 actix-web = "4.9.0"
 actix-utils = "3.0.1"
 actix-web-httpauth = "0.8.2"
