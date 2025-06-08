@@ -16,7 +16,7 @@ export const ProductPopup: Component = () => {
 
     onMount(() => {
         escHandle()
-        EnterHandle()
+        // EnterHandle()
 
         onCleanup(() => {
             ac.abort()
@@ -38,20 +38,20 @@ export const ProductPopup: Component = () => {
             { signal: ac.signal }
         )
     }
-    function EnterHandle() {
-        document.addEventListener(
-            'keydown',
-            e => {
-                if (e.key === 'Enter' && state.popup.show) {
-                    if (!formRef) return
+    // function EnterHandle() {
+    //     document.addEventListener(
+    //         'keydown',
+    //         e => {
+    //             if (e.key === 'Enter' && state.popup.show) {
+    //                 if (!formRef) return
 
-                    e.preventDefault()
-                    formRef.requestSubmit()
-                }
-            },
-            { signal: ac.signal }
-        )
-    }
+    //                 e.preventDefault()
+    //                 formRef.requestSubmit()
+    //             }
+    //         },
+    //         { signal: ac.signal }
+    //     )
+    // }
 
     const closePopup = () => {
         if (changedInfo() || changedPhotos()) {
