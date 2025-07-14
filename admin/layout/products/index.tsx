@@ -32,6 +32,10 @@ export default () => {
         if (self.perms.check(Perms.V_PRODUCT_TAG)) {
             load_tags(0)
         }
+
+        setState({
+            page: parseInt(params.page || '0') || 0,
+        })
     })
 
     function load_tags(page: number) {
@@ -59,16 +63,21 @@ export default () => {
 
     createEffect(() => {
         state.filters.best
-        fetch_products(parseInt(params.page || '0') || 0)
+        fetch_products(state.page)
     })
 
     function fetch_products(page: number) {
         setState({ loading: true })
         setParams({ page })
 
+        let params = { page } as any
+        if (state.filters.best != null) {
+            params.best = state.filters.best
+        }
+
         httpx({
             url: '/api/admin/products/',
-            params: { page, best: state.filters.best },
+            params,
             method: 'GET',
             onLoad(x) {
                 setState({ loading: false })
@@ -128,18 +137,64 @@ export default () => {
                     </button>
                 </div>
                 <div class='filters-wrapper'>
-                    <FilterCheckbox
-                        holder='بهترین محصولات'
-                        checked={state.filters.best}
-                        onCheck={c =>
+                    <button
+                        class='title_smaller'
+                        style={{
+                            border: '2px solid blue',
+                            'border-radius': '0.2rem',
+                            padding: '0.5rem',
+                        }}
+                        disabled={state.page == 0}
+                        onClick={() => {
                             setState(
                                 produce(s => {
-                                    s.filters.best = c
+                                    s.page--
                                 })
                             )
-                        }
+                        }}
+                    >
+                        صفحه قبلی
+                    </button>
+                    <button
                         class='title_smaller'
-                    />
+                        style={{
+                            border: '2px solid blue',
+                            'border-radius': '0.2rem',
+                            padding: '0.5rem',
+                        }}
+                        onClick={() => {
+                            setState(
+                                produce(s => {
+                                    s.page++
+                                })
+                            )
+                        }}
+                    >
+                        صفحه بعدی
+                    </button>
+                    <button
+                        class='title_smaller'
+                        style={{
+                            border: '2px solid blue',
+                            'border-radius': '0.2rem',
+                            padding: '0.5rem',
+                        }}
+                        onClick={() => {
+                            setState(
+                                produce(s => {
+                                    if (s.filters.best == null) {
+                                        s.filters.best = true
+                                    } else if (s.filters.best == true) {
+                                        s.filters.best = false
+                                    } else {
+                                        s.filters.best = null
+                                    }
+                                })
+                            )
+                        }}
+                    >
+                        بهترین محصولات: {state.filters.best + ''}
+                    </button>
                     <FilterCheckbox
                         holder=' فقط صندلی'
                         checked={state.filters.onlyChair}

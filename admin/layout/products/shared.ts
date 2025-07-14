@@ -27,7 +27,7 @@ type popupType = {
 }
 
 type filtersType = {
-    best: boolean
+    best: boolean | null
     onlyChair: boolean
     onlyTable: boolean
 }
@@ -46,7 +46,7 @@ type stateType = {
 export const [state, setState] = createStore<stateType>({
     search: '',
     filters: {
-        best: false,
+        best: null,
         onlyChair: false,
         onlyTable: false,
     },
