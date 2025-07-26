@@ -5,11 +5,11 @@ After=syslog.target
 [Service]
 Type=simple
 Restart=always
-WorkingDirectory=/heydari/
-EnvironmentFile=/heydari/.env
-ExecStart=/heydari/target/release/heydari
+WorkingDirectory=/x/heydari/
+EnvironmentFile=/x/heydari/.env
+ExecStart=/x/heydari/target/release/heydari
 KillSignal=SIGQUIT
-StandardError=file:/heydari/log
+StandardError=file:/x/heydari/stderr.log
 NotifyAccess=all
 
 [Install]
