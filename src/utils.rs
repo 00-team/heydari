@@ -100,7 +100,15 @@ pub async fn send_sms_prefab(phone: &str, body_id: i64, args: Vec<String>) {
     }
 
     let body = Body { body_id, to: phone.to_string(), args };
-    let _ = request.send_json(&body).await;
+    let r = request.send_json(&body).await;
+    match r {
+        Ok(mut v) => {
+            if v.status() != 200 {
+                log::error!("send sms error: {:?}", v.body().await)
+            }
+        }
+        Err(e) => log::error!("send sms error: {e:#?}"),
+    }
 }
 
 pub async fn simurgh_request(
