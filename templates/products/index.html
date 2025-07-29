@@ -231,26 +231,36 @@
         </div>
         {% endfor %}
 
-        <div class="pagination" data-pages="{{ pages }}">
-            <button class="pagination-prev">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="30" height="30">
-                    <path d="m9 18 6-6-6-6"></path>
-                </svg>
-            </button>
+        <div class="pagination" data-pages="{{ pages }}" data-page="{{ page }}">
+            {% if page != 0 %}
+            <a rel="noopener" href="?page={{ page - 1 }}" class="title_small">
+                صفحه قبلی
+            </a>
+            {% endif %}
+            <!-- <button class="pagination-prev"> -->
+            <!--     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" -->
+            <!--         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"> -->
+            <!--         <path d="m9 18 6-6-6-6"></path> -->
+            <!--     </svg> -->
+            <!-- </button> -->
             <div class="pagination-wrapper">
-                {% for page in range(1, pages) %}
-                <a rel="noopener" href="?page={{ page }}" class="title_small">
-                    {{ page + 1 }}
+                {% for p in range(0, pages + 1) %}
+                <a rel="noopener" href="?page={{ p }}" class="title_small{% if p == page %} active {% endif %}">
+                    {{ p + 1 }}
                 </a>
                 {% endfor %}
             </div>
-            <button class="pagination-next">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="30" height="30">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
-            </button>
+            {% if page != pages %}
+            <a rel="noopener" href="?page={{ page + 1 }}" class="title_small">
+                صفحه بعدی
+            </a>
+            {% endif %}
+            <!-- <button class="pagination-next"> -->
+            <!--     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" -->
+            <!--         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"> -->
+            <!--         <path d="m15 18-6-6 6-6"></path> -->
+            <!--     </svg> -->
+            <!-- </button> -->
         </div>
 
     </section>

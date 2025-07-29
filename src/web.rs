@@ -51,7 +51,7 @@ struct ProductsQuery {
 async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
     let q = Query::<ProductsQuery>::extract(&rq).await;
     let mut sort = "desc";
-    let mut offset = 0;
+    let mut page = 0;
     let mut filter = Vec::<String>::new();
 
     if let Ok(q) = &q {
@@ -59,9 +59,7 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
             sort = "asc";
         }
 
-        if let Some(p) = q.page {
-            offset = p * 32;
-        }
+        page = q.page.unwrap_or(0);
 
         if let Some(kind) = &q.kind {
             filter.push(format!("kind = {}", kind.clone() as i64));
@@ -87,17 +85,24 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
         count: i64,
     }
     let products_count: Count = sqlx::query_as(&format!(
-        "select count(id) as count from products {cond}"
+        "select count(1) as count from products {cond}"
     ))
     .fetch_one(&state.sql)
     .await?;
-    let pages = (products_count.count as f32 / 32f32).ceil() as u32;
+    let pages = if products_count.count > 0 {
+        // (products_count.count as f32 / 32f32).ceil() as u32
+        products_count.count as u32 / 32
+    } else {
+        0
+    };
+
+    log::info!("pages: {page}/{pages} | count: {}", products_count.count);
 
     let products: Vec<Product> = sqlx::query_as(&format!(
         "select * from products {} order by created_at {} limit 32 offset ?",
         cond, sort
     ))
-    .bind(offset)
+    .bind(page * 32)
     .fetch_all(&state.sql)
     .await?;
 
@@ -117,6 +122,7 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
             products => products,
             tags => tags,
             pages => pages,
+            page => page
         })?;
 
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))

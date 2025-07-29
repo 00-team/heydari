@@ -5,7 +5,6 @@ import { ArrowdownIcon, TrashIcon, WarningIcon } from 'icons'
 import {
     Accessor,
     Component,
-    createEffect,
     createMemo,
     createSignal,
     Match,

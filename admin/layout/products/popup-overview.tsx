@@ -84,7 +84,17 @@ export const PopupOverview: Component = () => {
         }
     }
 
-    function photo_del(url: string) {
+    function photo_del(url: string, pdx: number) {
+        if (state.popup.type == 'add') {
+            setState(
+                produce(s => {
+                    s.popup.files.splice(pdx, 1)
+                })
+            )
+
+            return
+        }
+
         if (!url) return
 
         let p = unwrap(state.popup)
@@ -106,7 +116,7 @@ export const PopupOverview: Component = () => {
 
                 if (!s.products[proIndex]) return
 
-                s.products[proIndex].photos = s.products[
+                s.products[proIndex]!.photos = s.products[
                     proIndex
                 ]!.photos.filter(img => img !== url)
             })
@@ -239,7 +249,9 @@ export const PopupOverview: Component = () => {
                                             type: 'error',
                                             onSubmit() {
                                                 photo_del(
-                                                    images()[local.active]!
+                                                    images()[local.active]!,
+                                                    local.active
+                                                    // images()[local.active]!
                                                 )
                                                 setLocal({ active: 0 })
                                             },
