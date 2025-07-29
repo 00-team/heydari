@@ -19,4 +19,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           command_timeout: 1h
-          script: bash /heydari/config/deploy.sh
+          script: bash /x/heydari/config/deploy.sh

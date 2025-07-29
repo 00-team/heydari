@@ -2,7 +2,7 @@
 SPACER="======================================"
 EG="🔷"
 
-cd /heydari/
+cd /x/heydari/
 
 OLD_COMMIT=$(git rev-parse HEAD)
 
