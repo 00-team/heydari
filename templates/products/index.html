@@ -233,9 +233,9 @@
 
         <div class="pagination" data-pages="{{ pages }}" data-page="{{ page }}">
             {% if page != 0 %}
-                <a rel="noopener" href="?page={{ page - 1 }}" class="title_small">
-                    صفحه قبلی
-                </a>
+            <a rel="noopener" href="?page={{ page - 1 }}" class="title_small">
+                صفحه قبلی
+            </a>
             {% endif %}
             <!-- <button class="pagination-prev"> -->
             <!--     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" -->
@@ -246,14 +246,14 @@
             <div class="pagination-wrapper">
                 {% for p in range(0, pages + 1) %}
                 <a rel="noopener" href="?page={{ p }}" class="title_small{% if p == page %} active {% endif %}">
-                    {{ p }}
+                    {{ p + 1 }}
                 </a>
                 {% endfor %}
             </div>
             {% if page != pages %}
-                <a rel="noopener" href="?page={{ page + 1 }}" class="title_small">
-                    صفحه بعدی
-                </a>
+            <a rel="noopener" href="?page={{ page + 1 }}" class="title_small">
+                صفحه بعدی
+            </a>
             {% endif %}
             <!-- <button class="pagination-next"> -->
             <!--     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" -->
