@@ -75,7 +75,7 @@ async fn tag_add(
 ) -> Response<ProductTag> {
     admin.perm_check_many(&[perms::V_PRODUCT_TAG, perms::A_PRODUCT_TAG])?;
 
-    body.name.cut_off(255);
+    body.name.cut_off(1024);
 
     let result = sqlx::query! {
         "insert into product_tags(kind, name, part) values(?,?,?)",
@@ -113,7 +113,7 @@ async fn tag_update(
     admin.perm_check_many(&[perms::V_PRODUCT_TAG, perms::C_PRODUCT_TAG])?;
 
     tag.name = body.name.clone();
-    tag.name.cut_off(255);
+    tag.name.cut_off(1024);
 
     sqlx::query! {
         "update product_tags set name = ? where id = ?",

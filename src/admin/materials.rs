@@ -107,9 +107,6 @@ async fn add(
 
     let now = utils::now();
 
-    body.name.cut_off(255);
-    body.detail.cut_off(2047);
-
     let result = sqlx::query! {
         "insert into materials(name, detail, count, created_at, created_by)
         values(?,?,?,?,?)",
@@ -154,9 +151,6 @@ async fn update_info(
     // material.count = body.count;
     material.updated_at = utils::now();
     material.updated_by = Some(admin.user.id);
-
-    material.name.cut_off(255);
-    material.detail.cut_off(2047);
 
     sqlx::query! {
         "update materials set

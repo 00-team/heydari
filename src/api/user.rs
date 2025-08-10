@@ -156,7 +156,7 @@ async fn user_update(
     };
 
     if change {
-        user.name.cut_off(256);
+        user.name.cut_off(255);
 
         let _ = sqlx::query_as! {
             User,

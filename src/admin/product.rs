@@ -112,7 +112,7 @@ async fn product_add(
 
     utils::verify_slug(&body.slug)?;
 
-    body.name.cut_off(255);
+    body.name.cut_off(1024);
     body.code.cut_off(255);
     body.slug.cut_off(255);
 
@@ -220,11 +220,9 @@ async fn product_update(
     product.price = body.price;
     product.count = body.count;
 
-    product.slug.cut_off(256);
-    product.name.cut_off(256);
-    product.code.cut_off(256);
-    product.detail.cut_off(2048);
-    product.description.cut_off(512);
+    product.slug.cut_off(255);
+    product.name.cut_off(1024);
+    product.code.cut_off(255);
 
     product.tag_leg = update_tag(
         product.tag_leg,
