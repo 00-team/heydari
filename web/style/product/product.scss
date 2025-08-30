@@ -362,8 +362,7 @@ main.product {
 
                     overflow: hidden;
 
-                    will-change: transform;
-                    transition: 0.5s ease;
+                    transition: 0.3s ease transform;
 
                     @media screen and (max-width: 1024px) {
                         height: 70px;
@@ -375,11 +374,10 @@ main.product {
 
                     &:hover {
                         &:nth-child(even) {
-                            transform: translateY(-25%) rotate(-10deg)
-                                scale(1.2);
+                            transform: translateY(-6%) rotate(-5deg) scale(1.2);
                         }
                         &:nth-child(odd) {
-                            transform: translateY(-25%) rotate(10deg) scale(1.2);
+                            transform: translateY(-6%) rotate(5deg) scale(1.2);
                         }
                     }
                 }

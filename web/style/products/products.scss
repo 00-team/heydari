@@ -443,15 +443,10 @@
 
             overflow: hidden;
 
-            transition-property: transform, opacity, display;
-            transition-duration: 0.3s;
-            // transition-behavior: allow-discrete;
-            transition:
-                transform 0.3s ease-in-out,
-                width 0.3s ease-in-out;
+            transition: 0.2s transform ease;
 
             position: relative;
-            isolation: isolate;
+            z-index: 1;
 
             &.hide {
                 display: none;
@@ -459,7 +454,7 @@
             }
 
             &:hover {
-                transform: translateY(-1rem);
+                transform: translateY(-10px);
             }
 
             .card-wrapper {
@@ -492,7 +487,7 @@
                     }
 
                     .product-code {
-                        border-bottom-left-radius: 0.5rem;
+                        border-bottom-left-radius: 1rem;
                     }
                 }
 
@@ -537,6 +532,8 @@
 
                     padding: 1em;
 
+                    pointer-events: none;
+
                     .tag {
                         display: flex;
                         align-items: center;
@@ -548,6 +545,14 @@
                         background-color: white;
                         color: black;
                         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+                        pointer-events: all;
+
+                        transition: 0.15s ease scale;
+
+                        &:hover {
+                            scale: 1.05;
+                        }
                     }
                 }
             }
