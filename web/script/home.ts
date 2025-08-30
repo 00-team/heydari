@@ -59,65 +59,75 @@ const words: WORD[] = [
         id: 'edu',
     },
 ]
-let currentMessage = 0
 const DELETE_DELAY = 1000
 const START_DELAY = 250
 
-function typeMessage() {
-    if (!words[currentMessage].w) {
-        currentMessage = 0
+function sleep(ms: number) {
+    return new Promise<void>(res => setTimeout(res, ms))
+}
+
+let stopRequested = false // set true to stop the loop
+
+async function runTyper() {
+    if (!htmlWord) {
+        console.error('htmlWord not found — aborting typer.')
+        return
     }
 
-    const currentStr = words[currentMessage].w
-
-    currentStr.split('')
-
-    let part = ''
-
-    let currentLetter = 0
-
-    let int1 = setInterval(() => {
-        if (!currentStr[currentLetter]) {
-            currentMessage++
-
-            setTimeout(() => {
-                deleteMessage(part)
-            }, DELETE_DELAY)
-
-            console.log('switched')
-            toggleImgs()
-            clearInterval(int1)
-        } else {
-            part += currentStr[currentLetter++]
-
-            htmlWord.innerText = part
+    let idx = 0
+    while (!stopRequested) {
+        const current = words[idx]
+        if (!current) {
+            idx = 0
+            continue
         }
-    }, 100)
-}
-function deleteMessage(str) {
-    let int = setInterval(() => {
-        if (str.length === 0) {
-            setTimeout(() => {
-                typeMessage()
-            }, START_DELAY)
-            clearInterval(int)
-        } else {
-            str = str.split('')
-            str.pop()
-            str = str.join('')
-            htmlWord.innerHTML = str
+        const str = current.w
+
+        // type
+        for (let i = 1; i <= str.length; i++) {
+            if (!htmlWord) {
+                stopRequested = true
+                break
+            }
+            htmlWord.innerText = str.slice(0, i)
+            await sleep(100)
         }
-    }, 50)
+
+        if (stopRequested) break
+
+        // wait before deleting
+        await sleep(DELETE_DELAY)
+
+        // delete
+        for (let i = str.length; i >= 0; i--) {
+            if (!htmlWord) {
+                stopRequested = true
+                break
+            }
+            htmlWord.innerText = str.slice(0, i)
+            await sleep(50)
+        }
+
+        if (stopRequested) break
+
+        await sleep(START_DELAY)
+
+        idx = (idx + 1) % words.length
+
+        toggleImgs(idx)
+    }
 }
-function toggleImgs() {
+
+function toggleImgs(id: number) {
+    console.log(id)
     if (aTags.length == 0) return
-    let tags = Array.from(aTags)
 
+    let tags = Array.from(aTags)
+    console.log(tags[id].id)
+
+    console.log(id)
     tags.forEach(a => a.classList.toggle('active', false))
-    let id = tags.findIndex(a => a.id == words[currentMessage].id)
-    if (id == -1) id = currentMessage
 
     tags[id].classList.toggle('active', true)
 }
-typeMessage()
-toggleImgs()
+runTyper()
