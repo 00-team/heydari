@@ -594,12 +594,13 @@
                     place-content: center;
                     width: 30px;
                     height: 30px;
-                    padding: 0.5rem;
+                    padding: 1em;
+                    border-radius: 100vmax;
                 }
 
                 a.active {
                     background-color: var(--sixty-percent);
-                    border-radius: 50%;
+                    color: white;
                     // padding: 0.5rem;
                 }
             }
