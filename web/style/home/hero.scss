@@ -81,7 +81,7 @@ main.home section.hero-container {
 
                 &:hover {
                     img {
-                        scale: 1.05;
+                        scale: 1.02;
                     }
                 }
 
@@ -91,7 +91,7 @@ main.home section.hero-container {
 
                     object-fit: contain;
 
-                    transition: 0.15s scale ease;
+                    transition: 0.3s scale ease;
                 }
             }
 
