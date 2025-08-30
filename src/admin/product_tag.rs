@@ -7,7 +7,7 @@ use crate::AppState;
 use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, post, HttpResponse, Scope};
 use serde::Deserialize;
-use shah::perms::Perms;
+use potk::Perms;
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]

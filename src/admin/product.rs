@@ -10,7 +10,7 @@ use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use serde::Deserialize;
-use shah::perms::Perms;
+use potk::Perms;
 use sqlx::SqlitePool;
 use std::collections::HashMap;
 use utoipa::{IntoParams, OpenApi, ToSchema};
@@ -174,7 +174,7 @@ async fn update_tag(
         return Ok(Some(tag.id));
     }
 
-    return Ok(None);
+    Ok(None)
 }
 
 #[derive(Deserialize, ToSchema)]

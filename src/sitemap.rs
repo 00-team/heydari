@@ -68,7 +68,7 @@ async fn products(conn: ConnectionInfo, state: Data<AppState>) -> HttpResponse {
         let dt = chrono::Local
             .timestamp_opt(ts, 0)
             .latest()
-            .and_then(|v| Some(v.to_rfc3339()));
+            .map(|val| val.to_rfc3339());
         (r.slug.clone(), dt)
     });
 

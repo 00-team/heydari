@@ -74,7 +74,7 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
         }
     }
 
-    let cond = if filter.len() > 0 {
+    let cond = if !filter.is_empty() {
         "where ".to_string() + &filter.join(" AND ")
     } else {
         String::new()

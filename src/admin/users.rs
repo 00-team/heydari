@@ -5,8 +5,8 @@ use crate::utils::CutOff;
 use crate::AppState;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{get, patch, Scope};
+use potk::Perms;
 use serde::Deserialize;
-use shah::perms::Perms;
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]
@@ -98,10 +98,8 @@ async fn update(
     user.name = body.name.clone();
     user.name.cut_off(255);
 
-    if body.banned {
-        if user.admin.iter().any(|v| *v != 0) {
-            return Err(AppErrForbidden(Some("cannot ban an admin")));
-        }
+    if body.banned && user.admin.perm_any() {
+        return Err(AppErrForbidden(Some("cannot ban an admin")));
     }
     user.banned = body.banned;
 

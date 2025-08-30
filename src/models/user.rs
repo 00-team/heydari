@@ -2,7 +2,7 @@ use crate::AppState;
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
 use actix_web::{dev::Payload, web::Data, FromRequest, HttpRequest};
 use serde::{Deserialize, Serialize};
-use shah::perms::{Perm, Perms};
+use potk::{Perm, Perms};
 use std::{future::Future, pin::Pin};
 use utoipa::ToSchema;
 
@@ -28,7 +28,7 @@ pub struct UpdatePhoto {
 
 /// custom perms
 pub mod perms {
-    shah::perms! {
+    potk::perms! {
         MASTER,
         V_USER, A_USER, C_USER, D_USER,
         V_PRODUCT, A_PRODUCT, C_PRODUCT, D_PRODUCT,

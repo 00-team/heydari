@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use crate::docs::UpdatePaths;
 use crate::models::material::Material;
 use crate::models::user::perms;
@@ -7,16 +5,17 @@ use crate::models::user::Admin;
 use crate::models::user::User;
 use crate::models::ListInput;
 use crate::models::{AppErr, Response};
-use crate::utils::{self, CutOff};
+use crate::utils;
 use crate::AppState;
 use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
 use itertools::Itertools;
+use potk::Perms;
 use serde::Deserialize;
 use serde::Serialize;
-use shah::perms::Perms;
+use std::collections::HashSet;
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]
@@ -69,7 +68,7 @@ async fn list(
         }
     }
 
-    let users = if user_ids.len() != 0 {
+    let users = if !user_ids.is_empty() {
         let user_ids = user_ids.iter().join(",");
         let mut users = sqlx::query_as! {
             User, "select * from users where id in (?)", user_ids
@@ -101,7 +100,7 @@ struct MaterialAddBody {
 /// Add
 #[post("/")]
 async fn add(
-    admin: Admin, mut body: Json<MaterialAddBody>, state: Data<AppState>,
+    admin: Admin, body: Json<MaterialAddBody>, state: Data<AppState>,
 ) -> Response<Material> {
     admin.perm_check_many(&[perms::V_MATERIAL, perms::A_MATERIAL])?;
 
