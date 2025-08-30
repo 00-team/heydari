@@ -21,18 +21,54 @@ stickyButton.addEventListener('mouseleave', e => {
     stickyButton.style.transition = '0.2s ease'
 })
 
-let htmlWord = document.querySelector<HTMLElement>('span.typer-word')
-const words = ['اداری', 'خانگی', 'استادیومی', 'رستورانی', 'ویلایی', 'آموزشی']
+let heroWrapper = document.querySelector<HTMLElement>('.hero-wrapper')
+let htmlWord = heroWrapper.querySelector<HTMLElement>('span.typer-word')
+let aTags = heroWrapper.querySelectorAll('.hero-img-container a')
+
+type WORD = {
+    w: string
+    link: string
+    id: string
+}
+const words: WORD[] = [
+    {
+        w: 'اداری',
+        link: 'https://heydari-mi.com/products/Office-Chair',
+        id: 'office',
+    },
+    {
+        w: 'خانگی',
+
+        link: 'https://heydari-mi.com/products/savin-chair-5',
+        id: 'home',
+    },
+    // { w: 'استادیومی',  link: '' },
+    {
+        w: 'رستورانی',
+        link: 'https://heydari-mi.com/products/tree-chair',
+        id: 'restaurant',
+    },
+    {
+        w: 'ویلایی',
+        link: 'https://heydari-mi.com/products/savin-chair-2',
+        id: 'villa',
+    },
+    {
+        w: 'آموزشی',
+        link: 'https://heydari-mi.com/products/MetalPlast-Chair',
+        id: 'edu',
+    },
+]
 let currentMessage = 0
 const DELETE_DELAY = 1000
 const START_DELAY = 250
 
 function typeMessage() {
-    if (!words[currentMessage]) {
+    if (!words[currentMessage].w) {
         currentMessage = 0
     }
 
-    const currentStr = words[currentMessage]
+    const currentStr = words[currentMessage].w
 
     currentStr.split('')
 
@@ -48,6 +84,8 @@ function typeMessage() {
                 deleteMessage(part)
             }, DELETE_DELAY)
 
+            console.log('switched')
+            toggleImgs()
             clearInterval(int1)
         } else {
             part += currentStr[currentLetter++]
@@ -71,4 +109,15 @@ function deleteMessage(str) {
         }
     }, 50)
 }
+function toggleImgs() {
+    if (aTags.length == 0) return
+    let tags = Array.from(aTags)
+
+    tags.forEach(a => a.classList.toggle('active', false))
+    let id = tags.findIndex(a => a.id == words[currentMessage].id)
+    if (id == -1) id = currentMessage
+
+    tags[id].classList.toggle('active', true)
+}
 typeMessage()
+toggleImgs()
