@@ -70,7 +70,7 @@ main.home section.hero-container {
                 opacity: 0;
                 transform: translateX(1rem);
 
-                transition: 0.5s ease;
+                transition: 0.7s ease;
                 transition-property: opacity, transform;
 
                 &.active {
@@ -88,6 +88,8 @@ main.home section.hero-container {
                 img {
                     max-height: 100%;
                     max-width: 100%;
+
+                    transform: scale(1.1);
 
                     object-fit: contain;
 
