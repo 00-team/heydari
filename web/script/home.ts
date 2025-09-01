@@ -23,39 +23,38 @@ stickyButton.addEventListener('mouseleave', e => {
 
 let heroWrapper = document.querySelector<HTMLElement>('.hero-wrapper')
 let htmlWord = heroWrapper.querySelector<HTMLElement>('span.typer-word')
-let aTags = heroWrapper.querySelectorAll('.hero-img-container a')
+let aTags = heroWrapper.querySelectorAll('.hero-img-container .img-wrapper')
 
 type WORD = {
     w: string
-    link: string
     id: string
 }
 const words: WORD[] = [
     {
         w: 'اداری',
-        link: 'https://heydari-mi.com/products/Office-Chair',
         id: 'office',
     },
     {
         w: 'خانگی',
 
-        link: 'https://heydari-mi.com/products/savin-chair-5',
         id: 'home',
     },
     // { w: 'استادیومی',  link: '' },
     {
+        w: 'آموزشی',
+        id: 'edu2',
+    },
+    {
         w: 'رستورانی',
-        link: 'https://heydari-mi.com/products/tree-chair',
         id: 'restaurant',
     },
     {
         w: 'ویلایی',
-        link: 'https://heydari-mi.com/products/savin-chair-2',
         id: 'villa',
     },
+
     {
         w: 'آموزشی',
-        link: 'https://heydari-mi.com/products/MetalPlast-Chair',
         id: 'edu',
     },
 ]
@@ -119,13 +118,10 @@ async function runTyper() {
 }
 
 function toggleImgs(id: number) {
-    console.log(id)
     if (aTags.length == 0) return
 
     let tags = Array.from(aTags)
-    console.log(tags[id].id)
 
-    console.log(id)
     tags.forEach(a => a.classList.toggle('active', false))
 
     tags[id].classList.toggle('active', true)
