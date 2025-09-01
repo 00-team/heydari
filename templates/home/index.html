@@ -27,41 +27,27 @@
 {% block header %}
 
 <!-- ------  DEFER STYLE TAGS  ------- -->
-<link rel="preload" href="/static/style/home/home.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="/static/style/home/home.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
-    <link rel="stylesheet" href="/static/style/home/home.css">
+    <link rel="stylesheet" href="/static/style/home/home.css?v=1">
 </noscript>
 
-<link rel="preload" href="/static/style/home/hero.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="/static/style/home/hero.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
-    <link rel="stylesheet" href="/static/style/home/hero.css">
+    <link rel="stylesheet" href="/static/style/home/hero.css?v=1">
 </noscript>
 
-<link rel="preload" href="/static/style/home/about.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-    <link rel="stylesheet" href="/static/style/home/about.css">
-</noscript>
+<link rel="stylesheet" href="/static/style/home/about.css">
+<link rel="stylesheet" href="/static/style/home/honors.css">
+<link rel="stylesheet" href="/static/style/home/products.css">
+<link rel="stylesheet" href="/static/style/components/buttons.css">
 
-<link rel="preload" href="/static/style/home/honors.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-    <link rel="stylesheet" href="/static/style/home/honors.css">
-</noscript>
 
-<link rel="preload" href="/static/style/home/products.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-    <link rel="stylesheet" href="/static/style/home/products.css">
-</noscript>
-
-<link rel="preload" href="/static/style/components/buttons.css" as="style"
-    onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-    <link rel="stylesheet" href="/static/style/components/buttons.css">
-</noscript>
 <!-- ------------- -->
 
 <link rel="preload" href="/static/image/chair2.webp" as="image" type="image/webp" />
 
-<script src="/static/script/home.js" defer></script>
+<script src="/static/script/home.js?v=1" defer></script>
 <script src="/static/script/about.js" defer></script>
 <script src="/static/script/honors.js" defer></script>
 <script src="/static/script/products.js" defer></script>
