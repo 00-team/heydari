@@ -21,3 +21,7 @@ export function validate_image_format(file: File): boolean {
     }
     return true
 }
+
+export function deepcopy<T>(value: T): T {
+    return JSON.parse(JSON.stringify(value))
+}
