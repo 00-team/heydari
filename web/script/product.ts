@@ -55,3 +55,23 @@ AboutButton.addEventListener('click', () => {
     activeSection = 'about'
     update()
 })
+
+const product = document.querySelector<HTMLDivElement>('#product-price span')
+
+let orderCount = document.querySelector<HTMLInputElement>('#order-counter')
+let orderPlus = document.querySelector<HTMLInputElement>('#order-plus')
+let orderMinus = document.querySelector<HTMLInputElement>('#order-minus')
+
+product.innerHTML = product.innerHTML.toLocaleString()
+
+const handlePlus = () => {
+    console.log('called ')
+    orderCount.valueAsNumber = orderCount.valueAsNumber + 1
+}
+const handleMinus = () => {
+    console.log('called 1')
+    orderCount.valueAsNumber = Math.max(1, orderCount.valueAsNumber - 1)
+}
+
+orderPlus.addEventListener('click', handlePlus)
+orderMinus.addEventListener('click', handleMinus)
