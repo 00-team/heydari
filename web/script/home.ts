@@ -35,11 +35,15 @@ const words: WORD[] = [
         id: 'office',
     },
     {
+        w: 'آموزشی',
+        id: 'edu3',
+    },
+    {
         w: 'خانگی',
 
         id: 'home',
     },
-    // { w: 'استادیومی',  link: '' },
+    { w: 'استادیومی', id: 'stadium' },
     {
         w: 'آموزشی',
         id: 'edu2',

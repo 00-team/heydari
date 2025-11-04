@@ -1,11 +1,12 @@
 import { produce, unwrap } from 'solid-js/store'
 import { state, setState, popup_clear } from './shared'
-import { httpx } from 'shared'
+import { deepcopy, httpx } from 'shared'
 import { addAlert } from 'comps/alert'
-import { EMPTY_PRODUCT } from 'models'
+import { EMPTY_PRODUCT, ProductModel } from 'models'
 
 export async function product_add() {
-    let p = unwrap(state.popup)
+    let p = deepcopy(state.popup)
+    const files = unwrap(state.popup.files)
 
     popup_clear()
 
@@ -18,6 +19,8 @@ export async function product_add() {
             s.products.unshift({ ...empty })
         })
     )
+
+    let product: ProductModel
 
     await new Promise<void>(resolve => {
         httpx({
@@ -57,6 +60,8 @@ export async function product_add() {
                     loading: true,
                 }
 
+                product = productWithLoading
+
                 setState(
                     produce(s => {
                         s.products[index] = productWithLoading
@@ -66,33 +71,29 @@ export async function product_add() {
         })
     })
 
-    let hasFiles = p.files.length > 0
+    let hasFiles = files.length > 0
     let hasDetail =
-        p.product.detail || Object.keys(p.product.specification).length > 0
-
-    console.log(uniqeId)
+        !!p.product.detail ||
+        !!p.product.price ||
+        !!p.product.description ||
+        Object.keys(p.product.specification).length > 0
 
     let index = state.products.findIndex(a => a.id === uniqeId)
     if (index < 0) return
 
-    const product = state.products[index]!
+    if (!product!) return
 
     if (hasDetail) {
         httpx({
             url: `/api/admin/products/${product.id}/`,
             method: 'PATCH',
             json: {
-                slug: product.slug,
-                name: product.name,
-                code: product.code,
-                detail: product.detail,
-                tag_leg: p.product.tag_leg || product.tag_leg,
-                tag_bed: p.product.tag_bed || product.tag_bed,
-                best: product.best,
-                price: product.price,
-                count: product.count,
-                description: product.description,
-                specification: p.product.specification || product.specification,
+                ...product,
+
+                detail: p.product.detail,
+                price: p.product.price,
+                description: p.product.description,
+                specification: p.product.specification,
             },
             onLoad(x) {
                 if (x.status != 200)
@@ -110,6 +111,8 @@ export async function product_add() {
                     timeout: 3,
                 })
 
+                console.log('putted')
+
                 setState(
                     produce(s => {
                         s.products[index] = {
@@ -123,15 +126,15 @@ export async function product_add() {
     }
 
     if (hasFiles) {
-        const files = p.files.filter(f => f.file)
+        const f = files.filter(f => f.file)
 
         const uploadPromises: Promise<void>[] = []
 
-        files.forEach(f => {
+        f.forEach(fa => {
             uploadPromises.push(
                 new Promise<void>((resolve, reject) => {
                     const data = new FormData()
-                    data.set('photo', f.file!)
+                    data.set('photo', fa.file!)
 
                     httpx({
                         url: `/api/admin/products/${product.id}/photos/`,

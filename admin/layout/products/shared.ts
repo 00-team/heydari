@@ -43,6 +43,7 @@ type stateType = {
     page: number
     loading: boolean
 }
+export { type stateType as PRODUCTS_STATE }
 export const [state, setState] = createStore<stateType>({
     search: '',
     filters: {

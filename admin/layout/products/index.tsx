@@ -137,95 +137,95 @@ export default () => {
                     </button>
                 </div>
                 <div class='filters-wrapper'>
-                    <button
-                        class='title_smaller'
-                        style={{
-                            border: '2px solid blue',
-                            'border-radius': '0.2rem',
-                            padding: '0.5rem',
-                        }}
-                        disabled={state.page == 0}
-                        onClick={() => {
-                            setState(
-                                produce(s => {
-                                    s.page--
-                                })
-                            )
-                        }}
-                    >
-                        صفحه قبلی
-                    </button>
-                    <button
-                        class='title_smaller'
-                        style={{
-                            border: '2px solid blue',
-                            'border-radius': '0.2rem',
-                            padding: '0.5rem',
-                        }}
-                        onClick={() => {
-                            setState(
-                                produce(s => {
-                                    s.page++
-                                })
-                            )
-                        }}
-                    >
-                        صفحه بعدی
-                    </button>
-                    <button
-                        class='title_smaller'
-                        style={{
-                            border: '2px solid blue',
-                            'border-radius': '0.2rem',
-                            padding: '0.5rem',
-                        }}
-                        onClick={() => {
-                            setState(
-                                produce(s => {
-                                    if (s.filters.best == null) {
-                                        s.filters.best = true
-                                    } else if (s.filters.best == true) {
-                                        s.filters.best = false
-                                    } else {
-                                        s.filters.best = null
-                                    }
-                                })
-                            )
-                        }}
-                    >
-                        بهترین محصولات: {state.filters.best + ''}
-                    </button>
-                    <FilterCheckbox
-                        holder=' فقط صندلی'
-                        checked={state.filters.onlyChair}
-                        onCheck={c => {
-                            setState(
-                                produce(s => {
-                                    s.filters.onlyChair = c
-                                    if (s.filters.onlyChair) {
-                                        s.filters.onlyTable = false
-                                    }
-                                })
-                            )
-                        }}
-                        class='title_smaller'
-                    />
-                    <FilterCheckbox
-                        holder='فقط میز'
-                        checked={state.filters.onlyTable}
-                        onCheck={c =>
-                            setState(
-                                produce(s => {
-                                    s.filters.onlyTable = c
+                    <div class='pagination'>
+                        <button
+                            class='title_smaller page-cta'
+                            disabled={state.page == 0}
+                            onClick={() => {
+                                setState(
+                                    produce(s => {
+                                        s.page--
+                                    })
+                                )
+                            }}
+                        >
+                            صفحه قبل
+                        </button>
+                        <button
+                            class='title_smaller page-cta'
+                            // disabled={state.page == }
+                            onClick={() => {
+                                setState(
+                                    produce(s => {
+                                        s.page++
+                                    })
+                                )
+                            }}
+                        >
+                            صفحه بعد
+                        </button>
+                        <button
+                            class='title_smaller page-cta'
+                            classList={{
+                                disable: state.filters.best === null,
+                                green: state.filters.best === true,
+                                red: state.filters.best === false,
+                            }}
+                            onClick={() => {
+                                setState(
+                                    produce(s => {
+                                        if (s.filters.best == null) {
+                                            s.filters.best = true
+                                        } else if (s.filters.best == true) {
+                                            s.filters.best = false
+                                        } else {
+                                            s.filters.best = null
+                                        }
+                                    })
+                                )
+                            }}
+                        >
+                            بهترین ها{' '}
+                            {state.filters.best === null
+                                ? ''
+                                : state.filters.best === true
+                                  ? 'باشه'
+                                  : 'نباشه'}
+                        </button>
+                    </div>
+                    <div class='ctas'>
+                        <FilterCheckbox
+                            holder=' فقط صندلی'
+                            checked={state.filters.onlyChair}
+                            onCheck={c => {
+                                setState(
+                                    produce(s => {
+                                        s.filters.onlyChair = c
+                                        if (s.filters.onlyChair) {
+                                            s.filters.onlyTable = false
+                                        }
+                                    })
+                                )
+                            }}
+                            class='title_smaller'
+                        />
+                        <FilterCheckbox
+                            holder='فقط میز'
+                            checked={state.filters.onlyTable}
+                            onCheck={c =>
+                                setState(
+                                    produce(s => {
+                                        s.filters.onlyTable = c
 
-                                    if (s.filters.onlyTable) {
-                                        s.filters.onlyChair = false
-                                    }
-                                })
-                            )
-                        }
-                        class='title_smaller'
-                    />
+                                        if (s.filters.onlyTable) {
+                                            s.filters.onlyChair = false
+                                        }
+                                    })
+                                )
+                            }
+                            class='title_smaller'
+                        />
+                    </div>
                 </div>
             </div>
 

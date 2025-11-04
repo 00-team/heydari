@@ -109,69 +109,102 @@
             width: clamp(0px, 100%, 700px);
 
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
+            gap: 1.5rem;
 
-            gap: 2rem;
-
-            label {
+            .pagination,
+            .ctas {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 1rem;
+                flex-wrap: wrap;
 
-                cursor: pointer;
+                gap: 2rem;
 
-                input {
-                    display: none;
-                }
-
-                .checkbox-wrapper {
+                label {
                     display: flex;
                     align-items: center;
+                    justify-content: center;
+                    gap: 1rem;
 
-                    width: 45px;
-                    aspect-ratio: 2 / 1;
+                    cursor: pointer;
 
-                    background: white;
-                    border-radius: 100vmax;
-                    border: 3px solid white;
-
-                    position: relative;
-                    z-index: 1;
-
-                    transition: 0.7s ease;
-
-                    &::before {
-                        content: '';
-
-                        position: absolute;
-                        right: 1px;
-
-                        display: inline-block;
-
-                        transform: translateX(0%);
-
-                        aspect-ratio: 1;
-                        height: 100%;
-
-                        border-radius: 100vmax;
-
-                        background-color: var(--thirty-percent);
-
-                        transition: 0.3s ease;
+                    input {
+                        display: none;
                     }
-                }
-                &.active {
+
                     .checkbox-wrapper {
-                        background-color: var(--thirty-percent);
-                        border-color: var(--thirty-percent);
+                        display: flex;
+                        align-items: center;
+
+                        width: 45px;
+                        aspect-ratio: 2 / 1;
+
+                        background: white;
+                        border-radius: 100vmax;
+                        border: 3px solid white;
+
+                        position: relative;
+                        z-index: 1;
+
+                        transition: 0.7s ease;
 
                         &::before {
-                            transform: translateX(-130%);
-                            background-color: white;
+                            content: '';
+
+                            position: absolute;
+                            right: 1px;
+
+                            display: inline-block;
+
+                            transform: translateX(0%);
+
+                            aspect-ratio: 1;
+                            height: 100%;
+
+                            border-radius: 100vmax;
+
+                            background-color: var(--thirty-percent);
+
+                            transition: 0.3s ease;
                         }
+                    }
+                    &.active {
+                        .checkbox-wrapper {
+                            background-color: var(--thirty-percent);
+                            border-color: var(--thirty-percent);
+
+                            &::before {
+                                transform: translateX(-130%);
+                                background-color: white;
+                            }
+                        }
+                    }
+                }
+
+                .page-cta {
+                    border-radius: 0.7rem;
+                    background: var(--thirty-percent);
+                    color: white;
+                    padding: 0.7rem 1rem;
+
+                    transition: 0.2s ease;
+
+                    &:disabled {
+                        opacity: 0.7;
+                        filter: blur(1px);
+                        cursor: not-allowed;
+                    }
+
+                    &.disable {
+                        opacity: 0.7;
+                    }
+                    &.green {
+                        background-color: var(--alert-success);
+                    }
+                    &.red {
+                        background-color: var(--alert-error);
                     }
                 }
             }
@@ -188,7 +221,7 @@
 
         margin-top: 1rem;
 
-        padding: 0.6em 1.1em;
+        padding: 0.7em 1.1em;
         border: none;
         border-radius: 0.7rem;
         background-color: var(--ten-percent);
@@ -234,14 +267,13 @@
         flex-wrap: wrap;
         justify-content: center;
 
-        // row-gap: 2rem;
+        row-gap: 2rem;
         column-gap: calc(3rem + 1vw);
 
         padding: 1rem;
 
         .product-container {
             width: clamp(0px, 100%, 300px);
-            aspect-ratio: 1 / 2.2;
 
             display: flex;
             flex-direction: column;
@@ -295,7 +327,7 @@
             }
 
             .img-container {
-                height: 80%;
+                height: 390px;
                 width: 100%;
 
                 display: flex;
