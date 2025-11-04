@@ -4,10 +4,10 @@ import solidPlugin from 'vite-plugin-solid'
 
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-// let target = 'http://127.0.0.1:7000'
+let target = 'http://127.0.0.1:7000'
 let root = 'admin'
 
-let target = 'https://heydari-mi.com'
+// let target = 'https://heydari-mi.com'
 // let root = 'app'
 // if (process.env.local_api_target) {
 //     target = 'http://127.0.0.1:7000'
