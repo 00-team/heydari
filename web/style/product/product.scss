@@ -54,222 +54,111 @@ main.product {
                 cursor: default;
             }
 
-            a {
-                text-align: center;
-                color: #ffffff;
+            .buy-section {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
 
-                margin-top: 2em;
+                margin-top: 2rem;
 
-                width: clamp(200px, 50%, 250px);
+                .price-holder {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1rem;
 
-                border-radius: 12px;
+                    span {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
 
-                position: relative;
-                isolation: isolate;
+                        font-family: number;
+                        white-space: nowrap;
+                    }
 
-                &::before {
-                    content: '';
-                    box-shadow: 0px 0px 24px 0px #ff9f3b;
-                    mix-blend-mode: screen;
-                    transition: opacity 0.3s;
+                    .toman {
+                        scale: 0.8;
+                        transform: translateY(10px);
+                        opacity: 0.7;
+                    }
 
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    left: 0;
-                    bottom: 0;
-                    border-radius: inherit;
-                    opacity: 0;
-                }
-                &::after {
-                    content: '';
-                    box-shadow:
-                        0px 0px 23px 0px #fdfca9 inset,
-                        0px 0px 8px 0px #ffffff42;
-                    transition: opacity 0.3s;
-
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    left: 0;
-                    bottom: 0;
-                    border-radius: inherit;
-                    opacity: 0;
-                }
-
-                &:hover {
                     &::before,
                     &::after {
-                        opacity: 1;
-                    }
-
-                    .dot {
-                        transform: translate(0, 0) rotate(var(--rotatation));
-                    }
-
-                    .dot::after {
-                        animation-play-state: running;
-                    }
-                }
-
-                .text {
-                    z-index: -1;
-                    width: 100%;
-                    height: 100%;
-
-                    padding: 1em 1.2em;
-
-                    border-radius: inherit;
-
-                    background-color: var(--sixty-percent);
-                }
-
-                .dot {
-                    display: block;
-                    position: absolute;
-                    transition: transform calc(var(--speed) / 12) ease;
-                    width: var(--size);
-                    height: var(--size);
-                    transform: translate(var(--starting-x), var(--starting-y))
-                        rotate(var(--rotatation));
-
-                    z-index: 1;
-
-                    &::after {
                         content: '';
-                        animation:
-                            hoverFirefly var(--speed) infinite,
-                            dimFirefly calc(var(--speed) / 2) infinite
-                                calc(var(--speed) / 3);
-                        animation-play-state: paused;
-                        display: block;
-                        border-radius: 100%;
-                        background: yellow;
                         width: 100%;
-                        height: 100%;
-                        box-shadow:
-                            0px 0px 6px 0px #ffeb3b,
-                            0px 0px 4px 0px #fdfca9 inset,
-                            0px 0px 2px 1px #ffffff42;
+                        height: 1px;
+                        background-color: black;
                     }
+                }
 
-                    &.dot-1 {
-                        --rotatation: 0deg;
-                        --speed: 14s;
-                        --size: 6px;
-                        --starting-x: 30px;
-                        --starting-y: 20px;
-                        top: 2px;
-                        left: -16px;
-                        opacity: 0.7;
-                    }
+                .buy-ctas {
+                    width: 100%;
+                    display: flex;
+                    align-items: stretch;
+                    justify-content: space-between;
+                    gap: 2rem;
 
-                    &.dot-2 {
-                        --rotatation: 122deg;
-                        --speed: 16s;
-                        --size: 3px;
-                        --starting-x: 40px;
-                        --starting-y: 10px;
-                        top: 1px;
-                        left: 0px;
-                        opacity: 0.7;
-                    }
+                    .counter-wrapper {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.5rem;
 
-                    &.dot-3 {
-                        --rotatation: 39deg;
-                        --speed: 20s;
-                        --size: 4px;
-                        --starting-x: -10px;
-                        --starting-y: 20px;
-                        top: -8px;
-                        right: 14px;
-                    }
+                        border-bottom: 1px solid var(--primary-color);
 
-                    &.dot-4 {
-                        --rotatation: 220deg;
-                        --speed: 18s;
-                        --size: 2px;
-                        --starting-x: -30px;
-                        --starting-y: -5px;
-                        bottom: 4px;
-                        right: -14px;
-                        opacity: 0.9;
-                    }
+                        position: relative;
+                        z-index: 1;
 
-                    &.dot-5 {
-                        --rotatation: 190deg;
-                        --speed: 22s;
-                        --size: 5px;
-                        --starting-x: -40px;
-                        --starting-y: -20px;
-                        bottom: -6px;
-                        right: -3px;
-                    }
+                        .holder {
+                            position: absolute;
+                            width: 100%;
+                            text-align: center;
 
-                    &.dot-6 {
-                        --rotatation: 20deg;
-                        --speed: 15s;
-                        --size: 4px;
-                        --starting-x: 12px;
-                        --starting-y: -18px;
-                        bottom: -12px;
-                        left: 30px;
-                        opacity: 0.7;
-                    }
+                            z-index: 1;
+                            bottom: 0;
+                            opacity: 0.7;
 
-                    &.dot-7 {
-                        --rotatation: 300deg;
-                        --speed: 19s;
-                        --size: 3px;
-                        --starting-x: 6px;
-                        --starting-y: -20px;
-                        bottom: -16px;
-                        left: 44px;
-                    }
-
-                    @keyframes dimFirefly {
-                        0% {
-                            opacity: 1;
+                            transform: translateY(calc(100% + 0.5rem));
                         }
-                        25% {
-                            opacity: 0.4;
+
+                        input {
+                            background: none;
+                            border: none;
+                            padding: 0.5rem;
+                            text-align: center;
+
+                            min-width: 50px;
+                            max-width: 100px;
+
+                            &::-webkit-outer-spin-button,
+                            &::-webkit-inner-spin-button {
+                                -webkit-appearance: none;
+                                margin: 0;
+                            }
+                            /* Firefox */
+                            &[type='number'] {
+                                -moz-appearance: textfield;
+                            }
                         }
-                        50% {
-                            opacity: 0.8;
-                        }
-                        75% {
-                            opacity: 0.5;
-                        }
-                        100% {
-                            opacity: 1;
+
+                        .counter-cta {
+                            width: 30px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100%;
+                            border-radius: 0.5rem;
                         }
                     }
 
-                    @keyframes hoverFirefly {
-                        0% {
-                            transform: translate(0, 0);
-                        }
-                        12% {
-                            transform: translate(3px, 1px);
-                        }
-                        24% {
-                            transform: translate(-2px, 3px);
-                        }
-                        37% {
-                            transform: translate(2px, -2px);
-                        }
-                        55% {
-                            transform: translate(-1px, 0);
-                        }
-                        74% {
-                            transform: translate(0, 2px);
-                        }
-                        88% {
-                            transform: translate(-3px, -1px);
-                        }
-                        100% {
-                            transform: translate(0, 0);
-                        }
+                    .buy-cta {
+                        font-family: yekanBold;
+                        flex: 1 0 0;
+                        padding: 1rem;
+
+                        background-color: var(--sixty-percent);
+                        border-radius: 0.7rem;
                     }
                 }
             }
