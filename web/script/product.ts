@@ -56,20 +56,20 @@ AboutButton.addEventListener('click', () => {
     update()
 })
 
-const product = document.querySelector<HTMLDivElement>('#product-price span')
+const product = document.querySelector<HTMLDivElement>(
+    '#product-price span span'
+)
 
 let orderCount = document.querySelector<HTMLInputElement>('#order-counter')
 let orderPlus = document.querySelector<HTMLInputElement>('#order-plus')
 let orderMinus = document.querySelector<HTMLInputElement>('#order-minus')
 
-product.innerHTML = product.innerHTML.toLocaleString()
+product.innerText = parseInt(product.innerText).toLocaleString()
 
 const handlePlus = () => {
-    console.log('called ')
     orderCount.valueAsNumber = orderCount.valueAsNumber + 1
 }
 const handleMinus = () => {
-    console.log('called 1')
     orderCount.valueAsNumber = Math.max(1, orderCount.valueAsNumber - 1)
 }
 

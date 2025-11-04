@@ -157,8 +157,18 @@ main.product {
                         flex: 1 0 0;
                         padding: 1rem;
 
+                        color: white;
                         background-color: var(--sixty-percent);
                         border-radius: 0.7rem;
+
+                        transition: 0.2s ease;
+
+                        &:hover {
+                            transform: scale(1.05);
+                        }
+                        &:active {
+                            transform: scale(1);
+                        }
                     }
                 }
             }
