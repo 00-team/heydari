@@ -79,9 +79,9 @@ export class Perms {
         }
         let f = 1 << bit
         if (value) {
-            this.#perms[byte] |= f
+            this.#perms[byte]! |= f
         } else {
-            this.#perms[byte] &= ~f
+            this.#perms[byte]! &= ~f
         }
     }
 

@@ -1,22 +1,32 @@
-use std::collections::HashMap;
-
+use super::{from_request, JsonStr};
 use serde::{Deserialize, Serialize};
 use sqlx::{sqlite::SqliteRow, Row};
+use std::collections::HashMap;
 use utoipa::ToSchema;
 
-use super::{from_request, sql_enum, JsonStr};
-
-sql_enum! {
-    pub enum ProductKind {
-        Chair,
-        Table,
-    }
-
-    pub enum ProductPart {
-        Leg,
-        Bed,
-    }
+#[potk::enum_int(i64)]
+#[derive(PartialEq, Eq, Default, Clone, Copy, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ProductKind {
+    #[default]
+    Chair,
+    Table,
 }
+
+super::sql_enum!(ProductKind);
+
+#[potk::enum_int(i64)]
+#[derive(PartialEq, Eq, Default, Clone, Copy, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ProductPart {
+    #[default]
+    Leg,
+    Bed,
+}
+
+super::sql_enum!(ProductPart);
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Clone)]
 pub struct ProductTag {

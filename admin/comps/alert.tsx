@@ -3,6 +3,8 @@ import { Component, JSX, Show, onCleanup, onMount } from 'solid-js'
 import './style/alert.scss'
 
 import { createStore, produce } from 'solid-js/store'
+import { ErrorCode } from 'abi'
+import { LOCALE } from 'locale'
 
 type AlertModel = {
     type: 'info' | 'error' | 'success'
@@ -126,6 +128,17 @@ export default () => {
             ))}
         </div>
     )
+}
+
+export function alert_code(code: ErrorCode) {
+    let msg = LOCALE.error_code(code)
+
+    addAlert({
+        type: 'error',
+        timeout: 3,
+        subject: msg,
+        content: '',
+    })
 }
 
 export { alert_state, setAlertState, addAlert, delAlert }

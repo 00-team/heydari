@@ -8,7 +8,7 @@ use utoipa::{OpenApi, ToSchema};
 
 use crate::{
     config::Config,
-    models::{self, AppErr, AppErrBadRequest},
+    models::{self, AppErr},
     utils,
 };
 use models::Response;
@@ -84,15 +84,13 @@ async fn verification(
     let code = utils::get_random_string(Config::CODE_ABC, 5);
     log::info!("code: {code}");
 
-    #[cfg(not(debug_assertions))]
     utils::heimdall_message(
         &format!(
             "action: {:?}\nphone: {}\ncode: {code}",
             body.action, body.phone
         ),
         "verification",
-    )
-    .await;
+    );
 
     #[cfg(not(debug_assertions))]
     utils::send_sms_prefab(
@@ -128,22 +126,22 @@ pub async fn verify(
 
     let v = vdb.get_mut(phone);
     if v.is_none() {
-        return Err(AppErrBadRequest(Some("bad verification")));
+        return crate::err!(BadVerification);
     }
     let v = v.unwrap();
 
     v.tries += 1;
 
     if v.action != action {
-        return Err(AppErrBadRequest(Some("invalid action")));
+        return crate::err!(BadVerification);
     }
 
     if v.code != code {
         if v.tries > 2 {
-            return Err(AppErrBadRequest(Some("too many tries")));
+            return crate::err!(RateLimited);
         }
 
-        return Err(AppErrBadRequest(Some("invalid code")));
+        return crate::err!(BadVerification);
     }
 
     vdb.remove(phone);

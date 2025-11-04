@@ -8,9 +8,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
 
+use crate::config::Config;
 use crate::models::product::{Product, ProductKind, ProductTag};
 use crate::models::{AppErr, ListInput};
-use crate::utils::simurgh_request;
 use crate::AppState;
 
 type Response = Result<HttpResponse, AppErr>;
@@ -62,7 +62,7 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
         page = q.page.unwrap_or(0);
 
         if let Some(kind) = &q.kind {
-            filter.push(format!("kind = {}", kind.clone() as i64));
+            filter.push(format!("kind = {}", *kind as i64));
 
             if let Some(leg) = q.leg {
                 filter.push(format!("tag_leg = {leg}"));
@@ -201,19 +201,19 @@ async fn about(state: Data<AppState>) -> Response {
 
 #[get("/blogs")]
 async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("blogs/index.html")?;
     let mut page = 0;
 
     if let Ok(q) = Query::<ListInput>::extract(&rq).await {
         page = q.page;
     }
 
-    let result = simurgh_request(&format!("/blogs-ssr/?page={page}")).await;
-    let result = String::from_utf8(result?.body().await?.to_vec())?;
+    let conf = Config::get();
+    let url = conf.simurgh_url(&format!("/blogs-ssr/?page={page}"));
 
-    let result =
-        state.env.get_template("blogs/index.html")?.render(context! {
-            blogs_body => result
-        })?;
+    let res = conf.simurgh.get(url).send().await?.text().await?;
+
+    let result = tmpl.render(context! { blogs_body => res })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
@@ -250,23 +250,22 @@ struct BlogSSRR {
 
 #[get("/blogs/{slug}")]
 async fn blog(path: Path<(String,)>, state: Data<AppState>) -> Response {
-    let result = simurgh_request(&format!("/blogs-ssr/{}/", path.0)).await;
-    let result = result?.json::<BlogSSRR>().await?;
+    let tmpl = state.env.get_template("blog/index.html")?;
 
-    let result =
-        state.env.get_template("blog/index.html")?.render(context! {
-            blog_body => result.html,
-            blog => result.blog,
-        })?;
+    let conf = Config::get();
+    let url = conf.simurgh_url(&format!("/blogs-ssr/{}/", path.0));
+    let res = conf.simurgh.get(url).send().await?.json::<BlogSSRR>().await?;
+
+    let result = tmpl.render(context! {
+        blog_body => res.html,
+        blog => res.blog,
+    })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[routes]
 #[get("/admin")]
-#[get("/admin/products")]
-#[get("/admin/product-tags")]
-#[get("/admin/storage")]
-#[get("/admin/users")]
+#[get("/admin/{path:.*}")]
 async fn admin_index() -> HttpResponse {
     let result = std::fs::read_to_string("admin/dist/index.html")
         .unwrap_or("err reading admin index.html".to_string());
@@ -278,6 +277,7 @@ async fn robots() -> HttpResponse {
     HttpResponse::Ok().content_type(ContentType::plaintext()).body(
         r###"User-agent: *
 Disallow: /admin/
+Disallow: /api/
 
 User-agent: *
 Allow: /

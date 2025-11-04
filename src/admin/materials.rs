@@ -11,10 +11,10 @@ use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, post, put, HttpResponse, Scope};
-use itertools::Itertools;
 use potk::Perms;
 use serde::Deserialize;
 use serde::Serialize;
+use sqlx::Sqlite;
 use std::collections::HashSet;
 use utoipa::{OpenApi, ToSchema};
 
@@ -69,12 +69,17 @@ async fn list(
     }
 
     let users = if !user_ids.is_empty() {
-        let user_ids = user_ids.iter().join(",");
-        let mut users = sqlx::query_as! {
-            User, "select * from users where id in (?)", user_ids
+        let mut s = String::with_capacity(1024);
+        s.push_str("select * from users where id IN (");
+        for id in user_ids.iter() {
+            s.push_str(&id.to_string());
+            s.push(',');
         }
-        .fetch_all(&state.sql)
-        .await?;
+        s.pop();
+        s.push(')');
+
+        let mut users =
+            sqlx::query_as::<Sqlite, User>(&s).fetch_all(&state.sql).await?;
 
         users.iter_mut().for_each(|user| user.token = None);
         users

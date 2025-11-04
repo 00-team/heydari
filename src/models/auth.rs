@@ -1,6 +1,6 @@
 use actix_web::HttpRequest;
 
-use super::{error::AppErrBadAuth, AppErr};
+use super::AppErr;
 
 pub enum Authorization {
     User { id: i64, token: String },
@@ -8,14 +8,16 @@ pub enum Authorization {
 
 fn tokenizer<const N: usize>(value: Option<&str>) -> Result<[&str; N], AppErr> {
     if value.is_none() {
-        return Err(AppErrBadAuth(None));
+        return crate::err!(BadAuth);
     }
-    let result: [&str; N] = value
-        .unwrap()
-        .splitn(N, ':')
-        .collect::<Vec<&str>>()
-        .try_into()
-        .map_err(|_| AppErrBadAuth(None))?;
+    let mut result: [&str; N] = [""; N];
+    let mut v = value.unwrap().splitn(N, ':');
+    for slot in result.iter_mut() {
+        let Some(s) = v.next() else {
+            return crate::err!(BadAuth);
+        };
+        *slot = s;
+    }
 
     Ok(result)
 }
@@ -26,20 +28,18 @@ impl TryFrom<&str> for Authorization {
         let mut tokens = value.splitn(2, ' ');
         let key = tokens.next().map(|v| v.to_lowercase());
         if key.is_none() {
-            return Err(AppErrBadAuth(None));
+            return crate::err!(BadAuth);
         }
 
         match key.unwrap().as_str() {
             "user" => {
                 let [id, token] = tokenizer(tokens.next())?;
                 Ok(Authorization::User {
-                    id: id.parse()?,
+                    id: id.parse().map_err(|_| crate::err!(r, BadAuth))?,
                     token: token.to_string(),
                 })
             }
-            key => {
-                Err(AppErrBadAuth(Some(&format!("unknown key in auth: {key}"))))
-            }
+            _ => crate::err!(BadAuth),
         }
     }
 }
@@ -49,7 +49,9 @@ impl TryFrom<&HttpRequest> for Authorization {
 
     fn try_from(rq: &HttpRequest) -> Result<Self, Self::Error> {
         if let Some(value) = rq.headers().get("authorization") {
-            return Authorization::try_from(value.to_str()?);
+            if let Ok(value) = value.to_str() {
+                return Authorization::try_from(value);
+            }
         }
 
         for hdr in rq.headers().get_all("cookie") {
@@ -71,6 +73,6 @@ impl TryFrom<&HttpRequest> for Authorization {
             }
         }
 
-        Err(AppErrBadAuth(None))
+        crate::err!(BadAuth)
     }
 }

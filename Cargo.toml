@@ -12,10 +12,9 @@ rand = "0.8.5"
 cercis = "1.2.0"
 sha2 = "0.10.8"
 hex = "0.4.3"
-itertools = "0.13.0"
 lazy_static = "1.5.0"
-awc = { version = "3.5.1", features = ["openssl"] }
-utoipa = { version = "4.2.3", features = ["actix_extras", "debug"] }
+# awc = { version = "3.5.1", features = ["openssl"] }
+utoipa = { version = "5.4.0", features = ["actix_extras", "debug"] }
 actix-http = "3.9.0"
 # actix-web = { version = "4.9.0", features = ["rustls-0_23"] }
 actix-web = "4.9.0"
@@ -26,8 +25,8 @@ actix-multipart = "0.7.2"
 dotenvy = "0.15.7"
 pretty_env_logger = "0.5.0"
 tokio = { version = "1.40.0", features = ["full"] }
-serde = "1.0.210"
-serde_json = "1.0.128"
+serde = "1.0.219"
+serde_json = "1.0.141"
 chrono = { version = "0.4.38", features = ["serde"] }
 sqlx-cli = "0.8.2"
 minijinja = { version = "2.3.1", features = ["loader"] }
@@ -35,3 +34,8 @@ minijinja = { version = "2.3.1", features = ["loader"] }
 [dependencies.sqlx]
 version = "0.8.2"
 features = ["sqlite", "runtime-tokio-rustls", "chrono"]
+
+[dependencies.reqwest]
+version = "0.12.22"
+default-features = false
+features = ["socks", "rustls-tls", "charset", "http2", "json"]

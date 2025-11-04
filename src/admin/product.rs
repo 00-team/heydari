@@ -2,7 +2,7 @@ use crate::docs::UpdatePaths;
 use crate::models::product::{Product, ProductKind, ProductPart, ProductTag};
 use crate::models::user::perms;
 use crate::models::user::Admin;
-use crate::models::{AppErr, AppErrBadRequest, JsonStr, Response};
+use crate::models::{AppErr, JsonStr, Response};
 use crate::utils::{self, CutOff};
 use crate::AppState;
 use actix_multipart::form::tempfile::TempFile;
@@ -127,7 +127,7 @@ async fn product_add(
     Ok(Json(Product {
         id: result.last_insert_rowid(),
         slug: body.slug.clone(),
-        kind: body.kind.clone(),
+        kind: body.kind,
         name: body.name.clone(),
         code: body.code.clone(),
         created_at: now,
@@ -394,7 +394,7 @@ async fn product_photo_add(
     admin.perm_check_many(&[perms::V_PRODUCT, perms::C_PRODUCT])?;
 
     if product.photos.len() >= 255 {
-        return Err(AppErrBadRequest(Some("too many photos")));
+        return crate::err!(TooManyPhotos);
     }
 
     let salt = loop {
@@ -435,7 +435,7 @@ async fn product_photo_del(
     let mut product = product;
     let idx: usize = path.1.into();
     if idx >= product.photos.len() {
-        return Err(AppErrBadRequest(Some("photo not found")));
+        return crate::err!(IndexOutOfBounds, "photo index not found");
     }
 
     let salt = product.photos.remove(idx);

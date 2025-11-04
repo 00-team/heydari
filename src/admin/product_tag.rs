@@ -86,9 +86,9 @@ async fn tag_add(
 
     Ok(Json(ProductTag {
         id: result.last_insert_rowid(),
-        kind: body.kind.clone(),
+        kind: body.kind,
         name: body.name.clone(),
-        part: body.part.clone(),
+        part: body.part,
         count: 0,
     }))
 }

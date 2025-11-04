@@ -1,20 +1,16 @@
-use crate::config::{config, Config};
-use crate::models::{AppErr, AppErrBadRequest};
-use actix_http::encoding::Decoder;
-use actix_http::Payload;
-use awc::ClientResponse;
+use crate::config::Config;
+use crate::models::AppErr;
 use image::{EncodableLayout, ImageReader};
 use rand::Rng;
-use serde::Serialize;
 use std::path::Path;
 
 pub fn phone_validator(phone: &str) -> Result<(), AppErr> {
     if phone.len() != 11 || !phone.starts_with("09") {
-        return Err(AppErrBadRequest(Some("پیش شماره خود را با 0 وارد کنید")));
+        return crate::err!(BadPhone);
     }
 
     if phone.chars().any(|c| !c.is_ascii_digit()) {
-        return Err(AppErrBadRequest(Some("شماره تلفن اشتباه است!")));
+        return crate::err!(BadPhone);
     }
 
     Ok(())
@@ -25,14 +21,12 @@ pub fn now() -> i64 {
 }
 
 pub fn verify_slug(slug: &str) -> Result<(), AppErr> {
-    if slug.len() < 3 {
-        return Err(AppErrBadRequest(Some("حداقل طول نشانه 3 کاراکتر است")));
+    if slug.len() < 3 || slug.len() > 255 {
+        return crate::err!(BadSlugLen);
     }
 
     if !slug.chars().all(|c| Config::SLUG_ABC.contains(&(c as u8))) {
-        return Err(AppErrBadRequest(Some(
-            "URL اینگلیسی نیست یا دارای کاراکتر های غیر حروف است.",
-        )));
+        return crate::err!(BadSlugAbc);
     }
 
     Ok(())
@@ -58,7 +52,10 @@ pub fn save_photo(
 
     let img: image::DynamicImage = img.into_rgba8().into();
 
-    let encoder = webp::Encoder::from_image(&img)?;
+    let encoder = match webp::Encoder::from_image(&img) {
+        Ok(v) => v,
+        Err(e) => return crate::err!(EncodeWebpError, e),
+    };
     let output = encoder.encode(60.0);
     let path = Path::new(Config::RECORD_DIR).join(name);
     std::fs::write(path, output.as_bytes())?;
@@ -77,21 +74,23 @@ pub fn remove_record(name: &str) {
     let _ = std::fs::remove_file(Path::new(Config::RECORD_DIR).join(name));
 }
 
-pub async fn send_sms(phone: &str, text: &str) {
-    // let client = awc::Client::new();
-    log::info!("\nsending sms to {phone}:\n\n{text}\n");
-}
+// pub async fn send_sms(phone: &str, text: &str) {
+//     // let client = awc::Client::new();
+//     log::info!("\nsending sms to {phone}:\n\n{text}\n");
+// }
 
+#[cfg(not(debug_assertions))]
 pub async fn send_sms_prefab(phone: &str, body_id: i64, args: Vec<String>) {
     log::info!("\nsending sms to {phone}:\n\n{args:?}\n");
 
-    let client = awc::Client::new();
-    let request = client.post(format!(
+    let conf = Config::get();
+
+    let rq = reqwest::Client::new().post(format!(
         "https://console.melipayamak.com/api/send/shared/{}",
-        config().melipayamak
+        conf.melipayamak
     ));
 
-    #[derive(Serialize, Debug)]
+    #[derive(serde::Serialize, Debug)]
     #[serde(rename_all = "camelCase")]
     struct Body {
         body_id: i64,
@@ -100,49 +99,51 @@ pub async fn send_sms_prefab(phone: &str, body_id: i64, args: Vec<String>) {
     }
 
     let body = Body { body_id, to: phone.to_string(), args };
-    let r = request.send_json(&body).await;
+    let r = rq.json(&body).send().await;
     match r {
-        Ok(mut v) => {
+        Ok(v) => {
             if v.status() != 200 {
-                log::error!("send sms error: {:?}", v.body().await)
+                log::error!("send sms error: {:?}", v.text().await)
             }
         }
         Err(e) => log::error!("send sms error: {e:#?}"),
     }
 }
 
-pub async fn simurgh_request(
-    path: &str,
-) -> Result<ClientResponse<Decoder<Payload>>, AppErr> {
-    let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
-    let client = awc::Client::new();
-    let request = client
-        .get(format!("{simurgh_host}/api/projects/{simurgh_project}{path}"))
-        .insert_header(("authorization", simurgh_auth.as_str()));
+// pub async fn simurgh_request(
+//     path: &str,
+// ) -> Result<ClientResponse<Decoder<Payload>>, AppErr> {
+//     let Config { simurgh_project, simurgh_host, simurgh_auth, .. } = config();
+//     let client = awc::Client::new();
+//     let request = client
+//         .get(format!("{simurgh_host}/api/projects/{simurgh_project}{path}"))
+//         .insert_header(("authorization", simurgh_auth.as_str()));
+//
+//     let mut result = request.send().await?;
+//     if result.status() != 200 {
+//         Err(result.json::<AppErr>().await?)
+//     } else {
+//         Ok(result)
+//     }
+// }
 
-    let mut result = request.send().await?;
-    if result.status() != 200 {
-        Err(result.json::<AppErr>().await?)
-    } else {
-        Ok(result)
-    }
-}
+// #[cfg(not(debug_assertions))]
+pub fn heimdall_message(text: &str, tag: &str) {
+    let conf = Config::get();
 
-pub async fn heimdall_message(text: &str, tag: &str) {
-    let client = awc::Client::new();
-    let request = client
-        .post("https://heimdall.00-team.org/api/sites/messages/")
-        .insert_header(("authorization", config().heimdall_token.as_str()));
-
-    #[derive(Serialize)]
+    #[derive(serde::Serialize)]
     struct Message {
         text: String,
         tag: String,
     }
 
-    let _ = request
-        .send_json(&Message { text: text.to_string(), tag: tag.to_string() })
-        .await;
+    let rq = conf
+        .heimdall
+        .post("https://heimdall.00-team.org/api/sites/messages/")
+        .json(&Message { text: text.to_string(), tag: tag.to_string() })
+        .send();
+
+    tokio::task::spawn(rq);
 }
 
 pub trait CutOff {
