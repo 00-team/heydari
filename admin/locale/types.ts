@@ -1,6 +1,5 @@
 import {
     ErrorCode,
-    SortOrder,
 } from 'abi'
 // import { UiEaterySectionKind } from 'pages/db/eatery'
 // import { MenuFilters } from 'pages/db/eatery/menu/shared'
@@ -23,7 +22,6 @@ type Table = {
     bool: 'true' | 'false'
     days_of_week: DaysOfWeek
     error_code: ErrorCode 
-    sort_order: SortOrder
 }
 
 export type Locale = {

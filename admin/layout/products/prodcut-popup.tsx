@@ -12,7 +12,7 @@ import { popup_clear, setState, state } from './shared'
 
 export const ProductPopup: Component = () => {
     let ac = new AbortController()
-    let formRef: HTMLFormElement
+    // let formRef: HTMLFormElement
 
     onMount(() => {
         escHandle()
@@ -359,7 +359,7 @@ export const ProductPopup: Component = () => {
                 }}
                 class='popup-wrapper'
                 onclick={e => e.stopPropagation()}
-                ref={e => (formRef = e)}
+                // ref={e => (formRef = e)}
             >
                 <button
                     class='close icon'

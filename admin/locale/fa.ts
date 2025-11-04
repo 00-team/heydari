@@ -5,14 +5,14 @@ export default {
         false: 'خیر',
         true: 'بله',
     },
-    SORT_ORDER: {
-        // desc: 'نزولی',
-        // asc: 'صعودی',
-        desc: 'پایین به بالا',
-        asc: 'بالا به پایین',
-        // desc: 'بالا به پایین',
-        // asc: 'پایین به بالا',
-    },
+    // SORT_ORDER: {
+    //     // desc: 'نزولی',
+    //     // asc: 'صعودی',
+    //     desc: 'پایین به بالا',
+    //     asc: 'بالا به پایین',
+    //     // desc: 'بالا به پایین',
+    //     // asc: 'پایین به بالا',
+    // },
     DAYS_OF_WEEK: {
         saturday: 'شنبه',
         sunday: 'یک شنبه',
@@ -33,20 +33,18 @@ export default {
         index_out_of_bounds: 'آیتم از بازه خارج است',
         encode_webp_error: 'تبدیل تصویر به فرمت webp ناموفق بود',
 
-        password_mismatch: 'رمز عبور اشتباه است!',
         rate_limited: 'تعداد درخواست های شما از حد رد شده',
         bad_phone: 'شماره تلفن نامعتبر',
 
         user_banned: 'کاربر بن شده',
 
         bad_image: 'عکس نامعتبر',
-        bad_search_args: 'جستجوی نامعتبر',
-        bad_username: '',
         forbidden_self_edit: 'خود را نمی توان ادیت کرد',
-        hxr_already_exists: 'این درخواست قبلا ثبت شده و در انتظار است',
         not_unique: 'مشابه این مورد پیداشد',
-        password_too_long: 'رمز بسیار طولانی',
-        password_weak: 'رمز خیلی ضعیف',
         string_too_long: 'متن خیلی طولانی',
+        bad_slug_abc: 'نشانه باید تمامن حروف انگلیسی باشد',
+        bad_slug_len: 'حداقل طول نشانه 3 و حداکثر 250 است',
+        bad_verification: 'تایید کد نامعتبر است',
+        too_many_photos: 'تعداد عکس از حداکثر مجاز بیشتر است',
     },
 } satisfies Locale
