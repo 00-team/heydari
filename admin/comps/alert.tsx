@@ -128,4 +128,15 @@ export default () => {
     )
 }
 
+export function alert_code(code: ErrorCode) {
+    let msg = LOCALE.error_code(code)
+
+    addAlert({
+        type: 'error',
+        timeout: 3,
+        subject: msg,
+        content: '',
+    })
+}
+
 export { alert_state, setAlertState, addAlert, delAlert }

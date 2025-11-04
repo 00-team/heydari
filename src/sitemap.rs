@@ -1,5 +1,6 @@
+use crate::config::Config;
 use crate::models::AppErr;
-use crate::{utils, AppState};
+use crate::AppState;
 use actix_web::dev::{ConnectionInfo, HttpServiceFactory};
 use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
@@ -36,20 +37,17 @@ async fn web(conn: ConnectionInfo) -> HttpResponse {
 }
 
 #[get("/sitemap-blogs.xml")]
-async fn blogs(conn: ConnectionInfo) -> HttpResponse {
+async fn blogs(conn: ConnectionInfo) -> Result<HttpResponse, AppErr> {
     let base_url = format!("{}://{}/blogs/", conn.scheme(), conn.host());
 
+    let conf = Config::get();
+
     let url = format!("/blogs-sitemap/?base_url={base_url}");
+    let url = conf.simurgh_url(&url);
 
-    let result: Result<String, AppErr> = async move {
-        let result = utils::simurgh_request(&url).await;
-        Ok(String::from_utf8(result?.body().await?.to_vec())?)
-    }
-    .await;
+    let res = conf.simurgh.get(url).send().await?.text().await?;
 
-    HttpResponse::Ok()
-        .content_type(ContentType::xml())
-        .body(result.unwrap_or_default())
+    Ok(HttpResponse::Ok().content_type(ContentType::xml()).body(res))
 }
 
 #[get("/sitemap-products.xml")]

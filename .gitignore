@@ -19,3 +19,4 @@ __pycache__/
 backup/
 log
 *.db*
+argon-data/

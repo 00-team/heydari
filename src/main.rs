@@ -1,18 +1,15 @@
 use crate::config::Config;
-use crate::docs::{doc_add_prefix, ApiDoc};
 use actix_files as af;
 use actix_web::{
-    get,
-    http::header::ContentType,
-    middleware,
+    get, middleware,
     web::{scope, Data, Path, Redirect, ServiceConfig},
-    App, HttpResponse, HttpServer, Responder,
+    App, HttpResponse, HttpServer,
 };
-use config::config;
 use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode};
 use sqlx::{Pool, Sqlite, SqlitePool};
 use std::str::FromStr;
-use utoipa::OpenApi;
+
+use crate::models::{ErrorCode, AppErr};
 
 mod admin;
 mod api;
@@ -28,53 +25,15 @@ pub struct AppState {
     pub env: minijinja::Environment<'static>,
 }
 
-#[get("/openapi.json")]
-async fn openapi() -> impl Responder {
-    let mut doc = ApiDoc::openapi();
-    doc.merge(api::user::ApiDoc::openapi());
-    doc.merge(api::verification::ApiDoc::openapi());
-
-    let mut admin_doc = ApiDoc::openapi();
-    admin_doc.merge(admin::materials::ApiDoc::openapi());
-    admin_doc.merge(admin::product::ApiDoc::openapi());
-    admin_doc.merge(admin::product_tag::ApiDoc::openapi());
-    admin_doc.merge(admin::users::ApiDoc::openapi());
-
-    doc_add_prefix(&mut admin_doc, "/admin", false);
-
-    doc.merge(admin_doc);
-
-    doc_add_prefix(&mut doc, "/api", false);
-
-    HttpResponse::Ok().json(doc)
-}
-
-#[get("/rapidoc")]
-async fn rapidoc() -> impl Responder {
-    HttpResponse::Ok().content_type(ContentType::html()).body(
-        r###"<!doctype html>
-    <html><head><meta charset="utf-8"><style>rapi-doc {
-    --green: #00dc7d; --blue: #5199ff; --orange: #ff6b00;
-    --red: #ec0f0f; --yellow: #ffd600; --purple: #782fef; }</style>
-    <script type="module" src="/static/rapidoc.js"></script></head><body> <rapi-doc spec-url="/openapi.json" persist-auth="true"
-    bg-color="#040404" text-color="#f2f2f2"
-    header-color="#040404" primary-color="#ec0f0f"
-    nav-text-color="#eee" font-size="largest"
-    allow-spec-url-load="false" allow-spec-file-load="false"
-    show-method-in-nav-bar="as-colored-block" response-area-height="500px"
-    show-header="false" schema-expand-level="1" /></body> </html>"###,
-    )
-}
-
 #[get("/simurgh-record/{path:.*}")]
 async fn redirect_simrugh_record(path: Path<(String,)>) -> Redirect {
-    Redirect::to(format!("{}/simurgh-record/{}", config().simurgh_host, path.0))
+    Redirect::to(format!("{}/simurgh-record/{}", Config::SIMURGH_HOST, path.0))
         .permanent()
 }
 
 #[get("/simurgh-ssrs/{path:.*}")]
 async fn redirect_simrugh_ssrs(path: Path<(String,)>) -> Redirect {
-    Redirect::to(format!("{}/simurgh-ssrs/{}", config().simurgh_host, path.0))
+    Redirect::to(format!("{}/simurgh-ssrs/{}", Config::SIMURGH_HOST, path.0))
         .permanent()
 }
 
@@ -87,7 +46,7 @@ fn config_app(app: &mut ServiceConfig) {
         app.service(redirect_simrugh_ssrs);
     }
 
-    app.service(openapi).service(rapidoc);
+    app.service(docs::r_openapi).service(docs::r_rapidoc);
     app.service(
         scope("/api")
             .service(api::user::router())
@@ -95,6 +54,7 @@ fn config_app(app: &mut ServiceConfig) {
             .service(
                 scope("/admin")
                     .service(admin::materials::router())
+                    .service(admin::orders::router())
                     .service(admin::product::router())
                     .service(admin::product_tag::router())
                     .service(admin::users::router()),

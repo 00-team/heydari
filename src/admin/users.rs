@@ -1,6 +1,6 @@
 use crate::docs::UpdatePaths;
 use crate::models::user::{perms, Admin, User};
-use crate::models::{AppErrForbidden, ListInput, Response};
+use crate::models::{ListInput, Response};
 use crate::utils::CutOff;
 use crate::AppState;
 use actix_web::web::{Data, Json, Path, Query};
@@ -99,17 +99,17 @@ async fn update(
     user.name.cut_off(255);
 
     if body.banned && user.admin.perm_any() {
-        return Err(AppErrForbidden(Some("cannot ban an admin")));
+        return crate::err!(Forbidden, "cannot ban an admin");
     }
     user.banned = body.banned;
 
     if let Some(np) = body.perms {
         admin.perm_check(perms::MASTER)?;
         if user.admin.perm_get(perms::MASTER) {
-            return Err(AppErrForbidden(Some("cannot edit master's perms")));
+            return crate::err!(Forbidden, "cannot edit a master");
         }
         if np.perm_get(perms::MASTER) {
-            return Err(AppErrForbidden(Some("cannot set master's perms")));
+            return crate::err!(Forbidden, "cannot set as master");
         }
         user.admin = np.to_vec();
     }

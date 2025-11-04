@@ -1,12 +1,12 @@
 use crate::AppState;
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
 use actix_web::{dev::Payload, web::Data, FromRequest, HttpRequest};
-use serde::{Deserialize, Serialize};
 use potk::{Perm, Perms};
+use serde::{Deserialize, Serialize};
 use std::{future::Future, pin::Pin};
 use utoipa::ToSchema;
 
-use super::{auth::Authorization, AppErr, AppErrForbidden};
+use super::{auth::Authorization, AppErr};
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Default)]
 pub struct User {
@@ -34,6 +34,7 @@ pub mod perms {
         V_PRODUCT, A_PRODUCT, C_PRODUCT, D_PRODUCT,
         V_PRODUCT_TAG, A_PRODUCT_TAG, C_PRODUCT_TAG, D_PRODUCT_TAG,
         V_MATERIAL, A_MATERIAL, C_MATERIAL_INFO, C_MATERIAL_COUNT, D_MATERIAL,
+        V_ORDER, A_ORDER, C_ORDER, D_ORDER,
     }
 }
 
@@ -49,7 +50,7 @@ impl Perms for Admin {
         if self.perm_get(perms::MASTER) || self.perm_get(perm) {
             Ok(())
         } else {
-            Err(AppErrForbidden(Some("not enough perms")))
+            crate::err!(Forbidden)
         }
     }
 
@@ -91,7 +92,7 @@ impl FromRequest for User {
             };
 
             if user.banned {
-                return Err(AppErrForbidden(Some("banned")));
+                return crate::err!(UserBanned, "banned");
             }
 
             Ok(user)
@@ -117,7 +118,7 @@ impl FromRequest for Admin {
 
             let admin = Admin { user, perms };
             if !admin.perm_any() {
-                return Err(AppErrForbidden(None));
+                return crate::err!(Forbidden);
             }
 
             Ok(admin)

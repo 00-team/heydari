@@ -49,3 +49,15 @@ create table if not exists materials (
     photo text,
     count integer not null default 0
 );
+
+create table if not exists orders (
+    id integer primary key not null,
+    user integer not null references users(id) on delete cascade,
+    product integer not null references products(id) on delete cascade,
+    price integer not null,
+    created_at integer not null,
+    updated_at integer not null default 0,
+    count integer not null,
+    state integer not null
+);
+
