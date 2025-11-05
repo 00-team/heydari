@@ -94,6 +94,21 @@ main.login {
                 .input-container {
                     margin-top: -60px;
                 }
+
+                .counter {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+
+                    opacity: 0;
+
+                    transition: 0.3s opacity ease;
+
+                    &.active {
+                        opacity: 1;
+                    }
+                }
             }
 
             .phone-section {
