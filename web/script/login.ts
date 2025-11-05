@@ -2,6 +2,9 @@ export let phoneRegex = /^(0|09|09[0-9]{1,9})$/
 
 const form = document.querySelector<HTMLFormElement>('form.login-wrapper')
 
+const counter = form.querySelector<HTMLSpanElement>('#timer-count')
+let counterExpire: number = 0
+
 let activeSection: 'phone' | 'code' = 'phone'
 
 form.addEventListener('submit', e => {
@@ -27,13 +30,30 @@ function sendCode() {
         return showError('شماره تلفن خود را به درستی وارد کنید!')
 
     form.classList.toggle('active', true)
+    activeSection = 'code'
+
+    // test
+    set_expire(10)
 }
 
 function login() {}
 
+function goToPhoneSection() {
+    if (timer) {
+        clearInterval(timer)
+        timer = null
+    }
+
+    activeSection = 'phone'
+    form.classList.toggle('active', false)
+    counter.parentElement.classList.toggle('active', false)
+}
+
 const goBack = form.querySelector<HTMLButtonElement>('.go-back')
 
-goBack.addEventListener('click', () => {})
+goBack.addEventListener('click', () => {
+    goToPhoneSection()
+})
 
 const phoneInp = form.querySelector<HTMLInputElement>('input#login-phone-inp')!
 const codeInp = form.querySelector<HTMLInputElement>('input#login-code-inp')!
@@ -60,6 +80,41 @@ function showError(msg: string) {
     // console.log(phoneErrSpan)
     phoneErr.classList.toggle('active', true)
     phoneErrSpan.innerText = msg
+}
+
+let timer: NodeJS.Timeout
+function set_expire(seconds: number) {
+    counter.parentElement.classList.toggle('active', true)
+
+    // stop any running timer first
+    if (timer) {
+        clearInterval(timer)
+        timer = null
+    }
+
+    counterExpire = seconds
+    // render immediately so user sees the full time without waiting 1s
+    counter.innerText = convertSectoMin(counterExpire)
+
+    timer = setInterval(() => {
+        // decrement first so display goes down each tick
+        counterExpire--
+
+        // update UI
+        if (counterExpire <= 0) {
+            goToPhoneSection()
+
+            return
+        }
+
+        counter.innerText = convertSectoMin(counterExpire)
+    }, 1000)
+}
+
+function convertSectoMin(seconds: number) {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return mins + ':' + (secs < 10 ? '0' : '') + secs
 }
 
 export function convertPersianPriceToNumber(str: string): string {
