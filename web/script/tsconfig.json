@@ -1,10 +1,55 @@
 {
     "compilerOptions": {
+        "module": "esnext",
+        "target": "esnext",
+        "moduleResolution": "node",
         "baseUrl": "./",
         "rootDir": "./",
         "outDir": "../../static/script/",
-        "declaration": false
+        "declaration": false,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        // "types": ["vite/client"],
+        "noEmit": false,
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        //
+        // "moduleResolution": "bundler",
+        //
+        "useDefineForClassFields": true,
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "skipLibCheck": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "downlevelIteration": true,
+        "declarationMap": false,
+        "sourceMap": true,
+        "removeComments": true,
+        "noEmitOnError": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true
     },
-    "include": ["./"],
+    "include": [
+        "./"
+    ],
     "exclude": []
 }

@@ -1,31 +1,31 @@
 export {}
 
-const navContainer = document.querySelector<HTMLElement>('nav.nav-container')
-const navWrapper = navContainer.querySelector<HTMLElement>('.nav-wrapper')
-const smallScreen = navWrapper.querySelector<HTMLElement>('.just-for-small')
-const openSmallNav = document.querySelector<HTMLElement>('.small-open')
-const closeSmallNav = document.querySelector<HTMLElement>('.small-close')
-const logoContainer = document.querySelector<HTMLElement>('.nav-logo-container')
+const navContainer = document.querySelector<HTMLElement>('nav.nav-container')!
+const navWrapper = navContainer.querySelector<HTMLElement>('.nav-wrapper')!
+const smallScreen = navWrapper.querySelector<HTMLElement>('.just-for-small')!
+const openSmallNav = document.querySelector<HTMLElement>('.small-open')!
+const closeSmallNav = document.querySelector<HTMLElement>('.small-close')!
+const logoContainer = document.querySelector<HTMLElement>('.nav-logo-container')!
 
 let scrolled = false
 let isSmall = false
 let openSmall = false
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (innerWidth < 768) isSmall = true
+    if (window.innerWidth < 768) isSmall = true
     render()
 
     window.onresize = () => {
-        if (innerWidth < 768) isSmall = true
+        if (window.innerWidth < 768) isSmall = true
         else isSmall = false
         render()
     }
 
     window.onscroll = () => {
-        if (scrollY > 10 && !scrolled) {
+        if (window.scrollY > 10 && !scrolled) {
             scrolled = true
             render()
-        } else if (scrollY <= 10 && scrolled) {
+        } else if (window.scrollY <= 10 && scrolled) {
             scrolled = false
             render()
         }

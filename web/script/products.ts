@@ -1,7 +1,7 @@
 export {}
 
-const productsElem = document.querySelector('.products-container#products')
-const productsHeader = document.querySelector('.products-header')
+const productsElem = document.querySelector('.products-container#products')!
+const productsHeader = document.querySelector('.products-header')!
 
 const addClass = () => {
     productsHeader.className += ' active'

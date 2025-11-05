@@ -1,8 +1,8 @@
 export {}
 
-const HonorsElem = document.querySelector('.honors-container#honors')
-const honorsWrapper = document.querySelector('.honors-wrapper')
-const honorsHeader = document.querySelector('.honor-header')
+const HonorsElem = document.querySelector('.honors-container#honors')!
+const honorsWrapper = document.querySelector('.honors-wrapper')!
+const honorsHeader = document.querySelector('.honor-header')!
 
 const addClass = () => {
     HonorsElem.className += ' active'
@@ -16,7 +16,7 @@ const honors = document.querySelectorAll('.honor-container')
 
 let current = 1
 
-const setClass = index => {
+function setClass(index: number) {
     honors.forEach((content, idx0) => {
         if (index === idx0)
             return (content.className = 'honor-container active')

@@ -1,15 +1,15 @@
 const honorsSection = document.querySelector<HTMLElement>(
     '.about-page-honors#honors'
-)
-const honorTitle = honorsSection.querySelector<HTMLElement>('.honors-title')
+)!
+const honorTitle = honorsSection.querySelector<HTMLElement>('.honors-title')!
 const honorsWrapper =
-    honorsSection.querySelector<HTMLElement>('.honors-wrapper')
+    honorsSection.querySelector<HTMLElement>('.honors-wrapper')!
 
 const projectsSection = document.querySelector<HTMLElement>(
     '.about-page-projects'
-)
+)!
 const projectTitle =
-    projectsSection.querySelector<HTMLElement>('.project-title')
+    projectsSection.querySelector<HTMLElement>('.project-title')!
 
 document.addEventListener(
     'DOMContentLoaded',

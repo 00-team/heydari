@@ -1,27 +1,27 @@
 export {}
 
-const main = document.querySelector<HTMLImageElement>('.main-img')
-const imgs = document.querySelectorAll('.other-img')
+const main = document.querySelector<HTMLImageElement>('.main-img')!
+const imgs = document.querySelectorAll<HTMLImageElement>('.other-img')
 
-imgs.forEach((img: HTMLImageElement) => {
-    img.addEventListener('click', e => {
+imgs.forEach((img) => {
+    img.addEventListener('click', () => {
         main.src = img.src
     })
 })
 
-const aboutProduct = document.querySelector<HTMLElement>('.product-about')
+const aboutProduct = document.querySelector<HTMLElement>('.product-about')!
 
-const aboutSelect = aboutProduct.querySelector<HTMLElement>('.about-select')
-const aboutWrapper = aboutProduct.querySelector<HTMLElement>('.about-wrapper')
+const aboutSelect = aboutProduct.querySelector<HTMLElement>('.about-select')!
+const aboutWrapper = aboutProduct.querySelector<HTMLElement>('.about-wrapper')!
 
-const InfoButton = aboutSelect.querySelector<HTMLButtonElement>('button.info')
-const AboutButton = aboutSelect.querySelector<HTMLButtonElement>('button.about')
+const InfoButton = aboutSelect.querySelector<HTMLButtonElement>('button.info')!
+const AboutButton = aboutSelect.querySelector<HTMLButtonElement>('button.about')!
 
-const aboutSection = aboutWrapper.querySelector<HTMLElement>('.about')
-const infoSection = aboutWrapper.querySelector<HTMLElement>('.info')
+const aboutSection = aboutWrapper.querySelector<HTMLElement>('.about')!
+const infoSection = aboutWrapper.querySelector<HTMLElement>('.info')!
 
-const aboutText = aboutSection.querySelector<HTMLElement>('p')
-const infoTable = infoSection.querySelector<HTMLTableElement>('table')
+const aboutText = aboutSection.querySelector<HTMLElement>('p')!
+const infoTable = infoSection.querySelector<HTMLTableElement>('table')!
 
 let activeSection: 'info' | 'about' = 'about'
 
@@ -58,11 +58,11 @@ AboutButton.addEventListener('click', () => {
 
 const product = document.querySelector<HTMLDivElement>(
     '#product-price span span'
-)
+)!
 
-let orderCount = document.querySelector<HTMLInputElement>('#order-counter')
-let orderPlus = document.querySelector<HTMLInputElement>('#order-plus')
-let orderMinus = document.querySelector<HTMLInputElement>('#order-minus')
+let orderCount = document.querySelector<HTMLInputElement>('#order-counter')!
+let orderPlus = document.querySelector<HTMLInputElement>('#order-plus')!
+let orderMinus = document.querySelector<HTMLInputElement>('#order-minus')!
 
 product.innerText = parseInt(product.innerText).toLocaleString()
 

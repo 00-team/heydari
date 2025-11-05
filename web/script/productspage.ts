@@ -12,13 +12,13 @@ function insert_param(name: string, value: string) {
 
 function generic_clear(dd: HTMLDivElement) {
     if (!dd.dataset.value) return
-    dd.querySelector<HTMLSpanElement>('.drop-active-text').innerText = '---'
-    params.delete(dd.dataset.id)
+    dd.querySelector<HTMLSpanElement>('.drop-active-text')!.innerText = '---'
+    params.delete(dd.dataset.id!)
     location.search = params.toString()
 }
 
 function generic_load(dd: HTMLDivElement) {
-    let pal = params.get(dd.dataset.id)
+    let pal = params.get(dd.dataset.id!)
     if (!pal) return
 
     let value = dd.querySelector<HTMLDivElement>(
@@ -28,55 +28,58 @@ function generic_load(dd: HTMLDivElement) {
     dd.setAttribute('data-value', pal)
 
     let active = dd.querySelector<HTMLSpanElement>('.drop-active-text')
-    active.innerText = value.dataset.name
+    active!.innerText = value.dataset.name!
 }
 
 function generic_select(dd: HTMLDivElement, dl: HTMLDivElement) {
-    dd.setAttribute('data-value', dl.dataset.value)
-    insert_param(dd.dataset.id, dl.dataset.value)
+    dd.setAttribute('data-value', dl.dataset.value!)
+    insert_param(dd.dataset.id!, dl.dataset.value!)
 }
 
-let dropdown_kind = document.getElementById('dropdown_kind')
-var dropdown_leg = document.getElementById('dropdown_leg')
-let dropdown_bed = document.getElementById('dropdown_bed')
+let dropdown_kind = document.getElementById('dropdown_kind')!
+var dropdown_leg = document.getElementById('dropdown_leg')!
+let dropdown_bed = document.getElementById('dropdown_bed')!
 
-global.kind_clear = generic_clear
-global.kind_select = generic_select
-global.kind_load = (dd: HTMLDivElement) => {
-    let pal = params.get(dd.dataset.id)
-    if (!pal || !['chair', 'table'].includes(pal)) {
-        dropdown_leg.classList.add('disable')
-        dropdown_bed.classList.add('disable')
-        return
-    }
+const UTMAP: { [k: string]: any } = {
+    kind_clear: generic_clear,
+    kind_select: generic_select,
 
-    dropdown_bed.classList.add(pal)
-    dropdown_leg.classList.add(pal)
+    kind_load: (dd: HTMLDivElement) => {
+        let pal = params.get(dd.dataset.id!)
+        if (!pal || !['chair', 'table'].includes(pal)) {
+            dropdown_leg.classList.add('disable')
+            dropdown_bed.classList.add('disable')
+            return
+        }
 
-    dd.setAttribute('data-value', pal)
-    let active = dd.querySelector<HTMLSpanElement>('.drop-active-text')
-    active.innerText = pal == 'chair' ? 'صندلی' : 'میز'
+        dropdown_bed.classList.add(pal)
+        dropdown_leg.classList.add(pal)
+
+        dd.setAttribute('data-value', pal)
+        let active = dd.querySelector<HTMLSpanElement>('.drop-active-text')!
+        active.innerText = pal == 'chair' ? 'صندلی' : 'میز'
+    },
+
+    bed_clear: generic_clear,
+    bed_load: generic_load,
+    bed_select: generic_select,
+
+    leg_clear: generic_clear,
+    leg_load: generic_load,
+    leg_select: generic_select,
+
+    sort_clear: generic_clear,
+    sort_load: generic_load,
+    sort_select: generic_select,
 }
-
-global.bed_clear = generic_clear
-global.bed_load = generic_load
-global.bed_select = generic_select
-
-global.leg_clear = generic_clear
-global.leg_load = generic_load
-global.leg_select = generic_select
-
-global.sort_clear = generic_clear
-global.sort_load = generic_load
-global.sort_select = generic_select
 
 function setProducts() {
     document
         .querySelectorAll<HTMLDivElement>('.filters .dropdown')
         .forEach(el => {
-            let on_select = global[el.dataset.id + '_select']
-            let on_clear = global[el.dataset.id + '_clear']
-            let on_load = global[el.dataset.id + '_load']
+            let on_select = UTMAP[el.dataset.id + '_select']
+            let on_clear = UTMAP[el.dataset.id + '_clear']
+            let on_load = UTMAP[el.dataset.id + '_load']
 
             on_load && on_load(el)
 
@@ -86,9 +89,9 @@ function setProducts() {
                 dl.onclick = () => on_select(el, dl)
             })
 
-            el.parentElement.querySelector<HTMLDivElement>(
+            el.parentElement!.querySelector<HTMLDivElement>(
                 '.clear-filter'
-            ).onclick = () => on_clear(el)
+            )!.onclick = () => on_clear(el)
         })
 }
 
@@ -98,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 // search product
-const search_input = document.querySelector<HTMLInputElement>('.search-inp')
+const search_input = document.querySelector<HTMLInputElement>('.search-inp')!
 const product_cards = document.querySelectorAll<HTMLDivElement>('.product-card')
 
 search_input.oninput = () => {
@@ -110,8 +113,8 @@ search_input.oninput = () => {
     }
 
     product_cards.forEach(p => {
-        let title = p.querySelector<HTMLElement>('.product-title').textContent
-        let code = p.querySelector<HTMLElement>('.product-code').textContent
+        let title = p.querySelector<HTMLElement>('.product-title')!.textContent
+        let code = p.querySelector<HTMLElement>('.product-code')!.textContent
 
         let hasTitle = title.includes(search_input.value)
         let hasCode = code.includes(search_input.value)

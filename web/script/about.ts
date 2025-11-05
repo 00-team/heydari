@@ -4,7 +4,7 @@ const aboutSliders = document.querySelectorAll('.about-slider')
 
 let current = 0
 
-const setClass = index => {
+function setClass(index: number) {
     aboutContents.forEach((content, idx0) => {
         if (index === idx0) return (content.className = 'about-content active')
         if (index - 1 === idx0)

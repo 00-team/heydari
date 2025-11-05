@@ -1,6 +1,4 @@
-import { alert_code } from 'comps'
 import { API_VERSION, AppErr, is_error_code } from './gen'
-import { isServer } from 'solid-js/web'
 
 export type HttpxProps = {
     url: string | URL
@@ -30,12 +28,8 @@ export type HttpxProps = {
 export async function httpx(P: HttpxProps): Promise<Response> {
     const { url, headers: ih, show_alert = true } = P
     let headers = ih || {}
-    const HOST = 'https://hamrah-insurance.com'
 
-    let oul =
-        typeof url == 'string'
-            ? new URL(url, isServer ? HOST : location.href)
-            : url
+    let oul = typeof url == 'string' ? new URL(url, location.href) : url
 
     if (P.params) {
         for (let [k, v] of Object.entries(P.params)) {
@@ -76,11 +70,15 @@ export async function httpx(P: HttpxProps): Promise<Response> {
 
     if (!show_alert) return rc
 
-    if (r.status == 200 || P.exclude_status && P.exclude_status.includes(r.status)) return rc
+    if (
+        r.status == 200 ||
+        (P.exclude_status && P.exclude_status.includes(r.status))
+    )
+        return rc
     try {
         let apperr: AppErr = await r.json()
         if (is_error_code(apperr.code)) {
-            alert_code(apperr.code)
+            // alert_code(apperr.code)
         }
     } catch {}
 

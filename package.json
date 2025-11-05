@@ -2,6 +2,7 @@
     "name": "heydari",
     "version": "0.5.20",
     "type": "module",
+    "sideEffects": false,
     "scripts": {
         "check": "tsc -P admin",
         "admin:start": "vite --host",
@@ -17,6 +18,7 @@
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "@types/node": "^20.14.2",
         "concurrently": "^9.0.1",
+        "google-closure-compiler": "^20251103.0.0",
         "sass": "^1.77.4",
         "ts-loader": "^9.5.1",
         "typescript": "^5.9.3",

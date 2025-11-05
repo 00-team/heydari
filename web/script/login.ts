@@ -1,8 +1,10 @@
 export let phoneRegex = /^(0|09|09[0-9]{1,9})$/
 
-const form = document.querySelector<HTMLFormElement>('form.login-wrapper')
+import { api_verification_post } from './abi'
 
-const counter = form.querySelector<HTMLSpanElement>('#timer-count')
+const form = document.querySelector<HTMLFormElement>('form.login-wrapper')!
+
+const counter = form.querySelector<HTMLSpanElement>('#timer-count')!
 let counterExpire: number = 0
 
 let activeSection: 'phone' | 'code' = 'phone'
@@ -34,6 +36,8 @@ function sendCode() {
     form.classList.toggle('active', true)
     activeSection = 'code'
 
+    api_verification_post({ action: 'login', phone: value })
+
     // test
     counterExpire = 180
     set_expire()
@@ -55,10 +59,10 @@ function goToPhoneSection() {
 
     activeSection = 'phone'
     form.classList.toggle('active', false)
-    counter.parentElement.classList.toggle('active', false)
+    counter.parentElement!.classList.toggle('active', false)
 }
 
-const goBack = form.querySelector<HTMLButtonElement>('.go-back')
+const goBack = form.querySelector<HTMLButtonElement>('.go-back')!
 
 goBack.addEventListener('click', () => {
     goToPhoneSection()
@@ -78,8 +82,8 @@ phoneInp.addEventListener('input', e => {
     input.value = converted
 })
 
-const phoneErr = form.querySelector<HTMLDivElement>('#phone-error')
-const phoneErrSpan = phoneErr.querySelector<HTMLDivElement>('div')
+const phoneErr = form.querySelector<HTMLDivElement>('#phone-error')!
+const phoneErrSpan = phoneErr.querySelector<HTMLDivElement>('div')!
 
 function clearError() {
     phoneErr.classList.toggle('active', false)
@@ -91,9 +95,9 @@ function showError(msg: string) {
     phoneErrSpan.innerText = msg
 }
 
-let timer: NodeJS.Timeout
+let timer: number | null
 function set_expire() {
-    counter.parentElement.classList.toggle('active', true)
+    counter.parentElement!.classList.toggle('active', true)
 
     // stop any running timer first
     if (timer) {

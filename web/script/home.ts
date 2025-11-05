@@ -1,6 +1,6 @@
 export {}
 
-const stickyButton = document.querySelector<HTMLElement>('a.main.hero-button')
+const stickyButton = document.querySelector<HTMLElement>('a.main.hero-button')!
 
 stickyButton.addEventListener('mousemove', e => {
     const pos = stickyButton.getBoundingClientRect()
@@ -12,16 +12,16 @@ stickyButton.addEventListener('mousemove', e => {
         rotate3d(${mx * -0.1}, ${my * -0.3}, 0, 12deg)
     `
 })
-stickyButton.addEventListener('mouseenter', e => {
+stickyButton.addEventListener('mouseenter', () => {
     stickyButton.style.transition = ''
 })
-stickyButton.addEventListener('mouseleave', e => {
+stickyButton.addEventListener('mouseleave', () => {
     // stickyButton.className = 'hero-btn main'
     stickyButton.style.transform = ''
     stickyButton.style.transition = '0.2s ease'
 })
 
-let heroWrapper = document.querySelector<HTMLElement>('.hero-wrapper')
+let heroWrapper = document.querySelector<HTMLElement>('.hero-wrapper')!
 let htmlWord = heroWrapper.querySelector<HTMLElement>('span.typer-word')
 let aTags = heroWrapper.querySelectorAll('.hero-img-container .img-wrapper')
 
@@ -128,6 +128,6 @@ function toggleImgs(id: number) {
 
     tags.forEach(a => a.classList.toggle('active', false))
 
-    tags[id].classList.toggle('active', true)
+    tags[id]!.classList.toggle('active', true)
 }
 runTyper()
