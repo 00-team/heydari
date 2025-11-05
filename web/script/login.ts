@@ -10,6 +10,8 @@ let activeSection: 'phone' | 'code' = 'phone'
 form.addEventListener('submit', e => {
     e.preventDefault()
 
+    phoneInp.blur()
+
     if (activeSection == 'phone') {
         return sendCode()
     }
@@ -33,10 +35,17 @@ function sendCode() {
     activeSection = 'code'
 
     // test
-    set_expire(10)
+    counterExpire = 180
+    set_expire()
+
+    codeInp.focus()
 }
 
-function login() {}
+function login() {
+    codeInp.blur()
+    stopTimer()
+    form.classList.toggle('loading', true)
+}
 
 function goToPhoneSection() {
     if (timer) {
@@ -83,7 +92,7 @@ function showError(msg: string) {
 }
 
 let timer: NodeJS.Timeout
-function set_expire(seconds: number) {
+function set_expire() {
     counter.parentElement.classList.toggle('active', true)
 
     // stop any running timer first
@@ -92,7 +101,6 @@ function set_expire(seconds: number) {
         timer = null
     }
 
-    counterExpire = seconds
     // render immediately so user sees the full time without waiting 1s
     counter.innerText = convertSectoMin(counterExpire)
 
@@ -109,6 +117,12 @@ function set_expire(seconds: number) {
 
         counter.innerText = convertSectoMin(counterExpire)
     }, 1000)
+}
+function stopTimer() {
+    if (timer) {
+        clearInterval(timer)
+        timer = null
+    }
 }
 
 function convertSectoMin(seconds: number) {

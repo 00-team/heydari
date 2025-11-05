@@ -25,6 +25,13 @@ main.login {
         position: relative;
         z-index: 1;
 
+        transition: 0.2s ease;
+
+        &.loading {
+            pointer-events: none;
+            filter: blur(2px);
+        }
+
         .go-back {
             position: absolute;
             top: 0;
