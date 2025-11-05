@@ -41,36 +41,38 @@ body {
     }
 }
 
-.title_hero {
-    font-size: g.$TITLE_FONTSIZE_HERO;
+.section_title2 {
+    font-size: g.$SECTION_TITLE2_FONTSIZE;
     font-family: 'iranBold';
 }
-
 .section_title {
-    font-size: clamp(1.6rem, 2.9vw + 1.3rem, 2.8rem);
+    font-size: g.$SECTION_TITLE_FONTSIZE;
     font-family: 'iranBold';
 }
-
+.title_hero {
+    font-size: g.$HERO_TITLE_FONTSIZE;
+    font-family: 'iranBold';
+}
+.title_hero2 {
+    font-size: g.$HERO2_TITLE_FONTSIZE;
+    font-family: 'iranBold';
+}
 .title {
     font-size: g.$TITLE_FONTSIZE;
     font-family: 'yekanBold';
 }
-
 .title_small {
     font-size: g.$TITLE_FONTSIZE_SMALL;
     font-family: 'yekanBold';
 }
-
 .title_smaller {
     font-size: g.$TITLE_FONTSIZE_SMALLER;
     font-family: 'yekan';
 }
-
 .description {
     font-size: g.$DESCRIPTION_FONT_SIZE;
     font-family: 'yekan';
 }
-
 .description_small {
     font-size: g.$DESCRIPTION_FONT_SIZE_SMALL;
     font-family: 'yekan';
