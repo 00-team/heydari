@@ -16,6 +16,8 @@ macro_rules! evar {
 }
 
 impl Config {
+    pub const ONLINE_UPDATE_INTERVAL: i64 = 30;
+
     pub const RECORD_DIR: &str = "record";
     pub const CODE_ABC: &[u8] = b"0123456789";
     pub const TOKEN_ABC: &[u8] = b"!@#$%^&*_+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+";

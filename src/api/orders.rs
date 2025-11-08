@@ -82,6 +82,15 @@ async fn r_add(
 
     order.id = res.last_insert_rowid();
 
+    sqlx::query!(
+        "update users set order_count = (
+            select COUNT(id) from orders where user = ?
+        ) where id = ?",
+        user.id,
+        user.id
+    )
+    .execute(&state.sql)
+    .await?;
 
     // TODO: add iris notif
 

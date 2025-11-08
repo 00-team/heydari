@@ -49,6 +49,7 @@ async fn user_login(
         .await?;
 
     let token = utils::get_random_string(Config::TOKEN_ABC, 69);
+    let now = utils::now();
 
     let result = sqlx::query_as! {
         User,
@@ -76,13 +77,14 @@ async fn user_login(
             let perms = [0u8; 32].to_vec();
             let result = sqlx::query_as! {
                 User,
-                "insert into users (phone, token, admin) values(?,?,?)",
-                body.phone, token, perms
+                "insert into users (phone, token, admin, created_at) values(?,?,?,?)",
+                body.phone, token, perms, now
             }
             .execute(&state.sql)
             .await;
 
             User {
+                created_at: now,
                 phone: body.phone.clone(),
                 token: Some(token.clone()),
                 admin: perms,

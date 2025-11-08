@@ -7,7 +7,11 @@ create table if not exists users (
     photo text,
     --                           32 u8
     admin blob not null default x'0000000000000000000000000000000000000000000000000000000000000000',
-    banned boolean not null default false
+    banned boolean not null default false,
+
+    created_at integer not null,
+    order_count integer not null default 0,
+    online_at integer not null default 0
 );
 
 create table if not exists product_tags (

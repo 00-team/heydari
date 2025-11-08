@@ -17,6 +17,9 @@ pub struct User {
     pub photo: Option<String>,
     pub admin: Vec<u8>,
     pub banned: bool,
+    pub created_at: i64,
+    pub order_count: i64,
+    pub online_at: i64,
 }
 
 #[derive(Debug, MultipartForm, ToSchema)]
@@ -93,6 +96,17 @@ impl FromRequest for User {
 
             if user.banned {
                 return crate::err!(UserBanned, "banned");
+            }
+
+            let now = crate::utils::now();
+            if user.online_at + crate::Config::ONLINE_UPDATE_INTERVAL < now {
+                let _ = sqlx::query!(
+                    "update users set online_at = ? where id = ?",
+                    now,
+                    user.id
+                )
+                .execute(&pool)
+                .await;
             }
 
             Ok(user)
