@@ -50,6 +50,7 @@ fn config_app(app: &mut ServiceConfig) {
     app.service(
         scope("/api")
             .service(api::user::router())
+            .service(api::orders::router())
             .service(api::verification::verification)
             .service(
                 scope("/admin")

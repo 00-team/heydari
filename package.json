@@ -4,7 +4,7 @@
     "type": "module",
     "sideEffects": false,
     "scripts": {
-        "check": "tsc -P admin",
+        "check": "tsc -P admin && tsc -P web/script",
         "admin:start": "vite --host",
         "admin:build": "vite build",
         "web": "concurrently \"npm:web:style\" \"npm:web:script\" ",
