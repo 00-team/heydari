@@ -15,3 +15,18 @@ const fetch_user = async () => {
 }
 
 fetch_user()
+
+document.addEventListener('DOMContentLoaded', () => {
+    const links = document.querySelectorAll('.acc-nav a')
+    const currentPath = window.location.pathname
+
+    links.forEach(link => {
+        const linkPath = link.getAttribute('href')
+        if (
+            currentPath === linkPath ||
+            currentPath.startsWith(linkPath + '/')
+        ) {
+            link.classList.add('active')
+        }
+    })
+})
