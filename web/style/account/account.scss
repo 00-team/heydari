@@ -1,6 +1,8 @@
 main.account {
     width: 100%;
 
+    min-height: 100vh;
+
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -17,8 +19,12 @@ main.account {
         flex-direction: column;
         gap: 1rem;
 
+        background-color: inherit;
+
         position: fixed;
         inset: 0;
+
+        z-index: 5;
 
         img {
             width: 200px;
@@ -39,163 +45,56 @@ main.account {
         }
     }
 
-    aside.sidebar-container {
-        min-height: 100vh;
-        height: 100%;
-
-        width: 17%;
-        min-width: 270px;
-
+    .account-wrapper {
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        gap: 5vh;
+        gap: 2rem;
 
-        padding: 2.5rem 0;
+        padding-top: 4rem;
 
-        @media screen and (max-width: 768px) {
-            width: 100%;
-        }
-
-        .avatar-container {
+        .acc-nav {
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 0.5rem;
 
-            padding: 0 1.5rem 1.5rem 1.5rem;
+            padding: 5px;
+            background-color: var(--sixty-percent);
+            border-radius: 100vmax;
 
-            width: 100%;
-
-            position: relative;
-
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                height: 1px;
-                width: 80%;
-
-                background-color: var(--other-color);
-            }
-
-            .username {
-                width: 100%;
-            }
-        }
-
-        .sidebar-options {
-            width: 100%;
-            height: 100%;
-            flex: 1;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-
-            gap: 0.5vh;
-
-            .option-wrapper {
-                width: 100%;
-
-                cursor: pointer;
-                position: relative;
-
+            .acc-nav-link {
                 display: flex;
-                flex-direction: column;
-                align-items: center;
-
-                padding: 0 1.2em;
-
-                color: unset;
-                text-decoration: none;
-
-                &::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    height: 1px;
-                    width: 60%;
-
-                    background-color: var(--other-color);
-                }
-
-                .option {
-                    width: 100%;
-
-                    padding: 1.5em 0;
-
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 0.7vw;
-
-                    @media screen and (max-width: 768px) {
-                        width: 50%;
-                    }
-
-                    .grid {
-                        display: grid;
-                        place-items: center;
-                    }
-
-                    .option-icon {
-                        color: #ff6700;
-                        fill: #ff6700;
-
-                        path {
-                            stroke: #ff6700;
-                        }
-                    }
-
-                    transition: transform 200ms ease-out;
-                }
-                &:hover .option {
-                    transform: translateX(-0.7vw);
-                }
-
-                @media screen and (max-width: 768px) {
-                    &:hover .option {
-                        transform: translateX(-3vw);
-                    }
-                }
-            }
-        }
-
-        .logout-wrapper {
-            width: 100%;
-
-            .logout {
-                background-color: transparent;
-                border: 0;
-                cursor: pointer;
-                text-decoration: none;
-                color: unset;
-
-                width: 100%;
-                display: flex;
-                gap: 0.7vw;
                 align-items: center;
                 justify-content: center;
+                gap: 0.5rem;
 
-                .logout-icon {
-                    display: grid;
-                    place-items: center;
+                background-color: transparent;
+
+                color: #000;
+                white-space: nowrap;
+
+                padding: 1rem 2rem;
+                border-radius: inherit;
+                font: inherit;
+
+                &.active {
+                    background-color: white;
                 }
 
-                transition: all 200ms ease-out;
-            }
-            &:hover .logout {
-                color: red;
-                transform: translateY(-0.5vh);
-            }
-            @media screen and (max-width: 768px) {
-                &:hover .option {
-                    transform: translateY(-1.5vh);
+                svg {
+                    width: 20px;
+                    height: 20px;
                 }
             }
+        }
+
+        .account-outlet {
+            width: clamp(0px, 100%, 1500px);
+            min-height: 70vh;
+            border-radius: 2rem;
+            background-color: var(--accent-color);
         }
     }
 }
