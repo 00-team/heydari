@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title>صفحه کاربری صنایع تولیدی حیدری</title>
+
+
+{% endblock title %}
+
+{% block header %}
+
+<link href="/static/style/account/account.css" rel="stylesheet" />
+<script src="/static/script/account.js" defer></script>
+
+<link rel="canonical" href="https://heydari-mi.com/account/">
+<link rel="alternate" hreflang="fa" href="https://heydari-mi.com/account/">
+<link rel="alternate" hreflang="x-default" href="https://heydari-mi.com/account/">
+
+
+{% endblock header %}
+
+{% block content %}
+
+<main class="account">
+
+    <div id="loader" class="account-loading">
+        <img decoding="async" src="/static/image/logo.png" />
+        <p class="loading-info section_title2">
+            درحال گرفتن اطلاعات از سرور
+        </p>
+    </div>
+
+    <aside class="sidebar-container">
+        <div class="avatar-container">
+            <span id="user-name" class="title_small"></span>
+        </div>
+    </aside>
+</main>
+
+{% endblock content %}
