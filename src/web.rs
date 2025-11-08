@@ -211,6 +211,12 @@ async fn account(state: Data<AppState>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+#[get("/account/orders")]
+async fn orders(state: Data<AppState>) -> Response {
+    let result = state.env.get_template("account/orders.html")?.render(())?;
+    Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
+}
+
 #[get("/blogs")]
 async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
     let tmpl = state.env.get_template("blogs/index.html")?;
