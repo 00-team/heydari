@@ -116,6 +116,8 @@ search_input.oninput = () => {
         let title = p.querySelector<HTMLElement>('.product-title')!.textContent
         let code = p.querySelector<HTMLElement>('.product-code')!.textContent
 
+        if (!title || !code) return
+
         let hasTitle = title.includes(search_input.value)
         let hasCode = code.includes(search_input.value)
 
