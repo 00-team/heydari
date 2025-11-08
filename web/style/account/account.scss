@@ -91,10 +91,75 @@ main.account {
         }
 
         .account-outlet {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
             width: clamp(0px, 100%, 1500px);
             min-height: 70vh;
             border-radius: 2rem;
             background-color: var(--accent-color);
+
+            .profile-container {
+                padding: 3rem;
+
+                width: clamp(0px, 100%, 700px);
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+
+                .user-infos {
+                    width: 100%;
+
+                    display: flex;
+                    flex-direction: row-reverse;
+                    align-items: center;
+                    justify-content: space-around;
+
+                    .user-info {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 1rem;
+
+                        .holder {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+
+                            opacity: 0.7;
+                        }
+                    }
+                }
+
+                .form-ctas {
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 1rem;
+
+                    width: 100%;
+
+                    .submit {
+                        width: clamp(0px, 100%, 300px);
+                        background-color: var(--sixty-percent);
+                        color: white;
+
+                        padding: 0.7rem;
+
+                        border-radius: 1rem;
+                    }
+                    .logout {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        color: var(--alert-error);
+                    }
+                }
+            }
         }
     }
 }
