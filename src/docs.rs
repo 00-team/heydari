@@ -117,6 +117,7 @@ pub struct ApiDoc;
 async fn r_openapi() -> HttpResponse {
     let mut doc = ApiDoc::openapi();
     doc.merge(crate::api::user::ApiDoc::openapi());
+    doc.merge(crate::api::orders::ApiDoc::openapi());
     doc.merge(crate::api::verification::ApiDoc::openapi());
 
     let mut admin_doc = ApiDoc::openapi();
