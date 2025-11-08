@@ -53,7 +53,59 @@
         </header>
 
         <div class="account-outlet">
-            {% block account_outlet %}{% endblock account_outlet %}
+
+            <form class="profile-container">
+                <div class="name-container"></div>
+                <div class="user-infos title_smaller">
+                    <div class="user-info">
+                        <div class="holder">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20"
+                                aria-hidden="true" height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            آخرین بازدید
+                        </div>
+                        <div class="data">
+                            1410/09/09
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <div class="holder">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M480 128a64 64 0 0 0-64-64h-16V48.45c0-8.61-6.62-16-15.23-16.43A16 16 0 0 0 368 48v16H144V48.45c0-8.61-6.62-16-15.23-16.43A16 16 0 0 0 112 48v16H96a64 64 0 0 0-64 64v12a4 4 0 0 0 4 4h440a4 4 0 0 0 4-4zM32 416a64 64 0 0 0 64 64h320a64 64 0 0 0 64-64V179a3 3 0 0 0-3-3H35a3 3 0 0 0-3 3zm344-208a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm0 80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm-80-80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm0 80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm0 80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm-80-80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm0 80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm-80-80a24 24 0 1 1-24 24 24 24 0 0 1 24-24zm0 80a24 24 0 1 1-24 24 24 24 0 0 1 24-24z">
+                                </path>
+                            </svg>
+                            ثبت نام
+                        </div>
+                        <div class="data">
+                            1401/09/09
+                        </div>
+                    </div>
+                </div>
+                <div class="form-ctas">
+                    <button class="submit title_small">
+                        ثبت
+                    </button>
+                    <button type="button" class="logout title_small">
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="25"
+                            width="25" xmlns="http://www.w3.org/2000/svg" style="
+                            transform: scaleX(-1);
+                        ">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path
+                                d="m17 7-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z">
+                            </path>
+                        </svg>
+                        خروج
+                    </button>
+                </div>
+            </form>
+
+            <!-- {% block account_outlet %}{% endblock account_outlet %} -->
         </div>
     </div>
 </main>
