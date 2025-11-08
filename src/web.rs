@@ -205,6 +205,12 @@ async fn login(state: Data<AppState>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+#[get("/account")]
+async fn account(state: Data<AppState>) -> Response {
+    let result = state.env.get_template("account/index.html")?.render(())?;
+    Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
+}
+
 #[get("/blogs")]
 async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
     let tmpl = state.env.get_template("blogs/index.html")?;
@@ -328,6 +334,7 @@ pub fn router() -> impl HttpServiceFactory {
         .service(about)
         .service(blogs)
         .service(login)
+        .service(account)
         .service(blog)
         .service(admin_index)
         .service(robots)

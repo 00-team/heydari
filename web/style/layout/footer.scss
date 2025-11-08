@@ -69,7 +69,7 @@ footer.footer-container {
                 .header-wrapper {
                     display: flex;
                     flex-direction: column;
-                    row-gap: calc(1.5vh + 3px);
+                    row-gap: 0.5rem;
 
                     .data {
                         display: -webkit-box;
@@ -215,7 +215,8 @@ footer.footer-container {
                         }
 
                         &.telegram {
-                            background: linear-gradient(
+                            background:
+                                linear-gradient(
                                     to bottom,
                                     rgba(255, 255, 255, 0.2),
                                     rgba(0, 0, 0, 0.15)
@@ -223,7 +224,8 @@ footer.footer-container {
                                 #08a0e9;
                         }
                         &.whatsapp {
-                            background: linear-gradient(
+                            background:
+                                linear-gradient(
                                     to bottom,
                                     rgba(255, 255, 255, 0.2),
                                     rgba(0, 0, 0, 0.2)
@@ -235,7 +237,8 @@ footer.footer-container {
                                 );
                         }
                         &.instagram {
-                            background: linear-gradient(
+                            background:
+                                linear-gradient(
                                     to bottom,
                                     rgba(255, 255, 255, 0.1),
                                     rgba(0, 0, 0, 0.1)

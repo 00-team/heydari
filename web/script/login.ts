@@ -1,6 +1,7 @@
 export let phoneRegex = /^(0|09|09[0-9]{1,9})$/
 
-import { api_verification_post } from './abi'
+import { LOCALE } from './locale'
+import { api_user_get, api_user_login_post, api_verification_post } from './abi'
 
 const form = document.querySelector<HTMLFormElement>('form.login-wrapper')!
 
@@ -8,6 +9,15 @@ const counter = form.querySelector<HTMLSpanElement>('#timer-count')!
 let counterExpire: number = 0
 
 let activeSection: 'phone' | 'code' = 'phone'
+
+const fetch_user = async () => {
+    let res = await api_user_get()
+
+    if (!res.ok()) return
+
+    window.location.href = '/account'
+}
+fetch_user()
 
 form.addEventListener('submit', e => {
     e.preventDefault()
@@ -45,10 +55,20 @@ function sendCode() {
     codeInp.focus()
 }
 
-function login() {
+async function login() {
     codeInp.blur()
     stopTimer()
     form.classList.toggle('loading', true)
+
+    const phone = phoneInp.value
+    const code = codeInp.value
+
+    let res = await api_user_login_post({ phone, code })
+    form.classList.toggle('loading', false)
+
+    if (!res.ok()) return showError(LOCALE.error_code(res.body.code))
+
+    window.location.href = '/account'
 }
 
 function goToPhoneSection() {
