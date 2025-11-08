@@ -5,9 +5,11 @@ const navWrapper = navContainer.querySelector<HTMLElement>('.nav-wrapper')!
 const smallScreen = navWrapper.querySelector<HTMLElement>('.just-for-small')!
 const openSmallNav = document.querySelector<HTMLElement>('.small-open')!
 const closeSmallNav = document.querySelector<HTMLElement>('.small-close')!
-const logoContainer = document.querySelector<HTMLElement>('.nav-logo-container')!
+const logoContainer = document.querySelector<HTMLElement>(
+    '.nav-logo-container'
+)!
 
-let scrolled = false
+// let scrolled = false
 let isSmall = false
 let openSmall = false
 
@@ -21,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
         render()
     }
 
-    window.onscroll = () => {
-        if (window.scrollY > 10 && !scrolled) {
-            scrolled = true
-            render()
-        } else if (window.scrollY <= 10 && scrolled) {
-            scrolled = false
-            render()
-        }
-    }
+    // window.onscroll = () => {
+    //     if (window.scrollY > 10 && !scrolled) {
+    //         scrolled = true
+    //         render()
+    //     } else if (window.scrollY <= 10 && scrolled) {
+    //         scrolled = false
+    //         render()
+    //     }
+    // }
 })
 
 openSmallNav.addEventListener('click', () => {
@@ -54,9 +56,7 @@ closeSmallNav.addEventListener('click', () => {
 })
 
 function render() {
-    let addedClass = `${scrolled ? 'scrolled' : ''} ${
-        isSmall ? 'small' : 'big'
-    } ${openSmall ? 'opensmall' : ''}`
-
-    navContainer.className = `nav-container ${addedClass}`
+    navContainer.classList.toggle('opensmall', openSmall)
+    navContainer.classList.toggle('small', isSmall)
+    navContainer.classList.toggle('big', !isSmall)
 }
