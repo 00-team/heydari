@@ -96,7 +96,7 @@ main.account {
             flex-direction: column;
 
             width: clamp(0px, 100%, 1500px);
-            min-height: 70vh;
+            // min-height: 70vh;
             border-radius: 2rem;
             background-color: var(--accent-color);
 
@@ -104,10 +104,12 @@ main.account {
                 padding: 3rem;
 
                 width: clamp(0px, 100%, 700px);
+                height: max(400px, 55vh);
 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                justify-content: space-between;
                 gap: 1rem;
 
                 .user-infos {
@@ -130,6 +132,88 @@ main.account {
                             gap: 0.5rem;
 
                             opacity: 0.7;
+                        }
+                    }
+                }
+
+                .name-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+
+                    .hover-inp {
+                        width: clamp(0px, 100%, 450px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        margin-bottom: 0.5rem;
+
+                        border: 1px solid #ddd;
+                        border-radius: 2rem;
+                        background-color: white;
+
+                        position: relative;
+                        z-index: 1;
+
+                        // direction: ltr;
+
+                        &.disabled {
+                            opacity: 0.7;
+                            cursor: not-allowed;
+
+                            input {
+                                pointer-events: none;
+                            }
+                        }
+
+                        .holder {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+
+                            pointer-events: none;
+
+                            opacity: 0.7;
+
+                            transition: 0.2s ease;
+
+                            position: absolute;
+                            inset: 0;
+                            right: 1rem;
+
+                            z-index: 3;
+
+                            svg {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
+
+                        input {
+                            background-color: transparent;
+                            border: none;
+                            flex: 1 0 0;
+                            padding: 1em;
+
+                            text-align: right;
+
+                            direction: ltr;
+                        }
+
+                        &.active {
+                            .holder {
+                                opacity: 0;
+                            }
+                        }
+
+                        &:focus-within .holder {
+                            opacity: 0;
+                        }
+
+                        input {
+                            width: 100%;
                         }
                     }
                 }
