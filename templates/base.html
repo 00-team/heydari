@@ -94,6 +94,7 @@
 
     <link href="/static/style/base.css" rel="preload" as="style" />
     <link rel="stylesheet" href="/static/style/base.css" />
+    <link rel="stylesheet" href="/static/style/alert.css" />
 
     <link href="/static/style/layout/nav.css" rel="preload" as="style" />
     <link rel="stylesheet" href="/static/style/layout/nav.css" />
@@ -128,6 +129,9 @@
     <div id="root" class="root">
         {% include "layout/nav.html" %} {% block content %} {% endblock
         content %} {% include "layout/footer.html" %}
+
+        <div class="alerts" aria-live="polite" aria-atomic="true"></div>
+
     </div>
 </body>
 
