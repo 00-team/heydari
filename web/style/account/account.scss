@@ -274,6 +274,204 @@ main.account {
                     }
                 }
             }
+
+            .orders-container {
+                width: 100%;
+                min-height: 500px;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                padding: 2rem;
+
+                h1 {
+                    margin-bottom: 0.5rem;
+                }
+
+                .orders-wrapper {
+                    margin-top: 2rem;
+
+                    width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+
+                    row-gap: 4rem;
+                    column-gap: calc(3rem + 1vw);
+
+                    padding: 1rem;
+
+                    .product-container {
+                        color: unset;
+
+                        width: clamp(0px, 100%, 300px);
+
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1rem;
+
+                        position: relative;
+                        z-index: 1;
+
+                        &:focus-within {
+                            outline: none;
+                        }
+
+                        .best {
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            padding: 1rem;
+
+                            svg {
+                                color: gold;
+                                filter: drop-shadow(0px 0px 5px gold);
+                            }
+                        }
+
+                        .img-container {
+                            height: 390px;
+                            width: 100%;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            border-radius: 1rem;
+
+                            background-color: white;
+
+                            overflow: hidden;
+
+                            position: relative;
+                            z-index: 1;
+
+                            &:hover {
+                                .status-container {
+                                    transform: scale(1.03);
+                                }
+                            }
+                            .status-container {
+                                position: absolute;
+                                z-index: 2;
+                                bottom: 0.75rem;
+                                right: 0.75rem;
+
+                                background-color: white;
+
+                                border-radius: 100vmax;
+
+                                padding: 0.5em 1em;
+
+                                transition: 0.2s transform ease;
+
+                                &.success {
+                                    box-shadow: rgba(11, 231, 44, 0.5) 0px 1px
+                                        15px;
+                                    outline: 1px solid var(--alert-success);
+                                }
+                                &.error {
+                                    box-shadow: rgba(231, 40, 11, 0.5) 0px 1px
+                                        15px;
+                                    outline: 1px solid var(--alert-error);
+                                }
+                                &.waiting {
+                                    box-shadow: rgba(231, 121, 11, 0.5) 0px 1px
+                                        15px;
+                                    outline: 1px solid rgba(231, 121, 11);
+                                }
+                            }
+
+                            img {
+                                width: 100%;
+                                height: 100%;
+
+                                object-fit: contain;
+                            }
+
+                            .no-photo {
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                flex-direction: column;
+                                gap: 1rem;
+
+                                &:hover {
+                                    svg {
+                                        transform: scale(1.1);
+                                    }
+                                }
+
+                                svg {
+                                    width: 40px;
+                                    height: 40px;
+
+                                    color: var(--alert-error);
+
+                                    transition: 0.3s ease;
+                                }
+
+                                span {
+                                    text-align: center;
+                                    opacity: 0.6;
+                                }
+                            }
+                        }
+
+                        .info-container {
+                            width: 100%;
+
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.5rem;
+
+                            .info-head {
+                                width: 100%;
+                            }
+
+                            .infos-bottom {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+
+                                opacity: 0.7;
+
+                                .info-bottom {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 0.5rem;
+
+                                    .holder {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.5rem;
+
+                                        svg {
+                                            width: 20px;
+                                            height: 20px;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .info-tags {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+
+                                margin-bottom: 0.5rem;
+
+                                opacity: 0.7;
+
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
