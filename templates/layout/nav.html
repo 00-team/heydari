@@ -88,6 +88,10 @@
                     </path>
                 </svg>
                 ورود به حساب
+
+                {% if user %}
+                    {{ user.id }} : {{ user.name }}
+                {% endif %}
             </a>
 
             <span class="divider">

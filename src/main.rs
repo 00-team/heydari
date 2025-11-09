@@ -5,11 +5,12 @@ use actix_web::{
     web::{scope, Data, Path, Redirect, ServiceConfig},
     App, HttpResponse, HttpServer,
 };
+use models::user::User;
 use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode};
 use sqlx::{Pool, Sqlite, SqlitePool};
 use std::str::FromStr;
 
-use crate::models::{ErrorCode, AppErr};
+use crate::models::{AppErr, ErrorCode};
 
 mod admin;
 mod api;
@@ -65,14 +66,16 @@ fn config_app(app: &mut ServiceConfig) {
             ),
     );
     app.service(web::router());
-    app.default_service(actix_web::web::to(|state: Data<AppState>| {
-        web::not_found(state)
-    }));
+    app.default_service(actix_web::web::to(
+        |user: Option<User>, state: Data<AppState>| web::not_found(user, state),
+    ));
 }
 
 async fn init() -> Data<AppState> {
     dotenvy::from_path(".env").expect("could not read .env file");
     pretty_env_logger::init();
+
+    Config::get();
 
     let _ = std::fs::create_dir(Config::RECORD_DIR);
     let cpt = SqliteConnectOptions::from_str("sqlite://main.db")

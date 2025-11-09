@@ -9,14 +9,17 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 
 use crate::config::Config;
+use crate::models::order::Order;
 use crate::models::product::{Product, ProductKind, ProductTag};
+use crate::models::user::User;
 use crate::models::{AppErr, ListInput};
 use crate::AppState;
 
 type Response = Result<HttpResponse, AppErr>;
 
 #[get("/")]
-async fn home(state: Data<AppState>) -> Response {
+async fn home(user: Option<User>, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("home/index.html")?;
     let best_products = sqlx::query_as! {
         Product,
         "select * from products where best = true"
@@ -24,10 +27,10 @@ async fn home(state: Data<AppState>) -> Response {
     .fetch_all(&state.sql)
     .await?;
 
-    let result =
-        state.env.get_template("home/index.html")?.render(context! {
-            best_products => best_products
-        })?;
+    let result = tmpl.render(context! {
+        best_products => best_products,
+        user => user,
+    })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
@@ -48,7 +51,10 @@ struct ProductsQuery {
 }
 
 #[get("/products")]
-async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
+async fn products(
+    rq: HttpRequest, user: Option<User>, state: Data<AppState>,
+) -> Response {
+    let tmpl = state.env.get_template("products/index.html")?;
     let q = Query::<ProductsQuery>::extract(&rq).await;
     let mut sort = "desc";
     let mut page = 0;
@@ -96,7 +102,7 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
         0
     };
 
-    log::info!("pages: {page}/{pages} | count: {}", products_count.count);
+    // log::info!("pages: {page}/{pages} | count: {}", products_count.count);
 
     let products: Vec<Product> = sqlx::query_as(&format!(
         "select * from products {} order by created_at {} limit 32 offset ?",
@@ -117,19 +123,22 @@ async fn products(rq: HttpRequest, state: Data<AppState>) -> Response {
         .map(|v| (v.id, v.clone()))
         .collect::<HashMap<i64, ProductTag>>();
 
-    let result =
-        state.env.get_template("products/index.html")?.render(context! {
-            products => products,
-            tags => tags,
-            pages => pages,
-            page => page
-        })?;
+    let result = tmpl.render(context! {
+        products => products,
+        tags => tags,
+        pages => pages,
+        page => page,
+        user => user,
+    })?;
 
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/products/{slug}")]
-async fn product(path: Path<(String,)>, state: Data<AppState>) -> Response {
+async fn product(
+    path: Path<(String,)>, user: Option<User>, state: Data<AppState>,
+) -> Response {
+    let tmpl = state.env.get_template("product/index.html")?;
     // let path = Path::<(String,)>::extract(&rq).await;
     // if path.is_err() {
     //     return Ok(HttpResponse::NotFound()
@@ -177,48 +186,80 @@ async fn product(path: Path<(String,)>, state: Data<AppState>) -> Response {
         .map(|value| (value.id, value.clone()))
         .collect::<HashMap<_, _>>();
 
-    let result =
-        state.env.get_template("product/index.html")?.render(context! {
-            product => product,
-            related => related,
-            tags => tags,
-        })?;
+    let result = tmpl.render(context! {
+        product => product,
+        related => related,
+        tags => tags,
+        user => user,
+    })?;
 
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/contact")]
-async fn contact(state: Data<AppState>) -> Response {
-    let result = state.env.get_template("contact/index.html")?.render(())?;
+async fn contact(user: Option<User>, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("contact/index.html")?;
+    let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/about")]
-async fn about(state: Data<AppState>) -> Response {
-    let result = state.env.get_template("about/index.html")?.render(())?;
+async fn about(user: Option<User>, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("about/index.html")?;
+    let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/login")]
-async fn login(state: Data<AppState>) -> Response {
-    let result = state.env.get_template("login/index.html")?.render(())?;
+async fn login(user: Option<User>, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("login/index.html")?;
+    let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/account")]
-async fn account(state: Data<AppState>) -> Response {
-    let result = state.env.get_template("account/index.html")?.render(())?;
+async fn account_profile(user: User, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("account/profile.html")?;
+    let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+#[derive(serde::Deserialize, Debug)]
+struct UserOrdersQuery {
+    page: Option<u32>,
+}
+
 #[get("/account/orders")]
-async fn orders(state: Data<AppState>) -> Response {
-    let result = state.env.get_template("account/orders.html")?.render(())?;
+async fn account_orders(
+    rq: HttpRequest, user: User, state: Data<AppState>,
+) -> Response {
+    let tmpl = state.env.get_template("account/orders.html")?;
+    let q = Query::<UserOrdersQuery>::extract(&rq).await;
+    let mut page = 0;
+    if let Ok(q) = q {
+        page = q.page.unwrap_or_default();
+    }
+
+    let offset = page * 32;
+    let orders = sqlx::query_as! {
+        Order,
+        "select * from orders where user = ? limit 32 offset ?",
+        user.id, offset
+    }
+    .fetch_all(&state.sql)
+    .await?;
+
+    let result = tmpl.render(context! {
+        user => user,
+        orders => orders,
+    })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/blogs")]
-async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
+async fn blogs(
+    user: Option<User>, rq: HttpRequest, state: Data<AppState>,
+) -> Response {
     let tmpl = state.env.get_template("blogs/index.html")?;
     let mut page = 0;
 
@@ -229,9 +270,16 @@ async fn blogs(rq: HttpRequest, state: Data<AppState>) -> Response {
     let conf = Config::get();
     let url = conf.simurgh_url(&format!("/blogs-ssr/?page={page}"));
 
-    let res = conf.simurgh.get(url).send().await?.text().await?;
+    let res = 'r: {
+        let Ok(r) = conf.simurgh.get(url).send().await else { break 'r None };
+        r.text().await.ok()
+    }
+    .unwrap_or_default();
 
-    let result = tmpl.render(context! { blogs_body => res })?;
+    let result = tmpl.render(context! {
+        blogs_body => res,
+        user => user,
+    })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
@@ -267,7 +315,9 @@ struct BlogSSRR {
 }
 
 #[get("/blogs/{slug}")]
-async fn blog(path: Path<(String,)>, state: Data<AppState>) -> Response {
+async fn blog(
+    user: Option<User>, path: Path<(String,)>, state: Data<AppState>,
+) -> Response {
     let tmpl = state.env.get_template("blog/index.html")?;
 
     let conf = Config::get();
@@ -277,6 +327,7 @@ async fn blog(path: Path<(String,)>, state: Data<AppState>) -> Response {
     let result = tmpl.render(context! {
         blog_body => res.html,
         blog => res.blog,
+        user => user
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
@@ -305,8 +356,9 @@ Sitemap: https://heydari-mi.com/sitemap.xml
     )
 }
 
-pub async fn not_found(state: Data<AppState>) -> Response {
-    let result = state.env.get_template("404.html")?.render(())?;
+pub async fn not_found(user: Option<User>, state: Data<AppState>) -> Response {
+    let tmpl = state.env.get_template("404.html")?;
+    let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::NotFound().content_type(ContentType::html()).body(result))
 }
 
@@ -340,7 +392,8 @@ pub fn router() -> impl HttpServiceFactory {
         .service(about)
         .service(blogs)
         .service(login)
-        .service(account)
+        .service(account_profile)
+        .service(account_orders)
         .service(blog)
         .service(admin_index)
         .service(robots)
