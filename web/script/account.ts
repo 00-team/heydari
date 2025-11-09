@@ -1,5 +1,5 @@
 import { LOCALE } from './locale'
-import { api_user_get, api_user_logout_post, api_user_patch } from './abi'
+import { api_user_get, api_user_logout_post, api_user_patch, User } from './abi'
 
 const form = document.querySelector<HTMLFormElement>('form.profile-container')
 const pageLoader = document.querySelector<HTMLElement>('#loader')
@@ -37,25 +37,26 @@ function showError(msg: string | false) {
     )
 }
 
+let USER: User | null = null
 const fetch_user = async () => {
     let res = await api_user_get()
 
     if (!res.ok()) return goToLogin()
 
-    const user = res.body
+    USER = res.body
 
     if (online_at) {
-        online_at.innerText = `${new Date(user.online_at * 1e3).toLocaleDateString('fa-IR')}`
+        online_at.innerText = `${new Date(USER.online_at * 1e3).toLocaleDateString('fa-IR')}`
     }
     if (orders_count) {
-        orders_count.innerText = `${user.order_count}`
+        orders_count.innerText = `${USER.order_count}`
     }
     if (created_at) {
-        created_at.innerText = `${new Date(user.created_at * 1e3).toLocaleDateString('fa-IR')}`
+        created_at.innerText = `${new Date(USER.created_at * 1e3).toLocaleDateString('fa-IR')}`
     }
     if (nameInp) {
-        nameInp.value = user.name || ''
-        nameInp.parentElement!.classList.toggle('active', !!user.name)
+        nameInp.value = USER.name || ''
+        nameInp.parentElement!.classList.toggle('active', !!USER.name)
     }
 
     showLoading(false)
@@ -100,6 +101,9 @@ form?.addEventListener('submit', async e => {
 
     if (v.length == 0) {
         return showError('اسم شما نمیتواند خالی باشد!')
+    }
+    if (USER && v == USER.name) {
+        return showError('اسم خود را عوض نکردید!')
     }
 
     showLoading(true)
