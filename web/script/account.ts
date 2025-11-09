@@ -72,10 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     links.forEach(link => {
         const linkPath = link.getAttribute('href')
-        if (
-            currentPath === linkPath ||
-            currentPath.startsWith(linkPath + '/')
-        ) {
+
+        if (currentPath === linkPath) {
             link.classList.add('active')
         }
     })
