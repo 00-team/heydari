@@ -26,6 +26,17 @@ main.account {
 
         z-index: 5;
 
+        transition: opacity 0.3s ease;
+
+        &.hide {
+            opacity: 0;
+            pointer-events: none;
+
+            img {
+                animation: none;
+            }
+        }
+
         img {
             width: 200px;
             height: 200px;
@@ -214,6 +225,22 @@ main.account {
 
                         input {
                             width: 100%;
+                        }
+                    }
+
+                    .error-container {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        color: var(--alert-error);
+                        margin-top: 1rem;
+                        opacity: 0;
+
+                        transition: 0.2s opacity ease;
+
+                        &.show {
+                            opacity: 1;
                         }
                     }
                 }
