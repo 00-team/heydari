@@ -1,5 +1,7 @@
+// import { LOCALE } from './locale'
 import { LOCALE } from './locale'
 import { api_user_get, api_user_logout_post, api_user_patch, User } from './abi'
+import { addAlert } from './alert'
 
 const form = document.querySelector<HTMLFormElement>('form.profile-container')
 const pageLoader = document.querySelector<HTMLElement>('#loader')
@@ -114,9 +116,22 @@ form?.addEventListener('submit', async e => {
 
     showLoading(false)
 
-    if (!res.ok()) return showError(LOCALE.error_code(res.body.code))
+    if (!res.ok())
+        return addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: LOCALE.error_code(res.body.code),
+        })
 
     nameInp!.value = res.body.name || ''
+
+    addAlert({
+        type: 'success',
+        subject: 'موفق!',
+        timeout: 3,
+        content: 'اسم شما با موفقیت ثبت شد',
+    })
 })
 logout?.addEventListener('click', async () => {
     showLoading(true)
