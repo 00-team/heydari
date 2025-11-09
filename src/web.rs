@@ -5,7 +5,9 @@ use actix_web::web::{self, Data, Path, Query};
 use actix_web::{get, routes, FromRequest, HttpRequest, HttpResponse, Scope};
 use minijinja::{context, path_loader, Environment};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use sqlx::Sqlite;
+use std::collections::{HashMap, HashSet};
+use std::hash::RandomState;
 use std::path::PathBuf;
 
 use crate::config::Config;
@@ -18,7 +20,7 @@ use crate::AppState;
 type Response = Result<HttpResponse, AppErr>;
 
 #[get("/")]
-async fn home(user: Option<User>, state: Data<AppState>) -> Response {
+async fn r_home(user: Option<User>, state: Data<AppState>) -> Response {
     let tmpl = state.env.get_template("home/index.html")?;
     let best_products = sqlx::query_as! {
         Product,
@@ -51,7 +53,7 @@ struct ProductsQuery {
 }
 
 #[get("/products")]
-async fn products(
+async fn r_products(
     rq: HttpRequest, user: Option<User>, state: Data<AppState>,
 ) -> Response {
     let tmpl = state.env.get_template("products/index.html")?;
@@ -135,7 +137,7 @@ async fn products(
 }
 
 #[get("/products/{slug}")]
-async fn product(
+async fn r_product(
     path: Path<(String,)>, user: Option<User>, state: Data<AppState>,
 ) -> Response {
     let tmpl = state.env.get_template("product/index.html")?;
@@ -197,28 +199,40 @@ async fn product(
 }
 
 #[get("/contact")]
-async fn contact(user: Option<User>, state: Data<AppState>) -> Response {
+async fn r_contact(user: Option<User>, state: Data<AppState>) -> Response {
     let tmpl = state.env.get_template("contact/index.html")?;
     let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/about")]
-async fn about(user: Option<User>, state: Data<AppState>) -> Response {
+async fn r_about(user: Option<User>, state: Data<AppState>) -> Response {
     let tmpl = state.env.get_template("about/index.html")?;
     let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
+fn redirect(loc: &str) -> HttpResponse {
+    HttpResponse::TemporaryRedirect()
+        .insert_header((actix_web::http::header::LOCATION, loc))
+        .finish()
+}
+
 #[get("/login")]
-async fn login(user: Option<User>, state: Data<AppState>) -> Response {
+async fn r_login(user: Option<User>, state: Data<AppState>) -> Response {
+    let None = user else { return Ok(redirect("/account")) };
+
     let tmpl = state.env.get_template("login/index.html")?;
     let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/account")]
-async fn account_profile(user: User, state: Data<AppState>) -> Response {
+async fn r_account_profile(
+    user: Option<User>, state: Data<AppState>,
+) -> Response {
+    let Some(user) = user else { return Ok(redirect("/login")) };
+
     let tmpl = state.env.get_template("account/profile.html")?;
     let result = tmpl.render(context! { user => user })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
@@ -230,9 +244,11 @@ struct UserOrdersQuery {
 }
 
 #[get("/account/orders")]
-async fn account_orders(
-    rq: HttpRequest, user: User, state: Data<AppState>,
+async fn r_account_orders(
+    rq: HttpRequest, user: Option<User>, state: Data<AppState>,
 ) -> Response {
+    let Some(user) = user else { return Ok(redirect("/login")) };
+
     let tmpl = state.env.get_template("account/orders.html")?;
     let q = Query::<UserOrdersQuery>::extract(&rq).await;
     let mut page = 0;
@@ -249,15 +265,37 @@ async fn account_orders(
     .fetch_all(&state.sql)
     .await?;
 
+    let prod_ids = HashSet::<i64>::from_iter(orders.iter().map(|o| o.product));
+
+    let products = if !prod_ids.is_empty() {
+        let mut s = String::with_capacity(1024);
+        s.push_str("select * from products where id IN (");
+        for id in prod_ids.iter() {
+            s.push_str(&id.to_string());
+            s.push(',');
+        }
+        s.pop();
+        s.push(')');
+
+        sqlx::query_as::<Sqlite, Product>(&s).fetch_all(&state.sql).await?
+    } else {
+        vec![]
+    };
+
+    let products = HashMap::<i64, &Product, RandomState>::from_iter(
+        products.iter().map(|p| (p.id, p)),
+    );
+
     let result = tmpl.render(context! {
         user => user,
         orders => orders,
+        products => products,
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
 #[get("/blogs")]
-async fn blogs(
+async fn r_blogs(
     user: Option<User>, rq: HttpRequest, state: Data<AppState>,
 ) -> Response {
     let tmpl = state.env.get_template("blogs/index.html")?;
@@ -315,7 +353,7 @@ struct BlogSSRR {
 }
 
 #[get("/blogs/{slug}")]
-async fn blog(
+async fn r_blog(
     user: Option<User>, path: Path<(String,)>, state: Data<AppState>,
 ) -> Response {
     let tmpl = state.env.get_template("blog/index.html")?;
@@ -335,14 +373,14 @@ async fn blog(
 #[routes]
 #[get("/admin")]
 #[get("/admin/{path:.*}")]
-async fn admin_index() -> HttpResponse {
+async fn r_admin_index() -> HttpResponse {
     let result = std::fs::read_to_string("admin/dist/index.html")
         .unwrap_or("err reading admin index.html".to_string());
     HttpResponse::Ok().content_type(ContentType::html()).body(result)
 }
 
 #[get("/robots.txt")]
-async fn robots() -> HttpResponse {
+async fn r_robots() -> HttpResponse {
     HttpResponse::Ok().content_type(ContentType::plaintext()).body(
         r###"User-agent: *
 Disallow: /admin/
@@ -385,18 +423,18 @@ pub fn templates() -> Environment<'static> {
 pub fn router() -> impl HttpServiceFactory {
     Scope::new("")
         .wrap(NormalizePath::trim())
-        .service(home)
-        .service(products)
-        .service(product)
-        .service(contact)
-        .service(about)
-        .service(blogs)
-        .service(login)
-        .service(account_profile)
-        .service(account_orders)
-        .service(blog)
-        .service(admin_index)
-        .service(robots)
+        .service(r_home)
+        .service(r_products)
+        .service(r_product)
+        .service(r_contact)
+        .service(r_about)
+        .service(r_blogs)
+        .service(r_login)
+        .service(r_blog)
+        .service(r_account_profile)
+        .service(r_account_orders)
+        .service(r_admin_index)
+        .service(r_robots)
         .service(web::resource("/404/").get(not_found))
         .service(super::sitemap::router())
 }

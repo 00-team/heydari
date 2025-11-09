@@ -1,9 +1,9 @@
-export {}
+import { api_orders_post } from './abi'
 
 const main = document.querySelector<HTMLImageElement>('.main-img')!
 const imgs = document.querySelectorAll<HTMLImageElement>('.other-img')
 
-imgs.forEach((img) => {
+imgs.forEach(img => {
     img.addEventListener('click', () => {
         main.src = img.src
     })
@@ -15,7 +15,8 @@ const aboutSelect = aboutProduct.querySelector<HTMLElement>('.about-select')!
 const aboutWrapper = aboutProduct.querySelector<HTMLElement>('.about-wrapper')!
 
 const InfoButton = aboutSelect.querySelector<HTMLButtonElement>('button.info')!
-const AboutButton = aboutSelect.querySelector<HTMLButtonElement>('button.about')!
+const AboutButton =
+    aboutSelect.querySelector<HTMLButtonElement>('button.about')!
 
 const aboutSection = aboutWrapper.querySelector<HTMLElement>('.about')!
 const infoSection = aboutWrapper.querySelector<HTMLElement>('.info')!
@@ -75,3 +76,11 @@ const handleMinus = () => {
 
 orderPlus.addEventListener('click', handlePlus)
 orderMinus.addEventListener('click', handleMinus)
+
+declare global {
+    var add_order: (id: number) => void
+}
+
+globalThis.add_order = (id: number) => {
+    api_orders_post({ product: id, count: orderCount.valueAsNumber || 1 })
+}

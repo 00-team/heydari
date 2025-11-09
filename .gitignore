@@ -20,3 +20,4 @@ backup/
 log
 *.db*
 argon-data/
+*.tgz
