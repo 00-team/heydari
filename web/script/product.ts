@@ -1,3 +1,4 @@
+import { ADD_ORDER_LOCAL } from './base'
 import { api_orders_post } from './abi'
 import { addAlert } from './alert'
 import { LOCALE } from './locale'
@@ -194,6 +195,31 @@ popupCmpForm?.addEventListener('submit', async e => {
         count,
         product,
     })
+
+    if (res.status === 403) {
+        try {
+            const existing = JSON.parse(
+                localStorage.getItem(ADD_ORDER_LOCAL) || '[]'
+            )
+
+            // push a pending order object
+            existing.push({
+                product,
+                count,
+                savedAt: new Date().toISOString(),
+                from: location.pathname + location.search,
+            })
+
+            localStorage.setItem(ADD_ORDER_LOCAL, JSON.stringify(existing))
+
+            location.href = '/login'
+        } catch (err) {
+            console.error('Could not save pending order', err)
+
+            location.href = '/login'
+        }
+        return
+    }
 
     showLoading(false)
 
