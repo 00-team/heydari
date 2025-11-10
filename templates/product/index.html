@@ -105,6 +105,86 @@
 {% block content %}
 
 <main class="product">
+    <div class="produuct-popup-container" id="product-popup-cmp">
+        <form class="product-popup">
+            <button type="button" class="close-popup">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                    width="25" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z">
+                    </path>
+                </svg>
+            </button>
+            <div class="head ">
+                <p class="title_smaller">
+                    با تشکر از اعتماد شما به
+                </p>
+                <p class="title brand">
+                    صنایع تولیدی حیدری
+                </p>
+            </div>
+            <div class="top-imgs">
+                <div class="left-side-imgs">
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="center-img"></div>
+                <div class="right-side-imgs">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="chair-info">
+                <div class="chair-name title" id="p-chair-name">
+                    <span>
+                        صندلی آریا لمسه
+                    </span>
+                </div>
+            </div>
+            <div class="order-count">
+                <button class="order-cta icon" type="button" id="add">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                        </path>
+                    </svg>
+                </button>
+
+                <input id="p-order-counter" class="title_smaller" value="1" min="1" maxlength="1024" type="number"
+                    inputmode="numeric" />
+
+                <button class="order-cta icon" type="button" id="minus">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="order-sum">
+                <div class="holder title">
+                    مجموع:
+                </div>
+                <div class="data ">
+                    <span class="title_hero">
+                        100,000
+                    </span>
+                    <span class="description toman">
+                        تومان
+                    </span>
+                </div>
+            </div>
+            <div class="form-cta">
+                <button class="title_small">
+                    ثبت سفارش!
+                </button>
+            </div>
+        </form>
+    </div>
+
+
     <section class="product-wrapper">
         <aside class="product-details">
             <header class="title_smaller category">
@@ -155,7 +235,7 @@
 
                         <button class="counter-cta" id="order-minus">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
-                                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
                                 </path>
@@ -168,7 +248,7 @@
 
                         <button class="counter-cta" id="order-plus">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
-                                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
                                 </path>
@@ -178,7 +258,7 @@
                             تعداد سفارش
                         </div>
                     </div>
-                    <button class="buy-cta title_smaller" onclick="add_order({{ product.id }})">
+                    <button class="buy-cta title_smaller" id="buy-cta">
                         سفارش دهید!
                     </button>
                 </div>
