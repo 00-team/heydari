@@ -265,6 +265,19 @@ async fn r_account_orders(
     .fetch_all(&state.sql)
     .await?;
 
+    let order_count = sqlx::query!(
+        "select count(1) as count from orders where user = ?",
+        user.id
+    )
+    .fetch_one(&state.sql)
+    .await?;
+
+    let pages = if order_count.count > 0 {
+        order_count.count as u32 / 32
+    } else {
+        0
+    };
+
     let prod_ids = HashSet::<i64>::from_iter(orders.iter().map(|o| o.product));
 
     let products = if !prod_ids.is_empty() {
@@ -290,6 +303,7 @@ async fn r_account_orders(
         user => user,
         orders => orders,
         products => products,
+        pages => pages
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
