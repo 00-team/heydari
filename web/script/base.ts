@@ -7,3 +7,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initAlerts()
 })
+
+export const ADD_ORDER_LOCAL = 'ADD-ORDER-LOCAL'
