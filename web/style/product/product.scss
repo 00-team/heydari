@@ -86,6 +86,95 @@ main.product {
                 }
             }
 
+            .success-status,
+            .form-loading {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                background-color: inherit;
+                border-radius: inherit;
+
+                opacity: 0;
+                pointer-events: none;
+
+                z-index: 2;
+
+                transition: 0.2s opacity ease;
+
+                &.active {
+                    opacity: 1;
+                    pointer-events: all;
+                }
+            }
+
+            .success-status {
+                svg {
+                    width: 50px;
+                    height: 50px;
+
+                    margin-top: 1rem;
+
+                    color: var(--alert-success);
+
+                    transform-origin: center bottom;
+                    transform: scale(0);
+
+                    transition: 0.2s 0.1s ease transform;
+                }
+
+                p {
+                    text-wrap: pretty;
+                    text-align: center;
+                    line-height: 1.8em;
+
+                    a {
+                        color: var(--ten-percent);
+                        font-weight: bold;
+                        margin-inline: 0.2rem;
+                    }
+                }
+
+                &.active {
+                    svg {
+                        transform: scale(1);
+                    }
+                }
+            }
+
+            .form-loading {
+                img {
+                    width: 150px;
+                    height: 150px;
+
+                    margin-bottom: 0.5rem;
+
+                    animation: loading-img 1s alternate linear infinite;
+                    animation-play-state: paused;
+
+                    @keyframes loading-img {
+                        from {
+                            opacity: 1;
+                        }
+                        to {
+                            opacity: 0;
+                        }
+                    }
+                }
+
+                &.active {
+                    img {
+                        animation-play-state: running;
+                    }
+                }
+            }
+
             .head {
                 display: flex;
                 flex-direction: column;
@@ -152,6 +241,10 @@ main.product {
                 flex-direction: column;
                 align-items: center;
 
+                #product-id {
+                    display: none;
+                }
+
                 .chair-name {
                     margin-block: 1.5em;
 
@@ -170,6 +263,10 @@ main.product {
 
                         background-color: black;
                         opacity: 0.2;
+                    }
+
+                    .divider {
+                        opacity: 0.7;
                     }
 
                     span {
