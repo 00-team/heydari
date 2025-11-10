@@ -21,9 +21,21 @@
         <a href="/products/{{ p.slug }}" rel="noopener noreferrer" class="product-container">
             <div class="img-container">
                 <img src="/record/pp-{{p.id}}-{{ p.photos[0] }}" loading='lazy' decoding='async' draggable='false' />
+                {% if o.state == 'pending'%}
                 <div class="status-container waiting description">
                     حالت انتظار
                 </div>
+                {% endif %}
+                {% if o.state == 'resolved'%}
+                <div class="status-container success description">
+                    رسیدگی شده
+                </div>
+                {% endif %}
+                {% if o.state == 'rejected'%}
+                <div class="status-container error description">
+                    رد شده
+                </div>
+                {% endif %}
             </div>
             <div class="info-container">
                 <div class="info-head">
@@ -72,6 +84,19 @@
                         </div>
                         <div class="data aUTpGc129q">
                             {{ o.created_at }}
+                        </div>
+                    </div>
+                </div>
+                <div class="info-total">
+                    <div class="holder title_smaller">
+                        مجموع:
+                    </div>
+                    <div class="data title_small">
+                        <span id="fix-toman-amount" class="number">
+                            {{ o.price }}
+                        </span>
+                        <div class="toman">
+                            تومان
                         </div>
                     </div>
                 </div>
