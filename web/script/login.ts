@@ -1,7 +1,13 @@
 export let phoneRegex = /^(0|09|09[0-9]{1,9})$/
 
 import { LOCALE } from './locale'
-import { api_user_get, api_user_login_post, api_verification_post } from './abi'
+import {
+    api_orders_post,
+    api_user_get,
+    api_user_login_post,
+    api_verification_post,
+} from './abi'
+import { ADD_ORDER_LOCAL } from './base'
 
 const form = document.querySelector<HTMLFormElement>('form.login-wrapper')!
 
@@ -64,9 +70,48 @@ async function login() {
     const code = codeInp.value
 
     let res = await api_user_login_post({ phone, code })
+
     form.classList.toggle('loading', false)
 
     if (!res.ok()) return showError(LOCALE.error_code(res.body.code))
+
+    const raw = localStorage.getItem(ADD_ORDER_LOCAL)
+
+    if (raw) {
+        try {
+            const pending = JSON.parse(raw)
+
+            console.log(pending.length)
+            if (Array.isArray(pending) && pending.length > 0) {
+                let allOk = true
+
+                for (const order of pending) {
+                    const { product, count } = order
+                    console.log(order)
+                    if (!product || !count) continue
+
+                    form.classList.toggle('loading', true)
+
+                    const orderRes = await api_orders_post({
+                        product,
+                        count,
+                    })
+                    console.log(orderRes)
+                    if (!orderRes.ok()) {
+                        allOk = false
+                    }
+                }
+
+                if (allOk) {
+                    localStorage.removeItem(ADD_ORDER_LOCAL)
+                    window.location.href = '/account/orders'
+                    return
+                }
+            }
+        } catch (err) {
+            localStorage.removeItem(ADD_ORDER_LOCAL)
+        }
+    }
 
     window.location.href = '/account'
 }
