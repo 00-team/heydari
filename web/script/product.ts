@@ -1,5 +1,3 @@
-import { api_orders_post } from './abi'
-
 const main = document.querySelector<HTMLImageElement>('.main-img')!
 const imgs = document.querySelectorAll<HTMLImageElement>('.other-img')
 
@@ -77,10 +75,44 @@ const handleMinus = () => {
 orderPlus.addEventListener('click', handlePlus)
 orderMinus.addEventListener('click', handleMinus)
 
-declare global {
-    var add_order: (id: number) => void
+// declare global {
+//     var add_order: (id: number) => void
+// }
+
+// globalThis.add_order = (id: number) => {
+//     api_orders_post({ product: id, count: orderCount.valueAsNumber || 1 })
+// }
+
+const buyCta = document.querySelector<HTMLButtonElement>('#buy-cta')
+buyCta?.addEventListener('click', initPopup)
+
+// popup
+function initPopup() {
+    popupCmp?.classList.toggle('active', true)
+}
+function closePopup() {
+    console.log('called')
+    popupCmp?.classList.toggle('active', false)
 }
 
-globalThis.add_order = (id: number) => {
-    api_orders_post({ product: id, count: orderCount.valueAsNumber || 1 })
-}
+const popupCmp = document.querySelector<HTMLElement>('#product-popup-cmp')
+const popupCmpForm = popupCmp?.querySelector<HTMLElement>('form')
+const closePopupCta = popupCmp?.querySelector<HTMLButtonElement>('.close-popup')
+
+// TODO:
+const changed = () => false
+//
+
+popupCmp?.addEventListener('click', () => {
+    if (changed()) return
+
+    closePopup()
+})
+popupCmpForm?.addEventListener('click', e => {
+    e.stopPropagation()
+})
+
+closePopupCta?.addEventListener('click', () => {
+    closePopup()
+})
+// popup end
