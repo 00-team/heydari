@@ -1,3 +1,7 @@
+import { api_orders_post } from './abi'
+import { addAlert } from './alert'
+import { LOCALE } from './locale'
+
 const main = document.querySelector<HTMLImageElement>('.main-img')!
 const imgs = document.querySelectorAll<HTMLImageElement>('.other-img')
 
@@ -91,6 +95,7 @@ const popupCmp = document.querySelector<HTMLElement>('#product-popup-cmp')
 const popupCmpForm = popupCmp?.querySelector<HTMLElement>('form')
 const closePopupCta = popupCmp?.querySelector<HTMLButtonElement>('.close-popup')
 const popupTotal = popupCmp?.querySelector<HTMLSpanElement>('#total')
+const product_id = popupCmp?.querySelector<HTMLSpanElement>('#product-id')
 
 let p_orderCount =
     popupCmp?.querySelector<HTMLInputElement>('#p-order-counter')!
@@ -100,7 +105,7 @@ let p_orderMinus = popupCmp?.querySelector<HTMLInputElement>('#p_minus')!
 function initPopup() {
     const raw = (productPrice?.textContent ?? '0').replace(/\D+/g, '')
     const price = raw ? Number(raw) : 0
-    const count = Math.max(0, Number(p_orderCount.valueAsNumber) || 0)
+    const count = Math.max(0, Number(orderCount.valueAsNumber) || 0)
 
     p_orderCount.valueAsNumber = count
 
@@ -110,6 +115,7 @@ function initPopup() {
 
 // closes popup
 function closePopup() {
+    if (isLoading) return
     popupCmp?.classList.remove('active')
 }
 
@@ -159,5 +165,55 @@ popupCmpForm?.addEventListener('click', e => {
 
 closePopupCta?.addEventListener('click', () => {
     closePopup()
+})
+
+let isLoading = false
+const loadingForm = popupCmp?.querySelector<HTMLDivElement>('.form-loading')
+const showLoading = (show: boolean) => {
+    isLoading = show
+
+    loadingForm?.classList.toggle('active', show)
+}
+
+const statusForm = popupCmp?.querySelector<HTMLDivElement>('#form-status')
+const showSuccess = () => {
+    statusForm?.classList.toggle('active', true)
+}
+
+popupCmpForm?.addEventListener('submit', async e => {
+    e.preventDefault()
+
+    if (isLoading || !product_id?.textContent) return
+
+    let count = p_orderCount.valueAsNumber
+    let product = parseInt(product_id.textContent.trim())
+
+    showLoading(true)
+
+    let res = await api_orders_post({
+        count,
+        product,
+    })
+
+    showLoading(false)
+
+    if (!res.ok()) {
+        addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: LOCALE.error_code(res.body.code),
+        })
+        return
+    }
+
+    addAlert({
+        type: 'success',
+        subject: 'موفق!',
+        timeout: 3,
+        content: 'سفارش شما با موفقیت ثبت شد!',
+    })
+
+    showSuccess()
 })
 // popup end
