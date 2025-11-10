@@ -303,6 +303,7 @@ async fn r_account_orders(
         user => user,
         orders => orders,
         products => products,
+        page => page,
         pages => pages
     })?;
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
