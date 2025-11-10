@@ -3,6 +3,7 @@ use crate::models::order::{Order, OrderState};
 use crate::models::product::Product;
 use crate::models::user::User;
 use crate::models::Response;
+use crate::utils::IrisChannel;
 use crate::{utils, AppState};
 
 use actix_web::web::{Data, Json};
@@ -96,7 +97,23 @@ async fn r_add(
     .execute(&state.sql)
     .await?;
 
-    // TODO: add iris notif
+    crate::utils::iris_message(
+        IrisChannel::Orders,
+        format!(
+            "سفارش جدید:
+
+محصول: {:?} | {}
+تعداد: {}
+قیمت: {}
+خریدار: {} | +98{}",
+            product.kind,
+            product.name,
+            order.count,
+            order.price,
+            user.name.unwrap_or_default(),
+            user.phone
+        ),
+    );
 
     Ok(Json(order))
 }
