@@ -124,6 +124,27 @@
             </p>
         </div>
         {% endfor %}
+
+
+        <div class="pagination" data-pages="{{ pages }}" data-page="{{ page }}">
+            {% if page != 0 %}
+            <a rel="noopener" href="?page={{ page - 1 }}" class="title_small">
+                صفحه قبلی
+            </a>
+            {% endif %}
+            <div class="pagination-wrapper">
+                {% for p in range(0, pages + 1) %}
+                <a rel="noopener" href="?page={{ p }}" class="title_small{% if p == page %} active {% endif %}">
+                    {{ p + 1 }}
+                </a>
+                {% endfor %}
+            </div>
+            {% if page != pages %}
+            <a rel="noopener" href="?page={{ page + 1 }}" class="title_small">
+                صفحه بعدی
+            </a>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock account_outlet %}
