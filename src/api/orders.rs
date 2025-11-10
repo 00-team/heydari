@@ -42,6 +42,10 @@ async fn r_add(
     .fetch_one(&state.sql)
     .await?;
 
+    if body.count < 1 {
+        return crate::err!(CountMin, "min count is 1 kozo");
+    }
+
     let now = utils::now();
     let adayago = now.saturating_sub(86400);
 
@@ -63,7 +67,7 @@ async fn r_add(
         product: product.id,
         user: user.id,
         state: OrderState::Pending,
-        price: product.price,
+        price: product.price * body.count,
         count: body.count,
     };
 

@@ -8,7 +8,6 @@ pub enum ErrorCode {
     #[default]
     Unknown = 0,
     Forbidden,
-    ForbiddenSelfEdit,
     BadAuth,
     NotFound,
     NotUnique,
@@ -24,8 +23,8 @@ pub enum ErrorCode {
     BadSlugAbc,
     BadVerification,
 
-    StringTooLong,
     TooManyPhotos,
+    CountMin,
 }
 
 impl ErrorCode {
@@ -34,9 +33,9 @@ impl ErrorCode {
             Self::NotUnique => 400,
             Self::BadPhone => 400,
             Self::BadSlugLen | Self::BadSlugAbc => 400,
-            Self::StringTooLong => 400,
             Self::BadVerification => 400,
             Self::TooManyPhotos => 400,
+            Self::CountMin => 400,
 
             Self::IndexOutOfBounds => 400,
             Self::BadImage | Self::EncodeWebpError => 400,
@@ -44,7 +43,7 @@ impl ErrorCode {
             Self::NotFound => 404,
 
             Self::UserBanned => 403,
-            Self::Forbidden | Self::BadAuth | Self::ForbiddenSelfEdit => 403,
+            Self::Forbidden | Self::BadAuth => 403,
 
             Self::RateLimited => 429,
 
