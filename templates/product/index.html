@@ -125,24 +125,55 @@
             </div>
             <div class="top-imgs">
                 <div class="left-side-imgs">
-                    <div></div>
-                    <div></div>
+                    {% if product.photos|length > 2 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[2] }}" alt="{{ product.name }} image 3"
+                            class="thumb right-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+
+
+                    {% if product.photos|length > 4 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[4] }}" alt="{{ product.name }} image 5"
+                            class="thumb left-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
                 </div>
-                <div class="center-img"></div>
+
+                <div class="center-img">
+                    {% if product.photos|length > 0 %}
+                    <img src="/record/pp-{{ product.id }}-{{ product.photos[0] }}" alt="{{ product.name }} main image"
+                        class="center-main" loading="eager" decoding="async" draggable="false" />
+                    {% endif %}
+                </div>
+
                 <div class="right-side-imgs">
-                    <div></div>
-                    <div></div>
+                    {% if product.photos|length > 1 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[1] }}" alt="{{ product.name }} image 2"
+                            class="thumb right-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+
+                    {% if product.photos|length > 3 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[3] }}" alt="{{ product.name }} image 4"
+                            class="thumb left-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
             <div class="chair-info">
                 <div class="chair-name title" id="p-chair-name">
                     <span>
-                        صندلی آریا لمسه
+                        {{ product.name }}
                     </span>
                 </div>
             </div>
             <div class="order-count">
-                <button class="order-cta icon" type="button" id="add">
+                <button class="order-cta icon" type="button" id="p_add">
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="25"
                         width="25" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -154,7 +185,7 @@
                 <input id="p-order-counter" class="title_smaller" value="1" min="1" maxlength="1024" type="number"
                     inputmode="numeric" />
 
-                <button class="order-cta icon" type="button" id="minus">
+                <button class="order-cta icon" type="button" id="p_minus">
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="25"
                         width="25" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -168,8 +199,7 @@
                     مجموع:
                 </div>
                 <div class="data ">
-                    <span class="title_hero">
-                        100,000
+                    <span class="title_hero" id="total">
                     </span>
                     <span class="description toman">
                         تومان
