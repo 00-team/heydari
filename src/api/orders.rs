@@ -100,17 +100,18 @@ async fn r_add(
     crate::utils::iris_message(
         IrisChannel::Orders,
         format!(
-            "سفارش جدید:
+            "سفارش جدید: #new_orders
 
 محصول: {:?} | {}
 تعداد: {}
-قیمت: {}
-خریدار: {} | +98{}",
+قیمت: {} تومان
+خریدار: {}
+{}",
             product.kind,
             product.name,
             order.count,
-            order.price,
-            user.name.unwrap_or_default(),
+            crate::web::toman(order.price),
+            user.name.as_ref().map_or("بی نام", |v| v.as_str()),
             user.phone
         ),
     );
