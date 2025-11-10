@@ -7,6 +7,273 @@ main.product {
 
     background: linear-gradient(45deg, var(--sixty-percent), transparent);
 
+    .produuct-popup-container {
+        width: 100%;
+        height: 100%;
+
+        position: fixed;
+        inset: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        backdrop-filter: blur(3px);
+
+        z-index: 10;
+
+        opacity: 0;
+        pointer-events: none;
+
+        padding: 1rem;
+
+        transition: opacity 0.4s ease;
+
+        overscroll-behavior: contain;
+
+        &::before {
+            content: '';
+            width: 100%;
+            height: 100%;
+
+            position: absolute;
+            inset: 0;
+
+            background-color: black;
+            opacity: 0.2;
+
+            z-index: -1;
+        }
+
+        .product-popup {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+
+            width: clamp(0px, 100%, 700px);
+            height: clamp(0px, 100%, 700px);
+
+            border-radius: 1rem;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+            background-color: white;
+
+            transform: scale(1.1);
+
+            transition: 0.2s transform ease;
+
+            position: relative;
+            z-index: 1;
+
+            .close-popup {
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                padding: 1.5rem;
+
+                color: var(--alert-error);
+
+                &:hover {
+                    svg {
+                        transform: rotate(-90deg);
+                    }
+                }
+
+                svg {
+                    transition: 0.3s transform ease;
+                }
+            }
+
+            .head {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                padding-block: 2rem;
+            }
+
+            .top-imgs {
+                width: 100%;
+
+                padding-inline: 1rem;
+
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+
+                .center-img,
+                .right-side-imgs,
+                .left-side-imgs {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1rem;
+
+                    flex: 0.3 0 0;
+                }
+
+                .center-img {
+                    aspect-ratio: 1;
+
+                    border-radius: 1rem;
+
+                    background-color: grey;
+                }
+
+                .right-side-imgs,
+                .left-side-imgs {
+                    height: 100%;
+
+                    > * {
+                        height: 50%;
+                        aspect-ratio: 1;
+
+                        background-color: grey;
+                        border-radius: 1rem;
+
+                        object-fit: contain;
+                    }
+                }
+            }
+
+            .chair-info {
+                width: 100%;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .chair-name {
+                    margin-block: 1.5em;
+
+                    width: clamp(0px, 100%, 500px);
+
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+
+                    &::before,
+                    &::after {
+                        content: '';
+                        width: 100%;
+
+                        height: 1px;
+
+                        background-color: black;
+                        opacity: 0.2;
+                    }
+
+                    span {
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            .order-count {
+                width: clamp(0px, 100%, 300px);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+
+                margin-top: 1rem;
+
+                input {
+                    width: 100%;
+                    min-width: 50px;
+
+                    background: none;
+                    border: none;
+                    padding: 0.5rem;
+                    text-align: center;
+
+                    border-bottom: 1px solid black;
+
+                    &::-webkit-outer-spin-button,
+                    &::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                    /* Firefox */
+                    &[type='number'] {
+                        -moz-appearance: textfield;
+                    }
+                }
+
+                .order-cta {
+                    padding: 0.9rem;
+
+                    border-radius: 0.5rem;
+                    background-color: #ebebeb;
+
+                    svg {
+                        width: 1rem;
+                        height: 1rem;
+                    }
+                }
+            }
+
+            .order-sum {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+
+                margin-top: 2rem;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+
+                    font-family: number;
+                    white-space: nowrap;
+                }
+
+                .holder {
+                    opacity: 0.7;
+                }
+                .data {
+                    display: flex;
+                    gap: 0.2rem;
+
+                    .toman {
+                        scale: 0.8;
+                        transform-origin: bottom;
+                        opacity: 0.7;
+                    }
+                }
+            }
+
+            .form-cta {
+                width: 100%;
+                padding: 0.5rem;
+
+                button {
+                    width: 100%;
+                    color: white;
+                    padding: 1rem;
+
+                    border-radius: 0.7rem;
+
+                    background-color: var(--sixty-percent);
+                }
+            }
+        }
+
+        &.active {
+            opacity: 1;
+            pointer-events: all;
+
+            .product-popup {
+                transform: scale(1);
+            }
+        }
+    }
+
     .product-wrapper {
         width: 100%;
         min-height: 80vh;
@@ -149,6 +416,11 @@ main.product {
                             justify-content: center;
                             height: 100%;
                             border-radius: 0.5rem;
+
+                            svg {
+                                width: 1em;
+                                height: 1em;
+                            }
                         }
                     }
 
