@@ -105,6 +105,146 @@
 {% block content %}
 
 <main class="product">
+    <div class="produuct-popup-container" id="product-popup-cmp">
+        <form class="product-popup">
+            <div class="form-loading">
+                <img loading="lazy" decoding="async" src="/static/image/logo.png" />
+                <p class="title">
+                    لطفا منتظر بمانید
+                </p>
+                <span class="title_smaller">
+                    درحال ثبت سفارش شما هستیم
+                </span>
+            </div>
+            <div class="success-status" id="form-status">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                    width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z">
+                    </path>
+                </svg>
+                <p class="title">
+                    سفارش شما ثبت شد!
+                </p>
+                <p class="title_smaller">
+                    میتوانید وضعیت سفارش خود را در صفحه
+                    <a href="/account/orders" rel="noopener noreferrer"> سفارش های من</a>
+                    ببینید!
+                </p>
+            </div>
+
+            <button type="button" class="close-popup">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25"
+                    width="25" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z">
+                    </path>
+                </svg>
+            </button>
+            <div class="head ">
+                <p class="title_smaller">
+                    با تشکر از اعتماد شما به
+                </p>
+                <p class="title brand">
+                    صنایع تولیدی حیدری
+                </p>
+            </div>
+            <div class="top-imgs">
+                <div class="left-side-imgs">
+                    {% if product.photos|length > 2 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[2] }}" alt="{{ product.name }} image 3"
+                            class="thumb right-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+
+
+                    {% if product.photos|length > 4 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[4] }}" alt="{{ product.name }} image 5"
+                            class="thumb left-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="center-img">
+                    {% if product.photos|length > 0 %}
+                    <img src="/record/pp-{{ product.id }}-{{ product.photos[0] }}" alt="{{ product.name }} main image"
+                        class="center-main" loading="eager" decoding="async" draggable="false" />
+                    {% endif %}
+                </div>
+
+                <div class="right-side-imgs">
+                    {% if product.photos|length > 1 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[1] }}" alt="{{ product.name }} image 2"
+                            class="thumb right-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+
+                    {% if product.photos|length > 3 %}
+                    <div class="img-holder">
+                        <img src="/record/pp-{{ product.id }}-{{ product.photos[3] }}" alt="{{ product.name }} image 4"
+                            class="thumb left-thumb" loading="lazy" decoding="async" draggable="false" />
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="chair-info">
+                <div class="chair-name title">
+                    <span>
+                        {{ product.name }}
+                    </span>
+
+                    <span id="product-id">
+                        {{ product.id }}
+                    </span>
+                </div>
+            </div>
+            <div class="order-count">
+                <button class="order-cta icon" type="button" id="p_add">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                        </path>
+                    </svg>
+                </button>
+
+                <input id="p-order-counter" class="title_smaller" value="1" min="1" maxlength="1024" type="number"
+                    inputmode="numeric" />
+
+                <button class="order-cta icon" type="button" id="p_minus">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="25"
+                        width="25" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="order-sum">
+                <div class="holder title">
+                    مجموع:
+                </div>
+                <div class="data ">
+                    <span class="title_hero" id="total">
+                    </span>
+                    <span class="description toman">
+                        تومان
+                    </span>
+                </div>
+            </div>
+            <div class="form-cta">
+                <button class="title_small">
+                    ثبت سفارش!
+                </button>
+            </div>
+        </form>
+    </div>
+
+
     <section class="product-wrapper">
         <aside class="product-details">
             <header class="title_smaller category">
@@ -155,7 +295,7 @@
 
                         <button class="counter-cta" id="order-minus">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
-                                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
                                 </path>
@@ -168,7 +308,7 @@
 
                         <button class="counter-cta" id="order-plus">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
-                                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
                                 </path>
@@ -178,7 +318,7 @@
                             تعداد سفارش
                         </div>
                     </div>
-                    <button class="buy-cta title_smaller" onclick="add_order({{ product.id }})">
+                    <button class="buy-cta title_smaller" id="buy-cta">
                         سفارش دهید!
                     </button>
                 </div>

@@ -25,6 +25,9 @@ export default () => {
         loading: false,
     })
 
+    let phoneInpRef: HTMLInputElement
+    let codeInpRef: HTMLInputElement
+
     let timer: ReturnType<typeof setInterval>
 
     const navigate = useNavigate()
@@ -65,19 +68,21 @@ export default () => {
             onLoad(x) {
                 setState({ loading: false })
 
-                if (x.status == 200 && x.response.expires > 0)
-                    return setState({
-                        stage: 'code',
-                        expires: x.response.expires,
+                if (x.status != 200 || x.response.expires <= 0)
+                    return addAlert({
+                        type: 'error',
+                        content:
+                            'به تلفن شما پیامک ارسال شده است، برای ارسال دوباره چند لحظه صبر کنید.',
+                        subject: 'صبر کنید',
+                        timeout: 10,
                     })
 
-                addAlert({
-                    type: 'error',
-                    content:
-                        'به تلفن شما پیامک ارسال شده است، برای ارسال دوباره چند لحظه صبر کنید.',
-                    subject: 'صبر کنید',
-                    timeout: 10,
+                setState({
+                    stage: 'code',
+                    expires: x.response.expires,
                 })
+                phoneInpRef.blur()
+                codeInpRef.focus()
             },
         })
     }
@@ -202,6 +207,7 @@ export default () => {
                         </label>
                         <div class='input'>
                             <input
+                                ref={e => (phoneInpRef = e)}
                                 id='login-phone'
                                 class='title_small'
                                 type='number'
@@ -223,6 +229,7 @@ export default () => {
                         </label>
                         <div class='input'>
                             <input
+                                ref={e => (codeInpRef = e)}
                                 id='login-code'
                                 class='title_small'
                                 type='number'

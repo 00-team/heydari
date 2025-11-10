@@ -10,7 +10,7 @@ import {
     StarFillIcon,
     StarIcon,
     Table2Icon,
-    TrashIcon,
+    TrashCrossIcon,
 } from 'icons'
 import { httpx, validate_image_format } from 'shared'
 import {
@@ -242,7 +242,7 @@ export const PopupOverview: Component = () => {
                                     onclick={() => {
                                         setPopup({
                                             show: true,
-                                            Icon: () => <TrashIcon />,
+                                            Icon: () => <TrashCrossIcon />,
                                             content:
                                                 'این عمل قابل بازگشت نیست!',
                                             title: 'حذف عکس؟',
@@ -258,7 +258,7 @@ export const PopupOverview: Component = () => {
                                         })
                                     }}
                                 >
-                                    <TrashIcon />
+                                    <TrashCrossIcon />
                                 </button>
                             </Show>
                         </div>

@@ -1,4 +1,6 @@
 import { api_orders_post } from './abi'
+import { addAlert } from './alert'
+import { LOCALE } from './locale'
 
 const main = document.querySelector<HTMLImageElement>('.main-img')!
 const imgs = document.querySelectorAll<HTMLImageElement>('.other-img')
@@ -57,7 +59,7 @@ AboutButton.addEventListener('click', () => {
     update()
 })
 
-const product = document.querySelector<HTMLDivElement>(
+const productPrice = document.querySelector<HTMLDivElement>(
     '#product-price span span'
 )!
 
@@ -65,7 +67,7 @@ let orderCount = document.querySelector<HTMLInputElement>('#order-counter')!
 let orderPlus = document.querySelector<HTMLInputElement>('#order-plus')!
 let orderMinus = document.querySelector<HTMLInputElement>('#order-minus')!
 
-product.innerText = parseInt(product.innerText).toLocaleString()
+productPrice.innerText = parseInt(productPrice.innerText).toLocaleString()
 
 const handlePlus = () => {
     orderCount.valueAsNumber = orderCount.valueAsNumber + 1
@@ -77,10 +79,141 @@ const handleMinus = () => {
 orderPlus.addEventListener('click', handlePlus)
 orderMinus.addEventListener('click', handleMinus)
 
-declare global {
-    var add_order: (id: number) => void
+// declare global {
+//     var add_order: (id: number) => void
+// }
+
+// globalThis.add_order = (id: number) => {
+//     api_orders_post({ product: id, count: orderCount.valueAsNumber || 1 })
+// }
+
+const buyCta = document.querySelector<HTMLButtonElement>('#buy-cta')
+buyCta?.addEventListener('click', initPopup)
+
+// popup
+const popupCmp = document.querySelector<HTMLElement>('#product-popup-cmp')
+const popupCmpForm = popupCmp?.querySelector<HTMLElement>('form')
+const closePopupCta = popupCmp?.querySelector<HTMLButtonElement>('.close-popup')
+const popupTotal = popupCmp?.querySelector<HTMLSpanElement>('#total')
+const product_id = popupCmp?.querySelector<HTMLSpanElement>('#product-id')
+
+let p_orderCount =
+    popupCmp?.querySelector<HTMLInputElement>('#p-order-counter')!
+let p_orderPlus = popupCmp?.querySelector<HTMLInputElement>('#p_add')!
+let p_orderMinus = popupCmp?.querySelector<HTMLInputElement>('#p_minus')!
+
+function initPopup() {
+    const raw = (productPrice?.textContent ?? '0').replace(/\D+/g, '')
+    const price = raw ? Number(raw) : 0
+    const count = Math.max(0, Number(orderCount.valueAsNumber) || 0)
+
+    p_orderCount.valueAsNumber = count
+
+    popupTotal!.textContent = (price * count).toLocaleString()
+    popupCmp?.classList.add('active')
 }
 
-globalThis.add_order = (id: number) => {
-    api_orders_post({ product: id, count: orderCount.valueAsNumber || 1 })
+// closes popup
+function closePopup() {
+    if (isLoading) return
+    popupCmp?.classList.remove('active')
 }
+
+// update total based on count and price
+function updateTotal() {
+    const raw = (productPrice?.textContent ?? '0').replace(/\D+/g, '')
+    const price = raw ? Number(raw) : 0
+    const count = Math.max(0, Number(p_orderCount.valueAsNumber) || 0)
+    popupTotal!.textContent = (price * count).toLocaleString()
+}
+
+// handlers for + and –
+const p_handlePlus = () => {
+    let v = (p_orderCount.valueAsNumber || 0) + 1
+
+    p_orderCount.valueAsNumber = v
+    p_orderCount.valueAsNumber = v
+
+    updateTotal()
+}
+
+const p_handleMinus = () => {
+    const current = p_orderCount.valueAsNumber || 0
+    if (current > 1) {
+        let v = current - 1
+
+        p_orderCount.valueAsNumber = v
+        p_orderCount.valueAsNumber = v
+
+        updateTotal()
+    }
+}
+
+// attach listeners
+p_orderPlus.addEventListener('click', p_handlePlus)
+p_orderMinus.addEventListener('click', p_handleMinus)
+
+// also update total if user manually edits the count input
+p_orderCount.addEventListener('input', updateTotal)
+
+popupCmp?.addEventListener('click', () => {
+    closePopup()
+})
+popupCmpForm?.addEventListener('click', e => {
+    e.stopPropagation()
+})
+
+closePopupCta?.addEventListener('click', () => {
+    closePopup()
+})
+
+let isLoading = false
+const loadingForm = popupCmp?.querySelector<HTMLDivElement>('.form-loading')
+const showLoading = (show: boolean) => {
+    isLoading = show
+
+    loadingForm?.classList.toggle('active', show)
+}
+
+const statusForm = popupCmp?.querySelector<HTMLDivElement>('#form-status')
+const showSuccess = () => {
+    statusForm?.classList.toggle('active', true)
+}
+
+popupCmpForm?.addEventListener('submit', async e => {
+    e.preventDefault()
+
+    if (isLoading || !product_id?.textContent) return
+
+    let count = p_orderCount.valueAsNumber
+    let product = parseInt(product_id.textContent.trim())
+
+    showLoading(true)
+
+    let res = await api_orders_post({
+        count,
+        product,
+    })
+
+    showLoading(false)
+
+    if (!res.ok()) {
+        addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: LOCALE.error_code(res.body.code),
+        })
+        return
+    }
+
+    addAlert({
+        type: 'success',
+        subject: 'موفق!',
+        timeout: 3,
+        content: 'سفارش شما با موفقیت ثبت شد!',
+    })
+
+    showSuccess()
+})
+// popup end
