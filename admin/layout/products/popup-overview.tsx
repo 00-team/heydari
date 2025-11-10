@@ -11,7 +11,6 @@ import {
     StarIcon,
     Table2Icon,
     TrashCrossIcon,
-    TrashIcon,
 } from 'icons'
 import { httpx, validate_image_format } from 'shared'
 import {
