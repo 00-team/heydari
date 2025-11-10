@@ -7,6 +7,8 @@ pub struct Config {
     pub melipayamak: String,
     pub simurgh: reqwest::Client,
     pub heimdall: reqwest::Client,
+    pub iris: reqwest::Client,
+    pub iris_pass_on: String,
 }
 
 macro_rules! evar {
@@ -79,6 +81,11 @@ impl Config {
             simurgh,
             simurgh_pid,
             heimdall: Self::heimdall_client(),
+            iris: reqwest::ClientBuilder::new()
+                .connection_verbose(false)
+                .build()
+                .expect("invalid iris"),
+            iris_pass_on: evar!("IRIS_PASS_ON"),
         }
     }
 

@@ -3,6 +3,7 @@ use crate::models::order::{Order, OrderState};
 use crate::models::product::Product;
 use crate::models::user::User;
 use crate::models::Response;
+use crate::utils::IrisChannel;
 use crate::{utils, AppState};
 
 use actix_web::web::{Data, Json};
@@ -42,6 +43,10 @@ async fn r_add(
     .fetch_one(&state.sql)
     .await?;
 
+    if body.count < 1 {
+        return crate::err!(CountMin, "min count is 1 kozo");
+    }
+
     let now = utils::now();
     let adayago = now.saturating_sub(86400);
 
@@ -63,7 +68,7 @@ async fn r_add(
         product: product.id,
         user: user.id,
         state: OrderState::Pending,
-        price: product.price,
+        price: product.price * body.count,
         count: body.count,
     };
 
@@ -92,7 +97,24 @@ async fn r_add(
     .execute(&state.sql)
     .await?;
 
-    // TODO: add iris notif
+    crate::utils::iris_message(
+        IrisChannel::Orders,
+        format!(
+            "سفارش جدید: #new_orders
+
+محصول: {:?} | {}
+تعداد: {}
+قیمت: {} تومان
+خریدار: {}
+{}",
+            product.kind,
+            product.name,
+            order.count,
+            crate::web::toman(order.price),
+            user.name.as_ref().map_or("بی نام", |v| v.as_str()),
+            user.phone
+        ),
+    );
 
     Ok(Json(order))
 }

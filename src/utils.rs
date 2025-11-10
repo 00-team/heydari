@@ -177,3 +177,39 @@ impl CutOff for Option<String> {
         }
     }
 }
+
+pub enum IrisChannel {
+    Orders,
+}
+
+impl IrisChannel {
+    fn iris_chp(&self) -> (&'static str, String) {
+        let conf = Config::get();
+        match self {
+            Self::Orders => ("heydari_on", conf.iris_pass_on.clone()),
+        }
+    }
+}
+
+#[allow(dead_code)]
+pub fn iris_message(channel: IrisChannel, text: String) {
+    let conf = Config::get();
+
+    #[derive(serde::Serialize)]
+    struct Body {
+        channel: &'static str,
+        pass: String,
+        text: String,
+    }
+
+    let (channel, pass) = channel.iris_chp();
+    let body = Body { channel, pass, text };
+
+    let rq = conf
+        .iris
+        .post("https://iris.00-team.org/api/abzar/send/")
+        .json(&body)
+        .send();
+
+    tokio::task::spawn(rq);
+}
