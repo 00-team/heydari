@@ -1,6 +1,6 @@
 import { Component, Show } from 'solid-js'
 
-import { OrderList, OrderState } from 'abi'
+import { api_admin_orders_list, OrderState, Order as OrderT, User } from 'abi'
 import {
     Calendar2Icon,
     CartIcon,
@@ -17,10 +17,10 @@ const Orders: Component = () => {
     type STATE = {
         page: number
         loading: boolean
-        orders: OrderList | null
+        orders: [OrderT, User | null][]
     }
     const [state, setState] = createStore<STATE>({
-        orders: null,
+        orders: [],
         loading: false,
         page: 0,
     })
@@ -28,8 +28,13 @@ const Orders: Component = () => {
     const search = async () => {
         let page = unwrap(state.page)
 
-        // let res = await api_admin_orders_get({oid: null})``
-        return
+        setState('loading', true)
+        let res = await api_admin_orders_list({ page })
+        setState('loading', false)
+
+        if (!res.ok()) return
+
+        setState('orders', res.body)
     }
 
     const Empty = () => {
