@@ -7,14 +7,15 @@ import Alert from 'comps/alert'
 
 import './style/index.scss'
 
+import LoadingDots from 'comps/loadingDots'
 import { Popup } from 'comps/popup'
 import Login from 'layout/login'
 import Navbar from './layout/navbar'
-import LoadingDots from 'comps/loadingDots'
 
 const Products = lazy(() => import('./layout/products'))
 const Storage = lazy(() => import('./layout/storage'))
 const ProductTags = lazy(() => import('./layout/product-tags'))
+const Orders = lazy(() => import('./layout/orders'))
 
 const App: Component<RouteSectionProps> = P => {
     return (
@@ -52,10 +53,11 @@ const Root = () => {
                     <Show when={self.perms.check(Perms.V_MATERIAL)}>
                         <Route path='/storage/' component={Storage} />
                     </Show>
+                    <Route path='/orders/' component={Orders} />
                     <Route
                         path='*'
                         component={() => (
-                            <span id='select-tab title_small'>
+                            <span id='select-tab' class='title_small'>
                                 بخش مورد نظر خود را انتخاب کنید
                             </span>
                         )}

@@ -1,16 +1,15 @@
 import { A, reload } from '@solidjs/router'
 import {
+    CartIcon,
     ChairIcon,
     ExitIcon,
     PersonIcon,
-    StorageIcon,
     TagIcon,
     TrashIcon,
 } from 'icons'
 import { httpx, Perm } from 'shared'
 
-import { For, JSX, onMount, Show } from 'solid-js'
-import { createStore } from 'solid-js/store'
+import { For, JSX, Show } from 'solid-js'
 import { Perms, self, setSelf } from 'store'
 import { setPopup } from 'store/popup'
 import './style/navbar.scss'
@@ -19,13 +18,13 @@ type linkType = {
     link: string
     title: string
     icon: JSX.Element
-    perm: Perm
+    perm: Perm | null
 }
 
 const links: linkType[] = [
     {
         icon: <ChairIcon />,
-        link: '/',
+        link: '/products',
         title: 'محصولات',
         perm: Perms.V_PRODUCT,
     },
@@ -35,11 +34,17 @@ const links: linkType[] = [
         title: 'تگ محصولات',
         perm: Perms.V_PRODUCT_TAG,
     },
+    // {
+    //     icon: <StorageIcon />,
+    //     link: '/storage/',
+    //     title: 'انبار',
+    //     perm: Perms.V_MATERIAL,
+    // },
     {
-        icon: <StorageIcon />,
-        link: '/storage/',
-        title: 'انبار',
-        perm: Perms.V_MATERIAL,
+        icon: <CartIcon />,
+        link: '/orders/',
+        title: 'سفارشات',
+        perm: null,
     },
     {
         icon: <PersonIcon />,
@@ -50,25 +55,25 @@ const links: linkType[] = [
 ]
 
 export default () => {
-    const [state, setState] = createStore({
-        active: 0,
-    })
+    // const [state, setState] = createStore({
+    //     active: 0,
+    // })
 
-    onMount(() => {
-        let pathname = location.pathname.split('/')
+    // onMount(() => {
+    //     let pathname = location.pathname.split('/')
 
-        let adminIndex = pathname.findIndex(str => str === 'admin')
+    //     let adminIndex = pathname.findIndex(str => str === 'admin')
 
-        if (adminIndex <= -1) return
+    //     if (adminIndex <= -1) return
 
-        let activeIndex = pathname[adminIndex + 1]
+    //     let activeIndex = pathname[adminIndex + 1]
 
-        let activeLink = links.findIndex(
-            link => link.link.split('/').filter(str => str)[0] === activeIndex
-        )
+    //     let activeLink = links.findIndex(
+    //         link => link.link.split('/').filter(str => str)[0] === activeIndex
+    //     )
 
-        activeLink >= 0 && setState({ active: activeLink })
-    })
+    //     activeLink >= 0 && setState({ active: activeLink })
+    // })
 
     function logout() {
         httpx({
@@ -128,13 +133,18 @@ export default () => {
             </div>
             <div class='links'>
                 <For each={links}>
-                    {(link, index) => (
-                        <Show when={self.perms.check(link.perm)}>
+                    {link => (
+                        <Show
+                            when={
+                                link.perm == null || self.perms.check(link.perm)
+                            }
+                        >
                             <A
                                 href={link.link}
+                                inactiveClass=''
                                 class='title_smaller'
-                                classList={{ active: state.active == index() }}
-                                onclick={() => setState({ active: index() })}
+                                // classList={{ active: state.active == index() }}
+                                // onclick={() => setState({ active: index() })}
                             >
                                 <span>
                                     {link.icon}
@@ -145,13 +155,15 @@ export default () => {
                     )}
                 </For>
             </div>
-            <img
-                class='nav-logo-container'
-                src='/static/image/logo.png'
-                alt=''
-                draggable={false}
-                loading='lazy'
-            />
+            <a href='/'>
+                <img
+                    class='nav-logo-container'
+                    src='/static/image/logo.png'
+                    alt=''
+                    draggable={false}
+                    loading='lazy'
+                />
+            </a>
         </nav>
     )
 }
