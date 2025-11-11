@@ -10,6 +10,7 @@ import {
     PersonIcon,
 } from 'icons'
 import { createStore, produce, unwrap } from 'solid-js/store'
+import { setPopup } from 'store/popup'
 import './style/orders.scss'
 
 const Orders: Component = () => {
@@ -88,6 +89,9 @@ const Orders: Component = () => {
 }
 
 const Order: Component = () => {
+    const submit = () => {}
+    const reject = () => {}
+
     const label_map: Record<OrderState, string> = {
         pending: 'حالت انتظار',
         rejected: 'رد شده!',
@@ -161,11 +165,33 @@ const Order: Component = () => {
                 </div>
             </div>
             <div class='order-ctas title_smaller'>
-                <button class='cta reject'>
+                <button
+                    class='cta reject'
+                    onclick={() => {
+                        setPopup({
+                            show: true,
+                            type: 'error',
+                            Icon: CloseIcon,
+                            title: 'سفارش را رد میکنید؟',
+                            onSubmit: reject,
+                        })
+                    }}
+                >
                     <CloseIcon />
                     رد
                 </button>
-                <button class='cta submit'>
+                <button
+                    class='cta submit'
+                    onclick={() =>
+                        setPopup({
+                            show: true,
+                            type: 'success',
+                            Icon: CheckIcon,
+                            title: 'سفارش را تایید میکنید؟',
+                            onSubmit: submit,
+                        })
+                    }
+                >
                     <CheckIcon />
                     تایید
                 </button>
