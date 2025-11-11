@@ -1,9 +1,9 @@
 import { A, reload } from '@solidjs/router'
 import {
+    CartIcon,
     ChairIcon,
     ExitIcon,
     PersonIcon,
-    StorageIcon,
     TagIcon,
     TrashIcon,
 } from 'icons'
@@ -41,7 +41,7 @@ const links: linkType[] = [
     //     perm: Perms.V_MATERIAL,
     // },
     {
-        icon: <StorageIcon />,
+        icon: <CartIcon />,
         link: '/orders/',
         title: 'سفارشات',
         perm: null,
@@ -155,13 +155,15 @@ export default () => {
                     )}
                 </For>
             </div>
-            <img
-                class='nav-logo-container'
-                src='/static/image/logo.png'
-                alt=''
-                draggable={false}
-                loading='lazy'
-            />
+            <a href='/'>
+                <img
+                    class='nav-logo-container'
+                    src='/static/image/logo.png'
+                    alt=''
+                    draggable={false}
+                    loading='lazy'
+                />
+            </a>
         </nav>
     )
 }
