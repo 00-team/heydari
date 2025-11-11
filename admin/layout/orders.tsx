@@ -1,7 +1,13 @@
 import { Component, Show } from 'solid-js'
 
-import { OrderList } from 'abi'
-import { CloseIcon } from 'icons'
+import { OrderList, OrderState } from 'abi'
+import {
+    Calendar2Icon,
+    CartIcon,
+    CloseIcon,
+    MobileIcon,
+    PersonIcon,
+} from 'icons'
 import { createStore, produce, unwrap } from 'solid-js/store'
 import './style/orders.scss'
 
@@ -81,12 +87,76 @@ const Orders: Component = () => {
 }
 
 const Order: Component = () => {
+    const label_map: Record<OrderState, string> = {
+        pending: 'حالت انتظار',
+        rejected: 'رد شده!',
+        resolved: 'رسیدگی شده!',
+    }
+
     return (
         <div class='order-cmp'>
-            <div class='product-img'>
-                <img src='/static/image/products/1.webp' alt='' />
+            <div class='order-infos'>
+                <div
+                    class='order-status pending description'
+                    classList={
+                        {
+                            // [P.order.state]: true
+                        }
+                    }
+                >
+                    {label_map['pending']}
+                </div>
+                <div class='wrapper'>
+                    <div class='product-name title'>صندلی رادین اپنی</div>
+                    <div class='order-sum title_small number'>
+                        <span>120,000</span>
+                        <div class='toman'>تومان</div>
+                    </div>
+                    <div class='order-info'>
+                        <div class='order-count'>10 عدد</div>
+                        <div class='order-divider'>|</div>
+                        <div class='order-date'>1400/09/09</div>
+                    </div>
+                </div>
+
+                <div class='buyer-wrapper'>
+                    <div class='buyer-head title_small'>
+                        <span>خریدار</span>
+                    </div>
+                    <div class='buyer-infos description'>
+                        <div class='buyer-name'>
+                            <PersonIcon />
+                            عباس تقوی روشن
+                        </div>
+                        <a href={`tel:09120974411`} class='buyer-info '>
+                            <div class='holder'>
+                                <MobileIcon />
+                                تلفن:
+                            </div>
+                            <div class='data'>09120974956</div>
+                        </a>
+                        <div class='buyer-info '>
+                            <div class='holder'>
+                                <Calendar2Icon />
+                                عضویت:
+                            </div>
+                            <div class='data'>1400/09/09</div>
+                        </div>
+                        <div class='buyer-info '>
+                            <div class='holder'>
+                                <CartIcon />
+                                سفارش تا حالا
+                            </div>
+                            <div class='data'>5</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class='order-info'></div>
+            <div class='product-img-wrapper'>
+                <div class='product-img'>
+                    <img src='/static/image/home/hero/office.webp' alt='' />
+                </div>
+            </div>
         </div>
     )
 }
