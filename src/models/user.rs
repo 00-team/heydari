@@ -2,13 +2,13 @@ use crate::AppState;
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
 use actix_web::{dev::Payload, web::Data, FromRequest, HttpRequest};
 use potk::{Perm, Perms};
-use serde::{Deserialize, Serialize};
 use std::{future::Future, pin::Pin};
 use utoipa::ToSchema;
 
 use super::{auth::Authorization, AppErr};
 
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, ToSchema, Default)]
+#[derive(Debug, Clone, Default)]
+#[derive(serde::Serialize, serde::Deserialize, sqlx::FromRow, utoipa::ToSchema)]
 pub struct User {
     pub id: i64,
     pub name: Option<String>,
