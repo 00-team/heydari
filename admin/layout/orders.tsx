@@ -4,6 +4,7 @@ import { OrderList, OrderState } from 'abi'
 import {
     Calendar2Icon,
     CartIcon,
+    CheckIcon,
     CloseIcon,
     MobileIcon,
     PersonIcon,
@@ -94,68 +95,80 @@ const Order: Component = () => {
     }
 
     return (
-        <div class='order-cmp'>
-            <div class='order-infos'>
-                <div
-                    class='order-status pending description'
-                    classList={
-                        {
-                            // [P.order.state]: true
+        <div class='order-cmp-wrapper'>
+            <div class='order-cmp'>
+                <div class='order-infos'>
+                    <div
+                        class='order-status pending description'
+                        classList={
+                            {
+                                // [P.order.state]: true
+                            }
                         }
-                    }
-                >
-                    {label_map['pending']}
-                </div>
-                <div class='wrapper'>
-                    <div class='product-name title'>صندلی رادین اپنی</div>
-                    <div class='order-sum title_small number'>
-                        <span>120,000</span>
-                        <div class='toman'>تومان</div>
+                    >
+                        {label_map['pending']}
                     </div>
-                    <div class='order-info'>
-                        <div class='order-count'>10 عدد</div>
-                        <div class='order-divider'>|</div>
-                        <div class='order-date'>1400/09/09</div>
+                    <div class='wrapper'>
+                        <div class='product-name title'>صندلی رادین اپنی</div>
+                        <div class='order-sum title_small number'>
+                            <span>120,000</span>
+                            <div class='toman'>تومان</div>
+                        </div>
+                        <div class='order-info'>
+                            <div class='order-count'>10 عدد</div>
+                            <div class='order-divider'>|</div>
+                            <div class='order-date'>1400/09/09</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class='buyer-wrapper'>
-                    <div class='buyer-head title_small'>
-                        <span>خریدار</span>
+                    <div class='buyer-wrapper'>
+                        <div class='buyer-head title_small'>
+                            <span>خریدار</span>
+                        </div>
+                        <div class='buyer-infos description'>
+                            <div class='buyer-name'>
+                                <PersonIcon />
+                                عباس تقوی روشن
+                            </div>
+                            <a href={`tel:09120974411`} class='buyer-info '>
+                                <div class='holder'>
+                                    <MobileIcon />
+                                    تلفن:
+                                </div>
+                                <div class='data'>09120974956</div>
+                            </a>
+                            <div class='buyer-info '>
+                                <div class='holder'>
+                                    <Calendar2Icon />
+                                    عضویت:
+                                </div>
+                                <div class='data'>1400/09/09</div>
+                            </div>
+                            <div class='buyer-info '>
+                                <div class='holder'>
+                                    <CartIcon />
+                                    سفارش تا حالا
+                                </div>
+                                <div class='data'>5</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class='buyer-infos description'>
-                        <div class='buyer-name'>
-                            <PersonIcon />
-                            عباس تقوی روشن
-                        </div>
-                        <a href={`tel:09120974411`} class='buyer-info '>
-                            <div class='holder'>
-                                <MobileIcon />
-                                تلفن:
-                            </div>
-                            <div class='data'>09120974956</div>
-                        </a>
-                        <div class='buyer-info '>
-                            <div class='holder'>
-                                <Calendar2Icon />
-                                عضویت:
-                            </div>
-                            <div class='data'>1400/09/09</div>
-                        </div>
-                        <div class='buyer-info '>
-                            <div class='holder'>
-                                <CartIcon />
-                                سفارش تا حالا
-                            </div>
-                            <div class='data'>5</div>
-                        </div>
+                </div>
+                <div class='product-img-wrapper'>
+                    <div class='product-img'>
+                        <img src='/static/image/home/hero/office.webp' alt='' />
                     </div>
                 </div>
             </div>
-            <div class='product-img-wrapper'>
-                <div class='product-img'>
-                    <img src='/static/image/home/hero/office.webp' alt='' />
-                </div>
+            <div class='order-ctas title_smaller'>
+                <button class='cta reject'>
+                    <CloseIcon />
+                    رد
+                </button>
+                <button class='cta submit'>
+                    <CheckIcon />
+                    تایید
+                </button>
             </div>
         </div>
     )
