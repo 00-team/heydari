@@ -180,6 +180,20 @@ export const ChevronUpIcon = () => (
     </svg>
 )
 
+export const CartIcon = () => (
+    <svg
+        stroke='currentColor'
+        fill='currentColor'
+        stroke-width='0'
+        viewBox='0 0 256 256'
+        height='25'
+        width='25'
+        xmlns='http://www.w3.org/2000/svg'
+    >
+        <path d='M230.14,58.87A8,8,0,0,0,224,56H62.68L56.6,22.57A8,8,0,0,0,48.73,16H24a8,8,0,0,0,0,16h18L67.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,160,204a28,28,0,1,0,28-28H91.17a8,8,0,0,1-7.87-6.57L80.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,230.14,58.87ZM104,204a12,12,0,1,1-12-12A12,12,0,0,1,104,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,200,204Z'></path>
+    </svg>
+)
+
 export const TrashIcon = () => (
     <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -508,7 +522,11 @@ export const PersonIcon = () => (
         xmlns='http://www.w3.org/2000/svg'
     >
         <path fill='none' d='M0 0h24v24H0z'></path>
-        <path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'></path>
+        <path
+            style='scale: 1.1;
+    transform-origin: center;'
+            d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'
+        ></path>
     </svg>
 )
 
