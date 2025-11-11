@@ -12,9 +12,8 @@ use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, HttpResponse, Scope};
 use potk::Perms;
 use serde::Deserialize;
-use serde::Serialize;
 use sqlx::Sqlite;
-use std::collections::HashSet;
+use std::collections::HashMap;
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(OpenApi)]
@@ -26,22 +25,16 @@ use utoipa::{OpenApi, ToSchema};
 )]
 pub struct ApiDoc;
 
-#[derive(Serialize, ToSchema)]
-struct OrderList {
-    orders: Vec<Order>,
-    users: Vec<User>,
-}
-
 #[utoipa::path(
     get,
     params(ListInput),
-    responses((status = 200, body = OrderList))
+    responses((status = 200, body = Vec<(Order, Option<User>)>))
 )]
 /// List
 #[get("/")]
 async fn r_list(
     admin: Admin, q: Query<ListInput>, state: Data<AppState>,
-) -> Response<OrderList> {
+) -> Response<Vec<(Order, Option<User>)>> {
     admin.perm_check(perms::V_ORDER)?;
 
     let offset = q.page as i64 * 32;
@@ -53,28 +46,39 @@ async fn r_list(
     .fetch_all(&state.sql)
     .await?;
 
-    let user_ids = HashSet::<i64>::from_iter(orders.iter().map(|o| o.user));
+    let mut users = HashMap::<i64, Option<User>>::from_iter(
+        orders.iter().map(|o| (o.user, None)),
+    );
 
-    let users = if !user_ids.is_empty() {
+    if !users.is_empty() {
         let mut s = String::with_capacity(1024);
         s.push_str("select * from users where id IN (");
-        for id in user_ids.iter() {
+        for id in users.keys() {
             s.push_str(&id.to_string());
             s.push(',');
         }
         s.pop();
         s.push(')');
 
-        let mut users =
+        let ul =
             sqlx::query_as::<Sqlite, User>(&s).fetch_all(&state.sql).await?;
 
-        users.iter_mut().for_each(|user| user.token = None);
-        users
-    } else {
-        vec![]
-    };
+        for mut u in ul {
+            u.token = None;
+            if let Some(oo) = users.get_mut(&u.id) {
+                *oo = Some(u);
+            } else {
+                users.insert(u.id, Some(u));
+            }
+        }
+    }
 
-    Ok(Json(OrderList { orders, users }))
+    let mut out = Vec::with_capacity(orders.len());
+    for o in orders {
+        let u = users.get(&o.user).and_then(|v| v.clone());
+        out.push((o, u));
+    }
+    Ok(Json(out))
 }
 
 #[utoipa::path(
