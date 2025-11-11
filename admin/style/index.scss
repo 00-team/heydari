@@ -113,6 +113,23 @@ span.copiable {
     color: var(--selection-fg);
 }
 
+// reset
+a {
+    color: unset;
+    text-decoration: none;
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+
+    text-decoration: none;
+    color: inherit;
+}
+
 .title_hero {
     font-size: g.$TITLE_FONTSIZE_HERO;
     font-family: 'iranBold';
@@ -144,5 +161,9 @@ span.copiable {
 }
 
 #select-tab {
-    text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
 }
