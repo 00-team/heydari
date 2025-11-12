@@ -162,6 +162,10 @@ button {
 .number {
     font-family: number;
 }
+.icon {
+    display: grid;
+    place-items: center;
+}
 
 #select-tab {
     width: 100%;
