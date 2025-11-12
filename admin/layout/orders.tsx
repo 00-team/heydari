@@ -1,8 +1,19 @@
-import { Component, Show } from 'solid-js'
+import { Component, For, onMount, Show } from 'solid-js'
 
-import { api_admin_orders_list, OrderState, Order as OrderT, User } from 'abi'
+import { useSearchParams } from '@solidjs/router'
+import {
+    api_admin_orders_list,
+    api_admin_orders_patch,
+    api_admin_products_get,
+    Order,
+    OrderState,
+    User,
+} from 'abi'
+import { LoadingElem } from 'comps'
+import LoadingDots from 'comps/loadingDots'
 import {
     Calendar2Icon,
+    CalendarIcon,
     CartIcon,
     CheckIcon,
     CloseIcon,
@@ -14,10 +25,12 @@ import { setPopup } from 'store/popup'
 import './style/orders.scss'
 
 const Orders: Component = () => {
+    const [params, setParams] = useSearchParams()
+
     type STATE = {
         page: number
         loading: boolean
-        orders: [OrderT, User | null][]
+        orders: [Order, User | null][]
     }
     const [state, setState] = createStore<STATE>({
         orders: [],
@@ -25,8 +38,18 @@ const Orders: Component = () => {
         page: 0,
     })
 
+    onMount(() => {
+        setState({
+            page: parseInt(params.page || '0') || 0,
+        })
+
+        search()
+    })
+
     const search = async () => {
         let page = unwrap(state.page)
+
+        setParams({ page })
 
         setState('loading', true)
         let res = await api_admin_orders_list({ page })
@@ -44,6 +67,19 @@ const Orders: Component = () => {
                     <CloseIcon />
                 </div>
                 <p>سفارشی در سیستم ثبت نشده!</p>
+            </div>
+        )
+    }
+
+    const Loading: Component = () => {
+        return (
+            <div class='loading-container'>
+                <img
+                    src='/static/image/logo.png'
+                    loading='lazy'
+                    decoding='async'
+                />
+                <p class='title_small'>درحال گرفتن اطلاعات از سرور</p>
             </div>
         )
     }
@@ -68,7 +104,7 @@ const Orders: Component = () => {
                 </button>
                 <button
                     class='title_smaller page-cta'
-                    // disabled={state.page == }
+                    disabled={state.orders.length == 0}
                     onClick={() => {
                         setState(
                             produce(s => {
@@ -84,8 +120,24 @@ const Orders: Component = () => {
             <div class='divider'></div>
             <div class='orders-wrapper'>
                 <Show when={!state.loading} fallback={<Loading />}>
-                    <Show when={true} fallback={<Empty />}>
-                        <Order />
+                    <Show when={state.orders.length > 0} fallback={<Empty />}>
+                        <For each={state.orders}>
+                            {(o, index) => (
+                                <OrderCmp
+                                    onState={a => {
+                                        setState(
+                                            produce(s => {
+                                                if (!s.orders[index()]) return
+
+                                                s.orders[index()]![0].state = a
+                                            })
+                                        )
+                                    }}
+                                    order={o[0]}
+                                    user={o[1]}
+                                />
+                            )}
+                        </For>
                     </Show>
                 </Show>
             </div>
@@ -93,9 +145,61 @@ const Orders: Component = () => {
     )
 }
 
-const Order: Component = () => {
-    const submit = () => {}
-    const reject = () => {}
+interface OrderProps {
+    user: User | null
+    order: Order
+    onState(s: OrderState): void
+}
+const OrderCmp: Component<OrderProps> = P => {
+    type STATE = {
+        loading: boolean
+        product: {
+            loading: boolean
+            img: string
+            name: string
+        }
+    }
+    const [state, setState] = createStore<STATE>({
+        loading: false,
+
+        product: {
+            loading: true,
+            img: '',
+            name: '',
+        },
+    })
+
+    onMount(async () => {
+        setState('product', 'loading', true)
+        let res = await api_admin_products_get({ id: P.order.product })
+        setState('product', 'loading', false)
+
+        if (!res.ok()) return
+
+        setState('product', {
+            name: res.body.name,
+            img: res.body.photos.find(Boolean) || '',
+        })
+    })
+
+    const changeTo = async (state: OrderState) => {
+        setState('loading', true)
+
+        let res = await api_admin_orders_patch(
+            {
+                oid: P.order.id,
+            },
+            {
+                state,
+            }
+        )
+
+        setState('loading', false)
+
+        if (!res.ok()) return
+
+        P.onState(res.body.state)
+    }
 
     const label_map: Record<OrderState, string> = {
         pending: 'حالت انتظار',
@@ -105,28 +209,43 @@ const Order: Component = () => {
 
     return (
         <div class='order-cmp-wrapper'>
+            <Show when={state.loading}>
+                <LoadingElem class='order-loading' />
+            </Show>
             <div class='order-cmp'>
                 <div class='order-infos'>
                     <div
-                        class='order-status pending description'
-                        classList={
-                            {
-                                // [P.order.state]: true
-                            }
-                        }
+                        class='order-status title_smaller'
+                        classList={{
+                            [P.order.state]: true,
+                        }}
                     >
-                        {label_map['pending']}
+                        {label_map[P.order.state]}
                     </div>
                     <div class='wrapper'>
-                        <div class='product-name title'>صندلی رادین اپنی</div>
+                        <div class='product-name title'>
+                            <Show
+                                when={!state.product.loading}
+                                fallback={<LoadingDots />}
+                            >
+                                {state.product.name}
+                            </Show>
+                        </div>
                         <div class='order-sum title_small number'>
-                            <span>120,000</span>
+                            <span>{P.order.price.toLocaleString()}</span>
                             <div class='toman'>تومان</div>
                         </div>
                         <div class='order-info'>
-                            <div class='order-count'>10 عدد</div>
+                            <div class='order-count'> {P.order.count} عدد</div>
                             <div class='order-divider'>|</div>
-                            <div class='order-date'>1400/09/09</div>
+                            <div class='order-date'>
+                                <div class='icon'>
+                                    <CalendarIcon />
+                                </div>
+                                {new Date(
+                                    P.order.created_at * 1e3
+                                ).toLocaleDateString('fa-IR')}
+                            </div>
                         </div>
                     </div>
 
@@ -137,48 +256,67 @@ const Order: Component = () => {
                         <div class='buyer-infos description'>
                             <div class='buyer-name'>
                                 <PersonIcon />
-                                عباس تقوی روشن
+                                {P.user?.name || 'بدون نام'}
                             </div>
-                            <a href={`tel:09120974411`} class='buyer-info '>
+                            <a
+                                href={`tel:${P.user?.phone}`}
+                                class='buyer-info '
+                            >
                                 <div class='holder'>
                                     <MobileIcon />
                                     تلفن:
                                 </div>
-                                <div class='data'>09120974956</div>
+                                <div class='data'>
+                                    {P.user?.name || 'بدون شماره!'}
+                                </div>
                             </a>
                             <div class='buyer-info '>
                                 <div class='holder'>
                                     <Calendar2Icon />
                                     عضویت:
                                 </div>
-                                <div class='data'>1400/09/09</div>
+                                <div class='data'>
+                                    {P.user?.created_at &&
+                                        new Date(
+                                            P.user?.created_at * 1e3
+                                        ).toLocaleDateString('fa-IR')}
+                                </div>
                             </div>
                             <div class='buyer-info '>
                                 <div class='holder'>
                                     <CartIcon />
-                                    سفارش تا حالا
+                                    {P.user?.order_count || 0} سفارش تا حالا
                                 </div>
-                                <div class='data'>5</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class='product-img-wrapper'>
                     <div class='product-img'>
-                        <img src='/static/image/home/hero/office.webp' alt='' />
+                        <Show
+                            when={!state.product.loading}
+                            fallback={<LoadingElem />}
+                        >
+                            <img
+                                src={`/record/pp-${P.order.product}-${state.product.img}`}
+                                loading='lazy'
+                                decoding='async'
+                            />
+                        </Show>
                     </div>
                 </div>
             </div>
             <div class='order-ctas title_smaller'>
                 <button
                     class='cta reject'
+                    disabled={P.order.state == 'rejected'}
                     onclick={() => {
                         setPopup({
                             show: true,
                             type: 'error',
                             Icon: CloseIcon,
                             title: 'سفارش را رد میکنید؟',
-                            onSubmit: reject,
+                            onSubmit: () => changeTo('rejected'),
                         })
                     }}
                 >
@@ -187,13 +325,14 @@ const Order: Component = () => {
                 </button>
                 <button
                     class='cta submit'
+                    disabled={P.order.state == 'resolved'}
                     onclick={() =>
                         setPopup({
                             show: true,
                             type: 'success',
                             Icon: CheckIcon,
                             title: 'سفارش را تایید میکنید؟',
-                            onSubmit: submit,
+                            onSubmit: () => changeTo('resolved'),
                         })
                     }
                 >
@@ -203,10 +342,6 @@ const Order: Component = () => {
             </div>
         </div>
     )
-}
-
-const Loading: Component = () => {
-    return <></>
 }
 
 export default Orders
