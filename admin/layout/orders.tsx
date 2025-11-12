@@ -30,10 +30,12 @@ const Orders: Component = () => {
     type STATE = {
         page: number
         loading: boolean
+        state: OrderState
         orders: [Order, User | null][]
     }
     const [state, setState] = createStore<STATE>({
         orders: [],
+        state: 'pending',
         loading: false,
         page: 0,
     })
@@ -48,11 +50,12 @@ const Orders: Component = () => {
 
     const search = async () => {
         let page = unwrap(state.page)
+        let ostate = unwrap(state.state)
 
         setParams({ page })
 
         setState('loading', true)
-        let res = await api_admin_orders_list({ page })
+        let res = await api_admin_orders_list({ page, state: ostate })
         setState('loading', false)
 
         if (!res.ok()) return
@@ -101,6 +104,25 @@ const Orders: Component = () => {
                     }}
                 >
                     صفحه قبل
+                </button>
+                <button
+                    class='title_smaller page-cta'
+                    onClick={() => {
+                        setState(
+                            produce(s => {
+                                if (s.state == 'pending') {
+                                    s.state = 'rejected'
+                                } else if (s.state == 'rejected') {
+                                    s.state = 'resolved'
+                                } else {
+                                    s.state = 'pending'
+                                }
+                            })
+                        )
+                        search()
+                    }}
+                >
+                    {state.state}
                 </button>
                 <button
                     class='title_smaller page-cta'
