@@ -23,6 +23,7 @@ import {
 import { createStore, produce, unwrap } from 'solid-js/store'
 import { setPopup } from 'store/popup'
 import './style/orders.scss'
+import { Locale } from 'locale'
 
 const Orders: Component = () => {
     const [params, setParams] = useSearchParams()
@@ -122,7 +123,7 @@ const Orders: Component = () => {
                         search()
                     }}
                 >
-                    {state.state}
+                    <Locale order_state={state.state} />
                 </button>
                 <button
                     class='title_smaller page-cta'

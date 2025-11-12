@@ -1,5 +1,6 @@
 import {
     ErrorCode,
+    OrderState,
 } from 'abi'
 // import { UiEaterySectionKind } from 'pages/db/eatery'
 // import { MenuFilters } from 'pages/db/eatery/menu/shared'
@@ -21,6 +22,7 @@ export type DaysOfWeek = (typeof DAYS_OF_WEEK)[number]
 type Table = {
     bool: 'true' | 'false'
     days_of_week: DaysOfWeek
+    order_state: OrderState
     error_code: ErrorCode 
 }
 

@@ -5,6 +5,11 @@ export default {
         false: 'خیر',
         true: 'بله',
     },
+    ORDER_STATE: {
+        pending: 'درانتظار',
+        resolved: 'تایید شده',
+        rejected: 'رد شده',
+    },
     // SORT_ORDER: {
     //     // desc: 'نزولی',
     //     // asc: 'صعودی',
@@ -39,9 +44,8 @@ export default {
         user_banned: 'کاربر بن شده',
 
         bad_image: 'عکس نامعتبر',
-        forbidden_self_edit: 'خود را نمی توان ادیت کرد',
         not_unique: 'مشابه این مورد پیداشد',
-        string_too_long: 'متن خیلی طولانی',
+        count_min: 'حداقل تعداد',
         bad_slug_abc: 'نشانه باید تمامن حروف انگلیسی باشد',
         bad_slug_len: 'حداقل طول نشانه 3 و حداکثر 250 است',
         bad_verification: 'تایید کد نامعتبر است',
