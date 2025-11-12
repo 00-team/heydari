@@ -4,7 +4,6 @@ use crate::models::order::OrderState;
 use crate::models::user::perms;
 use crate::models::user::Admin;
 use crate::models::user::User;
-use crate::models::ListInput;
 use crate::models::{AppErr, Response};
 use crate::utils;
 use crate::AppState;
@@ -25,23 +24,30 @@ use utoipa::{OpenApi, ToSchema};
 )]
 pub struct ApiDoc;
 
+#[derive(serde::Deserialize, utoipa::IntoParams)]
+struct AdminOrderListParams {
+    #[param(example = 0)]
+    page: u32,
+    state: OrderState,
+}
+
 #[utoipa::path(
     get,
-    params(ListInput),
+    params(AdminOrderListParams),
     responses((status = 200, body = Vec<(Order, Option<User>)>))
 )]
 /// List
 #[get("/")]
 async fn r_list(
-    admin: Admin, q: Query<ListInput>, state: Data<AppState>,
+    admin: Admin, q: Query<AdminOrderListParams>, state: Data<AppState>,
 ) -> Response<Vec<(Order, Option<User>)>> {
     admin.perm_check(perms::V_ORDER)?;
 
     let offset = q.page as i64 * 32;
     let orders = sqlx::query_as! {
         Order,
-        "select * from orders order by id desc limit 32 offset ?",
-        offset
+        "select * from orders where state = ? order by id desc limit 32 offset ?",
+        q.state, offset
     }
     .fetch_all(&state.sql)
     .await?;
