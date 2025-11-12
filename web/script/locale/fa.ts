@@ -39,12 +39,11 @@ export default {
         user_banned: 'کاربر بن شده',
 
         bad_image: 'عکس نامعتبر',
-        forbidden_self_edit: 'خود را نمی توان ادیت کرد',
         not_unique: 'مشابه این مورد پیداشد',
-        string_too_long: 'متن خیلی طولانی',
         bad_slug_abc: 'نشانه باید تمامن حروف انگلیسی باشد',
         bad_slug_len: 'حداقل طول نشانه 3 و حداکثر 250 است',
         bad_verification: 'تایید کد نامعتبر است',
         too_many_photos: 'تعداد عکس از حداکثر مجاز بیشتر است',
+        count_min: 'حداقل تعداد را رعایت کنید!',
     },
 } satisfies Locale
