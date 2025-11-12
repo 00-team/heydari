@@ -57,6 +57,35 @@
         column-gap: calc(3rem + 1vw);
         padding: 1rem;
 
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+
+            width: clamp(0px, 100%, 700px);
+            padding: 3rem 2rem;
+            border-radius: 2rem;
+            background-color: white;
+
+            img {
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+
+                animation: loading-img 1s alternate linear infinite;
+
+                @keyframes loading-img {
+                    from {
+                        opacity: 1;
+                    }
+                    to {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+
         .empty-order {
             margin-top: 1rem;
 
@@ -77,13 +106,27 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2rem;
+            gap: 1rem;
 
             border-radius: 2rem;
 
             background-color: white;
             padding: 1rem;
 
+            position: relative;
+            z-index: 1;
+
+            .order-loading {
+                width: 100%;
+                height: 100%;
+
+                position: absolute;
+                inset: 0;
+
+                border-radius: inherit;
+
+                z-index: 3;
+            }
             .order-cmp {
                 width: 100%;
 
@@ -116,7 +159,8 @@
 
                         overflow: hidden;
 
-                        img {
+                        img,
+                        .loading-elem {
                             width: 100%;
                             height: 100%;
                             object-fit: contain;
@@ -138,10 +182,10 @@
                     .order-status {
                         width: fit-content;
 
-                        &.success {
+                        &.resolved {
                             color: var(--alert-success);
                         }
-                        &.error {
+                        &.rejected {
                             color: var(--alert-error);
                         }
                     }
@@ -153,10 +197,30 @@
                         flex-direction: column;
                         gap: 0.5rem;
 
+                        .product-name {
+                            .loading-dots-cmp {
+                                width: fit-content;
+                                scale: 0.5;
+                                opacity: 0.7;
+                            }
+                        }
+
                         .order-info {
                             display: flex;
                             align-items: center;
                             gap: 0.5rem;
+
+                            .order-date {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+
+                                svg {
+                                    opacity: 0.7;
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
                         }
 
                         .order-sum {
@@ -180,7 +244,6 @@
 
                         display: flex;
                         flex-direction: column;
-                        gap: 1rem;
 
                         .buyer-head {
                             width: 100%;
@@ -188,6 +251,8 @@
                             display: flex;
                             align-items: center;
                             gap: 1rem;
+
+                            margin-bottom: 0.3em;
 
                             &::after {
                                 content: '';
@@ -206,7 +271,7 @@
                         .buyer-infos {
                             display: flex;
                             flex-direction: column;
-                            gap: 1rem;
+                            // gap: 1rem;
 
                             .buyer-name {
                                 display: flex;
@@ -229,7 +294,7 @@
                                 .holder {
                                     display: flex;
                                     align-items: center;
-                                    gap: 0.2rem;
+                                    gap: 0.5rem;
 
                                     svg {
                                         width: 20px;
@@ -240,8 +305,10 @@
 
                             .buyer-name,
                             .buyer-info {
+                                padding-block: 0.5rem;
+
                                 svg {
-                                    transition: 0.5s transform ease;
+                                    transition: 0.3s transform ease;
                                 }
                                 &:hover {
                                     svg {
@@ -286,8 +353,16 @@
                         background-color: var(--alert-success);
                     }
 
-                    &:active {
-                        transform: scale(0.95);
+                    &:disabled {
+                        cursor: not-allowed;
+                        filter: blur(2px);
+                        opacity: 0.7;
+                    }
+
+                    &:not(:disabled) {
+                        &:active {
+                            transform: scale(0.95);
+                        }
                     }
                 }
             }
