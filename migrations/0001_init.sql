@@ -1,7 +1,7 @@
 
 create table if not exists users (
     id integer primary key not null,
-    frist_name text,
+    first_name text,
     last_name text,
     address text,
     company_name text,
