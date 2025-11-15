@@ -5,16 +5,18 @@ import {
     api_orders_post,
     api_user_get,
     api_user_login_post,
+    api_user_patch,
     api_verification_post,
 } from './abi'
 import { ADD_ORDER_LOCAL } from './base'
+import { addAlert } from './alert'
 
 const form = document.querySelector<HTMLFormElement>('form.login-wrapper')!
 
 const counter = form.querySelector<HTMLSpanElement>('#timer-count')!
 let counterExpire: number = 0
 
-let activeSection: 'phone' | 'code' = 'phone'
+let activeSection: 'phone' | 'code' | 'info' = 'phone'
 
 const fetch_user = async () => {
     let res = await api_user_get()
@@ -34,7 +36,11 @@ form.addEventListener('submit', e => {
         return sendCode()
     }
 
-    return login()
+    if (activeSection == 'code') {
+        return login()
+    }
+
+    return submit_login()
 })
 
 function sendCode() {
@@ -62,8 +68,9 @@ function sendCode() {
 }
 
 async function login() {
+    let goToInfo = false
+
     codeInp.blur()
-    stopTimer()
     form.classList.toggle('loading', true)
 
     const phone = phoneInp.value
@@ -73,7 +80,21 @@ async function login() {
 
     form.classList.toggle('loading', false)
 
-    if (!res.ok()) return showError(LOCALE.error_code(res.body.code))
+    if (!res.ok())
+        return addAlert({
+            type: 'error',
+            timeout: 3,
+            content: LOCALE.error_code(res.body.code),
+            subject: 'خطا!',
+        })
+
+    stopTimer()
+
+    let user = res.body
+
+    if (!user.first_name || user.last_name) {
+        goToInfo = true
+    }
 
     const raw = localStorage.getItem(ADD_ORDER_LOCAL)
 
@@ -81,13 +102,12 @@ async function login() {
         try {
             const pending = JSON.parse(raw)
 
-            console.log(pending.length)
             if (Array.isArray(pending) && pending.length > 0) {
                 let allOk = true
 
                 for (const order of pending) {
                     const { product, count } = order
-                    console.log(order)
+
                     if (!product || !count) continue
 
                     form.classList.toggle('loading', true)
@@ -96,14 +116,14 @@ async function login() {
                         product,
                         count,
                     })
-                    console.log(orderRes)
                     if (!orderRes.ok()) {
                         allOk = false
                     }
                 }
 
-                if (allOk) {
-                    localStorage.removeItem(ADD_ORDER_LOCAL)
+                localStorage.removeItem(ADD_ORDER_LOCAL)
+
+                if (allOk && !goToInfo) {
                     window.location.href = '/account/orders'
                     return
                 }
@@ -112,6 +132,66 @@ async function login() {
             localStorage.removeItem(ADD_ORDER_LOCAL)
         }
     }
+
+    if (!goToInfo) {
+        return (window.location.href = '/account')
+    }
+
+    activeSection = 'info'
+    form.classList.toggle('active', false)
+    form.classList.toggle('info', true)
+}
+
+async function submit_login() {
+    form.classList.toggle('loading', true)
+
+    const name = nameInp.value
+    const lname = lnameInp.value
+    const email = emailInp.value
+    const corp = corpInp.value
+    const address = addressInp.value
+
+    if (!name || !lname) {
+        addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: 'نام و نام‌خانودگی نمیتواند خالی باشد!',
+        })
+        form.classList.toggle('loading', false)
+
+        return
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (email && !emailRegex.test(email)) {
+        addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: 'ایمیل وارد شده معتبر نیست!',
+        })
+
+        form.classList.toggle('loading', false)
+        return
+    }
+
+    let res = await api_user_patch({
+        address,
+        company_name: corp,
+        email,
+        first_name: name,
+        last_name: lname,
+    })
+
+    form.classList.toggle('loading', false)
+    if (!res.ok())
+        return addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: LOCALE.error_code(res.body.code),
+        })
 
     window.location.href = '/account'
 }
@@ -135,6 +215,13 @@ goBack.addEventListener('click', () => {
 
 const phoneInp = form.querySelector<HTMLInputElement>('input#login-phone-inp')!
 const codeInp = form.querySelector<HTMLInputElement>('input#login-code-inp')!
+const nameInp = form.querySelector<HTMLInputElement>('input#name-code-inp')!
+const lnameInp = form.querySelector<HTMLInputElement>('input#lname-code-inp')!
+const emailInp = form.querySelector<HTMLInputElement>('input#email-code-inp')!
+const corpInp = form.querySelector<HTMLInputElement>('input#corp-code-inp')!
+const addressInp = form.querySelector<HTMLTextAreaElement>(
+    'textarea#address-code-inp'
+)!
 
 phoneInp.addEventListener('input', e => {
     clearError()
@@ -155,7 +242,6 @@ function clearError() {
     phoneErrSpan.innerText = ''
 }
 function showError(msg: string) {
-    // console.log(phoneErrSpan)
     phoneErr.classList.toggle('active', true)
     phoneErrSpan.innerText = msg
 }
