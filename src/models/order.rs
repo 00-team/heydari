@@ -8,6 +8,8 @@ use utoipa::ToSchema;
 pub enum OrderState {
     #[default]
     Pending,
+    PaymentPending,
+    Sending,
     Rejected,
     Resolved,
 }

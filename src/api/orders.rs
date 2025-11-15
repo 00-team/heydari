@@ -48,12 +48,12 @@ async fn r_add(
     }
 
     let now = utils::now();
-    let adayago = now.saturating_sub(86400);
+    let a_day_ago = now.saturating_sub(86400);
 
     let count = sqlx::query!(
         "select COUNT(id) as count from orders where user = ? AND created_at > ?",
         user.id,
-        adayago
+        a_day_ago
     )
     .fetch_one(&state.sql).await?;
 
@@ -105,13 +105,20 @@ async fn r_add(
 محصول: {:?} | {}
 تعداد: {}
 قیمت: {} تومان
-خریدار: {}
+خریدار: {} {}
+شرکت: {}
+آدرس: {}
+ایمیل: {}
 {}",
             product.kind,
             product.name,
             order.count,
             crate::web::toman(order.price),
-            user.name.as_ref().map_or("بی نام", |v| v.as_str()),
+            user.first_name.as_ref().map_or("بی نام", |v| v.as_str()),
+            user.last_name.as_ref().map_or("بی خانواده", |v| v.as_str()),
+            user.company_name.as_ref().map_or("---", |v| v.as_str()),
+            user.address.as_ref().map_or("بی خانمان", |v| v.as_str()),
+            user.email.as_ref().map_or("---", |v| v.as_str()),
             user.phone
         ),
     );

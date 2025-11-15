@@ -1,7 +1,6 @@
 use crate::docs::UpdatePaths;
 use crate::models::user::{perms, Admin, User};
 use crate::models::{ListInput, Response};
-use crate::utils::CutOff;
 use crate::AppState;
 use actix_web::web::{Data, Json, Path, Query};
 use actix_web::{get, patch, Scope};
@@ -69,7 +68,6 @@ async fn get(
 #[derive(Deserialize, ToSchema)]
 struct AdminUserUpdateBody {
     banned: bool,
-    name: Option<String>,
     perms: Option<[u8; 32]>,
 }
 
@@ -95,9 +93,6 @@ async fn update(
     .fetch_one(&state.sql)
     .await?;
 
-    user.name = body.name.clone();
-    user.name.cut_off(255);
-
     if body.banned && user.admin.perm_any() {
         return crate::err!(Forbidden, "cannot ban an admin");
     }
@@ -114,10 +109,9 @@ async fn update(
         user.admin = np.to_vec();
     }
 
-    sqlx::query_as! {
-        User,
-        "update users set name = ?, banned = ?, admin = ? where id = ?",
-        user.name, user.banned, user.admin, user.id
+    sqlx::query! {
+        "update users set banned = ?, admin = ? where id = ?",
+        user.banned, user.admin, user.id
     }
     .execute(&state.sql)
     .await?;

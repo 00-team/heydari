@@ -11,7 +11,11 @@ use super::{auth::Authorization, AppErr};
 #[derive(serde::Serialize, serde::Deserialize, sqlx::FromRow, utoipa::ToSchema)]
 pub struct User {
     pub id: i64,
-    pub name: Option<String>,
+    pub first_name: Option<String>,
+    pub last_name: Option<String>,
+    pub address: Option<String>,
+    pub company_name: Option<String>,
+    pub email: Option<String>,
     pub phone: String,
     pub token: Option<String>,
     pub photo: Option<String>,

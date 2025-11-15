@@ -1,7 +1,11 @@
 
 create table if not exists users (
     id integer primary key not null,
-    name text,
+    frist_name text,
+    last_name text,
+    address text,
+    company_name text,
+    email text,
     phone text not null,
     token text,
     photo text,

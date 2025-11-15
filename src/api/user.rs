@@ -137,7 +137,11 @@ async fn user_get(user: User) -> Json<User> {
 
 #[derive(Deserialize, ToSchema)]
 struct UserUpdateBody {
-    name: Option<String>,
+    first_name: Option<String>,
+    last_name: Option<String>,
+    email: Option<String>,
+    address: Option<String>,
+    company_name: Option<String>,
 }
 
 #[utoipa::path(
@@ -149,27 +153,33 @@ struct UserUpdateBody {
 #[patch("/")]
 async fn user_update(
     user: User, body: Json<UserUpdateBody>, state: Data<AppState>,
-) -> Json<User> {
+) -> Response<User> {
     let mut user = user;
-    let mut change = false;
-    if let Some(n) = &body.name {
-        change = true;
-        user.name = Some(n.clone());
-    };
 
-    if change {
-        user.name.cut_off(255);
+    user.first_name = body.first_name.clone();
+    user.last_name = body.last_name.clone();
+    user.address = body.address.clone();
+    user.company_name = body.company_name.clone();
+    user.email = body.email.clone();
 
-        let _ = sqlx::query_as! {
-            User,
-            "update users set name = ? where id = ?",
-            user.name, user.id
-        }
-        .execute(&state.sql)
-        .await;
+    user.first_name .cut_off(255);
+    user.last_name.cut_off(255);
+    user.address.cut_off(4096);
+    user.company_name.cut_off(512);
+    user.email.cut_off(255);
+
+    sqlx::query! {
+        "update users set
+            first_name = ?, last_name = ?, address = ?, 
+            company_name = ?, email = ?
+        where id = ?",
+        user.first_name, user.last_name, user.address, user.company_name,
+        user.email, user.id
     }
+    .execute(&state.sql)
+    .await?;
 
-    Json(user)
+    Ok(Json(user))
 }
 
 #[utoipa::path(
