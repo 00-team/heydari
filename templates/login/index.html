@@ -84,7 +84,7 @@
             <section class="code-section">
                 <div class="input-container">
                     <input id="login-code-inp" class="title_small" inputmode="numeric" maxlength="5"
-                        placeholder="مثال: 12345" type="text" name="userPhone" autocomplete="phone" autofocus>
+                        placeholder="مثال: 12345" type="text" name="userPhone" autocomplete="one-time-code">
                     <div class="holder title_smaller">
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
                             height="25" width="25" xmlns="http://www.w3.org/2000/svg">
@@ -108,6 +108,78 @@
                         <div>
                             باقی مانده
                         </div>
+                    </div>
+                </div>
+            </section>
+            <section class="infos-section">
+                <div class="input-row">
+                    <div class="input-container">
+                        <input id="name-code-inp" class=" name title_small" placeholder="اسم شما..." type="text"
+                            name="firstName" autocomplete="given-name">
+                        <div class="holder title_smaller">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z">
+                                </path>
+                            </svg>
+                            نام
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <input id="lname-code-inp" class="lname title_small" placeholder="فامیل..." type="text"
+                            name="lastName" autocomplete="family-name">
+                        <div class="holder title_smaller">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
+                                height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z">
+                                </path>
+                            </svg>
+                            نام خانوادگی
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <input id="corp-code-inp" class="title_small" type="text" name="corp" autocomplete="organization">
+                    <div class="holder title_smaller">
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
+                            height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M436 480h-20V24c0-13.255-10.745-24-24-24H56C42.745 0 32 10.745 32 24v456H12c-6.627 0-12 5.373-12 12v20h448v-20c0-6.627-5.373-12-12-12zM128 76c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12V76zm0 96c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12v-40zm52 148h-40c-6.627 0-12-5.373-12-12v-40c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40c0 6.627-5.373 12-12 12zm76 160h-64v-84c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v84zm64-172c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12v-40c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40zm0-96c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12v-40c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40zm0-96c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12V76c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40z">
+                            </path>
+                        </svg>
+                        نام شرکت (اخیاری)
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <input id="email-code-inp" class="title_small" type="text" name="userEmail" autocomplete="email">
+                    <div class="holder title_smaller">
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="25"
+                            width="25" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path
+                                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z">
+                            </path>
+                        </svg>
+                        پست الکترونیکی (اختیاری)
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <textarea name="address" class="title_smaller" autocomplete="street-address" id="address-code-inp"
+                        cols="30"></textarea>
+
+                    <div class="holder title_smaller">
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512"
+                            height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M436 480h-20V24c0-13.255-10.745-24-24-24H56C42.745 0 32 10.745 32 24v456H12c-6.627 0-12 5.373-12 12v20h448v-20c0-6.627-5.373-12-12-12zM128 76c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12V76zm0 96c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12v-40zm52 148h-40c-6.627 0-12-5.373-12-12v-40c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40c0 6.627-5.373 12-12 12zm76 160h-64v-84c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v84zm64-172c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12v-40c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40zm0-96c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12v-40c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40zm0-96c0 6.627-5.373 12-12 12h-40c-6.627 0-12-5.373-12-12V76c0-6.627 5.373-12 12-12h40c6.627 0 12 5.373 12 12v40z">
+                            </path>
+                        </svg>
+                        آدرس (اخیاری)
                     </div>
                 </div>
             </section>
