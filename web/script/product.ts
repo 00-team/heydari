@@ -1,7 +1,6 @@
 import { ADD_ORDER_LOCAL } from './base'
 import { api_orders_post } from './abi'
 import { addAlert } from './alert'
-import { LOCALE } from './locale'
 
 const main = document.querySelector<HTMLImageElement>('.main-img')!
 const imgs = document.querySelectorAll<HTMLImageElement>('.other-img')
@@ -196,7 +195,7 @@ popupCmpForm?.addEventListener('submit', async e => {
         product,
     })
 
-    if (res.status === 403) {
+    if (!res.ok()) {
         try {
             const existing = JSON.parse(
                 localStorage.getItem(ADD_ORDER_LOCAL) || '[]'
@@ -223,15 +222,15 @@ popupCmpForm?.addEventListener('submit', async e => {
 
     showLoading(false)
 
-    if (!res.ok()) {
-        addAlert({
-            type: 'error',
-            subject: 'خطا!',
-            timeout: 3,
-            content: LOCALE.error_code(res.body.code),
-        })
-        return
-    }
+    // if (!res.ok()) {
+    //     addAlert({
+    //         type: 'error',
+    //         subject: 'خطا!',
+    //         timeout: 3,
+    //         content: LOCALE.error_code(res.body.code),
+    //     })
+    //     return
+    // }
 
     addAlert({
         type: 'success',
