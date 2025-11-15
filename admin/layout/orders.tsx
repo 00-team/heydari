@@ -108,6 +108,10 @@ const Orders: Component = () => {
                 </button>
                 <button
                     class='title_smaller page-cta'
+                    classList={{
+                        red: state.state == 'rejected',
+                        green: state.state == 'resolved',
+                    }}
                     onClick={() => {
                         setState(
                             produce(s => {

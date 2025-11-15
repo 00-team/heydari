@@ -27,6 +27,13 @@
 
             transition: 0.2s transform ease;
 
+            &.green {
+                background-color: var(--alert-success);
+            }
+            &.red {
+                background-color: var(--alert-error);
+            }
+
             &:disabled {
                 opacity: 0.7;
                 filter: blur(2px);
