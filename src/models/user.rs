@@ -88,13 +88,18 @@ impl FromRequest for User {
         Box::pin(async move {
             let user = match auth? {
                 Authorization::User { id, token } => {
-                    sqlx::query_as! {
+                    let res = sqlx::query_as! {
                         User,
                         "select * from users where id = ? and token = ?",
                         id, token
                     }
                     .fetch_one(&pool)
-                    .await?
+                    .await;
+
+                    let Ok(res) = res else {
+                        return crate::err!(BadAuth);
+                    };
+                    res
                 }
             };
 
