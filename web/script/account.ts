@@ -1,5 +1,7 @@
 // import { LOCALE } from './locale'
-import { api_user_get, api_user_logout_post, User } from './abi'
+import { addAlert } from './alert'
+import { api_user_get, api_user_logout_post, api_user_patch, User } from './abi'
+import { LOCALE } from './locale'
 
 const form = document.querySelector<HTMLFormElement>('form.profile-container')
 const pageLoader = document.querySelector<HTMLElement>('#loader')
@@ -100,39 +102,60 @@ inps.forEach(elem => {
 form?.addEventListener('submit', async e => {
     e.preventDefault()
 
-    // const v = nameInp!.value.trim()
+    const fname = fnameInp!.value.trim()
+    const lname = lnameInp!.value.trim()
+    const email = emailInp!.value.trim()
+    const corp = corpInp!.value.trim()
+    const address = addressInp!.value.trim()
 
-    // if (v.length == 0) {
-    //     return showError('اسم شما نمیتواند خالی باشد!')
-    // }
-    // if (USER && v == USER.name) {
-    //     return showError('اسم خود را عوض نکردید!')
-    // }
+    if (!fname) {
+        return addAlert({
+            type: 'error',
+            subject: 'خطا اسم!',
+            timeout: 3,
+            content: 'اسم نمیتواند خالی باشد!',
+        })
+    }
 
-    // showLoading(true)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (email && !emailRegex.test(email)) {
+        addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: 'ایمیل وارد شده معتبر نیست!',
+        })
 
-    // let res = await api_user_patch({
-    //     name: v,
-    // })
+        form.classList.toggle('loading', false)
+        return
+    }
 
-    // showLoading(false)
+    showLoading(true)
 
-    // if (!res.ok())
-    //     return addAlert({
-    //         type: 'error',
-    //         subject: 'خطا!',
-    //         timeout: 3,
-    //         content: LOCALE.error_code(res.body.code),
-    //     })
+    let res = await api_user_patch({
+        first_name: fname,
+        last_name: lname,
+        address,
+        company_name: corp,
+        email,
+    })
 
-    // nameInp!.value = res.body.name || ''
+    showLoading(false)
 
-    // addAlert({
-    //     type: 'success',
-    //     subject: 'موفق!',
-    //     timeout: 3,
-    //     content: 'اسم شما با موفقیت ثبت شد',
-    // })
+    if (!res.ok())
+        return addAlert({
+            type: 'error',
+            subject: 'خطا!',
+            timeout: 3,
+            content: LOCALE.error_code(res.body.code),
+        })
+
+    addAlert({
+        type: 'success',
+        subject: 'موفق!',
+        timeout: 3,
+        content: 'اطلاعات شما با موفقیت ثبت شد',
+    })
 })
 logout?.addEventListener('click', async () => {
     showLoading(true)
