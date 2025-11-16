@@ -234,7 +234,7 @@ main.account {
                         &.active {
                             .holder {
                                 transform: translateY(-65%) translateX(-0.5rem);
-                                opacity: 1;
+                                // opacity: 1;
                                 scale: 0.9;
                             }
                         }

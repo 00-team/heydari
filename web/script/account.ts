@@ -1,7 +1,5 @@
 // import { LOCALE } from './locale'
-import { LOCALE } from './locale'
-import { api_user_get, api_user_logout_post, api_user_patch, User } from './abi'
-import { addAlert } from './alert'
+import { api_user_get, api_user_logout_post, User } from './abi'
 
 const form = document.querySelector<HTMLFormElement>('form.profile-container')
 const pageLoader = document.querySelector<HTMLElement>('#loader')
@@ -12,9 +10,11 @@ const orders_count = document.querySelector<HTMLDivElement>('#orders_count')
 const created_at = document.querySelector<HTMLDivElement>('#created_at')
 // summery infos
 
-const errorContainer = document.querySelector<HTMLDivElement>('#form-error')
-
-const nameInp = document.querySelector<HTMLInputElement>('#user-name')
+const fnameInp = document.querySelector<HTMLInputElement>('#user-fname')
+const lnameInp = document.querySelector<HTMLInputElement>('#user-lname')
+const emailInp = document.querySelector<HTMLInputElement>('#user-email')
+const corpInp = document.querySelector<HTMLInputElement>('#user-corp')
+const addressInp = document.querySelector<HTMLInputElement>('#user-address')
 
 const logout = document.querySelector<HTMLButtonElement>('#logout')
 
@@ -23,20 +23,6 @@ const goToLogin = () => {
 }
 const showLoading = (show: boolean) => {
     pageLoader?.classList.toggle('hide', !show)
-}
-function showError(msg: string | false) {
-    if (!errorContainer) return
-
-    if (msg === false) {
-        errorContainer.classList.toggle('show', false)
-        return
-    }
-
-    errorContainer.classList.toggle('show', true)
-    errorContainer.querySelector<HTMLSpanElement>('span')!.innerText = msg
-    console.log(
-        errorContainer.querySelector<HTMLSpanElement>('span')!.innerText
-    )
 }
 
 let USER: User | null = null
@@ -56,9 +42,25 @@ const fetch_user = async () => {
     if (created_at) {
         created_at.innerText = `${new Date(USER.created_at * 1e3).toLocaleDateString('fa-IR')}`
     }
-    if (nameInp) {
-        nameInp.value = USER.name || ''
-        nameInp.parentElement!.classList.toggle('active', !!USER.name)
+    if (fnameInp) {
+        fnameInp.value = USER.first_name || ''
+        fnameInp.parentElement!.classList.toggle('active', !!USER.first_name)
+    }
+    if (lnameInp) {
+        lnameInp.value = USER.last_name || ''
+        lnameInp.parentElement!.classList.toggle('active', !!USER.last_name)
+    }
+    if (emailInp) {
+        emailInp.value = USER.email || ''
+        emailInp.parentElement!.classList.toggle('active', !!USER.email)
+    }
+    if (corpInp) {
+        corpInp.value = USER.company_name || ''
+        corpInp.parentElement!.classList.toggle('active', !!USER.company_name)
+    }
+    if (addressInp) {
+        addressInp.value = USER.address || ''
+        addressInp.parentElement!.classList.toggle('active', !!USER.address)
     }
 
     showLoading(false)
@@ -79,57 +81,58 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
-nameInp?.addEventListener('input', e => {
-    const input = e.currentTarget as HTMLInputElement
-    const v = input.value.trim()
+let inps = [fnameInp, lnameInp, emailInp, corpInp, addressInp]
+inps.forEach(elem => {
+    elem?.addEventListener('input', e => {
+        const input = e.currentTarget as HTMLInputElement
+        const v = input.value.trim()
 
-    const parent = input.parentElement
+        const parent = input.parentElement
 
-    if (v.length !== 0) {
-        parent!.classList.add('active')
-    } else {
-        parent!.classList.remove('active')
-    }
-
-    showError(false)
+        if (v.length !== 0) {
+            parent!.classList.add('active')
+        } else {
+            parent!.classList.remove('active')
+        }
+    })
 })
 
 form?.addEventListener('submit', async e => {
     e.preventDefault()
 
-    const v = nameInp!.value.trim()
+    // const v = nameInp!.value.trim()
 
-    if (v.length == 0) {
-        return showError('اسم شما نمیتواند خالی باشد!')
-    }
-    if (USER && v == USER.name) {
-        return showError('اسم خود را عوض نکردید!')
-    }
+    // if (v.length == 0) {
+    //     return showError('اسم شما نمیتواند خالی باشد!')
+    // }
+    // if (USER && v == USER.name) {
+    //     return showError('اسم خود را عوض نکردید!')
+    // }
 
-    showLoading(true)
+    // showLoading(true)
 
-    let res = await api_user_patch({
-        name: v,
-    })
+    // let res = await api_user_patch({
+    //     name: v,
+    // })
 
-    showLoading(false)
+    // showLoading(false)
 
-    if (!res.ok())
-        return addAlert({
-            type: 'error',
-            subject: 'خطا!',
-            timeout: 3,
-            content: LOCALE.error_code(res.body.code),
-        })
+    // if (!res.ok())
+    //     return addAlert({
+    //         type: 'error',
+    //         subject: 'خطا!',
+    //         timeout: 3,
+    //         content: LOCALE.error_code(res.body.code),
+    //     })
 
-    nameInp!.value = res.body.name || ''
+    // nameInp!.value = res.body.name || ''
 
-    addAlert({
-        type: 'success',
-        subject: 'موفق!',
-        timeout: 3,
-        content: 'اسم شما با موفقیت ثبت شد',
-    })
+    // addAlert({
+    //     type: 'success',
+    //     subject: 'موفق!',
+    //     timeout: 3,
+    //     content: 'اسم شما با موفقیت ثبت شد',
+    // })
 })
 logout?.addEventListener('click', async () => {
     showLoading(true)
