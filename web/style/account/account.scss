@@ -111,7 +111,7 @@ main.account {
             width: clamp(0px, 100%, 1500px);
             // min-height: 70vh;
             border-radius: 2rem;
-            background-color: var(--accent-color);
+            // background-color: var(--accent-color);
 
             .profile-container {
                 padding: 3rem;
@@ -149,11 +149,14 @@ main.account {
                     }
                 }
 
-                .name-container {
+                .inps-container {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+                    gap: 1.5rem;
                     width: 100%;
+
+                    margin-top: 1rem;
 
                     .hover-inp {
                         width: clamp(0px, 100%, 450px);
@@ -161,11 +164,10 @@ main.account {
                         align-items: center;
                         justify-content: space-between;
 
-                        margin-bottom: 0.5rem;
-
                         border: 1px solid #ddd;
                         border-radius: 2rem;
-                        background-color: white;
+                        box-shadow: rgba(149, 157, 165, 0.2) 0px 5px 24px;
+                        // background-color: white;
 
                         position: relative;
                         z-index: 1;
@@ -187,6 +189,7 @@ main.account {
                             gap: 0.5rem;
 
                             pointer-events: none;
+                            background-color: white;
 
                             opacity: 0.7;
 
@@ -215,35 +218,69 @@ main.account {
 
                             direction: ltr;
                         }
+                        .holder {
+                            right: 0;
 
+                            transform: translateY(75%) translateX(-0.5rem);
+
+                            padding-inline: 0.5rem;
+                            // padding-block: 0px;
+
+                            height: fit-content;
+                            width: fit-content;
+                            border-radius: 100vmax;
+                        }
+                        &:focus-within,
                         &.active {
                             .holder {
-                                opacity: 0;
+                                transform: translateY(-65%) translateX(-0.5rem);
+                                opacity: 1;
+                                scale: 0.9;
                             }
-                        }
-
-                        &:focus-within .holder {
-                            opacity: 0;
                         }
 
                         input {
                             width: 100%;
                         }
                     }
-
-                    .error-container {
+                    .text-inp {
+                        width: clamp(0px, 100%, 450px);
                         display: flex;
-                        align-items: center;
+                        flex-direction: column;
                         gap: 0.5rem;
+                        margin-bottom: 0.5rem;
+                        position: relative;
+                        z-index: 1;
 
-                        color: var(--alert-error);
-                        margin-top: 1rem;
-                        opacity: 0;
+                        .holder {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
 
-                        transition: 0.2s opacity ease;
+                            padding-right: 0.7rem;
 
-                        &.show {
-                            opacity: 1;
+                            transform-origin: right;
+                            opacity: 0.7;
+                        }
+
+                        textarea {
+                            min-height: 200px;
+                            width: 100%;
+                            border-radius: 1rem;
+                            border: 1px solid #ddd;
+                            resize: none;
+
+                            width: 100%;
+                            padding: 1rem;
+                            border-radius: 1rem;
+                            border: 1px solid #c5c5c5;
+                            resize: none;
+                            line-height: 1.8em;
+
+                            &::placeholder {
+                                font-family: iranLight;
+                                font-weight: lighter;
+                            }
                         }
                     }
                 }
