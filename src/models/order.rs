@@ -16,7 +16,7 @@ pub enum OrderState {
 
 super::sql_enum!(OrderState);
 
-#[derive(Debug, Serialize, Deserialize, ToSchema, Default)]
+#[derive(Debug, Serialize, Deserialize, ToSchema, Default, sqlx::FromRow)]
 pub struct Order {
     pub id: i64,
     pub user: i64,

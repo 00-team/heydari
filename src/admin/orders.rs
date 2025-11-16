@@ -11,6 +11,7 @@ use actix_web::web::{Data, Json, Query};
 use actix_web::{delete, get, patch, HttpResponse, Scope};
 use potk::Perms;
 use serde::Deserialize;
+use sqlx::QueryBuilder;
 use sqlx::Sqlite;
 use std::collections::HashMap;
 use utoipa::{OpenApi, ToSchema};
@@ -28,7 +29,7 @@ pub struct ApiDoc;
 struct AdminOrderListParams {
     #[param(example = 0)]
     page: u32,
-    state: OrderState,
+    state: Option<OrderState>,
 }
 
 #[utoipa::path(
@@ -43,14 +44,17 @@ async fn r_list(
 ) -> Response<Vec<(Order, Option<User>)>> {
     admin.perm_check(perms::V_ORDER)?;
 
-    let offset = q.page as i64 * 32;
-    let orders = sqlx::query_as! {
-        Order,
-        "select * from orders where state = ? order by id desc limit 32 offset ?",
-        q.state, offset
+    let mut qb = QueryBuilder::<Sqlite>::new("SELECT * FROM orders ");
+
+    if let Some(state) = q.state {
+        qb.push(" WHERE state = ");
+        qb.push_bind(state);
     }
-    .fetch_all(&state.sql)
-    .await?;
+
+    qb.push(" ORDER BY id desc LIMIT 32 OFFSET ");
+    qb.push_bind(q.page as i64 * 32);
+
+    let orders = qb.build_query_as::<Order>().fetch_all(&state.sql).await?;
 
     let mut users = HashMap::<i64, Option<User>>::from_iter(
         orders.iter().map(|o| (o.user, None)),
