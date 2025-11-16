@@ -43,7 +43,7 @@ const links: linkType[] = [
     {
         icon: <CartIcon />,
         link: '/orders/',
-        title: 'سفارشات',
+        title: 'سفارش‌ها',
         perm: null,
     },
     {

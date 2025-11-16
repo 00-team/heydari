@@ -6,6 +6,7 @@ import {
     api_admin_orders_patch,
     api_admin_products_get,
     Order,
+    ORDER_STATE,
     OrderState,
     User,
 } from 'abi'
@@ -20,10 +21,11 @@ import {
     MobileIcon,
     PersonIcon,
 } from 'icons'
+import { LOCALE } from 'locale'
 import { createStore, produce, unwrap } from 'solid-js/store'
 import { setPopup } from 'store/popup'
+import { FilterCheckbox } from './products'
 import './style/orders.scss'
-import { Locale } from 'locale'
 
 const Orders: Component = () => {
     const [params, setParams] = useSearchParams()
@@ -31,7 +33,7 @@ const Orders: Component = () => {
     type STATE = {
         page: number
         loading: boolean
-        state: OrderState
+        state: OrderState | null
         orders: [Order, User | null][]
     }
     const [state, setState] = createStore<STATE>({
@@ -56,7 +58,9 @@ const Orders: Component = () => {
         setParams({ page })
 
         setState('loading', true)
+
         let res = await api_admin_orders_list({ page, state: ostate })
+
         setState('loading', false)
 
         if (!res.ok()) return
@@ -90,7 +94,31 @@ const Orders: Component = () => {
 
     return (
         <div class='orders-container'>
-            <header class='section_title'>سفارشات حیدری</header>
+            <header class='section_title'>سفارش‌ها حیدری</header>
+            <div class='filters'>
+                <For each={ORDER_STATE}>
+                    {o => (
+                        <FilterCheckbox
+                            holder={LOCALE.order_state(o)}
+                            checked={state.state == o}
+                            onCheck={c => {
+                                setState(
+                                    produce(s => {
+                                        if (c) {
+                                            s.state = o
+                                        } else {
+                                            s.state = null
+                                        }
+                                    })
+                                )
+
+                                search()
+                            }}
+                            class='title_smaller'
+                        />
+                    )}
+                </For>
+            </div>
             <div class='pagination'>
                 <button
                     class='title_smaller page-cta'
@@ -106,7 +134,7 @@ const Orders: Component = () => {
                 >
                     صفحه قبل
                 </button>
-                <button
+                {/* <button
                     class='title_smaller page-cta'
                     classList={{
                         red: state.state == 'rejected',
@@ -128,7 +156,7 @@ const Orders: Component = () => {
                     }}
                 >
                     <Locale order_state={state.state} />
-                </button>
+                </button> */}
                 <button
                     class='title_smaller page-cta'
                     disabled={state.orders.length == 0}
@@ -228,10 +256,13 @@ const OrderCmp: Component<OrderProps> = P => {
         P.onState(res.body.state)
     }
 
-    const label_map: Record<OrderState, string> = {
-        pending: 'حالت انتظار',
-        rejected: 'رد شده!',
-        resolved: 'رسیدگی شده!',
+    const name = () => {
+        if (!P.user?.first_name && !P.user?.last_name) {
+            return 'بدون نام'
+        }
+        const n = P.user.first_name || ''
+        const l = P.user.last_name || ''
+        return n + ' ' + l
     }
 
     return (
@@ -247,7 +278,7 @@ const OrderCmp: Component<OrderProps> = P => {
                             [P.order.state]: true,
                         }}
                     >
-                        {label_map[P.order.state]}
+                        {LOCALE.order_state(P.order.state)}
                     </div>
                     <div class='wrapper'>
                         <div class='product-name title'>
@@ -283,7 +314,7 @@ const OrderCmp: Component<OrderProps> = P => {
                         <div class='buyer-infos description'>
                             <div class='buyer-name'>
                                 <PersonIcon />
-                                {P.user?.name || 'بدون نام'}
+                                {name()}
                             </div>
                             <a
                                 href={`tel:${P.user?.phone}`}
@@ -294,7 +325,7 @@ const OrderCmp: Component<OrderProps> = P => {
                                     تلفن:
                                 </div>
                                 <div class='data'>
-                                    {P.user?.name || 'بدون شماره!'}
+                                    {P.user?.phone || 'بدون شماره!'}
                                 </div>
                             </a>
                             <div class='buyer-info '>
