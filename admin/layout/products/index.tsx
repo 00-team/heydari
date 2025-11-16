@@ -270,7 +270,7 @@ interface FilterCheckboxProps {
 
     holder: string
 }
-const FilterCheckbox: Component<FilterCheckboxProps> = P => {
+export const FilterCheckbox: Component<FilterCheckboxProps> = P => {
     const uniqeId = createUniqueId()
 
     return (
