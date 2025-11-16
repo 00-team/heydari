@@ -9,6 +9,8 @@ export default {
         pending: 'درانتظار',
         resolved: 'تایید شده',
         rejected: 'رد شده',
+        payment_pending: 'انتظار پرداخت',
+        sending: 'درحال ارسال',
     },
     // SORT_ORDER: {
     //     // desc: 'نزولی',
