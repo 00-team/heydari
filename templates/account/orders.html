@@ -20,7 +20,7 @@
         {% if p %}
         <a href="/products/{{ p.slug }}" rel="noopener noreferrer" class="product-container">
             <div class="img-container">
-                <img src="/record/pp-{{p.id}}-{{ p.photos[0] }}" loading='lazy' decoding='async' draggable='false' />
+                <img src="/record/pp-{{p.id}}-{{ p.photos[0] }}" loading="lazy" decoding="async" draggable="false" />
                 {% if o.state == 'pending'%}
                 <div class="status-container waiting description">
                     حالت انتظار
@@ -28,12 +28,22 @@
                 {% endif %}
                 {% if o.state == 'resolved'%}
                 <div class="status-container success description">
-                    رسیدگی شده
+                    ارسال شده
                 </div>
                 {% endif %}
                 {% if o.state == 'rejected'%}
                 <div class="status-container error description">
                     رد شده
+                </div>
+                {% endif %}
+                {% if o.state == 'payment_pending'%}
+                <div class="status-container waiting description">
+                    انتظار پرداخت
+                </div>
+                {% endif %}
+                {% if o.state == 'sending'%}
+                <div class="status-container waiting description">
+                    درحال ارسال
                 </div>
                 {% endif %}
             </div>
