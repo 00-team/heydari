@@ -6,7 +6,7 @@ export default {
         true: 'بله',
     },
     ORDER_STATE: {
-        pending: 'درانتظار',
+        pending: 'در انتظار',
         resolved: 'تایید شده',
         rejected: 'رد شده',
         payment_pending: 'انتظار پرداخت',
