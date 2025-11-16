@@ -4,200 +4,60 @@ import * as ud from './user_defined';
 export const API_VERSION = '0.1.42';
 
 
-export type ProductTagUpdateBody = { name:(string), };
-export type ProductPhoto = { photo:(File), };
-export type ProductTag = { count:(number),kind:ProductKind,name:(string),part:ProductPart,id:(number), };
-export type LoginBody = { code:(string),phone:(string), };
-export type VerificationResponse = { expires:(number),action:Action, };
-export type ProductUpdateBody = { slug:(string),code:(string),count:(number),specification:({  }),description:(string),name:(string),price:(number),tag_leg?:(((number) | null)),detail:(string),tag_bed?:(((number) | null)),best:(boolean), };
-export type User = { token?:(((string) | null)),address?:(((string) | null)),company_name?:(((string) | null)),id:(number),admin:(((number)[])),banned:(boolean),email?:(((string) | null)),last_name?:(((string) | null)),first_name?:(((string) | null)),online_at:(number),order_count:(number),phone:(string),created_at:(number),photo?:(((string) | null)), };
-export type AdminUserUpdateBody = { perms?:(((((number)[])) | null)),banned:(boolean), };
-export type MaterialList = { materials:((Material[])),users:((User[])), };
-export type Order = { updated_at:(number),count:(number),state:OrderState,user:(number),id:(number),product:(number),price:(number),created_at:(number), };
-export type ProductPart = "leg"|"bed";
-export const PRODUCT_PART = ["leg","bed",] as const;
-export function is_product_part(value: string): value is ProductPart {
-    return PRODUCT_PART.includes(value as ProductPart)
-}
-;
-export type MaterialUpdateInfoBody = { detail:(string),name:(string), };
-export type ProductTagAddBody = { name:(string),part:ProductPart,kind:ProductKind, };
-export type MaterialAddBody = { count:(number),detail:(string),name:(string), };
-export type OrderUpdateBody = { state:OrderState, };
-export type AppErr = { status:(number),code:ErrorCode,debug?:(((string) | null)), };
-export type UserAddOrderBody = { product:(number),count:(number), };
-export type UserUpdateBody = { email?:(((string) | null)),address?:(((string) | null)),first_name?:(((string) | null)),company_name?:(((string) | null)),last_name?:(((string) | null)), };
-export type Material = { photo?:(((string) | null)),created_by?:(((number) | null)),name:(string),count:(number),created_at:(number),detail:(string),id:(number),updated_by?:(((number) | null)),updated_at:(number), };
-export type UpdatePhoto = { photo:(File), };
-export type VerificationData = { action:Action,phone:(string), };
-export type ErrorCode = "unknown"|"forbidden"|"bad_auth"|"not_found"|"not_unique"|"server_error"|"database_error"|"rate_limited"|"index_out_of_bounds"|"bad_image"|"encode_webp_error"|"user_banned"|"bad_phone"|"bad_slug_len"|"bad_slug_abc"|"bad_verification"|"too_many_photos"|"count_min";
-export const ERROR_CODE = ["unknown","forbidden","bad_auth","not_found","not_unique","server_error","database_error","rate_limited","index_out_of_bounds","bad_image","encode_webp_error","user_banned","bad_phone","bad_slug_len","bad_slug_abc","bad_verification","too_many_photos","count_min",] as const;
-export function is_error_code(value: string): value is ErrorCode {
-    return ERROR_CODE.includes(value as ErrorCode)
-}
-;
-export type ProductKind = "chair"|"table";
-export const PRODUCT_KIND = ["chair","table",] as const;
-export function is_product_kind(value: string): value is ProductKind {
-    return PRODUCT_KIND.includes(value as ProductKind)
-}
-;
-export type MaterialUpdateCountBody = { count:(number), };
-export type MaterialPhoto = { photo:(File), };
-export type Product = { created_at:(number),id:(number),tag_leg?:(((number) | null)),updated_at:(number),specification:({  }),thumbnail?:(((string) | null)),photos:(((string)[])),price:(number),kind:ProductKind,name:(string),best:(boolean),slug:(string),code:(string),count:(number),detail:(string),description:(string),tag_bed?:(((number) | null)), };
 export type Action = "login"|"delete";
 export const ACTION = ["login","delete",] as const;
 export function is_action(value: string): value is Action {
     return ACTION.includes(value as Action)
 }
 ;
+export type UpdatePhoto = { photo:(File), };
+export type MaterialAddBody = { name:(string),detail:(string),count:(number), };
 export type OrderState = "pending"|"payment_pending"|"sending"|"rejected"|"resolved";
 export const ORDER_STATE = ["pending","payment_pending","sending","rejected","resolved",] as const;
 export function is_order_state(value: string): value is OrderState {
     return ORDER_STATE.includes(value as OrderState)
 }
 ;
-export type ProductAddBody = { kind:ProductKind,name:(string),code:(string),slug:(string), };
-/**
-List
-
-*/
-export async function api_admin_users_list (params: {page:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((User[]))>> {
-    let { page } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/users/`,
-        method: 'GET',
-        params: { page },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<((User[]))> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<((User[]))>
-
+export type MaterialPhoto = { photo:(File), };
+export type Product = { kind:ProductKind,name:(string),count:(number),price:(number),detail:(string),slug:(string),code:(string),photos:(((string)[])),tag_bed?:(((number) | null)),created_at:(number),tag_leg?:(((number) | null)),best:(boolean),description:(string),specification:({  }),updated_at:(number),id:(number),thumbnail?:(((string) | null)), };
+export type ProductPhoto = { photo:(File), };
+export type ProductAddBody = { kind:ProductKind,code:(string),name:(string),slug:(string), };
+export type MaterialUpdateCountBody = { count:(number), };
+export type ErrorCode = "unknown"|"forbidden"|"bad_auth"|"not_found"|"not_unique"|"server_error"|"database_error"|"rate_limited"|"index_out_of_bounds"|"bad_image"|"encode_webp_error"|"user_banned"|"bad_phone"|"bad_slug_len"|"bad_slug_abc"|"bad_verification"|"too_many_photos"|"count_min";
+export const ERROR_CODE = ["unknown","forbidden","bad_auth","not_found","not_unique","server_error","database_error","rate_limited","index_out_of_bounds","bad_image","encode_webp_error","user_banned","bad_phone","bad_slug_len","bad_slug_abc","bad_verification","too_many_photos","count_min",] as const;
+export function is_error_code(value: string): value is ErrorCode {
+    return ERROR_CODE.includes(value as ErrorCode)
 }
-/**
-Delete
-
-*/
-export async function api_admin_materials_del (params: {mid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
-    let { mid } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/materials/${mid}/`,
-        method: 'DELETE',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: void 0 as void,
-        ok(): this is ud.Ok<void> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<void>
-
+;
+export type LoginBody = { code:(string),phone:(string), };
+export type UserUpdateBody = { last_name?:(((string) | null)),address?:(((string) | null)),company_name?:(((string) | null)),email?:(((string) | null)),first_name?:(((string) | null)), };
+export type ProductTagUpdateBody = { name:(string), };
+export type UserAddOrderBody = { product:(number),count:(number), };
+export type Material = { id:(number),created_by?:(((number) | null)),created_at:(number),photo?:(((string) | null)),detail:(string),updated_at:(number),updated_by?:(((number) | null)),count:(number),name:(string), };
+export type MaterialUpdateInfoBody = { name:(string),detail:(string), };
+export type ProductKind = "chair"|"table";
+export const PRODUCT_KIND = ["chair","table",] as const;
+export function is_product_kind(value: string): value is ProductKind {
+    return PRODUCT_KIND.includes(value as ProductKind)
 }
-/**
-Logout
-
-*/
-export async function api_user_logout_post (override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
-    
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/user/logout/`,
-        method: 'POST',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: void 0 as void,
-        ok(): this is ud.Ok<void> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<void>
-
+;
+export type Order = { user:(number),state:OrderState,count:(number),id:(number),price:(number),created_at:(number),product:(number),updated_at:(number), };
+export type ProductTagAddBody = { part:ProductPart,name:(string),kind:ProductKind, };
+export type MaterialList = { users:((User[])),materials:((Material[])), };
+export type ProductTag = { name:(string),count:(number),id:(number),kind:ProductKind,part:ProductPart, };
+export type VerificationResponse = { action:Action,expires:(number), };
+export type ProductUpdateBody = { price:(number),description:(string),tag_bed?:(((number) | null)),count:(number),specification:({  }),tag_leg?:(((number) | null)),slug:(string),best:(boolean),code:(string),name:(string),detail:(string), };
+export type OrderUpdateBody = { state:OrderState, };
+export type AppErr = { debug?:(((string) | null)),status:(number),code:ErrorCode, };
+export type ProductPart = "leg"|"bed";
+export const PRODUCT_PART = ["leg","bed",] as const;
+export function is_product_part(value: string): value is ProductPart {
+    return PRODUCT_PART.includes(value as ProductPart)
 }
-/**
-List
-
-*/
-export async function api_admin_orders_list (params: {page:(number),state:OrderState,}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((([ ({ count:(number),price:(number),user:(number),created_at:(number),updated_at:(number),state:OrderState,product:(number),id:(number), }),((({ photo?:(((string) | null)),token?:(((string) | null)),email?:(((string) | null)),id:(number),admin:(((number)[])),last_name?:(((string) | null)),phone:(string),online_at:(number),order_count:(number),first_name?:(((string) | null)),address?:(((string) | null)),company_name?:(((string) | null)),created_at:(number),banned:(boolean), }) | null)), ])[]))>> {
-    let { page,state } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/orders/`,
-        method: 'GET',
-        params: { page,state },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<((([ ({ count:(number),price:(number),user:(number),created_at:(number),updated_at:(number),state:OrderState,product:(number),id:(number), }),((({ photo?:(((string) | null)),token?:(((string) | null)),email?:(((string) | null)),id:(number),admin:(((number)[])),last_name?:(((string) | null)),phone:(string),online_at:(number),order_count:(number),first_name?:(((string) | null)),address?:(((string) | null)),company_name?:(((string) | null)),created_at:(number),banned:(boolean), }) | null)), ])[]))> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<((([ ({ count:(number),price:(number),user:(number),created_at:(number),updated_at:(number),state:OrderState,product:(number),id:(number), }),((({ photo?:(((string) | null)),token?:(((string) | null)),email?:(((string) | null)),id:(number),admin:(((number)[])),last_name?:(((string) | null)),phone:(string),online_at:(number),order_count:(number),first_name?:(((string) | null)),address?:(((string) | null)),company_name?:(((string) | null)),created_at:(number),banned:(boolean), }) | null)), ])[]))>
-
-}
-/**
-Add
-
-*/
-export async function api_admin_product_tags_post (body: ProductTagAddBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<ProductTag>> {
-    
-    let data = JSON.stringify(body);
-    let r = await ud.httpx({
-        url: `/api/admin/product-tags/`,
-        method: 'POST',
-        params: {  },
-        headers: { 'Content-Type': 'application/json', },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<ProductTag> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<ProductTag>
-
-}
+;
+export type User = { photo?:(((string) | null)),order_count:(number),online_at:(number),id:(number),banned:(boolean),token?:(((string) | null)),address?:(((string) | null)),company_name?:(((string) | null)),email?:(((string) | null)),last_name?:(((string) | null)),first_name?:(((string) | null)),created_at:(number),phone:(string),admin:(((number)[])), };
+export type AdminUserUpdateBody = { banned:(boolean),perms?:(((((number)[])) | null)), };
+export type VerificationData = { action:Action,phone:(string), };
 /**
 Update
 
@@ -227,126 +87,14 @@ export async function api_admin_products_patch (params: {id:(number),}, body: Pr
 
 }
 /**
-Delete Thumbnail
-
-*/
-export async function api_admin_products_thumbnail_del (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Product>> {
-    let { id } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/products/${id}/thumbnail/`,
-        method: 'DELETE',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Product> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Product>
-
-}
-/**
-List
-
-*/
-export async function api_admin_product_tags_list (params: {page:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((ProductTag[]))>> {
-    let { page } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/product-tags/`,
-        method: 'GET',
-        params: { page },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<((ProductTag[]))> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<((ProductTag[]))>
-
-}
-/**
-Delete Photo
-
-*/
-export async function api_admin_products_photos_del (params: {id:(number),idx:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
-    let { id,idx } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/products/${id}/photos/${idx}/`,
-        method: 'DELETE',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: void 0 as void,
-        ok(): this is ud.Ok<void> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<void>
-
-}
-/**
-Delete
-
-*/
-export async function api_admin_orders_del (params: {oid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
-    let { oid } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/orders/${oid}/`,
-        method: 'DELETE',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: void 0 as void,
-        ok(): this is ud.Ok<void> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<void>
-
-}
-/**
 Get
 
 */
-export async function api_admin_product_tags_get (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<ProductTag>> {
-    let { id } = params;
+export async function api_user_get (override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<User>> {
+    
     let data = void 0;
     let r = await ud.httpx({
-        url: `/api/admin/product-tags/${id}/`,
+        url: `/api/user/`,
         method: 'GET',
         params: {  },
         headers: {  },
@@ -357,97 +105,13 @@ export async function api_admin_product_tags_get (params: {id:(number),}, overri
         r: r.clone(),
         status: r.status,
         body: await r.json(),
-        ok(): this is ud.Ok<ProductTag> {
+        ok(): this is ud.Ok<User> {
             return this.status == 200
         },
         err(): this is ud.Err {
             return !this.ok()
         },
-    } as ud.Result<ProductTag>
-
-}
-/**
-Product List
-
-*/
-export async function api_admin_products_list (params: {page:(number),best?:(((boolean) | null)),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((Product[]))>> {
-    let { page,best } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/products/`,
-        method: 'GET',
-        params: { page,best },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<((Product[]))> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<((Product[]))>
-
-}
-/**
-Add
-
-*/
-export async function api_orders_post (body: UserAddOrderBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Order>> {
-    
-    let data = JSON.stringify(body);
-    let r = await ud.httpx({
-        url: `/api/orders/`,
-        method: 'POST',
-        params: {  },
-        headers: { 'Content-Type': 'application/json', },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Order> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Order>
-
-}
-/**
-Delete Photo
-
-*/
-export async function api_user_photo_del (override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
-    
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/user/photo/`,
-        method: 'DELETE',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: void 0 as void,
-        ok(): this is ud.Ok<void> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<void>
+    } as ud.Result<User>
 
 }
 /**
@@ -479,150 +143,6 @@ export async function api_admin_users_get (params: {uid:(number),}, override: Pa
 
 }
 /**
-List
-
-*/
-export async function api_admin_materials_get (params: {page:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<MaterialList>> {
-    let { page } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/materials/`,
-        method: 'GET',
-        params: { page },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<MaterialList> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<MaterialList>
-
-}
-/**
-Del Photo
-
-*/
-export async function api_admin_materials_photo_del (params: {mid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
-    let { mid } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/materials/${mid}/photo/`,
-        method: 'DELETE',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Material> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Material>
-
-}
-/**
-Set Photo
-
-*/
-export async function api_admin_materials_photo_put (params: {mid:(number),}, body: MaterialPhoto, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
-    let { mid } = params;
-    let data = new FormData();
-data.set('photo', body.photo);
-
-    let r = await ud.httpx({
-        url: `/api/admin/materials/${mid}/photo/`,
-        method: 'PUT',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Material> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Material>
-
-}
-/**
-Product Get
-
-*/
-export async function api_admin_products_get (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Product>> {
-    let { id } = params;
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/admin/products/${id}/`,
-        method: 'GET',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Product> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Product>
-
-}
-/**
-Set Thumbnail
-
-*/
-export async function api_admin_products_thumbnail_put (params: {id:(number),}, body: ProductPhoto, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Product>> {
-    let { id } = params;
-    let data = new FormData();
-data.set('photo', body.photo);
-
-    let r = await ud.httpx({
-        url: `/api/admin/products/${id}/thumbnail/`,
-        method: 'PUT',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Product> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Product>
-
-}
-/**
 Update
 
 */
@@ -651,71 +171,15 @@ export async function api_admin_users_patch (params: {id:(number),}, body: Admin
 
 }
 /**
-Update
+Add
 
 */
-export async function api_admin_orders_patch (params: {oid:(number),}, body: OrderUpdateBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Order>> {
-    let { oid } = params;
-    let data = JSON.stringify(body);
-    let r = await ud.httpx({
-        url: `/api/admin/orders/${oid}/`,
-        method: 'PATCH',
-        params: {  },
-        headers: { 'Content-Type': 'application/json', },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Order> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Order>
-
-}
-/**
-Login
-
-*/
-export async function api_user_login_post (body: LoginBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<User>> {
+export async function api_admin_product_tags_post (body: ProductTagAddBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<ProductTag>> {
     
     let data = JSON.stringify(body);
     let r = await ud.httpx({
-        url: `/api/user/login/`,
+        url: `/api/admin/product-tags/`,
         method: 'POST',
-        params: {  },
-        headers: { 'Content-Type': 'application/json', },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<User> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<User>
-
-}
-/**
-Update
-
-*/
-export async function api_admin_product_tags_patch (params: {id:(number),}, body: ProductTagUpdateBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<ProductTag>> {
-    let { id } = params;
-    let data = JSON.stringify(body);
-    let r = await ud.httpx({
-        url: `/api/admin/product-tags/${id}/`,
-        method: 'PATCH',
         params: {  },
         headers: { 'Content-Type': 'application/json', },
         data, ...override
@@ -735,15 +199,71 @@ export async function api_admin_product_tags_patch (params: {id:(number),}, body
 
 }
 /**
-Update Info
+Product Delete
 
 */
-export async function api_admin_materials_info_patch (params: {mid:(number),}, body: MaterialUpdateInfoBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
+export async function api_admin_products_del (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
+    let { id } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/products/${id}/`,
+        method: 'DELETE',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: void 0 as void,
+        ok(): this is ud.Ok<void> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<void>
+
+}
+/**
+Update Count
+
+*/
+export async function api_admin_materials_count_patch (params: {mid:(number),}, body: MaterialUpdateCountBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
     let { mid } = params;
     let data = JSON.stringify(body);
     let r = await ud.httpx({
-        url: `/api/admin/materials/${mid}/info/`,
+        url: `/api/admin/materials/${mid}/count/`,
         method: 'PATCH',
+        params: {  },
+        headers: { 'Content-Type': 'application/json', },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Material> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Material>
+
+}
+/**
+Add
+
+*/
+export async function api_admin_materials_post (body: MaterialAddBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
+    
+    let data = JSON.stringify(body);
+    let r = await ud.httpx({
+        url: `/api/admin/materials/`,
+        method: 'POST',
         params: {  },
         headers: { 'Content-Type': 'application/json', },
         data, ...override
@@ -793,6 +313,92 @@ data.set('photo', body.photo);
 
 }
 /**
+Set Photo
+
+*/
+export async function api_admin_materials_photo_put (params: {mid:(number),}, body: MaterialPhoto, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
+    let { mid } = params;
+    let data = new FormData();
+data.set('photo', body.photo);
+
+    let r = await ud.httpx({
+        url: `/api/admin/materials/${mid}/photo/`,
+        method: 'PUT',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Material> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Material>
+
+}
+/**
+Delete
+
+*/
+export async function api_admin_orders_del (params: {oid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
+    let { oid } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/orders/${oid}/`,
+        method: 'DELETE',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: void 0 as void,
+        ok(): this is ud.Ok<void> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<void>
+
+}
+/**
+Update
+
+*/
+export async function api_admin_orders_patch (params: {oid:(number),}, body: OrderUpdateBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Order>> {
+    let { oid } = params;
+    let data = JSON.stringify(body);
+    let r = await ud.httpx({
+        url: `/api/admin/orders/${oid}/`,
+        method: 'PATCH',
+        params: {  },
+        headers: { 'Content-Type': 'application/json', },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Order> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Order>
+
+}
+/**
 Delete
 
 */
@@ -818,6 +424,344 @@ export async function api_admin_product_tags_del (params: {id:(number),}, overri
             return !this.ok()
         },
     } as ud.Result<void>
+
+}
+/**
+Del Photo
+
+*/
+export async function api_admin_materials_photo_del (params: {mid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
+    let { mid } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/materials/${mid}/photo/`,
+        method: 'DELETE',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Material> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Material>
+
+}
+/**
+List
+
+*/
+export async function api_admin_users_list (params: {page:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((User[]))>> {
+    let { page } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/users/`,
+        method: 'GET',
+        params: { page },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<((User[]))> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<((User[]))>
+
+}
+/**
+Get
+
+*/
+export async function api_admin_orders_get (params: {oid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Order>> {
+    let { oid } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/orders/${oid}/`,
+        method: 'GET',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Order> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Order>
+
+}
+/**
+Delete Photo
+
+*/
+export async function api_admin_products_photos_del (params: {id:(number),idx:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
+    let { id,idx } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/products/${id}/photos/${idx}/`,
+        method: 'DELETE',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: void 0 as void,
+        ok(): this is ud.Ok<void> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<void>
+
+}
+/**
+Set Thumbnail
+
+*/
+export async function api_admin_products_thumbnail_put (params: {id:(number),}, body: ProductPhoto, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Product>> {
+    let { id } = params;
+    let data = new FormData();
+data.set('photo', body.photo);
+
+    let r = await ud.httpx({
+        url: `/api/admin/products/${id}/thumbnail/`,
+        method: 'PUT',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Product> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Product>
+
+}
+/**
+List
+
+*/
+export async function api_admin_orders_list (params: {page:(number),state?:((OrderState | null)),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((([ ({ updated_at:(number),state:OrderState,created_at:(number),id:(number),user:(number),count:(number),price:(number),product:(number), }),((({ company_name?:(((string) | null)),first_name?:(((string) | null)),online_at:(number),phone:(string),last_name?:(((string) | null)),order_count:(number),address?:(((string) | null)),admin:(((number)[])),banned:(boolean),id:(number),photo?:(((string) | null)),token?:(((string) | null)),created_at:(number),email?:(((string) | null)), }) | null)), ])[]))>> {
+    let { page,state } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/orders/`,
+        method: 'GET',
+        params: { page,state },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<((([ ({ updated_at:(number),state:OrderState,created_at:(number),id:(number),user:(number),count:(number),price:(number),product:(number), }),((({ company_name?:(((string) | null)),first_name?:(((string) | null)),online_at:(number),phone:(string),last_name?:(((string) | null)),order_count:(number),address?:(((string) | null)),admin:(((number)[])),banned:(boolean),id:(number),photo?:(((string) | null)),token?:(((string) | null)),created_at:(number),email?:(((string) | null)), }) | null)), ])[]))> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<((([ ({ updated_at:(number),state:OrderState,created_at:(number),id:(number),user:(number),count:(number),price:(number),product:(number), }),((({ company_name?:(((string) | null)),first_name?:(((string) | null)),online_at:(number),phone:(string),last_name?:(((string) | null)),order_count:(number),address?:(((string) | null)),admin:(((number)[])),banned:(boolean),id:(number),photo?:(((string) | null)),token?:(((string) | null)),created_at:(number),email?:(((string) | null)), }) | null)), ])[]))>
+
+}
+/**
+Logout
+
+*/
+export async function api_user_logout_post (override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
+    
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/user/logout/`,
+        method: 'POST',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: void 0 as void,
+        ok(): this is ud.Ok<void> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<void>
+
+}
+/**
+List
+
+*/
+export async function api_admin_materials_get (params: {page:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<MaterialList>> {
+    let { page } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/materials/`,
+        method: 'GET',
+        params: { page },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<MaterialList> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<MaterialList>
+
+}
+/**
+Login
+
+*/
+export async function api_user_login_post (body: LoginBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<User>> {
+    
+    let data = JSON.stringify(body);
+    let r = await ud.httpx({
+        url: `/api/user/login/`,
+        method: 'POST',
+        params: {  },
+        headers: { 'Content-Type': 'application/json', },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<User> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<User>
+
+}
+/**
+Get
+
+*/
+export async function api_admin_product_tags_get (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<ProductTag>> {
+    let { id } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/product-tags/${id}/`,
+        method: 'GET',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<ProductTag> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<ProductTag>
+
+}
+/**
+Delete
+
+*/
+export async function api_admin_materials_del (params: {mid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
+    let { mid } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/materials/${mid}/`,
+        method: 'DELETE',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: void 0 as void,
+        ok(): this is ud.Ok<void> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<void>
+
+}
+/**
+List
+
+*/
+export async function api_admin_product_tags_list (params: {page:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((ProductTag[]))>> {
+    let { page } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/product-tags/`,
+        method: 'GET',
+        params: { page },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<((ProductTag[]))> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<((ProductTag[]))>
 
 }
 /**
@@ -849,14 +793,100 @@ export async function api_verification_post (body: VerificationData, override: P
 
 }
 /**
-Update Count
+Update Photo
 
 */
-export async function api_admin_materials_count_patch (params: {mid:(number),}, body: MaterialUpdateCountBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
-    let { mid } = params;
+export async function api_user_photo_put (body: UpdatePhoto, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<User>> {
+    
+    let data = new FormData();
+data.set('photo', body.photo);
+
+    let r = await ud.httpx({
+        url: `/api/user/photo/`,
+        method: 'PUT',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<User> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<User>
+
+}
+/**
+Product List
+
+*/
+export async function api_admin_products_list (params: {page:(number),best?:(((boolean) | null)),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<((Product[]))>> {
+    let { page,best } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/products/`,
+        method: 'GET',
+        params: { page,best },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<((Product[]))> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<((Product[]))>
+
+}
+/**
+Product Get
+
+*/
+export async function api_admin_products_get (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Product>> {
+    let { id } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/products/${id}/`,
+        method: 'GET',
+        params: {  },
+        headers: {  },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Product> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Product>
+
+}
+/**
+Update
+
+*/
+export async function api_admin_product_tags_patch (params: {id:(number),}, body: ProductTagUpdateBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<ProductTag>> {
+    let { id } = params;
     let data = JSON.stringify(body);
     let r = await ud.httpx({
-        url: `/api/admin/materials/${mid}/count/`,
+        url: `/api/admin/product-tags/${id}/`,
         method: 'PATCH',
         params: {  },
         headers: { 'Content-Type': 'application/json', },
@@ -867,13 +897,13 @@ export async function api_admin_materials_count_patch (params: {mid:(number),}, 
         r: r.clone(),
         status: r.status,
         body: await r.json(),
-        ok(): this is ud.Ok<Material> {
+        ok(): this is ud.Ok<ProductTag> {
             return this.status == 200
         },
         err(): this is ud.Err {
             return !this.ok()
         },
-    } as ud.Result<Material>
+    } as ud.Result<ProductTag>
 
 }
 /**
@@ -888,6 +918,34 @@ export async function api_admin_products_post (body: ProductAddBody, override: P
         method: 'POST',
         params: {  },
         headers: { 'Content-Type': 'application/json', },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Product> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Product>
+
+}
+/**
+Delete Thumbnail
+
+*/
+export async function api_admin_products_thumbnail_del (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Product>> {
+    let { id } = params;
+    let data = void 0;
+    let r = await ud.httpx({
+        url: `/api/admin/products/${id}/thumbnail/`,
+        method: 'DELETE',
+        params: {  },
+        headers: {  },
         data, ...override
     })
 
@@ -933,14 +991,42 @@ export async function api_user_patch (body: UserUpdateBody, override: Partial<ud
 
 }
 /**
-Product Delete
+Update Info
 
 */
-export async function api_admin_products_del (params: {id:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
-    let { id } = params;
+export async function api_admin_materials_info_patch (params: {mid:(number),}, body: MaterialUpdateInfoBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
+    let { mid } = params;
+    let data = JSON.stringify(body);
+    let r = await ud.httpx({
+        url: `/api/admin/materials/${mid}/info/`,
+        method: 'PATCH',
+        params: {  },
+        headers: { 'Content-Type': 'application/json', },
+        data, ...override
+    })
+
+    return {
+        r: r.clone(),
+        status: r.status,
+        body: await r.json(),
+        ok(): this is ud.Ok<Material> {
+            return this.status == 200
+        },
+        err(): this is ud.Err {
+            return !this.ok()
+        },
+    } as ud.Result<Material>
+
+}
+/**
+Delete Photo
+
+*/
+export async function api_user_photo_del (override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<void>> {
+    
     let data = void 0;
     let r = await ud.httpx({
-        url: `/api/admin/products/${id}/`,
+        url: `/api/user/photo/`,
         method: 'DELETE',
         params: {  },
         headers: {  },
@@ -961,17 +1047,17 @@ export async function api_admin_products_del (params: {id:(number),}, override: 
 
 }
 /**
-Get
+Add
 
 */
-export async function api_admin_orders_get (params: {oid:(number),}, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Order>> {
-    let { oid } = params;
-    let data = void 0;
+export async function api_orders_post (body: UserAddOrderBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Order>> {
+    
+    let data = JSON.stringify(body);
     let r = await ud.httpx({
-        url: `/api/admin/orders/${oid}/`,
-        method: 'GET',
+        url: `/api/orders/`,
+        method: 'POST',
         params: {  },
-        headers: {  },
+        headers: { 'Content-Type': 'application/json', },
         data, ...override
     })
 
@@ -986,91 +1072,5 @@ export async function api_admin_orders_get (params: {oid:(number),}, override: P
             return !this.ok()
         },
     } as ud.Result<Order>
-
-}
-/**
-Add
-
-*/
-export async function api_admin_materials_post (body: MaterialAddBody, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<Material>> {
-    
-    let data = JSON.stringify(body);
-    let r = await ud.httpx({
-        url: `/api/admin/materials/`,
-        method: 'POST',
-        params: {  },
-        headers: { 'Content-Type': 'application/json', },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<Material> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<Material>
-
-}
-/**
-Get
-
-*/
-export async function api_user_get (override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<User>> {
-    
-    let data = void 0;
-    let r = await ud.httpx({
-        url: `/api/user/`,
-        method: 'GET',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<User> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<User>
-
-}
-/**
-Update Photo
-
-*/
-export async function api_user_photo_put (body: UpdatePhoto, override: Partial<ud.HttpxProps> = {}) : Promise<ud.Result<User>> {
-    
-    let data = new FormData();
-data.set('photo', body.photo);
-
-    let r = await ud.httpx({
-        url: `/api/user/photo/`,
-        method: 'PUT',
-        params: {  },
-        headers: {  },
-        data, ...override
-    })
-
-    return {
-        r: r.clone(),
-        status: r.status,
-        body: await r.json(),
-        ok(): this is ud.Ok<User> {
-            return this.status == 200
-        },
-        err(): this is ud.Err {
-            return !this.ok()
-        },
-    } as ud.Result<User>
 
 }
