@@ -71,6 +71,9 @@ footer.footer-container {
                     flex-direction: column;
                     row-gap: 0.5rem;
 
+                    .holder {
+                        opacity: 0.8;
+                    }
                     .data {
                         display: -webkit-box;
                         -webkit-line-clamp: 3;
