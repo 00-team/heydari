@@ -38,7 +38,7 @@ const Orders: Component = () => {
     }
     const [state, setState] = createStore<STATE>({
         orders: [],
-        state: 'pending',
+        state: null,
         loading: false,
         page: 0,
     })
