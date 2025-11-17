@@ -102,23 +102,29 @@ async fn r_add(
         format!(
             "سفارش جدید: #new_orders
 
-شماره سفارش: {}
-کد محصول: #{} | #pid_{}
-محصول: {} | {}
-تعداد: {}
-قیمت: {} تومان
+محصول: #pid_{}
+نوع: {}
+نام: {}
+کد: {}
+
+سفارش: {}
+  قیمت: {} تومان
+  تعداد: {}
+
 خریدار: {} {}
-شرکت: {}
-آدرس: {}
-ایمیل: {}
-{}",
-            order.id,
-            product.code,
+  شرکت: {}
+  آدرس: {}
+  ایمیل: {}
+  تلفن: {}
+.",
             product.id,
             product.kind.farsi(),
             product.name,
-            order.count,
+            product.code,
+
+            order.id,
             crate::web::toman(order.price),
+            order.count,
             user.first_name.as_ref().map_or("بی نام", |v| v.as_str()),
             user.last_name
                 .as_ref()
