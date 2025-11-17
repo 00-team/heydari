@@ -102,7 +102,8 @@ async fn r_add(
         format!(
             "سفارش جدید: #new_orders
 
-محصول: {:?} | {}
+شماره سفارش: {}
+محصول: {} | {}
 تعداد: {}
 قیمت: {} تومان
 خریدار: {} {}
@@ -110,7 +111,8 @@ async fn r_add(
 آدرس: {}
 ایمیل: {}
 {}",
-            product.kind,
+            order.id,
+            product.kind.farsi(),
             product.name,
             order.count,
             crate::web::toman(order.price),

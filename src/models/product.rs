@@ -14,6 +14,15 @@ pub enum ProductKind {
     Table,
 }
 
+impl ProductKind {
+    pub fn farsi(&self) -> &'static str {
+        match self {
+            Self::Table => "میز ┬─┬",
+            Self::Chair => "صندلی 🪑",
+        }
+    }
+}
+
 super::sql_enum!(ProductKind);
 
 #[potk::enum_int(i64)]
