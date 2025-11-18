@@ -102,20 +102,33 @@ async fn r_add(
         format!(
             "سفارش جدید: #new_orders
 
-محصول: {:?} | {}
-تعداد: {}
-قیمت: {} تومان
+محصول: #pid_{}
+نوع: {}
+نام: {}
+کد: {}
+
+سفارش: {}
+  قیمت: {} تومان
+  تعداد: {}
+
 خریدار: {} {}
-شرکت: {}
-آدرس: {}
-ایمیل: {}
-{}",
-            product.kind,
+  شرکت: {}
+  آدرس: {}
+  ایمیل: {}
+  تلفن: {}
+.",
+            product.id,
+            product.kind.farsi(),
             product.name,
-            order.count,
+            product.code,
+
+            order.id,
             crate::web::toman(order.price),
+            order.count,
             user.first_name.as_ref().map_or("بی نام", |v| v.as_str()),
-            user.last_name.as_ref().map_or("بی خانواده", |v| v.as_str()),
+            user.last_name
+                .as_ref()
+                .map_or("بی خانواده", |v| v.as_str()),
             user.company_name.as_ref().map_or("---", |v| v.as_str()),
             user.address.as_ref().map_or("بی خانمان", |v| v.as_str()),
             user.email.as_ref().map_or("---", |v| v.as_str()),
