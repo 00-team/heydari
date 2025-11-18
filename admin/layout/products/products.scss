@@ -1028,6 +1028,13 @@
                     position: relative;
                     z-index: 1;
 
+                    &.price {
+                        input {
+                            direction: ltr;
+                            text-align: right;
+                        }
+                    }
+
                     &.active {
                         .holder {
                             top: 0;
