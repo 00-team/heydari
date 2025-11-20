@@ -391,8 +391,8 @@ export const PopupOverview: Component = () => {
                 <div class='inputs'>
                     <FloatInput
                         Icon={<PriceIcon />}
-                        holder='قیمت (ریال)'
-                        value={state.popup.product.price.toString()}
+                        holder='قیمت (تومان)'
+                        value={state.popup.product.price.toLocaleString()}
                         onChange={e => {
                             setState(
                                 produce(s => {
