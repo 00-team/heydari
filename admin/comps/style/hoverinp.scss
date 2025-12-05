@@ -1,0 +1,123 @@
+.hover-inp {
+    width: clamp(0px, 100%, 450px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: 1px solid var(--border-color);
+    border-radius: 2rem;
+    background-color: var(--sixty-percent);
+
+    position: relative;
+    z-index: 1;
+
+    // direction: ltr;
+
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+
+        input {
+            pointer-events: none;
+        }
+    }
+
+    .holder {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        pointer-events: none;
+
+        opacity: 0.7;
+
+        transition: 0.2s ease;
+
+        position: absolute;
+        inset: 0;
+        right: 1rem;
+
+        z-index: 3;
+    }
+
+    input {
+        flex: 1 0 0;
+        padding: 1em;
+
+        text-align: right;
+
+        direction: ltr;
+    }
+
+    &.active {
+        .holder {
+            opacity: 0;
+        }
+    }
+
+    &:focus-within .holder {
+        opacity: 0;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .eye-icon {
+        opacity: 0.7;
+        padding: 1rem;
+    }
+
+    .reset-icon,
+    .clear-icon {
+        position: absolute;
+        left: 0;
+
+        background-color: inherit;
+        border-radius: inherit;
+
+        z-index: 2;
+
+        height: 100%;
+        aspect-ratio: 1;
+
+        opacity: 0;
+        pointer-events: none;
+
+        transition: 0.3s ease;
+
+        svg {
+            transition: 0.7s transform ease;
+        }
+    }
+    .reset-icon {
+        color: var(--warning-color);
+
+        &:hover {
+            svg {
+                transform: rotate(-360deg);
+            }
+        }
+
+        &.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+    .clear-icon {
+        color: var(--alert-error);
+        transform: scale(0);
+        opacity: 1;
+
+        &.active {
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        &:hover {
+            svg {
+                transform: scale(1.1);
+            }
+        }
+    }
+}
