@@ -1,4 +1,5 @@
 import { addAlert } from 'comps/alert'
+import { HoverInp } from 'comps/hoverInp'
 import {
     ChairIcon,
     CodeIcon,
@@ -17,9 +18,7 @@ import {
     Component,
     createEffect,
     createMemo,
-    createSignal,
     For,
-    JSX,
     onCleanup,
     onMount,
     Show,
@@ -356,26 +355,26 @@ export const PopupOverview: Component = () => {
             </aside>
 
             <aside class='data-container'>
-                <FloatInput
+                <HoverInp
                     Icon={<NameIcon />}
                     holder='اسم محصول'
+                    acitve={!!state.popup.product.name}
                     value={state.popup.product.name}
-                    onChange={e =>
+                    onInp={e =>
                         setState(
                             produce(s => {
                                 s.popup.product.name = e
                             })
                         )
                     }
-                    class='description'
-                    inpClass='title_smaller'
-                    inpMode='str'
+                    inpType='text'
                 />
-                <FloatInput
+                <HoverInp
                     Icon={<InternetIcon />}
                     holder='URL'
+                    acitve={!!state.popup.product.slug}
                     value={state.popup.product.slug}
-                    onChange={e => {
+                    onInp={e => {
                         let val = e.replaceAll(' ', '-')
 
                         setState(
@@ -384,31 +383,30 @@ export const PopupOverview: Component = () => {
                             })
                         )
                     }}
-                    class='description'
-                    inpClass='title_smaller'
-                    inpMode='str'
+                    inpType='username'
                 />
                 <div class='inputs'>
-                    <FloatInput
+                    <HoverInp
                         Icon={<PriceIcon />}
                         holder='قیمت (تومان)'
-                        value={state.popup.product.price.toLocaleString()}
-                        onChange={e => {
+                        acitve={true}
+                        value={String(state.popup.product.price || 0)}
+                        onInp={e => {
                             setState(
                                 produce(s => {
                                     s.popup.product.price = parseInt(e) || 0
                                 })
                             )
                         }}
-                        class='price description'
-                        inpClass='title_smaller'
-                        inpMode='num'
+                        format
+                        inpType='number'
                     />
-                    <FloatInput
+                    <HoverInp
                         Icon={<CodeIcon />}
+                        acitve={!!state.popup.product.code}
                         holder='کد محصول'
                         value={state.popup.product.code}
-                        onChange={e => {
+                        onInp={e => {
                             let val = e.replaceAll(' ', '-')
 
                             setState(
@@ -417,9 +415,7 @@ export const PopupOverview: Component = () => {
                                 })
                             )
                         }}
-                        class='code description'
-                        inpClass='title_smaller'
-                        inpMode='str'
+                        inpType='text'
                     />
                 </div>
 
@@ -440,53 +436,6 @@ export const PopupOverview: Component = () => {
                     placeholder='توضیحات خلاصه...'
                 ></textarea>
             </aside>
-        </div>
-    )
-}
-
-interface FloatInputProps {
-    inpClass?: string
-    class?: string
-
-    holder: string
-    Icon: JSX.Element
-
-    value: string
-    onChange(value: string): void
-
-    inpMode: 'str' | 'num'
-}
-const FloatInput: Component<FloatInputProps> = P => {
-    const [active, setActive] = createSignal(false)
-
-    createEffect(() => {
-        if (P.value && state.popup.show) {
-            setActive(true)
-        } else {
-            setActive(false)
-        }
-    })
-
-    return (
-        <div
-            class={`finput-container ${P.class || ''}`}
-            classList={{ active: active() }}
-        >
-            <div class='holder'>
-                {P.Icon}
-                {P.holder}
-            </div>
-            <input
-                value={P.value}
-                onfocus={() => setActive(true)}
-                onblur={() => {
-                    if (!P.value) setActive(false)
-                }}
-                type={P.inpMode === 'num' ? 'number' : 'text'}
-                inputmode={P.inpMode === 'num' ? 'numeric' : 'text'}
-                class={`finput ${P.inpClass || ''}`}
-                oninput={e => P.onChange(e.target.value)}
-            />
         </div>
     )
 }

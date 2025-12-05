@@ -772,6 +772,44 @@
 
                         padding-top: 1.3rem;
 
+                        .hover-inp {
+                            width: 100%;
+
+                            svg {
+                                width: 20px;
+                                height: 20px;
+                            }
+
+                            input {
+                                border: none;
+                                outline: none;
+                                border-bottom: 1px solid;
+                                padding: 0.5em;
+                            }
+                            .holder {
+                                right: 0;
+
+                                transform: translateY(65%);
+
+                                padding-inline: 0px 1rem;
+                                padding-block: 0px;
+
+                                height: fit-content;
+                                width: fit-content;
+                                background-color: transparent;
+
+                                transform-origin: top right;
+                            }
+                            &:focus-within,
+                            &.active {
+                                .holder {
+                                    transform: translateY(-110%);
+                                    opacity: 0.8;
+                                    scale: 0.9;
+                                }
+                            }
+                        }
+
                         .inputs {
                             display: flex;
                             align-items: center;
@@ -779,6 +817,11 @@
 
                             gap: 2rem;
 
+                            .hover-inp {
+                                flex: 1 0 0;
+                                min-width: 200px;
+                                width: unset;
+                            }
                             .price,
                             .code {
                                 flex: 1 0 0;
