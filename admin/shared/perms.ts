@@ -35,6 +35,12 @@ export class Perms {
     static C_MATERIAL_COUNT: Perm = auto()
     static D_MATERIAL: Perm = auto()
 
+    static V_ORDER: Perm = auto()
+    static A_ORDER: Perm = auto()
+    static C_ORDER: Perm = auto()
+    static D_ORDER: Perm = auto()
+
+
     #perms: number[]
     constructor(perms: number[]) {
         perms = perms.map(p => Math.min(p, 255))
@@ -120,4 +126,9 @@ export const PERMS_DISPLAY: PermDisplay[] = [
     { perm: Perms.C_MATERIAL_INFO, name: 'تغییر اطلاعات کالای انبار' },
     { perm: Perms.C_MATERIAL_COUNT, name: 'تغییر تعداد کالای انبار' },
     { perm: Perms.D_MATERIAL, name: 'حذف از انبار' },
+
+    { perm: Perms.V_ORDER, name: 'نمایش سفارشات' },
+    { perm: Perms.A_ORDER, name: 'اضافه سفارشات' },
+    { perm: Perms.C_ORDER, name: 'تغییر سفارشات' },
+    { perm: Perms.D_ORDER, name: 'حذف سفارشات' },
 ]

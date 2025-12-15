@@ -9,16 +9,16 @@ import {
     UserIcon,
     WrenchIcon,
 } from 'icons'
-import { UserModel } from 'models'
-import { PERMS_DISPLAY, Perms, httpx } from 'shared'
+import { PERMS_DISPLAY, Perms } from 'shared'
 import { Component, createEffect, createMemo, Show } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import './style/users.scss'
+import { api_admin_users_list, api_admin_users_patch, User } from 'abi'
 
 export default () => {
     const [params, setParams] = useSearchParams()
     type State = {
-        users: UserModel[]
+        users: User[]
         page: number
         loading: boolean
     }
@@ -30,19 +30,16 @@ export default () => {
 
     createEffect(() => fetch_users(parseInt(params.page || '0') || 0))
 
-    function fetch_users(page: number) {
+    async function fetch_users(page: number) {
         setParams({ page })
         setState({ loading: true })
 
-        httpx({
-            url: '/api/admin/users/',
-            params: { page },
-            method: 'GET',
-            onLoad(x) {
-                if (x.status != 200) return
-                setState({ users: x.response, page, loading: false })
-            },
-        })
+        let r = await api_admin_users_list({ page })
+        if (r.ok()) {
+            setState({ users: r.body, page, loading: false })
+        } else {
+            setState({ users: [], page, loading: false })
+        }
     }
 
     return (
@@ -73,10 +70,13 @@ export default () => {
 
             <div class='user-list'>
                 {state.users.map((p, i) => (
-                    <User
+                    <UserCmp
                         user={p}
                         update={p => {
-                            if (!p) return fetch_users(state.page)
+                            if (!p) {
+                                fetch_users(state.page)
+                                return
+                            }
 
                             setState(
                                 produce(s => {
@@ -92,14 +92,13 @@ export default () => {
 }
 
 type UserProps = {
-    user: UserModel
-    update(user?: UserModel): void
+    user: User
+    update(user?: User): void
 }
-const User: Component<UserProps> = P => {
+const UserCmp: Component<UserProps> = P => {
     type State = {
         loading: boolean
         edit: boolean
-        name: string | null
         perms: Perms
         banned: boolean
         changed: number
@@ -107,39 +106,28 @@ const User: Component<UserProps> = P => {
     const [state, setState] = createStore<State>({
         loading: false,
         edit: false,
-        name: P.user.name,
         perms: new Perms(P.user.admin),
         banned: P.user.banned,
         changed: 0,
     })
 
     function user_update() {
-        httpx({
-            url: `/api/admin/users/${P.user.id}/`,
-            method: 'PATCH',
-            json: {
-                banned: state.banned,
-                name: state.name,
-                perms: state.perms.perms,
-            },
-            onLoad(x) {
-                if (x.status != 200) return
-                P.update(x.response)
-            },
-        })
+        api_admin_users_patch(
+            { id: P.user.id },
+            { banned: state.banned, perms: state.perms.perms }
+        )
     }
 
     function reset() {
         setState({
             banned: P.user.banned,
-            name: P.user.name,
             perms: new Perms(P.user.admin),
         })
     }
 
     const changed = createMemo(() => {
         state.changed
-        let change = state.banned != P.user.banned || state.name != P.user.name
+        let change = state.banned != P.user.banned
         if (!change) {
             if (state.perms.perms.length != P.user.admin.length) return true
 
@@ -161,7 +149,9 @@ const User: Component<UserProps> = P => {
                     <UserIcon />
                     <span>{P.user.id}</span>
                     <span>{P.user.phone}</span>
-                    <span>{P.user.name}</span>
+                    <span>
+                        {P.user.first_name} {P.user.last_name}
+                    </span>
                     <span>banned: {P.user.banned + ''}</span>
                     <span>admin: {new Perms(P.user.admin).any() + ''}</span>
                 </div>
@@ -194,17 +184,6 @@ const User: Component<UserProps> = P => {
             </div>
             <Show when={state.edit}>
                 <div class='bottom'>
-                    <span>Name:</span>
-                    <input
-                        class='styled'
-                        placeholder='user name'
-                        maxLength={255}
-                        value={state.name || ''}
-                        onInput={e => {
-                            let name = e.currentTarget.value.slice(0, 255)
-                            setState({ name })
-                        }}
-                    />
                     <span>Banned:</span>
                     <input
                         disabled={state.perms.get(Perms.MASTER)}
