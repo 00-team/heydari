@@ -153,6 +153,12 @@ async fn r_update(
         return Ok(Json(order));
     };
 
+    let photo = if let Some(ps) = product.photos.first() {
+        format!("https://heydari-mi.com/record/pp-{}-{ps}", product.id)
+    } else {
+        String::new()
+    };
+
     crate::utils::iris_message(
         crate::utils::IrisChannel::Orders,
         format!(
@@ -162,6 +168,7 @@ async fn r_update(
   نوع: {}
   نام: {}
   کد: {}
+  عکس: {photo}
 
 سفارش: #oid_{}
   قیمت: {} تومان
