@@ -1,6 +1,7 @@
 use crate::docs::UpdatePaths;
 use crate::models::order::Order;
 use crate::models::order::OrderState;
+use crate::models::product::Product;
 use crate::models::user::perms;
 use crate::models::user::Admin;
 use crate::models::user::User;
@@ -133,6 +134,72 @@ async fn r_update(
     }
     .execute(&state.sql)
     .await?;
+
+    let Ok(product) = sqlx::query_as! {
+        Product, "select * from products where id = ?", order.product
+    }
+    .fetch_one(&state.sql)
+    .await
+    else {
+        return Ok(Json(order));
+    };
+
+    let Ok(user) = sqlx::query_as! {
+        User, "select * from users where id = ?", order.user
+    }
+    .fetch_one(&state.sql)
+    .await
+    else {
+        return Ok(Json(order));
+    };
+
+    crate::utils::iris_message(
+        crate::utils::IrisChannel::Orders,
+        format!(
+            "سفارش بروزرسانی شد: #order_updated
+
+محصول: #pid_{}
+  نوع: {}
+  نام: {}
+  کد: {}
+
+سفارش: #oid_{}
+  قیمت: {} تومان
+  تعداد: {}
+  وضعیت: {}
+
+خریدار: {} {}
+  شرکت: {}
+  آدرس: {}
+  ایمیل: {}
+  تلفن: {}
+
+تغییر توسط: {} {}
+  تلفن: {}
+.",
+            product.id,
+            product.kind.farsi(),
+            product.name,
+            product.code,
+            order.id,
+            crate::web::toman(order.price),
+            order.count,
+            order.state.iris_dpy(),
+            user.first_name.as_ref().map_or("بی نام", |v| v.as_str()),
+            user.last_name.as_ref().map_or("---", |v| v.as_str()),
+            user.company_name.as_ref().map_or("---", |v| v.as_str()),
+            user.address.as_ref().map_or("بدون آدرس", |v| v.as_str()),
+            user.email.as_ref().map_or("---", |v| v.as_str()),
+            user.phone,
+            admin
+                .user
+                .first_name
+                .as_ref()
+                .map_or("بی نام", |v| v.as_str()),
+            admin.user.last_name.unwrap_or_default(),
+            admin.user.phone,
+        ),
+    );
 
     Ok(Json(order))
 }

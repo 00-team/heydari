@@ -14,6 +14,18 @@ pub enum OrderState {
     Resolved,
 }
 
+impl OrderState {
+    pub fn iris_dpy(&self) -> &'static str {
+        match self {
+            Self::Pending => "درحال برسی ⏳",
+            Self::PaymentPending => "در انتظار پرداخت 💸",
+            Self::Resolved => "ارسال شد 📦",
+            Self::Rejected => "رد شد ❌",
+            Self::Sending => "درحال ارسال 🚚",
+        }
+    }
+}
+
 super::sql_enum!(OrderState);
 
 #[derive(Debug, Serialize, Deserialize, ToSchema, Default, sqlx::FromRow)]
