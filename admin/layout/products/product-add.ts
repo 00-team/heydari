@@ -10,7 +10,7 @@ export async function product_add() {
 
     popup_clear()
 
-    let uniqeId = performance.now()
+    let uniqeId = Math.floor(performance.now())
 
     let empty = { ...EMPTY_PRODUCT, id: uniqeId }
 
@@ -33,8 +33,6 @@ export async function product_add() {
                 slug: p.product.slug,
             },
             onLoad(resp) {
-                resolve()
-
                 let index = state.products.findIndex(a => a.id === uniqeId)
                 if (index < 0) return
 
@@ -67,6 +65,8 @@ export async function product_add() {
                         s.products[index] = productWithLoading
                     })
                 )
+
+                resolve()
             },
         })
     })
@@ -111,13 +111,11 @@ export async function product_add() {
                     timeout: 3,
                 })
 
-                console.log('putted')
-
                 setState(
                     produce(s => {
                         s.products[index] = {
                             ...x.response,
-                            loading: false,
+                            // loading: false,
                         }
                     })
                 )
@@ -128,11 +126,13 @@ export async function product_add() {
     if (hasFiles) {
         const f = files.filter(f => f.file)
 
-        const uploadPromises: Promise<void>[] = []
+        for (let i = 0; i < f.length; i++) {
+            const fa = f[i]
 
-        f.forEach(fa => {
-            uploadPromises.push(
-                new Promise<void>((resolve, reject) => {
+            if (!fa) return
+
+            try {
+                await new Promise<void>((resolve, reject) => {
                     const data = new FormData()
                     data.set('photo', fa.file!)
 
@@ -141,30 +141,53 @@ export async function product_add() {
                         method: 'PUT',
                         data,
                         onLoad(secRes) {
-                            if (secRes.status !== 200) return reject()
+                            if (secRes.status !== 200)
+                                return reject(new Error('upload-failed'))
 
-                            resolve()
+                            // recompute index in case products array changed
+                            const idx = state.products.findIndex(
+                                a => a.id === uniqeId
+                            )
+                            if (idx < 0)
+                                return reject(new Error('product-missing'))
 
+                            // update photos and if this was the last image, mark loading false
                             setState(
                                 produce(s => {
-                                    s.products[index]!.photos =
+                                    s.products[idx]!.photos =
                                         secRes.response.photos
+                                    if (i === f.length - 1) {
+                                        s.products[idx]!.loading = false
+                                    }
                                 })
                             )
+
+                            resolve()
                         },
                     })
                 })
-            )
-        })
+            } catch (err) {
+                // stop further uploads, show alert, and clear loading flag for the product
+                addAlert({
+                    type: 'error',
+                    subject: 'آپلود ناموفق!',
+                    content: 'آپلود عکس با خطا مواجه شد',
+                    timeout: 3,
+                })
 
-        await Promise.all(uploadPromises).catch(() => {
-            addAlert({
-                type: 'error',
-                subject: 'آپلود ناموفق!',
-                content: 'آپلود عکس با خطا مواجه شد',
-                timeout: 3,
-            })
-        })
+                const idxOnErr = state.products.findIndex(a => a.id === uniqeId)
+                if (idxOnErr !== -1) {
+                    setState(
+                        produce(s => {
+                            s.products[idxOnErr]!.loading = false
+                        })
+                    )
+                }
+
+                break
+            }
+        }
+        // fall through instead of returning; loading has been cleared when last finished (or on error)
     }
 
     index = state.products.findIndex(a => a.id === uniqeId)

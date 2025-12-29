@@ -261,7 +261,7 @@ export const PopupOverview: Component = () => {
                                 </button>
                             </Show>
                         </div>
-                        <div class='other-imgs'>
+                        <div class='other-imgs' draggable={false}>
                             <label class='add-img' for='popup-add-img'>
                                 <input
                                     type='file'
@@ -279,6 +279,7 @@ export const PopupOverview: Component = () => {
                                         fallback={
                                             <div
                                                 class='other-img'
+                                                draggable={false}
                                                 onclick={() => {
                                                     setLocal({
                                                         active: index(),
