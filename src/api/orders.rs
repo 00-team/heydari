@@ -97,6 +97,14 @@ async fn r_add(
     .execute(&state.sql)
     .await?;
 
+    #[cfg(not(debug_assertions))]
+    {
+        let conf = crate::Config::get();
+        for ap in conf.admin_phones.iter() {
+            utils::send_sms_prefab(ap, 424299, vec![user.phone.clone()]).await;
+        }
+    }
+
     crate::utils::iris_message(
         IrisChannel::Orders,
         format!(
@@ -121,7 +129,6 @@ async fn r_add(
             product.kind.farsi(),
             product.name,
             product.code,
-
             order.id,
             crate::web::toman(order.price),
             order.count,

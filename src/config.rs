@@ -9,6 +9,7 @@ pub struct Config {
     pub heimdall: reqwest::Client,
     pub iris: reqwest::Client,
     pub iris_pass_on: String,
+    pub admin_phones: Vec<String>,
 }
 
 macro_rules! evar {
@@ -86,6 +87,10 @@ impl Config {
                 .build()
                 .expect("invalid iris"),
             iris_pass_on: evar!("IRIS_PASS_ON"),
+            admin_phones: evar!("ADMIN_PHONES")
+                .split(",")
+                .map(|a| a.to_string())
+                .collect(),
         }
     }
 
