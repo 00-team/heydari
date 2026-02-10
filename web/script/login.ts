@@ -92,7 +92,7 @@ async function login() {
 
     let user = res.body
 
-    if (!user.first_name || user.last_name) {
+    if (!user.first_name || !user.last_name) {
         goToInfo = true
     }
 
