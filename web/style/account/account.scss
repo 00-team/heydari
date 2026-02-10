@@ -114,16 +114,16 @@ main.account {
             // background-color: var(--accent-color);
 
             .profile-container {
-                padding: 3rem;
-
                 width: clamp(0px, 100%, 700px);
-                height: max(400px, 55vh);
+                min-height: max(400px, 55vh);
 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: space-between;
                 gap: 1rem;
+
+                padding: 3rem;
+                padding-bottom: 0;
 
                 .user-infos {
                     width: 100%;
@@ -145,6 +145,11 @@ main.account {
                             gap: 0.5rem;
 
                             opacity: 0.7;
+                        }
+
+                        svg {
+                            width: 1.5em;
+                            height: 1.5em;
                         }
                     }
                 }
