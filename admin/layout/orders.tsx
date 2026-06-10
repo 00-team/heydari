@@ -1,4 +1,4 @@
-import { Component, For, onMount, Show } from 'solid-js'
+import { Component, For, JSX, onMount, Show } from 'solid-js'
 
 import { useSearchParams } from '@solidjs/router'
 import {
@@ -16,6 +16,7 @@ import {
     Calendar2Icon,
     CalendarIcon,
     CartIcon,
+    CashLoadingIcon,
     CheckIcon,
     CloseIcon,
     MobileIcon,
@@ -94,7 +95,6 @@ const Orders: Component = () => {
 
     return (
         <div class='orders-container'>
-            <header class='section_title'>سفارش‌ها حیدری</header>
             <div class='filters'>
                 <For each={ORDER_STATE}>
                     {o => (
@@ -223,6 +223,40 @@ const OrderCmp: Component<OrderProps> = P => {
             name: '',
         },
     })
+
+    type CTA = {
+        text: string
+        Icon: JSX.Element
+        alert: null | { title: string; type: 'error' | 'success' }
+    }
+    const CTAS_MAP: Record<Exclude<OrderState, 'pending'>, CTA> = {
+        payment_pending: {
+            alert: null,
+            Icon: <CashLoadingIcon />,
+            text: 'انتظار پرداخت',
+        },
+        rejected: {
+            alert: {
+                title: 'سفارش رد شده؟',
+                type: 'error',
+            },
+            Icon: <CloseIcon />,
+            text: 'رد',
+        },
+        sending: {
+            alert: null,
+            Icon: <CloseIcon />,
+            text: 'درحال ارسال',
+        },
+        resolved: {
+            alert: {
+                title: 'سفارش تایید و تمام شده؟',
+                type: 'success',
+            },
+            Icon: <CheckIcon />,
+            text: 'تایید',
+        },
+    }
 
     onMount(async () => {
         setState('product', 'loading', true)
@@ -365,38 +399,31 @@ const OrderCmp: Component<OrderProps> = P => {
                 </div>
             </div>
             <div class='order-ctas title_smaller'>
-                <button
-                    class='cta reject'
-                    disabled={P.order.state == 'rejected'}
-                    onclick={() => {
-                        setPopup({
-                            show: true,
-                            type: 'error',
-                            Icon: CloseIcon,
-                            title: 'سفارش را رد میکنید؟',
-                            onSubmit: () => changeTo('rejected'),
-                        })
-                    }}
-                >
-                    <CloseIcon />
-                    رد
-                </button>
-                <button
-                    class='cta submit'
-                    disabled={P.order.state == 'resolved'}
-                    onclick={() =>
-                        setPopup({
-                            show: true,
-                            type: 'success',
-                            Icon: CheckIcon,
-                            title: 'سفارش را تایید میکنید؟',
-                            onSubmit: () => changeTo('resolved'),
-                        })
-                    }
-                >
-                    <CheckIcon />
-                    تایید
-                </button>
+                <For each={Object.entries(CTAS_MAP)}>
+                    {([k, v]) => (
+                        <button
+                            classList={{ [k]: true }}
+                            class='cta'
+                            disabled={P.order.state == k}
+                            onclick={() => {
+                                if (!v.alert) return changeTo(k as OrderState)
+
+                                setPopup({
+                                    show: true,
+                                    type: v.alert.type,
+                                    Icon: CloseIcon,
+                                    title: v.alert.title,
+                                    onSubmit: () => changeTo(k as OrderState),
+                                })
+
+                                return
+                            }}
+                        >
+                            {v.Icon}
+                            {v.text}
+                        </button>
+                    )}
+                </For>
             </div>
         </div>
     )

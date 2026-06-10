@@ -134,6 +134,7 @@
         row-gap: 2rem;
         column-gap: calc(3rem + 1vw);
         padding: 1rem;
+        padding-bottom: 3rem;
 
         .loading-container {
             display: flex;
@@ -415,19 +416,24 @@
                     justify-content: center;
                     gap: 0.5rem;
 
-                    flex: 1 0 0;
+                    width: calc(50% - 1rem);
+
                     border-radius: 100vmax;
                     color: white;
+                    background-color: #444444;
 
                     padding: 0.7rem;
                     font: inherit;
 
                     transition: 0.2s ease transform;
 
-                    &.reject {
+                    &.rejected {
                         background-color: var(--alert-error);
                     }
-                    &.submit {
+                    &.sending {
+                        background-color: var(--alert-info);
+                    }
+                    &.resolved {
                         background-color: var(--alert-success);
                     }
 
@@ -441,6 +447,12 @@
                         &:active {
                             transform: scale(0.95);
                         }
+                    }
+                }
+
+                @media screen and (max-width: 768px) {
+                    .cta {
+                        width: 100%;
                     }
                 }
             }
