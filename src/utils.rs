@@ -79,7 +79,6 @@ pub fn remove_record(name: &str) {
 //     log::info!("\nsending sms to {phone}:\n\n{text}\n");
 // }
 
-#[cfg(not(debug_assertions))]
 pub async fn send_sms_prefab(phone: &str, body_id: i64, args: Vec<String>) {
     log::info!("\nsending sms to {phone}:\n\n{args:?}\n");
 
