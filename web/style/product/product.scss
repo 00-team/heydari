@@ -413,10 +413,9 @@ main.product {
                 gap: 0.5em;
             }
 
-            h2 {
-                margin-bottom: 1em;
-                cursor: default;
-                width: max-content;
+            .product-title {
+                line-height: 1.8;
+                margin-bottom: 5px;
             }
 
             p {
