@@ -808,6 +808,12 @@
                                     scale: 0.9;
                                 }
                             }
+
+                            &.product-name-inp {
+                                input {
+                                    direction: rtl;
+                                }
+                            }
                         }
 
                         .inputs {

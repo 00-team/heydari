@@ -359,6 +359,7 @@ export const PopupOverview: Component = () => {
                 <HoverInp
                     Icon={<NameIcon />}
                     holder='اسم محصول'
+                    class='product-name-inp'
                     acitve={!!state.popup.product.name}
                     value={state.popup.product.name}
                     onInp={e =>
