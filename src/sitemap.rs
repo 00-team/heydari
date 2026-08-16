@@ -5,7 +5,7 @@ use actix_web::dev::{ConnectionInfo, HttpServiceFactory};
 use actix_web::http::header::ContentType;
 use actix_web::middleware::NormalizePath;
 use actix_web::web::Data;
-use actix_web::{get, HttpResponse, Scope};
+use actix_web::{get, routes, HttpResponse, Scope};
 use cercis::prelude::*;
 use chrono::TimeZone;
 
@@ -88,6 +88,8 @@ async fn products(conn: ConnectionInfo, state: Data<AppState>) -> HttpResponse {
         .body(r#"<?xml version="1.0" encoding="UTF-8"?>"#.to_string() + &result)
 }
 
+#[routes]
+#[get("/new_sitemap.xml")]
 #[get("/sitemap.xml")]
 async fn index(conn: ConnectionInfo) -> HttpResponse {
     let host = format!("{}://{}", conn.scheme(), conn.host());
