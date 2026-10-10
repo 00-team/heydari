@@ -1,4 +1,3 @@
-import { useSearchParams } from '@solidjs/router'
 import { LoadingElem } from 'comps'
 import {
     ChairIcon,
@@ -23,102 +22,150 @@ import { produce } from 'solid-js/store'
 import { self } from 'store'
 import { ProductPopup } from './prodcut-popup'
 import './products.scss'
-import { popup_init, setState, setTags, state } from './shared'
+import { popup_init, setState, setTags, SORT_PRIORITY, state } from './shared'
 
 export default () => {
-    const [params, setParams] = useSearchParams()
+    // Used to ignore responses from older requests if the best filter
+    // changes while a previous product-loading request is still running.
+    let productFetchId = 0
 
     onMount(() => {
         if (self.perms.check(Perms.V_PRODUCT_TAG)) {
             load_tags(0)
         }
-
-        setState({
-            page: parseInt(params.page || '0') || 0,
-        })
     })
 
-    function load_tags(page: number) {
+    function load_tags(page: number): void {
         httpx({
             url: '/api/admin/product-tags/',
             method: 'GET',
             params: { page },
+
             onLoad(x) {
-                if (x.status != 200) return
-                let tags: ProductTagModel[] = x.response
-                if (tags.length == 0) return
+                if (x.status !== 200) return
+
+                const loadedTags: ProductTagModel[] = x.response
+
+                if (loadedTags.length === 0) return
+
                 setTags(
                     produce(s => {
-                        tags.forEach(t => {
-                            s[t.kind][t.part].push(t)
+                        loadedTags.forEach(tag => {
+                            s[tag.kind][tag.part].push(tag)
                         })
                     })
                 )
-                if (tags.length >= 64) {
-                    return load_tags(page + 1)
+
+                if (loadedTags.length >= 64) {
+                    load_tags(page + 1)
                 }
             },
         })
     }
 
-    createEffect(() => {
-        state.filters.best
-        fetch_products(state.page)
-    })
+    function fetch_products(best: boolean | null): void {
+        const fetchId = ++productFetchId
 
-    function fetch_products(page: number) {
-        setState({ loading: true })
-        setParams({ page })
+        setState({
+            loading: true,
+            products: [],
+        })
 
-        let params = { page } as any
-        if (state.filters.best != null) {
-            params.best = state.filters.best
+        function fetch_page(page: number): void {
+            const params: {
+                page: number
+                best?: boolean
+            } = { page }
+
+            if (best !== null) {
+                params.best = best
+            }
+
+            httpx({
+                url: '/api/admin/products/',
+                method: 'GET',
+                params,
+
+                onLoad(x) {
+                    if (fetchId !== productFetchId) return
+
+                    if (x.status !== 200) {
+                        setState({ loading: false })
+                        return
+                    }
+
+                    const pageProducts: ProductModel[] = x.response
+
+                    if (pageProducts.length === 0) {
+                        setState(
+                            produce(s => {
+                                s.products.sort((a, b) => {
+                                    const aPriority =
+                                        SORT_PRIORITY.get(a.code) ??
+                                        Number.MAX_SAFE_INTEGER
+
+                                    const bPriority =
+                                        SORT_PRIORITY.get(b.code) ??
+                                        Number.MAX_SAFE_INTEGER
+
+                                    return aPriority - bPriority
+                                })
+
+                                s.loading = false
+                            })
+                        )
+
+                        return
+                    }
+
+                    const productsWithLoading = pageProducts.map(
+                        (product: ProductModel) => ({
+                            ...product,
+                            loading: false,
+                        })
+                    )
+
+                    setState(
+                        produce(s => {
+                            s.products.push(...productsWithLoading)
+                        })
+                    )
+
+                    fetch_page(page + 1)
+                },
+            })
         }
 
-        httpx({
-            url: '/api/admin/products/',
-            params,
-            method: 'GET',
-            onLoad(x) {
-                setState({ loading: false })
-
-                if (x.status != 200) return
-
-                const productsWithLoading = x.response.map(
-                    (product: ProductModel) => ({
-                        ...product,
-                        loading: false,
-                    })
-                )
-
-                setState({ products: productsWithLoading, page })
-            },
-        })
+        fetch_page(0)
     }
 
+    createEffect(() => {
+        const best = state.filters.best
+        fetch_products(best)
+    })
+
     const products = createMemo(() => {
-        let query = state.search.trim().toLocaleLowerCase()
+        const query = state.search.trim().toLocaleLowerCase()
+
         let result: ProductModel[] = [...state.products]
 
         if (query.length >= 3) {
             result = result.filter(
-                m =>
-                    m.name.toLocaleLowerCase().includes(query) ||
-                    m.code.toLocaleLowerCase().includes(query)
+                product =>
+                    product.name.toLocaleLowerCase().includes(query) ||
+                    product.code.toLocaleLowerCase().includes(query)
             )
         }
 
         if (state.filters.onlyChair) {
-            result = result.filter(s => s.kind === 'chair')
+            result = result.filter(product => product.kind === 'chair')
         }
 
         if (state.filters.onlyTable) {
-            result = result.filter(s => s.kind === 'table')
+            result = result.filter(product => product.kind === 'table')
         }
 
-        if (state.filters) return result
-
-        return []
+        return result
     })
 
     return (
@@ -130,40 +177,18 @@ export default () => {
                         class='title_small'
                         placeholder='جستجو کنید...'
                         value={state.search}
-                        oninput={e => setState({ search: e.target.value })}
+                        onInput={e =>
+                            setState({ search: e.currentTarget.value })
+                        }
                     />
+
                     <button class='icon'>
                         <SearchIcon />
                     </button>
                 </div>
+
                 <div class='filters-wrapper'>
                     <div class='pagination'>
-                        <button
-                            class='title_smaller page-cta'
-                            disabled={state.page == 0}
-                            onClick={() => {
-                                setState(
-                                    produce(s => {
-                                        s.page--
-                                    })
-                                )
-                            }}
-                        >
-                            صفحه قبل
-                        </button>
-                        <button
-                            class='title_smaller page-cta'
-                            // disabled={state.page == }
-                            onClick={() => {
-                                setState(
-                                    produce(s => {
-                                        s.page++
-                                    })
-                                )
-                            }}
-                        >
-                            صفحه بعد
-                        </button>
                         <button
                             class='title_smaller page-cta'
                             classList={{
@@ -174,9 +199,9 @@ export default () => {
                             onClick={() => {
                                 setState(
                                     produce(s => {
-                                        if (s.filters.best == null) {
+                                        if (s.filters.best === null) {
                                             s.filters.best = true
-                                        } else if (s.filters.best == true) {
+                                        } else if (s.filters.best === true) {
                                             s.filters.best = false
                                         } else {
                                             s.filters.best = null
@@ -185,7 +210,7 @@ export default () => {
                                 )
                             }}
                         >
-                            بهترین ها{' '}
+                            بهترین‌ها{' '}
                             {state.filters.best === null
                                 ? ''
                                 : state.filters.best === true
@@ -193,15 +218,17 @@ export default () => {
                                   : 'نباشه'}
                         </button>
                     </div>
+
                     <div class='ctas'>
                         <FilterCheckbox
-                            holder=' فقط صندلی'
+                            holder='فقط صندلی'
                             checked={state.filters.onlyChair}
-                            onCheck={c => {
+                            onCheck={checked => {
                                 setState(
                                     produce(s => {
-                                        s.filters.onlyChair = c
-                                        if (s.filters.onlyChair) {
+                                        s.filters.onlyChair = checked
+
+                                        if (checked) {
                                             s.filters.onlyTable = false
                                         }
                                     })
@@ -209,20 +236,21 @@ export default () => {
                             }}
                             class='title_smaller'
                         />
+
                         <FilterCheckbox
                             holder='فقط میز'
                             checked={state.filters.onlyTable}
-                            onCheck={c =>
+                            onCheck={checked => {
                                 setState(
                                     produce(s => {
-                                        s.filters.onlyTable = c
+                                        s.filters.onlyTable = checked
 
-                                        if (s.filters.onlyTable) {
+                                        if (checked) {
                                             s.filters.onlyChair = false
                                         }
                                     })
                                 )
-                            }
+                            }}
                             class='title_smaller'
                         />
                     </div>
@@ -233,7 +261,7 @@ export default () => {
                 <button
                     class='add-product title_small'
                     disabled={state.loading}
-                    onclick={() => popup_init(EMPTY_PRODUCT, 'add')}
+                    onClick={() => popup_init(EMPTY_PRODUCT, 'add')}
                 >
                     <PlusIcon />
                     <span>اضافه محصول</span>
@@ -244,7 +272,7 @@ export default () => {
             <div class='products-wrapper'>
                 <Show when={!state.loading} fallback={<Loading />}>
                     <Show
-                        when={state.products.length > 0}
+                        when={products().length > 0}
                         fallback={
                             <div class='empty title'>
                                 محصولی برای نمایش پیدا نشد!

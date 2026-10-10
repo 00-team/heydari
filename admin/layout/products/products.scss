@@ -36,11 +36,11 @@
         padding: 1rem;
 
         @media screen and (max-width: 320px) {
-            padding: 0.5;
+            padding: 0.5rem;
         }
 
         .search-wrapper {
-            width: clamp(0px, 100%, 700px);
+            width: clamp(0px, 100%, 600px);
 
             display: flex;
             align-items: center;
@@ -230,6 +230,8 @@
 
         overflow: hidden;
 
+        transition: transform 0.15s ease;
+
         &:hover {
             svg {
                 transform: translateX(0) rotate(0deg);
@@ -238,6 +240,10 @@
                     transform: translateX(0) rotate(0deg);
                 }
             }
+        }
+
+        &:active {
+            transform: scale(0.95);
         }
 
         svg {
