@@ -36,20 +36,20 @@ async fn r_home(user: Option<User>, state: Data<AppState>) -> Response {
     Ok(HttpResponse::Ok().content_type(ContentType::html()).body(result))
 }
 
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "snake_case")]
-enum Sort {
-    Asc,
-    Desc,
-}
+// #[derive(Deserialize, Debug)]
+// #[serde(rename_all = "snake_case")]
+// enum Sort {
+//     Asc,
+//     Desc,
+// }
 
 #[derive(Deserialize, Debug)]
 struct ProductsQuery {
     leg: Option<i64>,
     bed: Option<i64>,
     kind: Option<ProductKind>,
-    sort: Option<Sort>,
-    page: Option<u32>,
+    // sort: Option<Sort>,
+    // page: Option<u32>,
 }
 
 #[get("/products")]
@@ -58,16 +58,16 @@ async fn r_products(
 ) -> Response {
     let tmpl = state.env.get_template("products/index.html")?;
     let q = Query::<ProductsQuery>::extract(&rq).await;
-    let mut sort = "desc";
-    let mut page = 0;
+    // let mut sort = "desc";
+    // let mut page = 0;
     let mut filter = Vec::<String>::new();
 
     if let Ok(q) = &q {
-        if matches!(q.sort, Some(Sort::Asc)) {
-            sort = "asc";
-        }
+        // if matches!(q.sort, Some(Sort::Asc)) {
+        //     sort = "asc";
+        // }
 
-        page = q.page.unwrap_or(0);
+        // page = q.page.unwrap_or(0);
 
         if let Some(kind) = &q.kind {
             filter.push(format!("kind = {}", *kind as i64));
@@ -88,29 +88,29 @@ async fn r_products(
         String::new()
     };
 
-    #[derive(sqlx::FromRow)]
-    struct Count {
-        count: i64,
-    }
-    let products_count: Count = sqlx::query_as(&format!(
-        "select count(1) as count from products {cond}"
-    ))
-    .fetch_one(&state.sql)
-    .await?;
-    let pages = if products_count.count > 0 {
-        // (products_count.count as f32 / 32f32).ceil() as u32
-        products_count.count as u32 / 32
-    } else {
-        0
-    };
+    // #[derive(sqlx::FromRow)]
+    // struct Count {
+    //     count: i64,
+    // }
+    // let products_count: Count = sqlx::query_as(&format!(
+    //     "select count(1) as count from products {cond}"
+    // ))
+    // .fetch_one(&state.sql)
+    // .await?;
+    // let pages = if products_count.count > 0 {
+    //     // (products_count.count as f32 / 32f32).ceil() as u32
+    //     products_count.count as u32 / 32
+    // } else {
+    //     0
+    // };
 
     // log::info!("pages: {page}/{pages} | count: {}", products_count.count);
 
     let products: Vec<Product> = sqlx::query_as(&format!(
-        "select * from products {} order by created_at {} limit 32 offset ?",
-        cond, sort
+        // "select * from products {} order by created_at {} limit 32 offset ?",
+        "select * from products {cond}",
     ))
-    .bind(page * 32)
+    // .bind(page * 32)
     .fetch_all(&state.sql)
     .await?;
 
@@ -128,8 +128,8 @@ async fn r_products(
     let result = tmpl.render(context! {
         products => products,
         tags => tags,
-        pages => pages,
-        page => page,
+        // pages => pages,
+        // page => page,
         user => user,
     })?;
 
@@ -272,11 +272,8 @@ async fn r_account_orders(
     .fetch_one(&state.sql)
     .await?;
 
-    let pages = if order_count.count > 0 {
-        order_count.count as u32 / 32
-    } else {
-        0
-    };
+    let pages =
+        if order_count.count > 0 { order_count.count as u32 / 32 } else { 0 };
 
     let prod_ids = HashSet::<i64>::from_iter(orders.iter().map(|o| o.product));
 
