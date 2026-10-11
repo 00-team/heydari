@@ -145,6 +145,8 @@ const SORT_WITH_IDS: string[] = [
     '110A',
     '112',
     '113',
+    '212',
+    '213',
 
     // 200 series
     '202',
@@ -289,7 +291,6 @@ function sortProductsByCode(): void {
         'section.products-wrapper'
     )
 
-    console.log(wrapper)
     if (!wrapper) return
 
     const cards = Array.from(
